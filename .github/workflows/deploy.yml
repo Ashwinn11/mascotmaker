@@ -6,7 +6,7 @@ on:
 
 env:
   PROJECT_ID: glowing-harmony-362803
-  REGION: asia-south1
+  REGION: us-central1
   SERVICE: mascot-maker
   IMAGE: asia-south1-docker.pkg.dev/glowing-harmony-362803/mascot-repo/mascot-maker
 
