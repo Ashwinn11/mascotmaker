@@ -4,6 +4,7 @@ import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { Icon3DInline } from "@/components/ui/icon-3d";
 
 interface PromptInputProps {
   onGenerated: (imageUrl: string, analysis?: string) => void;
@@ -81,23 +82,23 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
       <div className="flex gap-1 rounded-2xl bg-muted p-1">
         <button
           onClick={() => setMode("describe")}
-          className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
-            mode === "describe"
-              ? "bg-white text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
+          className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${mode === "describe"
+            ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md"
+            : "text-muted-foreground hover:text-foreground"
+            }`}
         >
-          ✏️ Describe
+          <Icon3DInline name="pencil" size={18} />
+          Describe
         </button>
         <button
           onClick={() => setMode("upload")}
-          className={`flex-1 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
-            mode === "upload"
-              ? "bg-white text-foreground shadow-sm"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
+          className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${mode === "upload"
+            ? "bg-gradient-to-r from-candy-blue to-candy-purple text-white shadow-md"
+            : "text-muted-foreground hover:text-foreground"
+            }`}
         >
-          📸 Upload
+          <Icon3DInline name="camera" size={18} />
+          Upload
         </button>
       </div>
 
@@ -134,7 +135,8 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
             disabled={!prompt.trim()}
             className="w-full rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange py-6 text-base font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:shadow-candy-pink/30 hover:brightness-105 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
           >
-            Generate Mascot ✨
+            <Icon3DInline name="sparkles" size={20} className="mr-1.5" />
+            Generate Mascot
           </Button>
         </div>
       ) : (
@@ -144,13 +146,12 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onClick={() => fileInputRef.current?.click()}
-            className={`flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-3 border-dashed transition-all ${
-              dragOver
-                ? "border-candy-blue bg-candy-blue/5 scale-[1.02]"
-                : file
+            className={`flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-3 border-dashed transition-all ${dragOver
+              ? "border-candy-blue bg-candy-blue/5 scale-[1.02]"
+              : file
                 ? "border-candy-green bg-candy-green/5"
                 : "border-border bg-white hover:border-candy-pink/40 hover:bg-candy-pink/5"
-            }`}
+              }`}
           >
             <input
               ref={fileInputRef}
@@ -161,13 +162,13 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
             />
             {file ? (
               <div className="flex flex-col items-center gap-2">
-                <span className="text-3xl">✅</span>
+                <Icon3DInline name="check-mark" size={36} />
                 <p className="text-sm font-semibold text-foreground">{file.name}</p>
                 <p className="text-xs text-muted-foreground">Click to change</p>
               </div>
             ) : (
               <div className="flex flex-col items-center gap-2">
-                <span className="text-3xl">📁</span>
+                <Icon3DInline name="open-folder" size={36} />
                 <p className="text-sm font-semibold text-warm-gray">
                   Drop an image or click to browse
                 </p>
@@ -188,7 +189,8 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
             disabled={!file}
             className="w-full rounded-2xl bg-gradient-to-r from-candy-blue to-candy-purple py-6 text-base font-bold text-white shadow-lg shadow-candy-blue/25 transition-all hover:shadow-xl hover:shadow-candy-blue/30 hover:brightness-105 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
           >
-            Transform to Mascot 🪄
+            <Icon3DInline name="magic-wand" size={20} className="mr-1.5" />
+            Transform to Mascot
           </Button>
         </div>
       )}

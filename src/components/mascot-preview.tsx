@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Icon3D } from "@/components/ui/icon-3d";
 
 interface MascotPreviewProps {
   imageUrl: string | null;
@@ -54,7 +55,7 @@ export function MascotPreview({ imageUrl, loading }: MascotPreviewProps) {
       <div className="relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-dashed border-border bg-white/50">
         <div className="absolute inset-0 flex items-center justify-center bg-dotted">
           <div className="flex flex-col items-center gap-4 text-center px-8">
-            <div className="animate-float text-6xl">🎨</div>
+            <Icon3D name="artist-palette" size="2xl" animated />
             <p className="font-display text-lg text-warm-gray">
               Your canvas awaits
             </p>
@@ -82,9 +83,8 @@ export function MascotPreview({ imageUrl, loading }: MascotPreviewProps) {
       <a
         href={imageUrl}
         download="mascot.png"
-        className={`absolute bottom-4 right-4 flex items-center gap-2 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold text-warm-gray shadow-lg backdrop-blur-sm transition-all hover:bg-white ${
-          hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
-        }`}
+        className={`absolute bottom-4 right-4 flex items-center gap-2 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold text-warm-gray shadow-lg backdrop-blur-sm transition-all hover:bg-white ${hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
+          }`}
         onClick={(e) => e.stopPropagation()}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">

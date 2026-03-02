@@ -6,6 +6,7 @@ import { MascotPreview } from "./mascot-preview";
 import { ChatRefiner } from "./chat-refiner";
 import { AnimationPicker } from "./animation-picker";
 import { GifPreview } from "./gif-preview";
+import { Icon3DInline } from "@/components/ui/icon-3d";
 import {
   Dialog,
   DialogContent,
@@ -25,9 +26,9 @@ interface GifItem {
 }
 
 const STEPS = [
-  { key: "create" as Mode, label: "Create", emoji: "🎨", num: 1 },
-  { key: "refine" as Mode, label: "Refine", emoji: "✨", num: 2 },
-  { key: "animate" as Mode, label: "Animate", emoji: "🎬", num: 3 },
+  { key: "create" as Mode, label: "Create", icon: "artist-palette" as const, num: 1 },
+  { key: "refine" as Mode, label: "Refine", icon: "sparkles" as const, num: 2 },
+  { key: "animate" as Mode, label: "Animate", icon: "clapper-board" as const, num: 3 },
 ];
 
 export function MascotCreator() {
@@ -80,21 +81,21 @@ export function MascotCreator() {
                 key={step.key}
                 onClick={() => isAccessible && setMode(step.key)}
                 disabled={!isAccessible}
-                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
-                  isActive
+                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${isActive
                     ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md scale-105"
                     : isAccessible
-                    ? "text-warm-gray hover:bg-muted"
-                    : "text-muted-foreground/40 cursor-not-allowed"
-                }`}
+                      ? "text-warm-gray hover:bg-muted"
+                      : "text-muted-foreground/40 cursor-not-allowed"
+                  }`}
               >
-                <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${
-                  isActive ? "bg-white/20" : "bg-muted"
-                }`}>
+                <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${isActive ? "bg-white/20" : "bg-muted"
+                  }`}>
                   {step.num}
                 </span>
                 <span className="hidden sm:inline">{step.label}</span>
-                <span className="sm:hidden">{step.emoji}</span>
+                <span className="sm:hidden">
+                  <Icon3DInline name={step.icon} size={18} />
+                </span>
               </button>
             );
           })}

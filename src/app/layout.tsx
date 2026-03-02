@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Lilita_One, Nunito } from "next/font/google";
 import Link from "next/link";
+import Image from "next/image";
 import { Toaster } from "@/components/ui/sonner";
 import { NavLinks } from "@/components/nav-links";
 import "./globals.css";
@@ -18,32 +19,41 @@ const body = Nunito({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s | Mascot Maker",
-    default: "Mascot Maker — Create Animated AI Characters",
+    template: "%s — Mascot Maker",
+    default: "Mascot Maker — AI Mascot & Character Generator with Animation",
   },
   description:
-    "Turn any idea into a custom animated mascot in minutes. Describe, refine, and bring characters to life with AI.",
+    "Create custom mascot characters from text or images in seconds. Refine with AI chat, animate as GIFs, and share with the world — completely free, powered by Nano Banana 2.",
   keywords: [
     "mascot maker",
     "AI character generator",
     "animated mascot",
     "character creator",
-    "AI art",
+    "AI mascot generator",
     "GIF maker",
+    "cartoon avatar",
+    "mascot animation",
+    "text to character",
+    "AI art generator",
+    "free mascot creator",
   ],
   robots: { index: true, follow: true },
+  icons: {
+    icon: "/favicon.ico",
+    apple: "/apple-touch-icon.png",
+  },
   openGraph: {
-    title: "Mascot Maker — Create Animated AI Characters",
+    title: "Mascot Maker — AI Mascot & Character Generator with Animation",
     description:
-      "Turn any idea into a custom animated mascot in minutes. Describe, refine, and bring characters to life with AI.",
+      "Create custom mascot characters from text or images in seconds. Refine with AI chat, animate as GIFs, and share with the world — completely free.",
     type: "website",
     siteName: "Mascot Maker",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mascot Maker — Create Animated AI Characters",
+    title: "Mascot Maker — AI Mascot & Character Generator",
     description:
-      "Turn any idea into a custom animated mascot in minutes. Describe, refine, and bring characters to life with AI.",
+      "Turn any idea into a custom animated mascot. Describe it, refine with AI chat, and bring it to life as an animated GIF — all for free.",
   },
 };
 
@@ -58,14 +68,13 @@ export default function RootLayout({
         <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
             <Link href="/" className="flex items-center gap-2.5 group">
-              <div className="relative flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-candy-pink to-candy-orange shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="8" r="5" />
-                  <path d="M8 14s-4 2-4 6h16c0-4-4-6-4-6" />
-                  <path d="M9 6.5c0-1 .5-2 1.5-2.5" />
-                  <path d="M15 6.5c0-1-.5-2-1.5-2.5" />
-                </svg>
-              </div>
+              <Image
+                src="/app-icon.png"
+                alt="Mascot Maker"
+                width={36}
+                height={36}
+                className="rounded-xl shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3"
+              />
               <span className="font-display text-xl tracking-tight text-foreground">
                 Mascot Maker
               </span>
@@ -77,16 +86,17 @@ export default function RootLayout({
         <footer className="border-t border-border/50 bg-cream/50">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
             <div className="flex items-center gap-2">
-              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-candy-pink to-candy-orange">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                  <circle cx="12" cy="8" r="5" />
-                  <path d="M8 14s-4 2-4 6h16c0-4-4-6-4-6" />
-                </svg>
-              </div>
+              <Image
+                src="/app-icon.png"
+                alt="Mascot Maker"
+                width={28}
+                height={28}
+                className="rounded-lg"
+              />
               <span className="font-display text-sm text-warm-gray">Mascot Maker</span>
             </div>
             <p className="text-xs text-muted-foreground">
-              Powered by Google Gemini. Made with care.
+              Powered by Nano Banana 2. Made with care.
             </p>
           </div>
         </footer>

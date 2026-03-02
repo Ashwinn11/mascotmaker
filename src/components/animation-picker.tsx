@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Icon3DInline } from "@/components/ui/icon-3d";
+import type { FluentIcon3D } from "@/components/ui/icon-3d";
 
 interface AnimationPickerProps {
   mascotImageUrl: string;
@@ -11,13 +13,13 @@ interface AnimationPickerProps {
   onLoadingChange: (loading: boolean) => void;
 }
 
-const PRESET_ACTIONS = [
-  { label: "Wave", emoji: "👋", color: "from-candy-pink to-candy-orange" },
-  { label: "Jump", emoji: "🦘", color: "from-candy-orange to-candy-yellow" },
-  { label: "Dance", emoji: "💃", color: "from-candy-yellow to-candy-green" },
-  { label: "Idle", emoji: "😌", color: "from-candy-green to-candy-blue" },
-  { label: "Walk", emoji: "🚶", color: "from-candy-blue to-candy-purple" },
-  { label: "Thumbs Up", emoji: "👍", color: "from-candy-purple to-candy-pink" },
+const PRESET_ACTIONS: { label: string; icon: FluentIcon3D; color: string }[] = [
+  { label: "Wave", icon: "waving-hand", color: "from-candy-pink to-candy-orange" },
+  { label: "Jump", icon: "kangaroo", color: "from-candy-orange to-candy-yellow" },
+  { label: "Dance", icon: "woman-dancing", color: "from-candy-yellow to-candy-green" },
+  { label: "Idle", icon: "relieved-face", color: "from-candy-green to-candy-blue" },
+  { label: "Walk", icon: "person-walking", color: "from-candy-blue to-candy-purple" },
+  { label: "Thumbs Up", icon: "thumbs-up", color: "from-candy-purple to-candy-pink" },
 ];
 
 export function AnimationPicker({
@@ -72,14 +74,15 @@ export function AnimationPicker({
             key={action.label}
             onClick={() => handleAnimate(action.label.toLowerCase())}
             disabled={activeAction !== null}
-            className={`group relative overflow-hidden rounded-2xl border-2 border-border bg-white p-4 text-center transition-all hover:border-transparent hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-wait ${
-              activeAction === action.label.toLowerCase() ? "border-candy-pink shadow-lg" : ""
-            }`}
+            className={`group relative overflow-hidden rounded-2xl border-2 border-border bg-white p-4 text-center transition-all hover:border-transparent hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-wait ${activeAction === action.label.toLowerCase() ? "border-candy-pink shadow-lg" : ""
+              }`}
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${action.color} opacity-0 transition-opacity group-hover:opacity-10`} />
             <div className="relative">
-              <span className="text-2xl block mb-1">{action.emoji}</span>
-              <span className="text-xs font-bold text-warm-gray">{action.label}</span>
+              <div className="mb-1.5 flex justify-center">
+                <Icon3DInline name={action.icon} size={32} />
+              </div>
+              <span className="text-xs font-bold text-warm-gray block">{action.label}</span>
             </div>
             {activeAction === action.label.toLowerCase() && (
               <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-2xl">

@@ -13,6 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
+import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
 
 interface GifItem {
   spriteUrl: string;
@@ -121,7 +122,7 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
           </DialogHeader>
           {published ? (
             <div className="flex flex-col items-center py-8">
-              <span className="text-5xl mb-3 animate-pop-in">🎉</span>
+              <Icon3D name="party-popper" size="2xl" className="mb-3 animate-pop-in" />
               <p className="font-display text-lg text-foreground">Published!</p>
               <p className="text-sm text-muted-foreground mt-1">Your mascot is now in the gallery</p>
             </div>
@@ -154,7 +155,14 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
                 disabled={!name.trim() || publishing}
                 className="w-full rounded-xl bg-gradient-to-r from-candy-pink to-candy-orange py-5 text-base font-bold text-white"
               >
-                {publishing ? "Publishing..." : "Publish ✨"}
+                {publishing ? (
+                  "Publishing..."
+                ) : (
+                  <>
+                    <Icon3DInline name="sparkles" size={18} className="mr-1.5" />
+                    Publish
+                  </>
+                )}
               </Button>
             </DialogFooter>
           )}

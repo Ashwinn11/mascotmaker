@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import { MascotCreator } from "@/components/mascot-creator";
 
 export const metadata: Metadata = {
-  title: "Create",
+  title: "Create Your Mascot",
   description:
-    "Describe a character or upload an image and let AI turn it into a custom animated mascot.",
+    "Design a custom mascot character from a text description or image upload. Refine with AI chat and animate as a GIF — free, no sign-up required.",
 };
 
 export default function CreatePage() {
@@ -16,7 +16,7 @@ export default function CreatePage() {
             Create Your <span className="text-gradient">Mascot</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-lg mx-auto animate-slide-up stagger-2">
-            Describe a character, refine it with AI chat, then animate it into a GIF.
+            Describe a character, upload an image, refine with AI chat, then animate it into a GIF — all in one place.
           </p>
         </div>
         <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-candy-pink/10 blur-3xl" />

@@ -1,5 +1,7 @@
 "use client";
 
+import { Icon3D } from "@/components/ui/icon-3d";
+
 export default function Error({
   reset,
 }: {
@@ -8,7 +10,7 @@ export default function Error({
 }) {
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-dotted px-6 text-center">
-      <div className="animate-float text-8xl mb-6">😵</div>
+      <Icon3D name="warning" size="2xl" animated className="mb-6" />
       <h1 className="font-display text-3xl sm:text-4xl text-foreground mb-3">
         Something Went Wrong
       </h1>

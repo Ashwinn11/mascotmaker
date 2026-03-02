@@ -12,6 +12,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
+import { Icon3D } from "@/components/ui/icon-3d";
 
 interface GalleryItem {
   id: number;
@@ -83,7 +84,7 @@ export function GalleryGrid() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="animate-float text-7xl mb-4">😵</div>
+        <Icon3D name="dizzy-face" size="2xl" animated className="mb-4" />
         <h2 className="font-display text-2xl text-foreground mb-2">Failed to Load Gallery</h2>
         <p className="text-muted-foreground max-w-sm mb-6">
           Something went wrong while fetching mascots. Give it another try!
@@ -101,7 +102,7 @@ export function GalleryGrid() {
   if (items.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-24 text-center">
-        <div className="animate-float text-7xl mb-4">🏛️</div>
+        <Icon3D name="classical-building" size="2xl" animated className="mb-4" />
         <h2 className="font-display text-2xl text-foreground mb-2">No Mascots Yet</h2>
         <p className="text-muted-foreground max-w-sm mb-6">
           The gallery is waiting for its first mascot. Create one and be the first to share!

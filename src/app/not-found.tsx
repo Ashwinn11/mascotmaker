@@ -1,9 +1,10 @@
 import Link from "next/link";
+import { Icon3D } from "@/components/ui/icon-3d";
 
 export default function NotFound() {
   return (
     <div className="flex min-h-[calc(100vh-4rem)] flex-col items-center justify-center bg-dotted px-6 text-center">
-      <div className="animate-float text-8xl mb-6">🔍</div>
+      <Icon3D name="magnifying-glass" size="2xl" animated className="mb-6" />
       <h1 className="font-display text-3xl sm:text-4xl text-foreground mb-3">
         This mascot wandered off
       </h1>

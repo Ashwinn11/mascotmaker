@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { Icon3D } from "@/components/ui/icon-3d";
 
 interface Message {
   role: "user" | "assistant";
@@ -101,7 +102,7 @@ export function ChatRefiner({
       <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl bg-white/50 p-4 border-2 border-border mb-3 max-h-[40vh] sm:max-h-[320px]">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <span className="text-3xl mb-2">✨</span>
+            <Icon3D name="sparkles" size="xl" className="mb-3" />
             <p className="text-sm font-semibold text-warm-gray">
               Your mascot is looking great! Want to tweak anything?
             </p>
@@ -116,11 +117,10 @@ export function ChatRefiner({
             className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} animate-slide-up`}
           >
             <div
-              className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${
-                msg.role === "user"
+              className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user"
                   ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white rounded-br-md"
                   : "bg-white border-2 border-border text-foreground rounded-bl-md"
-              }`}
+                }`}
             >
               {msg.content}
             </div>

@@ -1,62 +1,63 @@
 import Link from "next/link";
+import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
+import type { FluentIcon3D } from "@/components/ui/icon-3d";
 
-const STEPS = [
+const STEPS: { num: number; title: string; description: string; icon: FluentIcon3D }[] = [
   {
     num: 1,
     title: "Describe or Upload",
     description:
-      "Type a character idea or upload any image. Our AI transforms it into a polished mascot instantly.",
-    emoji: "✏️",
-    color: "from-candy-pink to-candy-orange",
+      "Just type what you imagine — or upload a photo, sketch, or logo. AI turns it into a polished mascot character in seconds.",
+    icon: "pencil",
   },
   {
     num: 2,
     title: "Refine with Chat",
     description:
-      "Not quite right? Chat with the AI to tweak colors, add accessories, change expressions — iterate until it's perfect.",
-    emoji: "💬",
-    color: "from-candy-orange to-candy-yellow",
+      "Not quite right? Talk to the AI like a creative partner. Tweak colors, swap outfits, change expressions — keep iterating until it's perfect.",
+    icon: "speech-balloon",
   },
   {
     num: 3,
     title: "Animate & Share",
     description:
-      "Pick an action — wave, dance, jump — and get a looping animated GIF. Download it or publish to the gallery.",
-    emoji: "🎬",
-    color: "from-candy-blue to-candy-purple",
+      "Choose an action — wave, dance, jump — and your mascot springs to life as a looping animated GIF. Download or publish to the gallery.",
+    icon: "clapper-board",
   },
 ];
 
-const FEATURES = [
+const FEATURES: { icon: FluentIcon3D; title: string; description: string; span?: string }[] = [
   {
-    emoji: "⚡",
+    icon: "high-voltage",
     title: "Instant Generation",
-    description: "From text to mascot in seconds, powered by Google Gemini.",
+    description: "From text to mascot in seconds, powered by Nano Banana 2. Just describe your idea and watch it come to life.",
+    span: "sm:col-span-2",
   },
   {
-    emoji: "🎨",
+    icon: "artist-palette",
     title: "Upload Anything",
     description: "Turn photos, sketches, or logos into cartoon mascot characters.",
   },
   {
-    emoji: "🔄",
+    icon: "counterclockwise",
     title: "Iterative Refinement",
-    description: "Chat-based editing — just describe what to change.",
+    description: "Chat-based editing — just describe what to change and the AI handles the rest.",
   },
   {
-    emoji: "🎞️",
+    icon: "film-frames",
     title: "Animated GIFs",
-    description: "Generate sprite-sheet animations with one click.",
+    description: "Generate sprite-sheet animations with one click. Choose from wave, dance, jump, walk, and more actions.",
+    span: "sm:col-span-2",
   },
   {
-    emoji: "🌐",
+    icon: "globe",
     title: "Community Gallery",
     description: "Publish creations and browse what others have made.",
   },
   {
-    emoji: "📥",
+    icon: "inbox-tray",
     title: "Free Downloads",
-    description: "Download your mascots and GIFs — no watermarks, no strings.",
+    description: "Download your mascots and GIFs — no watermarks, no strings attached.",
   },
 ];
 
@@ -72,13 +73,13 @@ const EXAMPLES = [
 export default function Home() {
   return (
     <div className="bg-cream">
-      {/* Hero */}
-      <section className="relative overflow-hidden">
-        <div className="mx-auto max-w-6xl px-6 pt-20 pb-24 text-center">
+      {/* ─── Hero ─── */}
+      <section className="relative overflow-hidden bg-grain">
+        <div className="relative z-10 mx-auto max-w-6xl px-6 pt-28 pb-32 text-center">
           <div className="animate-slide-up">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border-2 border-border bg-white px-4 py-1.5 text-sm font-semibold text-warm-gray shadow-sm">
               <span className="inline-block h-2 w-2 rounded-full bg-candy-green animate-pulse" />
-              Powered by Google Gemini
+              Powered by Nano Banana 2
             </div>
           </div>
 
@@ -90,15 +91,16 @@ export default function Home() {
           </h1>
 
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up stagger-2">
-            Turn any idea into a custom animated mascot in minutes.
-            Describe a character, refine it with AI chat, and bring it to life as an animated GIF.
+            Create one-of-a-kind mascot characters from text or images.
+            Refine with AI chat, bring them to life as animated GIFs, and share with the world — all for free.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up stagger-3">
             <Link
               href="/create"
-              className="rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange px-8 py-4 text-lg font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:shadow-candy-pink/30 hover:brightness-105 active:scale-[0.98]"
+              className="group relative inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange px-8 py-4 text-lg font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:shadow-candy-pink/30 hover:brightness-105 active:scale-[0.98]"
             >
+              <Icon3DInline name="sparkles" size={22} />
               Start Creating
             </Link>
             <Link
@@ -111,12 +113,13 @@ export default function Home() {
         </div>
 
         {/* Decorative blobs */}
-        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-candy-pink/8 blur-3xl" />
-        <div className="absolute -top-20 -right-32 h-80 w-80 rounded-full bg-candy-blue/8 blur-3xl" />
-        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 h-64 w-[600px] rounded-full bg-candy-yellow/6 blur-3xl" />
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-candy-pink/15 blur-3xl" />
+        <div className="absolute -top-20 -right-32 h-80 w-80 rounded-full bg-candy-blue/15 blur-3xl" />
+        <div className="absolute -bottom-20 left-1/2 -translate-x-1/2 h-64 w-[600px] rounded-full bg-candy-yellow/10 blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-candy-purple/5 blur-3xl" />
       </section>
 
-      {/* Example prompts marquee */}
+      {/* ─── Marquee ─── */}
       <section className="border-y border-border/50 bg-white/50 py-5 overflow-hidden">
         <div className="flex animate-marquee gap-4 whitespace-nowrap">
           {[...EXAMPLES, ...EXAMPLES].map((ex, i) => (
@@ -131,10 +134,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How it Works */}
-      <section className="py-24 bg-dotted">
+      {/* ─── How it Works — Horizontal Timeline ─── */}
+      <section className="py-28 bg-dotted relative overflow-hidden">
         <div className="mx-auto max-w-6xl px-6">
-          <div className="text-center mb-16">
+          <div className="text-center mb-20">
             <h2 className="font-display text-3xl sm:text-4xl text-foreground mb-3">
               How It <span className="text-gradient">Works</span>
             </h2>
@@ -143,33 +146,55 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-8 md:grid-cols-3">
-            {STEPS.map((step) => (
-              <div
-                key={step.num}
-                className="group relative rounded-3xl border-2 border-border bg-white p-8 shadow-sm transition-all hover:shadow-xl hover:shadow-candy-pink/5 hover:-translate-y-1"
-              >
-                <div className={`mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br ${step.color} text-2xl shadow-md`}>
-                  {step.emoji}
+          {/* Timeline layout */}
+          <div className="relative">
+            {/* Connecting line */}
+            <div className="hidden md:block absolute top-16 left-[16.67%] right-[16.67%] h-0.5 bg-gradient-to-r from-candy-pink via-candy-yellow to-candy-blue opacity-30" />
+
+            <div className="grid gap-10 md:grid-cols-3 md:gap-8">
+              {STEPS.map((step, i) => (
+                <div key={step.num} className="relative flex flex-col items-center text-center group">
+                  {/* Step number bubble */}
+                  <div className="relative z-10 mb-6">
+                    <div className="flex h-32 w-32 items-center justify-center rounded-[2rem] bg-white border-2 border-border shadow-lg shadow-candy-pink/5 transition-all duration-300 group-hover:shadow-xl group-hover:shadow-candy-pink/10 group-hover:-translate-y-2 group-hover:border-candy-pink/20">
+                      <Icon3D name={step.icon} size="2xl" />
+                    </div>
+                    {/* Floating step number */}
+                    <div className="absolute -top-2 -right-2 flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-candy-pink to-candy-orange text-xs font-bold text-white shadow-md">
+                      {step.num}
+                    </div>
+                  </div>
+
+                  <h3 className="font-display text-xl text-foreground mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed max-w-xs">
+                    {step.description}
+                  </p>
+
+                  {/* Arrow between steps (mobile) */}
+                  {i < STEPS.length - 1 && (
+                    <div className="md:hidden mt-6 text-muted-foreground/30">
+                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 5v14M19 12l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  )}
                 </div>
-                <div className="absolute top-6 right-6 font-display text-5xl text-muted/60">
-                  {step.num}
-                </div>
-                <h3 className="font-display text-xl text-foreground mb-2">
-                  {step.title}
-                </h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {step.description}
-                </p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="py-24 bg-gradient-to-b from-transparent via-candy-purple/3 to-transparent">
-        <div className="mx-auto max-w-6xl px-6">
+      {/* ─── Features — Bento Grid ─── */}
+      <section className="py-28 relative overflow-hidden">
+        {/* Background decoration */}
+        <div className="absolute top-0 left-0 right-0 h-full bg-gradient-to-b from-transparent via-candy-purple/3 to-transparent" />
+        <div className="absolute top-1/3 -right-32 h-80 w-80 rounded-full bg-candy-blue/8 blur-3xl" />
+        <div className="absolute bottom-1/4 -left-32 h-80 w-80 rounded-full bg-candy-pink/8 blur-3xl" />
+
+        <div className="relative z-10 mx-auto max-w-6xl px-6">
           <div className="text-center mb-16">
             <h2 className="font-display text-3xl sm:text-4xl text-foreground mb-3">
               Everything You Need
@@ -179,18 +204,26 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Bento grid — 3 columns with some cards spanning 2 */}
+          <div className="grid gap-4 sm:grid-cols-3">
             {FEATURES.map((feat) => (
               <div
                 key={feat.title}
-                className="group flex gap-4 rounded-2xl border-2 border-border bg-white p-5 transition-all hover:shadow-md hover:border-candy-pink/20"
+                className={`group relative overflow-hidden rounded-3xl border-2 border-border/80 bg-white p-6 sm:p-7 shadow-md shadow-black/[0.03] transition-all duration-300 hover:shadow-xl hover:shadow-candy-pink/10 hover:border-candy-pink/30 hover:-translate-y-1 ring-1 ring-black/[0.03] ${feat.span || ""}`}
               >
-                <span className="text-3xl shrink-0">{feat.emoji}</span>
-                <div>
-                  <h3 className="font-display text-base text-foreground mb-0.5">
+                {/* Subtle gradient accent on hover */}
+                <div className="absolute inset-0 bg-gradient-to-br from-candy-pink/0 to-candy-orange/0 group-hover:from-candy-pink/3 group-hover:to-candy-orange/3 transition-all duration-300 rounded-3xl" />
+
+                <div className="relative z-10">
+                  <div className="mb-4">
+                    <Icon3D name={feat.icon} size="xl" />
+                  </div>
+                  <h3 className="font-display text-lg text-foreground mb-1.5">
                     {feat.title}
                   </h3>
-                  <p className="text-sm text-muted-foreground">{feat.description}</p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    {feat.description}
+                  </p>
                 </div>
               </div>
             ))}
@@ -198,21 +231,27 @@ export default function Home() {
         </div>
       </section>
 
-      {/* CTA */}
-      <section className="py-24 bg-dotted">
-        <div className="mx-auto max-w-3xl px-6 text-center">
-          <div className="rounded-3xl border-2 border-border bg-white p-12 shadow-sm">
-            <div className="animate-float text-6xl mb-6">🎨</div>
-            <h2 className="font-display text-3xl sm:text-4xl text-foreground mb-3">
-              Ready to Create?
+      {/* ─── CTA ─── */}
+      <section className="py-28 bg-dotted relative overflow-hidden">
+        <div className="absolute top-0 left-1/4 h-64 w-64 rounded-full bg-candy-yellow/10 blur-3xl" />
+        <div className="absolute bottom-0 right-1/4 h-64 w-64 rounded-full bg-candy-pink/10 blur-3xl" />
+
+        <div className="relative z-10 mx-auto max-w-3xl px-6 text-center">
+          <div className="rounded-[2rem] border-2 border-border bg-white p-10 sm:p-14 shadow-lg shadow-candy-pink/5">
+            <div className="mb-6 flex justify-center">
+              <Icon3D name="artist-palette" size="2xl" animated />
+            </div>
+            <h2 className="font-display text-3xl sm:text-4xl text-foreground mb-4">
+              Your Mascot Awaits
             </h2>
-            <p className="text-muted-foreground max-w-md mx-auto mb-8">
-              Your mascot is just a prompt away. Describe it, perfect it, animate it — all for free.
+            <p className="text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
+              One prompt is all it takes. Create a character that&apos;s uniquely yours, animate it, and share it with the world — completely free.
             </p>
             <Link
               href="/create"
-              className="inline-block rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange px-10 py-4 text-lg font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:shadow-candy-pink/30 hover:brightness-105 active:scale-[0.98]"
+              className="inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange px-10 py-4 text-lg font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:shadow-candy-pink/30 hover:brightness-105 active:scale-[0.98]"
             >
+              <Icon3DInline name="sparkles" size={22} />
               Start Creating
             </Link>
           </div>
