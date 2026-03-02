@@ -32,7 +32,7 @@ export async function POST(req: Request) {
     const gifBuffer = await spriteSheetToGif(spriteBuffer);
     const gifUrl = await saveBuffer(gifBuffer, "gif");
 
-    const creditsRemaining = deductCredits(check.userId, "animate", result.tokens);
+    const creditsRemaining = deductCredits(check.userId, "animate");
 
     return NextResponse.json({ spriteUrl, gifUrl, creditsRemaining });
   } catch (error) {

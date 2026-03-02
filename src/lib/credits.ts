@@ -12,12 +12,11 @@ export const CREDIT_COSTS: Record<string, number> = {
     generate: 5,
     chat: 3,
     stylize: 5,
-    animate: 8,
+    animate: 10, // Increased to account for higher processing/storage
 };
 
 /**
  * Check auth + credits for an API route.
- * We use the fixed costs as a minimum buffer check.
  */
 export async function requireCredits(
     route: string
@@ -31,15 +30,15 @@ export async function requireCredits(
         );
     }
 
-    const minBuffer = CREDIT_COSTS[route] || 1;
+    const cost = CREDIT_COSTS[route] || 1;
     const currentCredits = getUserCredits(session.user.id);
 
-    if (currentCredits < minBuffer) {
+    if (currentCredits < cost) {
         return new Response(
             JSON.stringify({
                 error: "Insufficient credits",
                 creditsRemaining: currentCredits,
-                creditsRequired: minBuffer,
+                creditsRequired: cost,
             }),
             { status: 402, headers: { "Content-Type": "application/json" } }
         );
@@ -49,18 +48,13 @@ export async function requireCredits(
 }
 
 /**
- * Deduct credits based on actual token usage.
+ * Deduct fixed credits based on the route.
  */
 export function deductCredits(
     userId: string,
-    route: string,
-    tokensUsed: number = 0
+    route: string
 ): number {
-    // If tokensUsed is 0, fallback to fixed cost
-    const cost = tokensUsed > 0
-        ? Math.max(1, Math.ceil(tokensUsed / TOKENS_PER_CREDIT))
-        : (CREDIT_COSTS[route] || 1);
-
+    const cost = CREDIT_COSTS[route] || 1;
     const currentCredits = getUserCredits(userId);
     const newBalance = currentCredits - cost;
 
@@ -70,7 +64,7 @@ export function deductCredits(
         type: "deduction",
         amount: -cost,
         balanceAfter: newBalance,
-        description: `Used ${route} (${tokensUsed} tokens)`,
+        description: `Used ${route}`,
     });
     logUsage({
         userId,
@@ -80,3 +74,4 @@ export function deductCredits(
 
     return newBalance;
 }
+

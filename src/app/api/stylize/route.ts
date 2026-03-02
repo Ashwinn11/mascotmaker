@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     const imageUrl = await saveImage(resultBase64);
 
     const totalTokens = analysisResult.tokens + stylizeResult.tokens;
-    const creditsRemaining = deductCredits(check.userId, "stylize", totalTokens);
+    const creditsRemaining = deductCredits(check.userId, "stylize");
 
     return NextResponse.json({ imageUrl, analysis: analysisResult.data, creditsRemaining });
   } catch (error) {
