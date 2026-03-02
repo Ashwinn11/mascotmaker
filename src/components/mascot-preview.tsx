@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Icon3D } from "@/components/ui/icon-3d";
+import { downloadFile } from "@/lib/download";
 
 interface MascotPreviewProps {
   imageUrl: string | null;
@@ -80,12 +81,13 @@ export function MascotPreview({ imageUrl, loading }: MascotPreviewProps) {
         className="h-full w-full object-contain"
       />
       <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-black/5" />
-      <a
-        href={imageUrl}
-        download="mascot.png"
+      <button
         className={`absolute bottom-4 right-4 flex items-center gap-2 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold text-warm-gray shadow-lg backdrop-blur-sm transition-all hover:bg-white ${hovered ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2"
           }`}
-        onClick={(e) => e.stopPropagation()}
+        onClick={(e) => {
+          e.stopPropagation();
+          downloadFile(imageUrl, "mascot.png");
+        }}
       >
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -93,7 +95,7 @@ export function MascotPreview({ imageUrl, loading }: MascotPreviewProps) {
           <line x1="12" y1="15" x2="12" y2="3" />
         </svg>
         Download
-      </a>
+      </button>
     </div>
   );
 }

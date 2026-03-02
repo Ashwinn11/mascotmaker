@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
+import { downloadFile } from "@/lib/download";
 import {
   Dialog,
   DialogContent,
@@ -195,11 +196,12 @@ function GalleryCard({
           <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{item.description}</p>
         )}
         <div className="flex gap-1.5 mt-2.5">
-          <a
-            href={downloadUrl}
-            download={downloadName}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              downloadFile(downloadUrl, downloadName);
+            }}
             className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-xs font-bold text-warm-gray transition-colors hover:bg-border"
-            onClick={(e) => e.stopPropagation()}
           >
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
@@ -207,7 +209,7 @@ function GalleryCard({
               <line x1="12" y1="15" x2="12" y2="3" />
             </svg>
             Download
-          </a>
+          </button>
           <button
             onClick={(e) => {
               e.stopPropagation();

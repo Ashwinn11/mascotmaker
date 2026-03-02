@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { downloadFile } from "@/lib/download";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -90,13 +91,12 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
             <div className="p-2.5">
               <p className="text-xs font-bold text-warm-gray capitalize mb-2">{gif.action}</p>
               <div className="flex gap-1.5">
-                <a
-                  href={gif.gifUrl}
-                  download={`mascot-${gif.action}.gif`}
+                <button
+                  onClick={() => downloadFile(gif.gifUrl, `mascot-${gif.action}.gif`)}
                   className="flex-1 rounded-lg bg-muted py-1.5 text-center text-xs font-bold text-warm-gray transition-colors hover:bg-border"
                 >
                   Download
-                </a>
+                </button>
                 <button
                   onClick={() => {
                     setSelectedGif(gif);

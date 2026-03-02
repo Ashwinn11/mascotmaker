@@ -72,11 +72,9 @@ export function MascotCreator() {
     return true;
   };
 
-  // Update session credits after successful API call
-  const handleCreditsUpdate = (creditsRemaining?: number) => {
-    if (creditsRemaining !== undefined) {
-      updateSession({ user: { credits: creditsRemaining } });
-    }
+  // Refresh session to pick up updated credit balance from DB
+  const handleCreditsUpdate = async (_creditsRemaining?: number) => {
+    await updateSession();
   };
 
   const handleGenerated = (imageUrl: string, analysis?: string) => {

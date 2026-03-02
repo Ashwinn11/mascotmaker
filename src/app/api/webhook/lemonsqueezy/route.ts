@@ -27,6 +27,21 @@ function resolveUserId(payload: Record<string, unknown>): string | null {
     return null;
 }
 
+function resolveCredits(payload: Record<string, unknown>, variantId: string): number {
+    // Primary: credits from checkout custom_data (set at checkout time)
+    const meta = payload.meta as Record<string, unknown> | undefined;
+    const customData = meta?.custom_data as Record<string, string> | undefined;
+    const customCredits = parseInt(customData?.credits ?? "", 10);
+    if (customCredits > 0) return customCredits;
+
+    // Fallback: lookup by variant ID
+    const planCredits = getPlanCredits(variantId);
+    if (planCredits > 0) return planCredits;
+
+    console.error(`[LS] Could not resolve credits for variant ${variantId}`);
+    return 0;
+}
+
 export async function POST(req: Request) {
     try {
         const rawBody = await req.text();
@@ -78,32 +93,69 @@ export async function POST(req: Request) {
                 if (!userId) {
                     return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
                 }
-                const creditsToAdd = getPlanCredits(variantId);
-                const currentCredits = getUserCredits(userId);
-                const newBalance = currentCredits + creditsToAdd;
 
-                updateUserCredits(userId, newBalance);
-                addTransaction({
-                    userId,
-                    type: "purchase",
-                    amount: creditsToAdd,
-                    balanceAfter: newBalance,
-                    description: `Subscription: ${creditsToAdd} credits added`,
-                });
+                // Check if this is a proration payment from a plan change (not a renewal).
+                // LemonSqueezy sends subscription_updated + subscription_payment_success
+                // on upgrades. We handle credits in subscription_updated to give only
+                // the difference, so skip crediting here for non-renewal payments.
+                const existingSubForPayment = getSubscriptionByLsId(lsSubId);
+                const isRenewal = !existingSubForPayment ||
+                    existingSubForPayment.variant_id === variantId;
 
-                // Also update subscription status/period
+                if (isRenewal) {
+                    const creditsToAdd = resolveCredits(payload, variantId);
+                    const currentCredits = getUserCredits(userId);
+                    const newBalance = currentCredits + creditsToAdd;
+
+                    updateUserCredits(userId, newBalance);
+                    addTransaction({
+                        userId,
+                        type: "purchase",
+                        amount: creditsToAdd,
+                        balanceAfter: newBalance,
+                        description: `Subscription renewal: ${creditsToAdd} credits added`,
+                    });
+
+                    console.log(`[LS] renewal user ${userId} +${creditsToAdd} → ${newBalance}`);
+                } else {
+                    console.log(`[LS] skipping proration payment for user ${userId} (credits handled in subscription_updated)`);
+                }
+
+                // Update subscription status/period
                 updateSubscriptionByLsId(lsSubId, {
                     status: "active",
                     currentPeriodEnd: attrs.renews_at ?? undefined,
                 });
 
-                console.log(`[LS] user ${userId} +${creditsToAdd} → ${newBalance}`);
                 break;
             }
 
             case "subscription_updated": {
                 const existingSub = getSubscriptionByLsId(lsSubId);
                 const plan = getPlanByVariantId(variantId);
+
+                // If plan changed, grant or revoke the credit difference
+                if (existingSub && userId && existingSub.variant_id !== variantId) {
+                    const oldCredits = getPlanCredits(existingSub.variant_id);
+                    const newCredits = getPlanCredits(variantId);
+                    const diff = newCredits - oldCredits;
+
+                    if (diff > 0) {
+                        // Upgrade: grant the difference
+                        const currentCredits = getUserCredits(userId);
+                        const newBalance = currentCredits + diff;
+                        updateUserCredits(userId, newBalance);
+                        addTransaction({
+                            userId,
+                            type: "purchase",
+                            amount: diff,
+                            balanceAfter: newBalance,
+                            description: `Plan upgrade (${existingSub.plan_name} → ${plan?.name ?? "Unknown"}): +${diff} credits`,
+                        });
+                        console.log(`[LS] upgrade user ${userId} +${diff} → ${newBalance}`);
+                    }
+                    // Downgrade: don't claw back — user already paid for current period
+                }
 
                 updateSubscriptionByLsId(lsSubId, {
                     variantId,
@@ -114,25 +166,6 @@ export async function POST(req: Request) {
                     updatePaymentUrl: attrs.urls?.update_payment_method ?? undefined,
                 });
 
-                // If upgrade, add credit difference immediately
-                if (existingSub && userId) {
-                    const oldCredits = getPlanCredits(existingSub.variant_id);
-                    const newCredits = getPlanCredits(variantId);
-                    if (newCredits > oldCredits) {
-                        const diff = newCredits - oldCredits;
-                        const currentCredits = getUserCredits(userId);
-                        const newBalance = currentCredits + diff;
-                        updateUserCredits(userId, newBalance);
-                        addTransaction({
-                            userId,
-                            type: "purchase",
-                            amount: diff,
-                            balanceAfter: newBalance,
-                            description: `Plan upgrade: +${diff} credits`,
-                        });
-                        console.log(`[LS] upgrade user ${userId} +${diff} → ${newBalance}`);
-                    }
-                }
                 break;
             }
 

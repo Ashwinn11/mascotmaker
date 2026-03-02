@@ -2,7 +2,6 @@ import sharp from "sharp";
 
 const GRID = 3;
 const FRAME_COUNT = GRID * GRID;
-const WHITE_THRESHOLD = 250;
 
 export async function spriteSheetToGif(
   spriteBuffer: Buffer,
@@ -18,7 +17,7 @@ export async function spriteSheetToGif(
   const frameWidth = Math.floor(effectiveWidth / GRID);
   const frameHeight = Math.floor(effectiveHeight / GRID);
 
-  // Extract each frame as raw RGBA and make white pixels transparent
+  // Extract each frame as raw RGB pixels (white background, no transparency)
   const rawFrames: Buffer[] = [];
   for (let row = 0; row < GRID; row++) {
     for (let col = 0; col < GRID; col++) {
@@ -27,25 +26,9 @@ export async function spriteSheetToGif(
 
       const raw = await sharp(spriteBuffer)
         .extract({ left, top, width: frameWidth, height: frameHeight })
-        .ensureAlpha()
+        .removeAlpha()
         .raw()
         .toBuffer();
-
-      // Remove white background — GIF supports 1-bit alpha only,
-      // so binary transparent/opaque is the best we can do
-      const pixels = new Uint8Array(raw.buffer, raw.byteOffset, raw.length);
-      for (let i = 0; i < pixels.length; i += 4) {
-        if (
-          pixels[i] >= WHITE_THRESHOLD &&
-          pixels[i + 1] >= WHITE_THRESHOLD &&
-          pixels[i + 2] >= WHITE_THRESHOLD
-        ) {
-          pixels[i] = 0;
-          pixels[i + 1] = 0;
-          pixels[i + 2] = 0;
-          pixels[i + 3] = 0;
-        }
-      }
 
       rawFrames.push(raw);
     }
@@ -58,7 +41,7 @@ export async function spriteSheetToGif(
     raw: {
       width: frameWidth,
       height: frameHeight * FRAME_COUNT,
-      channels: 4,
+      channels: 3,
       pageHeight: frameHeight,
     },
   })

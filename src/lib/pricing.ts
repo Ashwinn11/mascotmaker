@@ -15,14 +15,14 @@ export const PLANS: Plan[] = [
     popular: false,
   },
   {
-    name: "Pro",
+    name: "Popular",
     credits: 500,
     priceLabel: "$19.99/mo",
     variantId: process.env.NEXT_PUBLIC_LS_VARIANT_500 || "",
     popular: true,
   },
   {
-    name: "Ultra",
+    name: "Pro",
     credits: 1500,
     priceLabel: "$49.99/mo",
     variantId: process.env.NEXT_PUBLIC_LS_VARIANT_1500 || "",
@@ -35,5 +35,5 @@ export function getPlanByVariantId(variantId: string): Plan | undefined {
 }
 
 export function getPlanCredits(variantId: string): number {
-  return getPlanByVariantId(variantId)?.credits ?? 100;
+  return getPlanByVariantId(variantId)?.credits ?? 0;
 }
