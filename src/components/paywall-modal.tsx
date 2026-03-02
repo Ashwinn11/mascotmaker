@@ -84,9 +84,9 @@ export function PaywallModal({
     }
 
     const plans = [
-        { credits: 100, price: "₹99", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_100 || "" },
-        { credits: 500, price: "₹399", popular: true, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_500 || "" },
-        { credits: 1500, price: "₹999", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_1500 || "" },
+        { credits: 100, price: "$1.99", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_100 || "" },
+        { credits: 500, price: "$7.99", popular: true, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_500 || "" },
+        { credits: 1500, price: "$19.99", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_1500 || "" },
     ];
 
     return (
