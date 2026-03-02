@@ -2,10 +2,13 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { getUserCredits, updateUserCredits, addTransaction } from "@/lib/db";
 
-/**
- * Handle POST request to handle Lemon Squeezy webhooks.
- * This route is used to update the user's balance when a payment is successful.
- */
+function getPlanCredits(variantId: string): number {
+    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_100) return 100;
+    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_500) return 500;
+    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_1500) return 1500;
+    return 100; // default fallback
+}
+
 export async function POST(req: Request) {
     try {
         const rawBody = await req.text();
@@ -26,17 +29,15 @@ export async function POST(req: Request) {
         const payload = JSON.parse(rawBody);
         const eventName = payload.meta.event_name;
 
-        if (eventName === "order_created") {
-            const {
-                custom: { user_id, credits },
-            } = payload.meta.custom_data;
+        if (eventName === "subscription_created" || eventName === "subscription_payment_success") {
+            const userId = payload.meta.custom_data?.user_id;
+            const variantId = String(payload.data.attributes.variant_id);
 
-            if (!user_id || !credits) {
-                return NextResponse.json({ error: "Missing user_id or credits in custom data" }, { status: 400 });
+            if (!userId) {
+                return NextResponse.json({ error: "Missing user_id in custom data" }, { status: 400 });
             }
 
-            const userId = user_id;
-            const creditsToAdd = parseInt(credits);
+            const creditsToAdd = getPlanCredits(variantId);
             const currentCredits = getUserCredits(userId);
             const newBalance = currentCredits + creditsToAdd;
 
@@ -46,10 +47,10 @@ export async function POST(req: Request) {
                 type: "purchase",
                 amount: creditsToAdd,
                 balanceAfter: newBalance,
-                description: `Purchased ${creditsToAdd} credits`,
+                description: `Subscription: ${creditsToAdd} credits added`,
             });
 
-            console.log(`Updated credits for user ${userId}: ${newBalance}`);
+            console.log(`[LS] ${eventName} — user ${userId} +${creditsToAdd} → ${newBalance}`);
         }
 
         return NextResponse.json({ success: true });
