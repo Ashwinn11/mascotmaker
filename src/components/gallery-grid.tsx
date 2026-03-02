@@ -35,7 +35,10 @@ export function GalleryGrid() {
     setLoading(true);
     setError(false);
     fetch("/api/gallery")
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load gallery");
+        return res.json();
+      })
       .then((data) => setItems(data.items || []))
       .catch(() => setError(true))
       .finally(() => setLoading(false));

@@ -1,16 +1,13 @@
 /**
- * Downloads a file by fetching it as a blob and triggering a save dialog.
- * Works for cross-origin URLs where <a download> is ignored by browsers.
+ * Downloads a file via the server-side proxy to avoid CORS issues with R2 URLs.
+ * Falls back to direct blob fetch for same-origin URLs.
  */
 export async function downloadFile(url: string, filename: string): Promise<void> {
-  const res = await fetch(url);
-  const blob = await res.blob();
-  const blobUrl = URL.createObjectURL(blob);
+  const proxyUrl = `/api/download?url=${encodeURIComponent(url)}&filename=${encodeURIComponent(filename)}`;
   const a = document.createElement("a");
-  a.href = blobUrl;
+  a.href = proxyUrl;
   a.download = filename;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  URL.revokeObjectURL(blobUrl);
 }
