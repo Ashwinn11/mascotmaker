@@ -11,6 +11,12 @@ RUN npm ci
 
 COPY . .
 
+# NEXT_PUBLIC_ vars must be present at build time — Next.js inlines them into the client bundle.
+# These are public LemonSqueezy variant IDs (visible in browser), safe to hardcode.
+ENV NEXT_PUBLIC_LS_VARIANT_100=1358426
+ENV NEXT_PUBLIC_LS_VARIANT_500=1358430
+ENV NEXT_PUBLIC_LS_VARIANT_1500=1358431
+
 # Build Next.js (standalone output for small final image)
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
