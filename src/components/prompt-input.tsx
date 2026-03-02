@@ -124,7 +124,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
               }}
             />
             <span className="absolute bottom-2 right-3 text-[10px] text-muted-foreground/50">
-              {navigator.platform?.includes("Mac") ? "⌘" : "Ctrl"}+Enter to generate
+              {typeof window !== "undefined" && navigator.platform?.includes("Mac") ? "⌘" : "Ctrl"}+Enter to generate
             </span>
           </div>
           {/* Suggestion chips */}
