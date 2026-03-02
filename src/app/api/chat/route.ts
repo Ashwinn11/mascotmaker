@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     }
 
     const imageBase64 = await loadImageAsBase64(mascotImageUrl);
-    const prompt = `Modify this mascot character: ${message}. Keep the same art style and character identity. The background must be plain white with no patterns, objects, or shadows.`;
+    const prompt = `Modify this mascot character: ${message}. Keep the same art style and character identity. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The background must be plain white with no patterns, objects, or shadows.`;
     const result = await editImage(prompt, imageBase64);
     const resultBase64 = await removeWhiteBackground(result.data);
     const imageUrl = await saveImage(resultBase64);

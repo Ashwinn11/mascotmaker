@@ -11,6 +11,7 @@ import {
     DialogDescription,
 } from "@/components/ui/dialog";
 import { Icon3D } from "@/components/ui/icon-3d";
+import { PLANS } from "@/lib/pricing";
 
 interface PaywallModalProps {
     open: boolean;
@@ -85,12 +86,6 @@ export function PaywallModal({
         );
     }
 
-    const plans = [
-        { credits: 100, price: "$4.99/mo", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_100 || "" },
-        { credits: 500, price: "$19.99/mo", popular: true, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_500 || "" },
-        { credits: 1500, price: "$49.99/mo", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_1500 || "" },
-    ];
-
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent className="rounded-3xl border-2 border-border sm:max-w-md">
@@ -109,7 +104,7 @@ export function PaywallModal({
                             Get More Credits
                         </h3>
                         <div className="space-y-2">
-                            {plans.map((plan) => (
+                            {PLANS.map((plan) => (
                                 <button
                                     key={plan.credits}
                                     disabled={loading !== null}
@@ -120,7 +115,7 @@ export function PaywallModal({
                                         }`}
                                 >
                                     <span>{plan.credits} credits</span>
-                                    <span>{loading === plan.credits ? "Loading..." : plan.price}</span>
+                                    <span>{loading === plan.credits ? "Loading..." : plan.priceLabel}</span>
                                 </button>
                             ))}
                         </div>

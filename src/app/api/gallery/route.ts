@@ -4,7 +4,12 @@ import { getGalleryItems, addToGallery, deleteGalleryItem } from "@/lib/db";
 
 export async function GET() {
   try {
-    const items = getGalleryItems();
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const items = getGalleryItems(session.user.id);
     return NextResponse.json({ items });
   } catch (error) {
     console.error("Gallery GET error:", error);
@@ -68,10 +73,10 @@ export async function DELETE(req: Request) {
       );
     }
 
-    const deleted = deleteGalleryItem(id);
+    const deleted = deleteGalleryItem(id, session.user.id);
     if (!deleted) {
       return NextResponse.json(
-        { error: "Item not found" },
+        { error: "Item not found or not yours" },
         { status: 404 }
       );
     }

@@ -18,7 +18,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt must be under 2000 characters" }, { status: 400 });
     }
 
-    const mascotPrompt = `Create a cute, expressive mascot character: ${prompt}. Cartoon style, transparent background, full body, vibrant colors. The background must be plain white with no patterns, objects, or shadows.`;
+    const mascotPrompt = `Create a cute, expressive mascot character: ${prompt}. Cartoon style, transparent background, vibrant colors. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The entire character must be visible including legs, feet, and any bottom details. The background must be plain white with no patterns, objects, or shadows.`;
     const result = await generateImage(mascotPrompt);
     const base64 = await removeWhiteBackground(result.data);
     const imageUrl = await saveImage(base64);

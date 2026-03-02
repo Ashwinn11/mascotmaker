@@ -1,12 +1,30 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { getUserCredits, updateUserCredits, addTransaction } from "@/lib/db";
+import {
+    getUserCredits,
+    updateUserCredits,
+    addTransaction,
+    createSubscription,
+    updateSubscriptionByLsId,
+    getSubscriptionByLsId,
+} from "@/lib/db";
+import { getPlanByVariantId, getPlanCredits } from "@/lib/pricing";
 
-function getPlanCredits(variantId: string): number {
-    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_100) return 100;
-    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_500) return 500;
-    if (variantId === process.env.NEXT_PUBLIC_LS_VARIANT_1500) return 1500;
-    return 100; // default fallback
+function resolveUserId(payload: Record<string, unknown>): string | null {
+    // Try custom_data first
+    const meta = payload.meta as Record<string, unknown> | undefined;
+    const customData = meta?.custom_data as Record<string, string> | undefined;
+    if (customData?.user_id) return customData.user_id;
+
+    // Fall back to DB lookup by ls_subscription_id
+    const data = payload.data as Record<string, unknown> | undefined;
+    const lsSubId = String((data as Record<string, unknown>)?.id ?? "");
+    if (lsSubId) {
+        const sub = getSubscriptionByLsId(lsSubId);
+        if (sub) return sub.user_id;
+    }
+
+    return null;
 }
 
 export async function POST(req: Request) {
@@ -27,30 +45,145 @@ export async function POST(req: Request) {
         }
 
         const payload = JSON.parse(rawBody);
-        const eventName = payload.meta.event_name;
+        const eventName = payload.meta.event_name as string;
+        const attrs = payload.data.attributes;
+        const lsSubId = String(payload.data.id);
+        const variantId = String(attrs.variant_id ?? "");
+        const userId = resolveUserId(payload);
 
-        if (eventName === "subscription_created" || eventName === "subscription_payment_success") {
-            const userId = payload.meta.custom_data?.user_id;
-            const variantId = String(payload.data.attributes.variant_id);
+        console.log(`[LS] ${eventName} — sub ${lsSubId}, user ${userId ?? "unknown"}`);
 
-            if (!userId) {
-                return NextResponse.json({ error: "Missing user_id in custom data" }, { status: 400 });
+        switch (eventName) {
+            case "subscription_created": {
+                if (!userId) {
+                    return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
+                }
+                const plan = getPlanByVariantId(variantId);
+                createSubscription({
+                    userId,
+                    lsSubscriptionId: lsSubId,
+                    lsCustomerId: String(attrs.customer_id ?? ""),
+                    variantId,
+                    planName: plan?.name ?? "Unknown",
+                    status: String(attrs.status ?? "active"),
+                    currentPeriodEnd: attrs.renews_at ?? null,
+                    customerPortalUrl: attrs.urls?.customer_portal ?? null,
+                    updatePaymentUrl: attrs.urls?.update_payment_method ?? null,
+                });
+                // NO credits here — credits granted only on subscription_payment_success
+                break;
             }
 
-            const creditsToAdd = getPlanCredits(variantId);
-            const currentCredits = getUserCredits(userId);
-            const newBalance = currentCredits + creditsToAdd;
+            case "subscription_payment_success": {
+                if (!userId) {
+                    return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
+                }
+                const creditsToAdd = getPlanCredits(variantId);
+                const currentCredits = getUserCredits(userId);
+                const newBalance = currentCredits + creditsToAdd;
 
-            updateUserCredits(userId, newBalance);
-            addTransaction({
-                userId,
-                type: "purchase",
-                amount: creditsToAdd,
-                balanceAfter: newBalance,
-                description: `Subscription: ${creditsToAdd} credits added`,
-            });
+                updateUserCredits(userId, newBalance);
+                addTransaction({
+                    userId,
+                    type: "purchase",
+                    amount: creditsToAdd,
+                    balanceAfter: newBalance,
+                    description: `Subscription: ${creditsToAdd} credits added`,
+                });
 
-            console.log(`[LS] ${eventName} — user ${userId} +${creditsToAdd} → ${newBalance}`);
+                // Also update subscription status/period
+                updateSubscriptionByLsId(lsSubId, {
+                    status: "active",
+                    currentPeriodEnd: attrs.renews_at ?? undefined,
+                });
+
+                console.log(`[LS] user ${userId} +${creditsToAdd} → ${newBalance}`);
+                break;
+            }
+
+            case "subscription_updated": {
+                const existingSub = getSubscriptionByLsId(lsSubId);
+                const plan = getPlanByVariantId(variantId);
+
+                updateSubscriptionByLsId(lsSubId, {
+                    variantId,
+                    planName: plan?.name ?? "Unknown",
+                    status: String(attrs.status ?? "active"),
+                    currentPeriodEnd: attrs.renews_at ?? undefined,
+                    customerPortalUrl: attrs.urls?.customer_portal ?? undefined,
+                    updatePaymentUrl: attrs.urls?.update_payment_method ?? undefined,
+                });
+
+                // If upgrade, add credit difference immediately
+                if (existingSub && userId) {
+                    const oldCredits = getPlanCredits(existingSub.variant_id);
+                    const newCredits = getPlanCredits(variantId);
+                    if (newCredits > oldCredits) {
+                        const diff = newCredits - oldCredits;
+                        const currentCredits = getUserCredits(userId);
+                        const newBalance = currentCredits + diff;
+                        updateUserCredits(userId, newBalance);
+                        addTransaction({
+                            userId,
+                            type: "purchase",
+                            amount: diff,
+                            balanceAfter: newBalance,
+                            description: `Plan upgrade: +${diff} credits`,
+                        });
+                        console.log(`[LS] upgrade user ${userId} +${diff} → ${newBalance}`);
+                    }
+                }
+                break;
+            }
+
+            case "subscription_cancelled": {
+                updateSubscriptionByLsId(lsSubId, {
+                    status: "cancelled",
+                    cancelAt: attrs.ends_at ?? undefined,
+                });
+                break;
+            }
+
+            case "subscription_expired": {
+                updateSubscriptionByLsId(lsSubId, { status: "expired" });
+                break;
+            }
+
+            case "subscription_paused": {
+                updateSubscriptionByLsId(lsSubId, { status: "paused" });
+                break;
+            }
+
+            case "subscription_resumed": {
+                updateSubscriptionByLsId(lsSubId, { status: "active" });
+                break;
+            }
+
+            case "subscription_payment_failed": {
+                updateSubscriptionByLsId(lsSubId, { status: "past_due" });
+                break;
+            }
+
+            case "subscription_payment_refunded": {
+                if (userId) {
+                    const creditsToDeduct = getPlanCredits(variantId);
+                    const currentCredits = getUserCredits(userId);
+                    const newBalance = Math.max(0, currentCredits - creditsToDeduct);
+                    updateUserCredits(userId, newBalance);
+                    addTransaction({
+                        userId,
+                        type: "deduction",
+                        amount: -creditsToDeduct,
+                        balanceAfter: newBalance,
+                        description: `Refund: ${creditsToDeduct} credits deducted`,
+                    });
+                    console.log(`[LS] refund user ${userId} -${creditsToDeduct} → ${newBalance}`);
+                }
+                break;
+            }
+
+            default:
+                console.log(`[LS] Unhandled event: ${eventName}`);
         }
 
         return NextResponse.json({ success: true });

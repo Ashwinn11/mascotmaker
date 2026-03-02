@@ -1,8 +1,8 @@
 import sharp from "sharp";
-import { GIFEncoder, quantize, applyPalette } from "gifenc";
-import { makeWhiteTransparentRGBA } from "./image";
 
-const GIF_SIZE = 256;
+const GRID = 3;
+const FRAME_COUNT = GRID * GRID;
+const WHITE_THRESHOLD = 250;
 
 export async function spriteSheetToGif(
   spriteBuffer: Buffer,
@@ -12,51 +12,59 @@ export async function spriteSheetToGif(
   const totalWidth = metadata.width!;
   const totalHeight = metadata.height!;
 
+  // Account for 1px grid lines between cells
   const effectiveWidth = totalWidth - 2;
   const effectiveHeight = totalHeight - 2;
-  const frameWidth = Math.floor(effectiveWidth / 3);
-  const frameHeight = Math.floor(effectiveHeight / 3);
+  const frameWidth = Math.floor(effectiveWidth / GRID);
+  const frameHeight = Math.floor(effectiveHeight / GRID);
 
-  const gif = GIFEncoder();
-
-  for (let row = 0; row < 3; row++) {
-    for (let col = 0; col < 3; col++) {
+  // Extract each frame as raw RGBA and make white pixels transparent
+  const rawFrames: Buffer[] = [];
+  for (let row = 0; row < GRID; row++) {
+    for (let col = 0; col < GRID; col++) {
       const left = col * (frameWidth + 1);
       const top = row * (frameHeight + 1);
 
-      const data = await sharp(spriteBuffer)
+      const raw = await sharp(spriteBuffer)
         .extract({ left, top, width: frameWidth, height: frameHeight })
-        .resize(GIF_SIZE, GIF_SIZE)
         .ensureAlpha()
         .raw()
         .toBuffer();
 
-      // Make white pixels transparent
-      makeWhiteTransparentRGBA(data);
-
-      const palette = quantize(data, 256, { format: "rgba4444" });
-      const index = applyPalette(data, palette, "rgba4444");
-
-      // Find the transparent color index in the palette (r=0,g=0,b=0,a=0)
-      let transparentIndex = 0;
-      for (let i = 0; i < palette.length; i++) {
-        const [r, g, b, a] = palette[i];
-        if (a === 0 || (r === 0 && g === 0 && b === 0 && a === 0)) {
-          transparentIndex = i;
-          break;
+      // Remove white background — GIF supports 1-bit alpha only,
+      // so binary transparent/opaque is the best we can do
+      const pixels = new Uint8Array(raw.buffer, raw.byteOffset, raw.length);
+      for (let i = 0; i < pixels.length; i += 4) {
+        if (
+          pixels[i] >= WHITE_THRESHOLD &&
+          pixels[i + 1] >= WHITE_THRESHOLD &&
+          pixels[i + 2] >= WHITE_THRESHOLD
+        ) {
+          pixels[i] = 0;
+          pixels[i + 1] = 0;
+          pixels[i + 2] = 0;
+          pixels[i + 3] = 0;
         }
       }
 
-      gif.writeFrame(index, GIF_SIZE, GIF_SIZE, {
-        palette,
-        delay: frameDuration,
-        transparent: true,
-        transparentIndex,
-        disposal: 2, // restore to background between frames
-      });
+      rawFrames.push(raw);
     }
   }
 
-  gif.finish();
-  return Buffer.from(gif.bytes());
+  // Stack all frames into one tall raw buffer and encode as animated GIF
+  const allPixels = Buffer.concat(rawFrames);
+
+  return sharp(allPixels, {
+    raw: {
+      width: frameWidth,
+      height: frameHeight * FRAME_COUNT,
+      channels: 4,
+      pageHeight: frameHeight,
+    },
+  })
+    .gif({
+      delay: rawFrames.map(() => frameDuration),
+      loop: 0,
+    })
+    .toBuffer();
 }

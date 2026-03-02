@@ -53,6 +53,23 @@ function getDb(): Database.Database {
         created_at TEXT DEFAULT (datetime('now'))
       )
     `);
+    db.exec(`
+      CREATE TABLE IF NOT EXISTS subscriptions (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id TEXT NOT NULL,
+        ls_subscription_id TEXT UNIQUE NOT NULL,
+        ls_customer_id TEXT,
+        variant_id TEXT NOT NULL,
+        plan_name TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'active',
+        current_period_end TEXT,
+        cancel_at TEXT,
+        customer_portal_url TEXT,
+        update_payment_url TEXT,
+        created_at TEXT DEFAULT (datetime('now')),
+        updated_at TEXT DEFAULT (datetime('now'))
+      )
+    `);
   }
   return db;
 }
@@ -69,16 +86,16 @@ export interface GalleryItem {
   created_at: string;
 }
 
-export function getGalleryItems(): GalleryItem[] {
+export function getGalleryItems(userId: string): GalleryItem[] {
   return getDb()
-    .prepare("SELECT * FROM gallery WHERE published = 1 ORDER BY created_at DESC")
-    .all() as GalleryItem[];
+    .prepare("SELECT * FROM gallery WHERE user_id = ? ORDER BY created_at DESC")
+    .all(userId) as GalleryItem[];
 }
 
-export function deleteGalleryItem(id: number): boolean {
+export function deleteGalleryItem(id: number, userId: string): boolean {
   const result = getDb()
-    .prepare("DELETE FROM gallery WHERE id = ?")
-    .run(id);
+    .prepare("DELETE FROM gallery WHERE id = ? AND user_id = ?")
+    .run(id, userId);
   return result.changes > 0;
 }
 
@@ -201,4 +218,130 @@ export function logUsage(params: {
       "INSERT INTO usage_logs (user_id, api_route, credits_charged) VALUES (?, ?, ?)"
     )
     .run(params.userId, params.apiRoute, params.creditsCharged);
+}
+
+// ─── Subscriptions ───
+
+export interface Subscription {
+  id: number;
+  user_id: string;
+  ls_subscription_id: string;
+  ls_customer_id: string | null;
+  variant_id: string;
+  plan_name: string;
+  status: string;
+  current_period_end: string | null;
+  cancel_at: string | null;
+  customer_portal_url: string | null;
+  update_payment_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export function createSubscription(params: {
+  userId: string;
+  lsSubscriptionId: string;
+  lsCustomerId?: string;
+  variantId: string;
+  planName: string;
+  status?: string;
+  currentPeriodEnd?: string;
+  customerPortalUrl?: string;
+  updatePaymentUrl?: string;
+}): void {
+  getDb()
+    .prepare(
+      `INSERT INTO subscriptions (user_id, ls_subscription_id, ls_customer_id, variant_id, plan_name, status, current_period_end, customer_portal_url, update_payment_url)
+       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+       ON CONFLICT(ls_subscription_id) DO UPDATE SET
+         variant_id = excluded.variant_id,
+         plan_name = excluded.plan_name,
+         status = excluded.status,
+         current_period_end = excluded.current_period_end,
+         customer_portal_url = excluded.customer_portal_url,
+         update_payment_url = excluded.update_payment_url,
+         updated_at = datetime('now')`
+    )
+    .run(
+      params.userId,
+      params.lsSubscriptionId,
+      params.lsCustomerId || null,
+      params.variantId,
+      params.planName,
+      params.status || "active",
+      params.currentPeriodEnd || null,
+      params.customerPortalUrl || null,
+      params.updatePaymentUrl || null
+    );
+}
+
+export function updateSubscriptionByLsId(
+  lsSubscriptionId: string,
+  updates: Partial<{
+    variantId: string;
+    planName: string;
+    status: string;
+    currentPeriodEnd: string;
+    cancelAt: string;
+    customerPortalUrl: string;
+    updatePaymentUrl: string;
+  }>
+): void {
+  const setClauses: string[] = ["updated_at = datetime('now')"];
+  const values: unknown[] = [];
+
+  if (updates.variantId !== undefined) {
+    setClauses.push("variant_id = ?");
+    values.push(updates.variantId);
+  }
+  if (updates.planName !== undefined) {
+    setClauses.push("plan_name = ?");
+    values.push(updates.planName);
+  }
+  if (updates.status !== undefined) {
+    setClauses.push("status = ?");
+    values.push(updates.status);
+  }
+  if (updates.currentPeriodEnd !== undefined) {
+    setClauses.push("current_period_end = ?");
+    values.push(updates.currentPeriodEnd);
+  }
+  if (updates.cancelAt !== undefined) {
+    setClauses.push("cancel_at = ?");
+    values.push(updates.cancelAt);
+  }
+  if (updates.customerPortalUrl !== undefined) {
+    setClauses.push("customer_portal_url = ?");
+    values.push(updates.customerPortalUrl);
+  }
+  if (updates.updatePaymentUrl !== undefined) {
+    setClauses.push("update_payment_url = ?");
+    values.push(updates.updatePaymentUrl);
+  }
+
+  values.push(lsSubscriptionId);
+
+  getDb()
+    .prepare(
+      `UPDATE subscriptions SET ${setClauses.join(", ")} WHERE ls_subscription_id = ?`
+    )
+    .run(...values);
+}
+
+export function getActiveSubscription(userId: string): Subscription | null {
+  return (
+    (getDb()
+      .prepare(
+        "SELECT * FROM subscriptions WHERE user_id = ? AND status IN ('active', 'cancelled', 'past_due', 'paused') ORDER BY created_at DESC LIMIT 1"
+      )
+      .get(userId) as Subscription) || null
+  );
+}
+
+export function getSubscriptionByLsId(lsSubscriptionId: string): Subscription | null {
+  return (
+    (getDb()
+      .prepare("SELECT * FROM subscriptions WHERE ls_subscription_id = ?")
+      .get(lsSubscriptionId) as Subscription) || null
+  );
 }

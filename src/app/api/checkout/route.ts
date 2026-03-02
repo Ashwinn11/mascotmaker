@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
+import { getActiveSubscription } from "@/lib/db";
 import { initLemonSqueezy } from "@/lib/lemonsqueezy";
-import { createCheckout } from "@lemonsqueezy/lemonsqueezy.js";
+import { createCheckout, updateSubscription } from "@lemonsqueezy/lemonsqueezy.js";
 
-/**
- * Handle POST request to create a Lemon Squeezy checkout.
- */
 export async function POST(req: Request) {
     try {
         const session = await auth();
@@ -19,6 +17,21 @@ export async function POST(req: Request) {
         }
 
         initLemonSqueezy();
+
+        // Check for existing active subscription — change plan instead of new checkout
+        const activeSub = getActiveSubscription(session.user.id);
+        if (activeSub && activeSub.status === "active") {
+            const { error } = await updateSubscription(activeSub.ls_subscription_id, {
+                variantId: Number(variantId),
+            });
+
+            if (error) {
+                console.error("LemonSqueezy update error:", error);
+                return NextResponse.json({ error: "Failed to update subscription" }, { status: 500 });
+            }
+
+            return NextResponse.json({ updated: true });
+        }
 
         const storeId = process.env.LEMONSQUEEZY_STORE_ID;
         if (!storeId) {
