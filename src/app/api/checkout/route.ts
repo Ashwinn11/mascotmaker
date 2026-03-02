@@ -34,7 +34,7 @@ export async function POST(req: Request) {
                 },
             },
             productOptions: {
-                redirectUrl: `${process.env.AUTH_URL || process.env.NEXTAUTH_URL}/profile?success=true`,
+                redirectUrl: `${process.env.AUTH_URL}/profile?success=true`,
             },
         });
 

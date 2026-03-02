@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
 import { getGalleryItems, addToGallery, deleteGalleryItem } from "@/lib/db";
 
 export async function GET() {
@@ -16,6 +17,11 @@ export async function GET() {
 
 export async function POST(req: Request) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { name, description, imageUrl, gifUrl } = await req.json();
     if (!name || typeof name !== "string" || !imageUrl) {
       return NextResponse.json(
@@ -36,7 +42,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const item = addToGallery({ name, description, imageUrl, gifUrl });
+    const item = addToGallery({ name, description, imageUrl, gifUrl, userId: session.user.id });
     return NextResponse.json({ item });
   } catch (error) {
     console.error("Gallery POST error:", error);
@@ -49,6 +55,11 @@ export async function POST(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { id } = await req.json();
     if (!id || typeof id !== "number") {
       return NextResponse.json(
