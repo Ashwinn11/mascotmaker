@@ -37,6 +37,9 @@ COPY --from=builder /app/.next/standalone ./
 COPY --from=builder /app/.next/static ./.next/static
 COPY --from=builder /app/public ./public
 
+# Writable cache dir for Next.js image optimization
+RUN mkdir -p /app/.next/cache && chown -R node:node /app/.next/cache
+
 # Create a writable directory for SQLite DB (mounted as Cloud Run volume)
 RUN mkdir -p /data && chown -R node:node /data
 ENV DATABASE_PATH=/data/mascot.db
