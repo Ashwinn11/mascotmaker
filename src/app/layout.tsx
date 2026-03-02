@@ -66,16 +66,16 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${heading.variable} ${body.variable} antialiased`}>
         <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
-          <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-            <Link href="/" className="flex items-center gap-2.5 group">
+          <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
+            <Link href="/" className="flex items-center gap-3 group">
               <Image
                 src="/app-icon.png"
                 alt="Mascot Maker"
-                width={36}
-                height={36}
+                width={56}
+                height={56}
                 className="rounded-xl shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3"
               />
-              <span className="font-display text-xl tracking-tight text-foreground">
+              <span className="font-display text-2xl tracking-tight text-foreground">
                 Mascot Maker
               </span>
             </Link>
@@ -85,15 +85,15 @@ export default function RootLayout({
         <main>{children}</main>
         <footer className="border-t border-border/50 bg-cream/50">
           <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <Image
                 src="/app-icon.png"
                 alt="Mascot Maker"
-                width={28}
-                height={28}
-                className="rounded-lg"
+                width={64}
+                height={64}
+                className="rounded-xl shadow-sm"
               />
-              <span className="font-display text-sm text-warm-gray">Mascot Maker</span>
+              <span className="font-display text-lg text-warm-gray">Mascot Maker</span>
             </div>
             <p className="text-xs text-muted-foreground">
               Powered by Nano Banana 2. Made with care.
