@@ -87,9 +87,9 @@ export default function ProfilePage() {
     const creditPercent = Math.min((credits / 1500) * 100, 100);
 
     const plans = [
-        { credits: 100, price: "$4.99", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_100 || "" },
-        { credits: 500, price: "$19.99", popular: true, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_500 || "" },
-        { credits: 1500, price: "$49.99", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_1500 || "" },
+        { credits: 100, price: "$4.99/mo", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_100 || "" },
+        { credits: 500, price: "$19.99/mo", popular: true, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_500 || "" },
+        { credits: 1500, price: "$49.99/mo", popular: false, variantId: process.env.NEXT_PUBLIC_LS_VARIANT_1500 || "" },
     ];
 
     return (

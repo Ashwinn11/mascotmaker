@@ -29,7 +29,7 @@ function getDb(): Database.Database {
         email TEXT NOT NULL,
         name TEXT,
         avatar_url TEXT,
-        credits INTEGER DEFAULT 50,
+        credits INTEGER DEFAULT 25,
         created_at TEXT DEFAULT (datetime('now'))
       )
     `);
@@ -138,7 +138,7 @@ export function findOrCreateUser(params: {
 
   const id = uuidv4();
   db.prepare(
-    "INSERT INTO users (id, google_id, email, name, avatar_url, credits) VALUES (?, ?, ?, ?, ?, 50)"
+    "INSERT INTO users (id, google_id, email, name, avatar_url, credits) VALUES (?, ?, ?, ?, ?, 25)"
   ).run(id, params.googleId, params.email, params.name, params.avatarUrl);
 
   return db.prepare("SELECT * FROM users WHERE id = ?").get(id) as User;
