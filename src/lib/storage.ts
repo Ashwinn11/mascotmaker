@@ -1,38 +1,71 @@
-import fs from "fs";
-import path from "path";
+import {
+  S3Client,
+  PutObjectCommand,
+  GetObjectCommand,
+} from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 
-const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
+const R2 = new S3Client({
+  region: "auto",
+  endpoint: process.env.R2_ENDPOINT!,
+  credentials: {
+    accessKeyId: process.env.R2_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+  },
+});
 
-function ensureDir() {
-  if (!fs.existsSync(UPLOADS_DIR)) {
-    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+const BUCKET = process.env.R2_BUCKET_NAME!;
+const PUBLIC_URL = process.env.R2_PUBLIC_URL!; // e.g. https://assets.yourdomain.com
+
+export async function saveImage(base64Data: string, ext = "png"): Promise<string> {
+  const key = `uploads/${uuidv4()}.${ext}`;
+  const buffer = Buffer.from(base64Data, "base64");
+
+  await R2.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      Body: buffer,
+      ContentType: ext === "gif" ? "image/gif" : "image/png",
+    })
+  );
+
+  return `${PUBLIC_URL}/${key}`;
+}
+
+export async function saveBuffer(buffer: Buffer, ext = "gif"): Promise<string> {
+  const key = `uploads/${uuidv4()}.${ext}`;
+
+  await R2.send(
+    new PutObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+      Body: buffer,
+      ContentType: ext === "gif" ? "image/gif" : "image/png",
+    })
+  );
+
+  return `${PUBLIC_URL}/${key}`;
+}
+
+export async function loadImageAsBase64(url: string): Promise<string> {
+  // If it's a full R2 URL, extract the key
+  let key = url;
+  if (url.startsWith(PUBLIC_URL)) {
+    key = url.slice(PUBLIC_URL.length + 1); // strip leading /
+  } else if (url.startsWith("/uploads/")) {
+    key = url.slice(1); // strip leading /
+  } else if (url.startsWith("uploads/")) {
+    key = url;
   }
-}
 
-export function saveImage(base64Data: string, ext = "png"): string {
-  ensureDir();
-  const filename = `${uuidv4()}.${ext}`;
-  const filepath = path.join(UPLOADS_DIR, filename);
-  fs.writeFileSync(filepath, Buffer.from(base64Data, "base64"));
-  return `/uploads/${filename}`;
-}
+  const response = await R2.send(
+    new GetObjectCommand({
+      Bucket: BUCKET,
+      Key: key,
+    })
+  );
 
-export function saveBuffer(buffer: Buffer, ext = "gif"): string {
-  ensureDir();
-  const filename = `${uuidv4()}.${ext}`;
-  const filepath = path.join(UPLOADS_DIR, filename);
-  fs.writeFileSync(filepath, buffer);
-  return `/uploads/${filename}`;
-}
-
-export function loadImageAsBase64(urlPath: string): string {
-  const sanitized = urlPath.replace(/^\/+/, "");
-  const filepath = path.resolve(process.cwd(), "public", sanitized);
-  const uploadsReal = fs.realpathSync(UPLOADS_DIR);
-  const fileReal = fs.realpathSync(filepath);
-  if (!fileReal.startsWith(uploadsReal + path.sep) && fileReal !== uploadsReal) {
-    throw new Error("Invalid file path");
-  }
-  return fs.readFileSync(filepath).toString("base64");
+  const bytes = await response.Body!.transformToByteArray();
+  return Buffer.from(bytes).toString("base64");
 }

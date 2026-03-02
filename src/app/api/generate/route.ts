@@ -2,9 +2,14 @@ import { NextResponse } from "next/server";
 import { generateImage } from "@/lib/gemini";
 import { saveImage } from "@/lib/storage";
 import { removeWhiteBackground } from "@/lib/image";
+import { requireCredits, deductCredits } from "@/lib/credits";
 
 export async function POST(req: Request) {
   try {
+    // Auth + credit check
+    const check = await requireCredits("generate");
+    if (check instanceof Response) return check;
+
     const { prompt } = await req.json();
     if (!prompt || typeof prompt !== "string") {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
@@ -14,11 +19,14 @@ export async function POST(req: Request) {
     }
 
     const mascotPrompt = `Create a cute, expressive mascot character: ${prompt}. Cartoon style, transparent background, full body, vibrant colors. The background must be plain white with no patterns, objects, or shadows.`;
-    const rawBase64 = await generateImage(mascotPrompt);
-    const base64 = await removeWhiteBackground(rawBase64);
-    const imageUrl = saveImage(base64);
+    const result = await generateImage(mascotPrompt);
+    const base64 = await removeWhiteBackground(result.data);
+    const imageUrl = await saveImage(base64);
 
-    return NextResponse.json({ imageUrl });
+    // Deduct credits after success based on tokens
+    const creditsRemaining = deductCredits(check.userId, "generate", result.tokens);
+
+    return NextResponse.json({ imageUrl, creditsRemaining });
   } catch (error) {
     console.error("Generate error:", error);
     return NextResponse.json(

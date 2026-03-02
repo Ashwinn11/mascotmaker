@@ -9,9 +9,12 @@ import { Icon3DInline } from "@/components/ui/icon-3d";
 interface PromptInputProps {
   onGenerated: (imageUrl: string, analysis?: string) => void;
   onLoadingChange: (loading: boolean) => void;
+  requireAuth: () => boolean;
+  onApiError: (res: Response, data: Record<string, unknown>) => boolean;
+  onCreditsUpdate: (creditsRemaining?: number) => void;
 }
 
-export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) {
+export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiError, onCreditsUpdate }: PromptInputProps) {
   const [mode, setMode] = useState<"describe" | "upload">("describe");
   const [prompt, setPrompt] = useState("");
   const [stylePrompt, setStylePrompt] = useState("");
@@ -21,6 +24,7 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
+    if (!requireAuth()) return;
     onLoadingChange(true);
     try {
       const res = await fetch("/api/generate", {
@@ -30,9 +34,11 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
       });
       const data = await res.json();
       if (!res.ok) {
+        if (!onApiError(res, data)) return;
         toast.error(data.error || "Failed to generate mascot");
         return;
       }
+      onCreditsUpdate(data.creditsRemaining);
       if (data.imageUrl) onGenerated(data.imageUrl);
     } catch {
       toast.error("Failed to generate mascot. Please try again.");
@@ -43,6 +49,7 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
 
   const handleStylize = async () => {
     if (!file) return;
+    if (!requireAuth()) return;
     onLoadingChange(true);
     try {
       const formData = new FormData();
@@ -51,9 +58,11 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
       const res = await fetch("/api/stylize", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok) {
+        if (!onApiError(res, data)) return;
         toast.error(data.error || "Failed to stylize image");
         return;
       }
+      onCreditsUpdate(data.creditsRemaining);
       if (data.imageUrl) onGenerated(data.imageUrl, data.analysis);
     } catch {
       toast.error("Failed to stylize image. Please try again.");

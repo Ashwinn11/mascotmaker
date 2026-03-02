@@ -1,12 +1,17 @@
 import { NextResponse } from "next/server";
 import { analyzeImage, stylizeImage } from "@/lib/gemini";
 import { saveImage } from "@/lib/storage";
+import { requireCredits, deductCredits } from "@/lib/credits";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp", "image/gif"];
 
 export async function POST(req: Request) {
   try {
+    // Auth + credit check
+    const check = await requireCredits("stylize");
+    if (check instanceof Response) return check;
+
     const formData = await req.formData();
     const file = formData.get("image") as File;
     const prompt = (formData.get("prompt") as string) || "";
@@ -24,13 +29,16 @@ export async function POST(req: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const base64 = buffer.toString("base64");
 
-    const analysis = await analyzeImage(base64);
-    const rawBase64 = await stylizeImage(prompt, base64, analysis);
+    const analysisResult = await analyzeImage(base64);
+    const stylizeResult = await stylizeImage(prompt, base64, analysisResult.data);
     const { removeWhiteBackground } = await import("@/lib/image");
-    const resultBase64 = await removeWhiteBackground(rawBase64);
-    const imageUrl = saveImage(resultBase64);
+    const resultBase64 = await removeWhiteBackground(stylizeResult.data);
+    const imageUrl = await saveImage(resultBase64);
 
-    return NextResponse.json({ imageUrl, analysis });
+    const totalTokens = analysisResult.tokens + stylizeResult.tokens;
+    const creditsRemaining = deductCredits(check.userId, "stylize", totalTokens);
+
+    return NextResponse.json({ imageUrl, analysis: analysisResult.data, creditsRemaining });
   } catch (error) {
     console.error("Stylize error:", error);
     return NextResponse.json(

@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
 import { PromptInput } from "./prompt-input";
 import { MascotPreview } from "./mascot-preview";
 import { ChatRefiner } from "./chat-refiner";
 import { AnimationPicker } from "./animation-picker";
 import { GifPreview } from "./gif-preview";
+import { PaywallModal } from "./paywall-modal";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 import {
   Dialog,
@@ -32,12 +34,50 @@ const STEPS = [
 ];
 
 export function MascotCreator() {
+  const { data: session, status, update: updateSession } = useSession();
   const [mode, setMode] = useState<Mode>("create");
   const [mascotImageUrl, setMascotImageUrl] = useState<string | null>(null);
   const [mascotDescription, setMascotDescription] = useState<string | null>(null);
   const [gifs, setGifs] = useState<GifItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallType, setPaywallType] = useState<"auth" | "credits">("auth");
+  const [paywallCreditsRequired, setPaywallCreditsRequired] = useState(0);
+
+  // Show paywall if not authenticated
+  const requireAuth = (): boolean => {
+    if (status === "loading") return false;
+    if (!session?.user) {
+      setPaywallType("auth");
+      setPaywallOpen(true);
+      return false;
+    }
+    return true;
+  };
+
+  // Handle API errors that indicate auth/credit issues
+  const handleApiError = (res: Response, data: { error?: string; creditsRequired?: number; creditsRemaining?: number }): boolean => {
+    if (res.status === 401) {
+      setPaywallType("auth");
+      setPaywallOpen(true);
+      return false;
+    }
+    if (res.status === 402) {
+      setPaywallType("credits");
+      setPaywallCreditsRequired(data.creditsRequired || 0);
+      setPaywallOpen(true);
+      return false;
+    }
+    return true;
+  };
+
+  // Update session credits after successful API call
+  const handleCreditsUpdate = (creditsRemaining?: number) => {
+    if (creditsRemaining !== undefined) {
+      updateSession({ user: { credits: creditsRemaining } });
+    }
+  };
 
   const handleGenerated = (imageUrl: string, analysis?: string) => {
     setMascotImageUrl(imageUrl);
@@ -82,10 +122,10 @@ export function MascotCreator() {
                 onClick={() => isAccessible && setMode(step.key)}
                 disabled={!isAccessible}
                 className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${isActive
-                    ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md scale-105"
-                    : isAccessible
-                      ? "text-warm-gray hover:bg-muted"
-                      : "text-muted-foreground/40 cursor-not-allowed"
+                  ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md scale-105"
+                  : isAccessible
+                    ? "text-warm-gray hover:bg-muted"
+                    : "text-muted-foreground/40 cursor-not-allowed"
                   }`}
               >
                 <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${isActive ? "bg-white/20" : "bg-muted"
@@ -126,7 +166,13 @@ export function MascotCreator() {
                 <p className="text-sm text-muted-foreground mb-5">
                   Describe a character or upload an image to transform
                 </p>
-                <PromptInput onGenerated={handleGenerated} onLoadingChange={setLoading} />
+                <PromptInput
+                  onGenerated={handleGenerated}
+                  onLoadingChange={setLoading}
+                  requireAuth={requireAuth}
+                  onApiError={handleApiError}
+                  onCreditsUpdate={handleCreditsUpdate}
+                />
               </div>
             )}
 
@@ -136,6 +182,8 @@ export function MascotCreator() {
                 onMascotUpdate={handleMascotUpdate}
                 onLoadingChange={setLoading}
                 onDone={() => setMode("animate")}
+                onApiError={handleApiError}
+                onCreditsUpdate={handleCreditsUpdate}
               />
             )}
 
@@ -146,6 +194,8 @@ export function MascotCreator() {
                   mascotDescription={mascotDescription}
                   onAnimationGenerated={handleAnimationGenerated}
                   onLoadingChange={setLoading}
+                  onApiError={handleApiError}
+                  onCreditsUpdate={handleCreditsUpdate}
                 />
                 <GifPreview gifs={gifs} mascotImageUrl={mascotImageUrl} />
               </div>
@@ -153,6 +203,15 @@ export function MascotCreator() {
           </div>
         </div>
       </div>
+
+      {/* Paywall Modal */}
+      <PaywallModal
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        type={paywallType}
+        creditsRequired={paywallCreditsRequired}
+        creditsRemaining={session?.user?.credits ?? 0}
+      />
 
       <Dialog open={confirmReset} onOpenChange={setConfirmReset}>
         <DialogContent className="rounded-3xl border-2 border-border sm:max-w-sm">

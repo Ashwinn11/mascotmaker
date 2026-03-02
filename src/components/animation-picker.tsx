@@ -11,6 +11,8 @@ interface AnimationPickerProps {
   mascotDescription?: string | null;
   onAnimationGenerated: (gif: { spriteUrl: string; gifUrl: string; action: string }) => void;
   onLoadingChange: (loading: boolean) => void;
+  onApiError: (res: Response, data: Record<string, unknown>) => boolean;
+  onCreditsUpdate: (creditsRemaining?: number) => void;
 }
 
 const PRESET_ACTIONS: { label: string; icon: FluentIcon3D; color: string }[] = [
@@ -27,6 +29,8 @@ export function AnimationPicker({
   mascotDescription,
   onAnimationGenerated,
   onLoadingChange,
+  onApiError,
+  onCreditsUpdate,
 }: AnimationPickerProps) {
   const [customAction, setCustomAction] = useState("");
   const [activeAction, setActiveAction] = useState<string | null>(null);
@@ -42,9 +46,11 @@ export function AnimationPicker({
       });
       const data = await res.json();
       if (!res.ok) {
+        if (!onApiError(res, data)) return;
         toast.error(data.error || "Failed to generate animation");
         return;
       }
+      onCreditsUpdate(data.creditsRemaining);
       if (data.gifUrl) {
         onAnimationGenerated({
           spriteUrl: data.spriteUrl,

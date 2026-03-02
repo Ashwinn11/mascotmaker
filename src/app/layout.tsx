@@ -4,6 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Toaster } from "@/components/ui/sonner";
 import { NavLinks } from "@/components/nav-links";
+import { AuthButton } from "@/components/auth-button";
+import { CreditsDisplay } from "@/components/credits-display";
+import { Providers } from "@/components/providers";
 import "./globals.css";
 
 const heading = Lilita_One({
@@ -19,23 +22,19 @@ const body = Nunito({
 
 export const metadata: Metadata = {
   title: {
-    template: "%s — Mascot Maker",
-    default: "Mascot Maker — AI Mascot & Character Generator with Animation",
+    template: "%s | Mascot Maker",
+    default: "Mascot Maker — AI Mascot & Character Generator at mascotmaker.io",
   },
   description:
-    "Create custom mascot characters from text or images in seconds. Refine with AI chat, animate as GIFs, and share with the world — completely free, powered by Nano Banana 2.",
+    "The ultimate AI mascot maker. Create custom characters from text or images, refine them with AI chat, and bring them to life with animations. All-in-one character creator at mascotmaker.io.",
   keywords: [
     "mascot maker",
-    "AI character generator",
-    "animated mascot",
-    "character creator",
     "AI mascot generator",
-    "GIF maker",
-    "cartoon avatar",
-    "mascot animation",
-    "text to character",
-    "AI art generator",
-    "free mascot creator",
+    "mascotmaker.io",
+    "character generator",
+    "animated mascot creator",
+    "AI cartoon avatar",
+    "mascot animation tool",
   ],
   robots: { index: true, follow: true },
   icons: {
@@ -43,17 +42,17 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
   },
   openGraph: {
-    title: "Mascot Maker — AI Mascot & Character Generator with Animation",
+    title: "Mascot Maker — The fastest AI Character Generator",
     description:
-      "Create custom mascot characters from text or images in seconds. Refine with AI chat, animate as GIFs, and share with the world — completely free.",
+      "Transform any idea into a professional mascot. Custom AI generation, chat-based refiner, and GIF animation. Explore mascotmaker.io today.",
     type: "website",
     siteName: "Mascot Maker",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Mascot Maker — AI Mascot & Character Generator",
+    title: "Mascot Maker — Powered by mascotmaker.io",
     description:
-      "Turn any idea into a custom animated mascot. Describe it, refine with AI chat, and bring it to life as an animated GIF — all for free.",
+      "The all-in-one platform for creating and animating custom AI mascot characters.",
   },
 };
 
@@ -65,42 +64,59 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${heading.variable} ${body.variable} antialiased`}>
-        <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
-          <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
-            <Link href="/" className="flex items-center gap-3 group">
-              <Image
-                src="/app-icon.png"
-                alt="Mascot Maker"
-                width={56}
-                height={56}
-                className="rounded-xl shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3"
-              />
-              <span className="font-display text-2xl tracking-tight text-foreground">
-                Mascot Maker
-              </span>
-            </Link>
-            <NavLinks />
-          </div>
-        </nav>
-        <main>{children}</main>
-        <footer className="border-t border-border/50 bg-cream/50">
-          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
-            <div className="flex items-center gap-4">
-              <Image
-                src="/app-icon.png"
-                alt="Mascot Maker"
-                width={64}
-                height={64}
-                className="rounded-xl shadow-sm"
-              />
-              <span className="font-display text-lg text-warm-gray">Mascot Maker</span>
+        <Providers>
+          <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
+            <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
+              <Link href="/" className="flex items-center gap-3 group">
+                <Image
+                  src="/app-icon.png"
+                  alt="mascotmaker.io"
+                  width={56}
+                  height={56}
+                  className="rounded-xl shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3"
+                />
+                <span className="font-display text-2xl tracking-tight text-foreground">
+                  Mascot Maker
+                </span>
+              </Link>
+              <div className="flex items-center gap-3">
+                <NavLinks />
+                <CreditsDisplay />
+                <AuthButton />
+              </div>
             </div>
-            <p className="text-xs text-muted-foreground">
-              Powered by Nano Banana 2. Made with care.
-            </p>
-          </div>
-        </footer>
-        <Toaster richColors position="bottom-right" />
+          </nav>
+          <main>{children}</main>
+          <footer className="border-t border-border/50 bg-cream/50 pt-12 pb-8">
+            <div className="mx-auto max-w-6xl px-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <Image
+                    src="/app-icon.png"
+                    alt="Mascot Maker"
+                    width={64}
+                    height={64}
+                    className="rounded-xl shadow-sm"
+                  />
+                  <div>
+                    <span className="font-display text-xl text-foreground block">Mascot Maker</span>
+                    <p className="text-sm text-muted-foreground font-semibold">mascotmaker.io</p>
+                  </div>
+                </div>
+                <div className="flex flex-col md:items-end gap-2">
+                  <div className="flex gap-6">
+                    <Link href="/privacy" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Privacy Policy</Link>
+                    <Link href="/terms" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Terms of Service</Link>
+                  </div>
+                  <p className="text-xs text-muted-foreground">
+                    &copy; {new Date().getFullYear()} mascotmaker.io. All rights reserved.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </footer>
+          <Toaster richColors position="bottom-right" />
+        </Providers>
       </body>
     </html>
   );

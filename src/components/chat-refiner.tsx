@@ -16,6 +16,8 @@ interface ChatRefinerProps {
   onMascotUpdate: (imageUrl: string) => void;
   onLoadingChange: (loading: boolean) => void;
   onDone: () => void;
+  onApiError: (res: Response, data: Record<string, unknown>) => boolean;
+  onCreditsUpdate: (creditsRemaining?: number) => void;
 }
 
 export function ChatRefiner({
@@ -23,6 +25,8 @@ export function ChatRefiner({
   onMascotUpdate,
   onLoadingChange,
   onDone,
+  onApiError,
+  onCreditsUpdate,
 }: ChatRefinerProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -49,6 +53,7 @@ export function ChatRefiner({
       });
       const data = await res.json();
       if (!res.ok) {
+        if (!onApiError(res, data)) return;
         toast.error(data.error || "Failed to refine mascot");
         setMessages((prev) => [
           ...prev,
@@ -56,6 +61,7 @@ export function ChatRefiner({
         ]);
         return;
       }
+      onCreditsUpdate(data.creditsRemaining);
       if (data.imageUrl) {
         onMascotUpdate(data.imageUrl);
         setMessages((prev) => [
@@ -118,8 +124,8 @@ export function ChatRefiner({
           >
             <div
               className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user"
-                  ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white rounded-br-md"
-                  : "bg-white border-2 border-border text-foreground rounded-bl-md"
+                ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white rounded-br-md"
+                : "bg-white border-2 border-border text-foreground rounded-bl-md"
                 }`}
             >
               {msg.content}
