@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface GifItem {
   spriteUrl: string;
@@ -36,7 +37,7 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
     if (!name.trim() || !selectedGif) return;
     setPublishing(true);
     try {
-      await fetch("/api/gallery", {
+      const res = await fetch("/api/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -46,15 +47,21 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
           gifUrl: selectedGif.gifUrl,
         }),
       });
+      if (!res.ok) {
+        const data = await res.json();
+        toast.error(data.error || "Failed to publish");
+        return;
+      }
       setPublished(true);
+      toast.success("Mascot published to the gallery!");
       setTimeout(() => {
         setPublishOpen(false);
         setPublished(false);
         setName("");
         setDescription("");
       }, 1500);
-    } catch (err) {
-      console.error("Publish failed:", err);
+    } catch {
+      toast.error("Failed to publish. Please try again.");
     } finally {
       setPublishing(false);
     }
@@ -116,6 +123,7 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
             <div className="flex flex-col items-center py-8">
               <span className="text-5xl mb-3 animate-pop-in">🎉</span>
               <p className="font-display text-lg text-foreground">Published!</p>
+              <p className="text-sm text-muted-foreground mt-1">Your mascot is now in the gallery</p>
             </div>
           ) : (
             <div className="space-y-3">

@@ -90,7 +90,7 @@ export async function stylizeImage(
   const analysisContext = analysis
     ? `The image contains: ${analysis}. Use these details to preserve the subject's identity.`
     : "";
-  const fullPrompt = `Transform this image into a cute mascot character in a cartoon/chibi style. ${analysisContext} ${prompt}. Keep the character recognizable but make it adorable and suitable as a mascot. Clean white background.`;
+  const fullPrompt = `Transform this image into a cute mascot character in a cartoon/chibi style. ${analysisContext} ${prompt}. Keep the character recognizable but make it adorable and suitable as a mascot. The background must be plain white with no patterns, objects, or shadows.`;
   return editImage(fullPrompt, imageBase64);
 }
 
@@ -105,7 +105,7 @@ export async function generateSpriteSheet(
   const characterContext = description
     ? `This character is: ${description}. `
     : "";
-  const prompt = `${characterContext}Sprite sheet of this character ${action}, 3x3 grid, white background, sequence, frame by frame animation, square aspect ratio. Follow the structure of the attached reference image exactly.`;
+  const prompt = `${characterContext}Sprite sheet of this character ${action}, 3x3 grid, plain white background with no patterns or objects, sequence, frame by frame animation, square aspect ratio. Follow the structure of the attached reference image exactly.`;
 
   const response = await ai.models.generateContent({
     model: SPRITE_MODEL_ID,

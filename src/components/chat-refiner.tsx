@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface Message {
   role: "user" | "assistant";
@@ -46,6 +47,14 @@ export function ChatRefiner({
         body: JSON.stringify({ message: userMsg, mascotImageUrl }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Failed to refine mascot");
+        setMessages((prev) => [
+          ...prev,
+          { role: "assistant", content: "Something went wrong. Try again!" },
+        ]);
+        return;
+      }
       if (data.imageUrl) {
         onMascotUpdate(data.imageUrl);
         setMessages((prev) => [
@@ -53,8 +62,8 @@ export function ChatRefiner({
           { role: "assistant", content: "Here's the updated mascot!", imageUrl: data.imageUrl },
         ]);
       }
-    } catch (err) {
-      console.error("Chat failed:", err);
+    } catch {
+      toast.error("Failed to refine mascot. Please try again.");
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: "Oops, something went wrong. Try again!" },
@@ -66,12 +75,12 @@ export function ChatRefiner({
   };
 
   const quickEdits = [
-    "Make it happier",
-    "Add a hat",
-    "Change to blue color",
-    "Make it more cute",
-    "Add sparkles",
-    "Give it wings",
+    "Make the eyes bigger and sparklier",
+    "Add a tiny top hat",
+    "Switch to a cool blue palette",
+    "Give it a superhero cape",
+    "Add rosy cheeks",
+    "Make it fluffier",
   ];
 
   return (
@@ -89,12 +98,12 @@ export function ChatRefiner({
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl bg-white/50 p-4 border-2 border-border mb-3" style={{ maxHeight: "320px" }}>
+      <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl bg-white/50 p-4 border-2 border-border mb-3 max-h-[40vh] sm:max-h-[320px]">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <span className="text-3xl mb-2">💬</span>
+            <span className="text-3xl mb-2">✨</span>
             <p className="text-sm font-semibold text-warm-gray">
-              Tell me how to improve your mascot
+              Your mascot is looking great! Want to tweak anything?
             </p>
             <p className="text-xs text-muted-foreground mt-1">
               Try the quick edits below or type your own

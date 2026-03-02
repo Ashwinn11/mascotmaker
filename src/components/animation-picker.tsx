@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface AnimationPickerProps {
   mascotImageUrl: string;
@@ -38,6 +39,10 @@ export function AnimationPicker({
         body: JSON.stringify({ mascotImageUrl, action, description: mascotDescription }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Failed to generate animation");
+        return;
+      }
       if (data.gifUrl) {
         onAnimationGenerated({
           spriteUrl: data.spriteUrl,
@@ -45,8 +50,8 @@ export function AnimationPicker({
           action,
         });
       }
-    } catch (err) {
-      console.error("Animate failed:", err);
+    } catch {
+      toast.error("Failed to generate animation. Please try again.");
     } finally {
       setActiveAction(null);
       onLoadingChange(false);

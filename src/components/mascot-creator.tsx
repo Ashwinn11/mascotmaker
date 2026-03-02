@@ -6,6 +6,15 @@ import { MascotPreview } from "./mascot-preview";
 import { ChatRefiner } from "./chat-refiner";
 import { AnimationPicker } from "./animation-picker";
 import { GifPreview } from "./gif-preview";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 type Mode = "create" | "refine" | "animate";
 
@@ -27,6 +36,7 @@ export function MascotCreator() {
   const [mascotDescription, setMascotDescription] = useState<string | null>(null);
   const [gifs, setGifs] = useState<GifItem[]>([]);
   const [loading, setLoading] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
 
   const handleGenerated = (imageUrl: string, analysis?: string) => {
     setMascotImageUrl(imageUrl);
@@ -42,6 +52,14 @@ export function MascotCreator() {
     setGifs((prev) => [...prev, gif]);
   };
 
+  const handleStartOver = () => {
+    setMascotImageUrl(null);
+    setMascotDescription(null);
+    setGifs([]);
+    setMode("create");
+    setConfirmReset(false);
+  };
+
   const canGoTo = (step: Mode) => {
     if (step === "create") return true;
     if (step === "refine") return !!mascotImageUrl;
@@ -54,7 +72,7 @@ export function MascotCreator() {
       {/* Step indicator */}
       <div className="mb-8 flex items-center justify-center">
         <div className="flex items-center gap-2 rounded-2xl bg-white border-2 border-border p-1.5 shadow-sm">
-          {STEPS.map((step, i) => {
+          {STEPS.map((step) => {
             const isActive = mode === step.key;
             const isAccessible = canGoTo(step.key);
             return (
@@ -64,7 +82,7 @@ export function MascotCreator() {
                 disabled={!isAccessible}
                 className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
                   isActive
-                    ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md"
+                    ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md scale-105"
                     : isAccessible
                     ? "text-warm-gray hover:bg-muted"
                     : "text-muted-foreground/40 cursor-not-allowed"
@@ -90,12 +108,7 @@ export function MascotCreator() {
           <MascotPreview imageUrl={mascotImageUrl} loading={loading && mode === "create"} />
           {mascotImageUrl && mode !== "create" && (
             <button
-              onClick={() => {
-                setMascotImageUrl(null);
-                setMascotDescription(null);
-                setGifs([]);
-                setMode("create");
-              }}
+              onClick={() => setConfirmReset(true)}
               className="self-center text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               ← Start over with a new mascot
@@ -139,6 +152,32 @@ export function MascotCreator() {
           </div>
         </div>
       </div>
+
+      <Dialog open={confirmReset} onOpenChange={setConfirmReset}>
+        <DialogContent className="rounded-3xl border-2 border-border sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl">Start Over?</DialogTitle>
+            <DialogDescription>
+              This will discard your current mascot and all animations. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex gap-2 sm:justify-end">
+            <Button
+              variant="outline"
+              onClick={() => setConfirmReset(false)}
+              className="rounded-xl border-2"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleStartOver}
+              className="rounded-xl bg-destructive text-white hover:bg-destructive/90"
+            >
+              Start Over
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

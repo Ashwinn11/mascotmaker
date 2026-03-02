@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { toast } from "sonner";
 
 interface PromptInputProps {
   onGenerated: (imageUrl: string, analysis?: string) => void;
@@ -27,9 +28,13 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
         body: JSON.stringify({ prompt: prompt.trim() }),
       });
       const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Failed to generate mascot");
+        return;
+      }
       if (data.imageUrl) onGenerated(data.imageUrl);
-    } catch (err) {
-      console.error("Generate failed:", err);
+    } catch {
+      toast.error("Failed to generate mascot. Please try again.");
     } finally {
       onLoadingChange(false);
     }
@@ -44,9 +49,13 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
       formData.append("prompt", stylePrompt);
       const res = await fetch("/api/stylize", { method: "POST", body: formData });
       const data = await res.json();
+      if (!res.ok) {
+        toast.error(data.error || "Failed to stylize image");
+        return;
+      }
       if (data.imageUrl) onGenerated(data.imageUrl, data.analysis);
-    } catch (err) {
-      console.error("Stylize failed:", err);
+    } catch {
+      toast.error("Failed to stylize image. Please try again.");
     } finally {
       onLoadingChange(false);
     }
@@ -60,10 +69,10 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
   };
 
   const suggestions = [
-    "A friendly robot with big eyes",
-    "A magical fox with a wizard hat",
-    "A cute penguin chef",
-    "A brave knight cat",
+    "A round panda DJ with headphones and turntables",
+    "A cheerful cactus with sunglasses and sneakers",
+    "A tiny dragon barista holding a latte",
+    "A fluffy cloud cat floating on a rainbow",
   ];
 
   return (
@@ -101,9 +110,12 @@ export function PromptInput({ onGenerated, onLoadingChange }: PromptInputProps) 
               placeholder="Describe your dream mascot..."
               className="min-h-[120px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-base placeholder:text-muted-foreground/60 focus:border-candy-pink focus:ring-candy-pink/20"
               onKeyDown={(e) => {
-                if (e.key === "Enter" && e.metaKey) handleGenerate();
+                if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate();
               }}
             />
+            <span className="absolute bottom-2 right-3 text-[10px] text-muted-foreground/50">
+              {navigator.platform?.includes("Mac") ? "⌘" : "Ctrl"}+Enter to generate
+            </span>
           </div>
           {/* Suggestion chips */}
           <div className="flex flex-wrap gap-2">

@@ -149,11 +149,11 @@
 }
 
 .animate-pop-in {
-  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  animation: pop-in 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
 }
 
 .animate-slide-up {
-  animation: slide-up 0.5s ease-out forwards;
+  animation: slide-up 0.5s ease-out both;
 }
 
 /* Staggered animations */
@@ -163,6 +163,18 @@
 .stagger-4 { animation-delay: 0.2s; }
 .stagger-5 { animation-delay: 0.25s; }
 .stagger-6 { animation-delay: 0.3s; }
+
+/* Checkerboard transparency pattern */
+.bg-checkerboard {
+  background-color: #ffffff;
+  background-image:
+    linear-gradient(45deg, #f0ebe4 25%, transparent 25%),
+    linear-gradient(-45deg, #f0ebe4 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, #f0ebe4 75%),
+    linear-gradient(-45deg, transparent 75%, #f0ebe4 75%);
+  background-size: 20px 20px;
+  background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+}
 
 /* Dotted paper background */
 .bg-dotted {
@@ -182,6 +194,16 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Marquee animation */
+@keyframes marquee {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
 }
 
 /* Custom scrollbar */

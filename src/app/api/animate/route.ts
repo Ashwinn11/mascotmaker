@@ -6,9 +6,15 @@ import { spriteSheetToGif } from "@/lib/sprite-to-gif";
 export async function POST(req: Request) {
   try {
     const { mascotImageUrl, action, description } = await req.json();
-    if (!mascotImageUrl || !action) {
+    if (!mascotImageUrl || !action || typeof action !== "string") {
       return NextResponse.json(
         { error: "mascotImageUrl and action are required" },
+        { status: 400 }
+      );
+    }
+    if (action.length > 500) {
+      return NextResponse.json(
+        { error: "Action must be under 500 characters" },
         { status: 400 }
       );
     }

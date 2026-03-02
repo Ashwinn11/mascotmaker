@@ -39,6 +39,13 @@ export function getGalleryItems(): GalleryItem[] {
     .all() as GalleryItem[];
 }
 
+export function deleteGalleryItem(id: number): boolean {
+  const result = getDb()
+    .prepare("DELETE FROM gallery WHERE id = ?")
+    .run(id);
+  return result.changes > 0;
+}
+
 export function addToGallery(item: {
   name: string;
   description?: string;

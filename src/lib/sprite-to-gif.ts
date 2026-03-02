@@ -1,5 +1,6 @@
 import sharp from "sharp";
 import { GIFEncoder, quantize, applyPalette } from "gifenc";
+import { makeWhiteTransparentRGBA } from "./image";
 
 const GIF_SIZE = 256;
 
@@ -30,12 +31,28 @@ export async function spriteSheetToGif(
         .raw()
         .toBuffer();
 
-      const palette = quantize(data, 256);
-      const index = applyPalette(data, palette);
+      // Make white pixels transparent
+      makeWhiteTransparentRGBA(data);
+
+      const palette = quantize(data, 256, { format: "rgba4444" });
+      const index = applyPalette(data, palette, "rgba4444");
+
+      // Find the transparent color index in the palette (r=0,g=0,b=0,a=0)
+      let transparentIndex = 0;
+      for (let i = 0; i < palette.length; i++) {
+        const [r, g, b, a] = palette[i];
+        if (a === 0 || (r === 0 && g === 0 && b === 0 && a === 0)) {
+          transparentIndex = i;
+          break;
+        }
+      }
 
       gif.writeFrame(index, GIF_SIZE, GIF_SIZE, {
         palette,
         delay: frameDuration,
+        transparent: true,
+        transparentIndex,
+        disposal: 2, // restore to background between frames
       });
     }
   }

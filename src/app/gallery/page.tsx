@@ -1,4 +1,10 @@
+import type { Metadata } from "next";
 import { GalleryGrid } from "@/components/gallery-grid";
+
+export const metadata: Metadata = {
+  title: "Gallery",
+  description: "Browse animated mascots created by the community. Hover to see them come alive!",
+};
 
 export default function GalleryPage() {
   return (
@@ -8,7 +14,7 @@ export default function GalleryPage() {
           <h1 className="font-display text-4xl sm:text-5xl text-foreground mb-3 animate-slide-up">
             Mascot <span className="text-gradient">Gallery</span>
           </h1>
-          <p className="text-lg text-muted-foreground max-w-lg mx-auto animate-slide-up stagger-2" style={{ opacity: 0 }}>
+          <p className="text-lg text-muted-foreground max-w-lg mx-auto animate-slide-up stagger-2">
             Browse mascots created by the community. Hover to see them animate!
           </p>
         </div>

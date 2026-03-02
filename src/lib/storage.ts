@@ -27,6 +27,12 @@ export function saveBuffer(buffer: Buffer, ext = "gif"): string {
 }
 
 export function loadImageAsBase64(urlPath: string): string {
-  const filepath = path.join(process.cwd(), "public", urlPath);
+  const sanitized = urlPath.replace(/^\/+/, "");
+  const filepath = path.resolve(process.cwd(), "public", sanitized);
+  const uploadsReal = fs.realpathSync(UPLOADS_DIR);
+  const fileReal = fs.realpathSync(filepath);
+  if (!fileReal.startsWith(uploadsReal + path.sep) && fileReal !== uploadsReal) {
+    throw new Error("Invalid file path");
+  }
   return fs.readFileSync(filepath).toString("base64");
 }

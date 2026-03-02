@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Lilita_One, Nunito } from "next/font/google";
 import Link from "next/link";
+import { Toaster } from "@/components/ui/sonner";
+import { NavLinks } from "@/components/nav-links";
 import "./globals.css";
 
 const heading = Lilita_One({
@@ -15,8 +17,34 @@ const body = Nunito({
 });
 
 export const metadata: Metadata = {
-  title: "Mascot Maker",
-  description: "Create animated mascot characters with AI",
+  title: {
+    template: "%s | Mascot Maker",
+    default: "Mascot Maker — Create Animated AI Characters",
+  },
+  description:
+    "Turn any idea into a custom animated mascot in minutes. Describe, refine, and bring characters to life with AI.",
+  keywords: [
+    "mascot maker",
+    "AI character generator",
+    "animated mascot",
+    "character creator",
+    "AI art",
+    "GIF maker",
+  ],
+  robots: { index: true, follow: true },
+  openGraph: {
+    title: "Mascot Maker — Create Animated AI Characters",
+    description:
+      "Turn any idea into a custom animated mascot in minutes. Describe, refine, and bring characters to life with AI.",
+    type: "website",
+    siteName: "Mascot Maker",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Mascot Maker — Create Animated AI Characters",
+    description:
+      "Turn any idea into a custom animated mascot in minutes. Describe, refine, and bring characters to life with AI.",
+  },
 };
 
 export default function RootLayout({
@@ -42,23 +70,27 @@ export default function RootLayout({
                 Mascot Maker
               </span>
             </Link>
-            <div className="flex items-center gap-1">
-              <Link
-                href="/"
-                className="rounded-xl px-4 py-2 text-sm font-semibold text-warm-gray transition-colors hover:bg-secondary hover:text-foreground"
-              >
-                Create
-              </Link>
-              <Link
-                href="/gallery"
-                className="rounded-xl px-4 py-2 text-sm font-semibold text-warm-gray transition-colors hover:bg-secondary hover:text-foreground"
-              >
-                Gallery
-              </Link>
-            </div>
+            <NavLinks />
           </div>
         </nav>
         <main>{children}</main>
+        <footer className="border-t border-border/50 bg-cream/50">
+          <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-6">
+            <div className="flex items-center gap-2">
+              <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gradient-to-br from-candy-pink to-candy-orange">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="8" r="5" />
+                  <path d="M8 14s-4 2-4 6h16c0-4-4-6-4-6" />
+                </svg>
+              </div>
+              <span className="font-display text-sm text-warm-gray">Mascot Maker</span>
+            </div>
+            <p className="text-xs text-muted-foreground">
+              Powered by Google Gemini. Made with care.
+            </p>
+          </div>
+        </footer>
+        <Toaster richColors position="bottom-right" />
       </body>
     </html>
   );
