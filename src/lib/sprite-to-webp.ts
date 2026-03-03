@@ -46,6 +46,8 @@ export async function spriteSheetToWebp(
     },
   })
     .webp({
+      quality: 90,
+      effort: 6,
       delay: rawFrames.map(() => frameDuration),
       loop: 0,
     })
