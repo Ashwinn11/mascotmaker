@@ -6,6 +6,7 @@ import Image from "next/image";
 import { toast } from "sonner";
 import { Icon3D } from "@/components/ui/icon-3d";
 import { PLANS } from "@/lib/pricing";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
 interface Transaction {
     id: number;
@@ -37,6 +38,8 @@ export default function ProfilePage() {
     const [subscription, setSubscription] = useState<SubscriptionInfo | null>(null);
     const [subLoading, setSubLoading] = useState(true);
     const [cancelLoading, setCancelLoading] = useState(false);
+    const [confirmCancelOpen, setConfirmCancelOpen] = useState(false);
+    const [confirmPlanChange, setConfirmPlanChange] = useState<{ variantId: string; credits: number } | null>(null);
 
     useEffect(() => {
         if (typeof window !== "undefined") {
@@ -70,13 +73,11 @@ export default function ProfilePage() {
 
     const handleBuyCredits = async (variantId: string, credits: number) => {
         // Confirm plan change if user already has an active subscription
-        if (subscription?.status === "active") {
+        if (subscription?.status === "active" && !confirmPlanChange) {
             const targetPlan = PLANS.find(p => p.variantId === variantId);
             if (!targetPlan) return;
-            const confirmed = confirm(
-                `Switch to ${targetPlan.name} plan (${targetPlan.credits} credits/mo at ${targetPlan.priceLabel})? You'll be charged a prorated amount immediately.`
-            );
-            if (!confirmed) return;
+            setConfirmPlanChange({ variantId, credits });
+            return;
         }
 
         setPurchaseLoading(credits);
@@ -106,7 +107,6 @@ export default function ProfilePage() {
     };
 
     const handleCancel = async () => {
-        if (!confirm("Are you sure you want to cancel your subscription? You'll keep access until the end of your billing period.")) return;
         setCancelLoading(true);
         try {
             const res = await fetch("/api/subscription/cancel", { method: "POST" });
@@ -261,7 +261,7 @@ export default function ProfilePage() {
                                     </button>
                                     {subscription.status === "active" && (
                                         <button
-                                            onClick={handleCancel}
+                                            onClick={() => setConfirmCancelOpen(true)}
                                             disabled={cancelLoading}
                                             className="rounded-xl border-2 border-red-200 bg-white px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 transition-all active:scale-95 disabled:opacity-50"
                                         >
@@ -372,6 +372,38 @@ export default function ProfilePage() {
                         </div>
                     )}
                 </div>
+                <ConfirmDialog
+                    open={!!confirmPlanChange}
+                    onOpenChange={(open) => !open && setConfirmPlanChange(null)}
+                    title="Change Subscription Plan?"
+                    description={
+                        confirmPlanChange
+                            ? `Switch to ${PLANS.find(p => p.variantId === confirmPlanChange.variantId)?.name} plan (${PLANS.find(p => p.variantId === confirmPlanChange.variantId)?.credits} credits/mo at ${PLANS.find(p => p.variantId === confirmPlanChange.variantId)?.priceLabel})? You'll be charged a prorated amount immediately.`
+                            : ""
+                    }
+                    confirmText="Switch Plan"
+                    onConfirm={() => {
+                        if (confirmPlanChange) {
+                            const { variantId, credits } = confirmPlanChange;
+                            setConfirmPlanChange(null);
+                            handleBuyCredits(variantId, credits);
+                        }
+                    }}
+                />
+
+                <ConfirmDialog
+                    open={confirmCancelOpen}
+                    onOpenChange={setConfirmCancelOpen}
+                    title="Cancel Subscription?"
+                    description="Are you sure you want to cancel your subscription? You'll keep access until the end of your billing period."
+                    confirmText="Cancel Subscription"
+                    variant="destructive"
+                    loading={cancelLoading}
+                    onConfirm={async () => {
+                        await handleCancel();
+                        setConfirmCancelOpen(false);
+                    }}
+                />
             </div>
         </div>
     );

@@ -4,14 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Button } from "@/components/ui/button";
 import { Icon3D } from "@/components/ui/icon-3d";
 
@@ -129,33 +122,16 @@ export function GalleryGrid() {
         ))}
       </div>
 
-      <Dialog open={!!deleteTarget} onOpenChange={(open) => !open && setDeleteTarget(null)}>
-        <DialogContent className="rounded-3xl border-2 border-border sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="font-display text-xl">Delete Mascot?</DialogTitle>
-            <DialogDescription>
-              &quot;{deleteTarget?.name}&quot; will be permanently removed from the gallery. This cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex gap-2 sm:justify-end">
-            <Button
-              variant="outline"
-              onClick={() => setDeleteTarget(null)}
-              className="rounded-xl border-2"
-              disabled={deleting}
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleDelete}
-              disabled={deleting}
-              className="rounded-xl bg-destructive text-white hover:bg-destructive/90"
-            >
-              {deleting ? "Deleting..." : "Delete"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={!!deleteTarget}
+        onOpenChange={(open) => !open && setDeleteTarget(null)}
+        title="Delete Mascot?"
+        description={`"${deleteTarget?.name}" will be permanently removed from the gallery. This cannot be undone.`}
+        confirmText="Delete"
+        variant="destructive"
+        loading={deleting}
+        onConfirm={handleDelete}
+      />
     </>
   );
 }

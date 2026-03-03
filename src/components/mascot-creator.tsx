@@ -9,14 +9,7 @@ import { AnimationPicker } from "./animation-picker";
 import { GifPreview } from "./gif-preview";
 import { PaywallModal } from "./paywall-modal";
 import { Icon3DInline } from "@/components/ui/icon-3d";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-} from "@/components/ui/dialog";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Button } from "@/components/ui/button";
 
 type Mode = "create" | "refine" | "animate";
@@ -211,31 +204,15 @@ export function MascotCreator() {
         creditsRemaining={session?.user?.credits ?? 0}
       />
 
-      <Dialog open={confirmReset} onOpenChange={setConfirmReset}>
-        <DialogContent className="rounded-3xl border-2 border-border sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="font-display text-xl">Start Over?</DialogTitle>
-            <DialogDescription>
-              This will discard your current mascot and all animations. This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter className="flex gap-2 sm:justify-end">
-            <Button
-              variant="outline"
-              onClick={() => setConfirmReset(false)}
-              className="rounded-xl border-2"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handleStartOver}
-              className="rounded-xl bg-destructive text-white hover:bg-destructive/90"
-            >
-              Start Over
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      <ConfirmDialog
+        open={confirmReset}
+        onOpenChange={setConfirmReset}
+        title="Start Over?"
+        description="This will discard your current mascot and all animations. This action cannot be undone."
+        confirmText="Start Over"
+        variant="destructive"
+        onConfirm={handleStartOver}
+      />
     </div>
   );
 }

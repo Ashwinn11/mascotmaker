@@ -94,37 +94,25 @@ export async function POST(req: Request) {
                 const billingReason = attrs.billing_reason ?? "";
 
                 if (existingSubForPayment) {
-                    let creditsToAdd = 0;
-                    let description = "";
-
                     if (billingReason === "initial" || billingReason === "renewal") {
                         // First purchase or monthly renewal — full plan credits
-                        creditsToAdd = getPlanCredits(existingSubForPayment.variant_id);
-                        description = `Subscription ${billingReason}: ${creditsToAdd} credits added`;
-                    } else if (billingReason === "upgrade") {
-                        // Upgrade proration — only grant the difference
-                        const oldCredits = getPlanCredits(existingSubForPayment.variant_id);
-                        const newVariant = variantId || existingSubForPayment.variant_id;
-                        const newCredits = getPlanCredits(newVariant);
-                        creditsToAdd = Math.max(0, newCredits - oldCredits);
-                        description = `Plan upgrade: +${creditsToAdd} credits`;
-                    }
-                    // downgrade/other: creditsToAdd stays 0
-
-                    if (creditsToAdd > 0) {
-                        const currentCredits = await getUserCredits(userId);
-                        const newBalance = currentCredits + creditsToAdd;
-                        await updateUserCredits(userId, newBalance);
-                        await addTransaction({
-                            userId,
-                            type: "purchase",
-                            amount: creditsToAdd,
-                            balanceAfter: newBalance,
-                            description,
-                        });
-                        console.log(`[LS] ${billingReason} user ${userId} +${creditsToAdd} → ${newBalance}`);
+                        const creditsToAdd = getPlanCredits(existingSubForPayment.variant_id);
+                        if (creditsToAdd > 0) {
+                            const currentCredits = await getUserCredits(userId);
+                            const newBalance = currentCredits + creditsToAdd;
+                            await updateUserCredits(userId, newBalance);
+                            await addTransaction({
+                                userId,
+                                type: "purchase",
+                                amount: creditsToAdd,
+                                balanceAfter: newBalance,
+                                description: `Subscription ${billingReason}: ${creditsToAdd} credits added`,
+                            });
+                            console.log(`[LS] ${billingReason} user ${userId} +${creditsToAdd} → ${newBalance}`);
+                        }
                     } else {
-                        console.log(`[LS] skipping payment for user ${userId} (billing_reason: ${billingReason}, no credits to add)`);
+                        // "updated" (plan change proration) — credits handled in subscription_plan_changed
+                        console.log(`[LS] skipping payment for user ${userId} (billing_reason: ${billingReason})`);
                     }
                 }
 
@@ -137,10 +125,38 @@ export async function POST(req: Request) {
                 break;
             }
 
+            case "subscription_plan_changed": {
+                if (!userId) break;
+
+                const oldSub = await getSubscriptionByLsId(lsSubId);
+                if (oldSub && oldSub.variant_id !== variantId) {
+                    const oldCredits = getPlanCredits(oldSub.variant_id);
+                    const newCredits = getPlanCredits(variantId);
+                    const diff = newCredits - oldCredits;
+                    const plan = getPlanByVariantId(variantId);
+
+                    if (diff > 0) {
+                        const currentCredits = await getUserCredits(userId);
+                        const newBalance = currentCredits + diff;
+                        await updateUserCredits(userId, newBalance);
+                        await addTransaction({
+                            userId,
+                            type: "purchase",
+                            amount: diff,
+                            balanceAfter: newBalance,
+                            description: `Plan upgrade (${oldSub.plan_name} → ${plan?.name ?? "Unknown"}): +${diff} credits`,
+                        });
+                        console.log(`[LS] upgrade user ${userId} +${diff} → ${newBalance}`);
+                    }
+                    // Downgrade: don't claw back
+                }
+                break;
+            }
+
             case "subscription_updated": {
-                // Only update subscription metadata — credits are handled solely in subscription_payment_success
                 const plan = getPlanByVariantId(variantId);
 
+                // Metadata only — credits are handled in subscription_plan_changed and subscription_payment_success
                 await updateSubscriptionByLsId(lsSubId, {
                     variantId,
                     planName: plan?.name ?? "Unknown",
