@@ -92,20 +92,20 @@ export function ChatRefiner({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="mb-3 flex items-center justify-between">
-        <h3 className="font-display text-lg text-foreground">Refine Your Mascot</h3>
+      <div className="mb-3 flex items-center justify-between gap-2">
+        <h3 className="font-display text-base md:text-lg text-foreground truncate">Refine Your Mascot</h3>
         <Button
           onClick={onDone}
           variant="outline"
-          className="rounded-xl border-2 border-candy-green text-candy-green hover:bg-candy-green/10 font-bold"
+          className="rounded-xl border-2 border-candy-green text-candy-green hover:bg-candy-green/10 font-bold whitespace-nowrap"
           size="sm"
         >
-          Done Refining →
+          {typeof window !== "undefined" && window.innerWidth < 640 ? "Done" : "Done Refining"} →
         </Button>
       </div>
 
       {/* Messages area */}
-      <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl bg-white/50 p-4 border-2 border-border mb-3 max-h-[40vh] sm:max-h-[320px]">
+      <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl bg-white/50 p-4 border-2 border-border mb-3 max-h-60 sm:max-h-[320px]">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
             <Icon3D name="sparkles" size="xl" className="mb-3" />
@@ -153,7 +153,7 @@ export function ChatRefiner({
             key={edit}
             onClick={() => setInput(edit)}
             disabled={loading}
-            className="rounded-full bg-white border-2 border-border px-2.5 py-1 text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 active:scale-95 disabled:opacity-50"
+            className="rounded-full bg-white border-2 border-border px-2 py-0.5 md:px-2.5 md:py-1 text-[10px] md:text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 active:scale-95 disabled:opacity-50"
           >
             {edit}
           </button>

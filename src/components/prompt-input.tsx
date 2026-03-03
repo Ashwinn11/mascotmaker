@@ -91,22 +91,22 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
       <div className="flex gap-1 rounded-2xl bg-muted p-1">
         <button
           onClick={() => setMode("describe")}
-          className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${mode === "describe"
+          className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 md:px-4 md:py-2.5 text-xs md:text-sm font-bold transition-all ${mode === "describe"
             ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md"
             : "text-muted-foreground hover:text-foreground"
             }`}
         >
-          <Icon3DInline name="pencil" size={18} />
+          <Icon3DInline name="pencil" size={16} className="md:w-[18px] md:h-[18px]" />
           Describe
         </button>
         <button
           onClick={() => setMode("upload")}
-          className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${mode === "upload"
+          className={`flex-1 flex items-center justify-center gap-1.5 rounded-xl px-2 py-2 md:px-4 md:py-2.5 text-xs md:text-sm font-bold transition-all ${mode === "upload"
             ? "bg-gradient-to-r from-candy-blue to-candy-purple text-white shadow-md"
             : "text-muted-foreground hover:text-foreground"
             }`}
         >
-          <Icon3DInline name="camera" size={18} />
+          <Icon3DInline name="camera" size={16} className="md:w-[18px] md:h-[18px]" />
           Upload
         </button>
       </div>
@@ -118,22 +118,22 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               placeholder="Describe your dream mascot..."
-              className="min-h-[120px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-base placeholder:text-muted-foreground/60 focus:border-candy-pink focus:ring-candy-pink/20"
+              className="min-h-[100px] md:min-h-[120px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-base placeholder:text-muted-foreground/60 focus:border-candy-pink focus:ring-candy-pink/20"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate();
               }}
             />
-            <span className="absolute bottom-2 right-3 text-[10px] text-muted-foreground/50">
+            <span className="absolute bottom-2 right-3 hidden md:block text-[10px] text-muted-foreground/50">
               {typeof window !== "undefined" && navigator.platform?.includes("Mac") ? "⌘" : "Ctrl"}+Enter to generate
             </span>
           </div>
           {/* Suggestion chips */}
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-1.5 md:gap-2">
             {suggestions.map((s) => (
               <button
                 key={s}
                 onClick={() => setPrompt(s)}
-                className="rounded-full border-2 border-border bg-white px-3 py-1.5 text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 hover:text-foreground active:scale-95"
+                className="rounded-full border-2 border-border bg-white px-2.5 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 hover:text-foreground active:scale-95"
               >
                 {s}
               </button>
@@ -155,7 +155,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
             onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
             onDragLeave={() => setDragOver(false)}
             onClick={() => fileInputRef.current?.click()}
-            className={`flex min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-3 border-dashed transition-all ${dragOver
+            className={`flex min-h-[120px] md:min-h-[160px] cursor-pointer flex-col items-center justify-center rounded-2xl border-3 border-dashed transition-all ${dragOver
               ? "border-candy-blue bg-candy-blue/5 scale-[1.02]"
               : file
                 ? "border-candy-green bg-candy-green/5"

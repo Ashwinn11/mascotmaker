@@ -10,9 +10,9 @@ export const TOKENS_PER_CREDIT = 100;
 
 export const CREDIT_COSTS: Record<string, number> = {
     generate: 5,
-    chat: 3,
+    chat: 5,
     stylize: 5,
-    animate: 10, // Increased to account for higher processing/storage
+    animate: 10,
 };
 
 /**

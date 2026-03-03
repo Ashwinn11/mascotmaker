@@ -116,7 +116,7 @@ export function GalleryGrid() {
 
   return (
     <>
-      <div className="columns-2 gap-4 sm:columns-3 lg:columns-4">
+      <div className="columns-2 gap-3 sm:gap-4 sm:columns-3 lg:columns-4">
         {items.map((item, i) => (
           <GalleryCard key={item.id} item={item} index={i} onDelete={setDeleteTarget} />
         ))}
@@ -169,10 +169,10 @@ function GalleryCard({
           </div>
         )}
       </div>
-      <div className="p-3.5">
-        <h3 className="font-display text-base text-foreground truncate">{item.name}</h3>
+      <div className="p-3 md:p-3.5">
+        <h3 className="font-display text-sm md:text-base text-foreground truncate">{item.name}</h3>
         {item.description && (
-          <p className="mt-0.5 text-xs text-muted-foreground line-clamp-2">{item.description}</p>
+          <p className="mt-0.5 text-[10px] md:text-xs text-muted-foreground line-clamp-2">{item.description}</p>
         )}
         <div className="flex gap-1.5 mt-2.5">
           <button
@@ -180,9 +180,9 @@ function GalleryCard({
               e.stopPropagation();
               downloadFile(downloadUrl, downloadName);
             }}
-            className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-xs font-bold text-warm-gray transition-colors hover:bg-border"
+            className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-muted py-2 md:py-1.5 text-[10px] md:text-xs font-bold text-warm-gray transition-colors hover:bg-border"
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="10" height="10" className="md:w-3 md:h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
               <polyline points="7 10 12 15 17 10" />
               <line x1="12" y1="15" x2="12" y2="3" />
@@ -194,9 +194,9 @@ function GalleryCard({
               e.stopPropagation();
               onDelete(item);
             }}
-            className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-xs font-bold text-destructive transition-colors hover:bg-red-50"
+            className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-muted py-2 md:py-1.5 text-[10px] md:text-xs font-bold text-destructive transition-colors hover:bg-red-50"
           >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="10" height="10" className="md:w-3 md:h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>

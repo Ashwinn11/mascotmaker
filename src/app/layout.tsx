@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { NavLinks } from "@/components/nav-links";
 import { AuthButton } from "@/components/auth-button";
 import { CreditsDisplay } from "@/components/credits-display";
+import { MobileNav } from "@/components/mobile-nav";
 import { Providers } from "@/components/providers";
 import "./globals.css";
 
@@ -66,27 +67,30 @@ export default function RootLayout({
       <body className={`${heading.variable} ${body.variable} antialiased`}>
         <Providers>
           <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
-            <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
-              <Link href="/" className="flex items-center gap-3 group">
+            <div className="mx-auto flex h-16 md:h-20 max-w-6xl items-center justify-between px-4 md:px-6">
+              <Link href="/" className="flex items-center gap-2 md:gap-3 group">
                 <Image
                   src="/app-icon.png"
                   alt="mascotmaker.io"
-                  width={56}
-                  height={56}
-                  className="rounded-xl shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3"
+                  width={40}
+                  height={40}
+                  className="rounded-lg md:rounded-xl shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3 md:w-[56px] md:h-[56px]"
                 />
-                <span className="font-display text-2xl tracking-tight text-foreground">
+                <span className="font-display text-xl md:text-2xl tracking-tight text-foreground">
                   Mascot Maker
                 </span>
               </Link>
-              <div className="flex items-center gap-3">
-                <NavLinks />
+              <div className="flex items-center gap-2 md:gap-3">
+                <div className="hidden md:block">
+                  <NavLinks />
+                </div>
                 <CreditsDisplay />
                 <AuthButton />
               </div>
             </div>
           </nav>
-          <main>{children}</main>
+          <main className="pb-24 md:pb-0">{children}</main>
+          <MobileNav />
           <footer className="border-t border-border/50 bg-cream/50 pt-12 pb-8">
             <div className="mx-auto max-w-6xl px-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center justify-between">

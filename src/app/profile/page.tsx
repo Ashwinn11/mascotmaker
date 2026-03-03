@@ -191,40 +191,40 @@ export default function ProfilePage() {
                 </div>
             )}
             <div className="relative overflow-hidden border-b border-border/50 bg-gradient-to-b from-candy-purple/5 via-candy-pink/5 to-transparent">
-                <div className="mx-auto max-w-4xl px-6 pt-12 pb-8">
-                    <div className="flex items-center gap-6">
+                <div className="mx-auto max-w-4xl px-4 md:px-6 pt-8 md:pt-12 pb-6 md:pb-8 animate-pop-in stagger-1">
+                    <div className="flex flex-col md:flex-row items-center md:items-start text-center md:text-left gap-4 md:gap-6">
                         {session.user.image ? (
                             <Image
                                 src={session.user.image}
                                 alt={session.user.name || "User"}
                                 width={80}
                                 height={80}
-                                className="rounded-2xl shadow-lg border-2 border-white"
+                                className="rounded-2xl shadow-lg border-2 border-white w-16 h-16 md:w-20 md:h-20"
                             />
                         ) : (
-                            <div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-candy-pink to-candy-orange text-2xl font-bold text-white shadow-lg">
+                            <div className="flex h-16 w-16 md:h-20 md:w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-candy-pink to-candy-orange text-xl md:text-2xl font-bold text-white shadow-lg">
                                 {session.user.name?.[0]?.toUpperCase() || "U"}
                             </div>
                         )}
                         <div>
-                            <h1 className="font-display text-3xl text-foreground">
+                            <h1 className="font-display text-2xl md:text-3xl text-foreground">
                                 {session.user.name}
                             </h1>
-                            <p className="text-muted-foreground">{session.user.email}</p>
+                            <p className="text-sm md:text-base text-muted-foreground">{session.user.email}</p>
                         </div>
                     </div>
                 </div>
                 <div className="absolute -top-20 -right-20 h-64 w-64 rounded-full bg-candy-pink/10 blur-3xl" />
             </div>
 
-            <div className="mx-auto max-w-4xl px-6 py-8 space-y-8">
+            <div className="mx-auto max-w-4xl px-4 md:px-6 py-6 md:py-8 space-y-6 md:space-y-8">
                 {/* Current Balance + Subscription */}
-                <div className="rounded-3xl border-2 border-border bg-white p-6 shadow-sm overflow-hidden relative">
-                    <div className="flex items-center justify-between mb-6">
-                        <h2 className="font-display text-2xl text-foreground">Current Balance</h2>
-                        <div className="flex items-center gap-3 rounded-2xl bg-muted px-5 py-3 border-2 border-border/50">
+                <div className="rounded-3xl border-2 border-border bg-white p-5 md:p-6 shadow-sm overflow-hidden relative animate-pop-in stagger-2">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
+                        <h2 className="font-display text-xl md:text-2xl text-foreground">Current Balance</h2>
+                        <div className="flex items-center gap-3 rounded-2xl bg-muted px-4 py-2 md:px-5 md:py-3 border-2 border-border/50">
                             <Icon3D name="high-voltage" size="sm" />
-                            <span className="font-display text-4xl text-foreground">{credits}</span>
+                            <span className="font-display text-3xl md:text-4xl text-foreground">{credits}</span>
                         </div>
                     </div>
 
@@ -232,10 +232,10 @@ export default function ProfilePage() {
                     {subLoading ? (
                         <div className="h-20 animate-pulse rounded-xl bg-muted mb-6" />
                     ) : subscription ? (
-                        <div className="rounded-2xl border-2 border-border p-5 mb-6">
-                            <div className="flex items-center justify-between mb-3">
-                                <div className="flex items-center gap-3">
-                                    <h3 className="font-display text-lg text-foreground">
+                        <div className="rounded-2xl border-2 border-border p-4 md:p-5 mb-6">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-4">
+                                <div className="flex items-center gap-2 md:gap-3 flex-wrap">
+                                    <h3 className="font-display text-base md:text-lg text-foreground">
                                         {subscription.planName} Plan
                                     </h3>
                                     {statusBadge(subscription.status)}
@@ -244,28 +244,28 @@ export default function ProfilePage() {
                                     {subscription.priceLabel}
                                 </span>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <p className="text-sm text-muted-foreground">
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4">
+                                <p className="text-xs md:text-sm text-muted-foreground">
                                     {subscription.status === "cancelled" && subscription.cancelAt
                                         ? `Access until ${new Date(subscription.cancelAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
                                         : subscription.currentPeriodEnd
                                             ? `Renews ${new Date(subscription.currentPeriodEnd).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
                                             : `${subscription.credits} credits/mo`}
                                 </p>
-                                <div className="flex gap-2">
+                                <div className="flex flex-wrap gap-2">
                                     <button
                                         onClick={handleManageBilling}
-                                        className="rounded-xl border-2 border-border bg-white px-4 py-2 text-sm font-bold text-foreground hover:border-candy-pink/30 transition-all active:scale-95"
+                                        className="flex-1 sm:flex-none rounded-xl border-2 border-border bg-white px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-bold text-foreground hover:border-candy-pink/30 transition-all active:scale-95 whitespace-nowrap"
                                     >
-                                        Manage Billing
+                                        Manage
                                     </button>
                                     {subscription.status === "active" && (
                                         <button
                                             onClick={() => setConfirmCancelOpen(true)}
                                             disabled={cancelLoading}
-                                            className="rounded-xl border-2 border-red-200 bg-white px-4 py-2 text-sm font-bold text-red-500 hover:bg-red-50 transition-all active:scale-95 disabled:opacity-50"
+                                            className="flex-1 sm:flex-none rounded-xl border-2 border-red-200 bg-white px-3 py-2 md:px-4 md:py-2 text-xs md:text-sm font-bold text-red-500 hover:bg-red-50 transition-all active:scale-95 disabled:opacity-50 whitespace-nowrap"
                                         >
-                                            {cancelLoading ? "Cancelling..." : "Cancel"}
+                                            {cancelLoading ? "..." : "Cancel"}
                                         </button>
                                     )}
                                     {subscription.status === "cancelled" && (
@@ -323,7 +323,7 @@ export default function ProfilePage() {
                 </div>
 
                 {/* Usage history */}
-                <div className="rounded-3xl border-2 border-border bg-white p-6 shadow-sm">
+                <div className="rounded-3xl border-2 border-border bg-white p-6 shadow-sm animate-pop-in stagger-3">
                     <h2 className="font-display text-xl text-foreground mb-4">Activity history</h2>
                     {txLoading ? (
                         <div className="space-y-3">

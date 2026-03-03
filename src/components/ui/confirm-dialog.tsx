@@ -41,7 +41,7 @@ export function ConfirmDialog({
                     <DialogTitle className="font-display text-xl">{title}</DialogTitle>
                     <DialogDescription>{description}</DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="flex gap-2 sm:justify-end mt-4">
+                <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-end mt-4">
                     <Button
                         variant="outline"
                         onClick={() => onOpenChange(false)}

@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateSpriteSheet } from "@/lib/gemini";
+import { removeGreenBackground } from "@/lib/image";
 import { spriteSheetToGif } from "@/lib/sprite-to-gif";
 import { requireCredits, deductCredits } from "@/lib/credits";
 
@@ -25,8 +26,9 @@ export async function POST(req: Request) {
 
     const result = await generateSpriteSheet(mascotBase64, action, description);
 
-    const spriteBase64 = result.data;
-    const spriteBuffer = Buffer.from(result.data, "base64");
+    // Remove green background from sprite sheet before GIF conversion
+    const spriteBase64 = await removeGreenBackground(result.data);
+    const spriteBuffer = Buffer.from(spriteBase64, "base64");
     const gifBuffer = await spriteSheetToGif(spriteBuffer);
     const gifBase64 = gifBuffer.toString("base64");
 

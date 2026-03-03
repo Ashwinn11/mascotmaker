@@ -100,10 +100,10 @@ export function MascotCreator() {
   };
 
   return (
-    <div className="mx-auto max-w-6xl px-6 py-8">
+    <div className="mx-auto max-w-6xl px-4 py-4 md:px-6 md:py-8 mb-16 md:mb-0">
       {/* Step indicator */}
-      <div className="mb-8 flex items-center justify-center">
-        <div className="flex items-center gap-2 rounded-2xl bg-white border-2 border-border p-1.5 shadow-sm">
+      <div className="mb-6 md:mb-8 flex items-center justify-center">
+        <div className="flex items-center gap-1 md:gap-2 rounded-2xl bg-white border-2 border-border p-1 md:p-1.5 shadow-sm">
           {STEPS.map((step) => {
             const isActive = mode === step.key;
             const isAccessible = canGoTo(step.key);
@@ -112,20 +112,20 @@ export function MascotCreator() {
                 key={step.key}
                 onClick={() => isAccessible && setMode(step.key)}
                 disabled={!isAccessible}
-                className={`flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${isActive
+                className={`flex items-center gap-1.5 md:gap-2 rounded-xl px-3 py-2 md:px-4 md:py-2.5 text-xs md:text-sm font-bold transition-all ${isActive
                   ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md scale-105"
                   : isAccessible
                     ? "text-warm-gray hover:bg-muted"
                     : "text-muted-foreground/40 cursor-not-allowed"
                   }`}
               >
-                <span className={`flex h-6 w-6 items-center justify-center rounded-full text-xs ${isActive ? "bg-white/20" : "bg-muted"
+                <span className={`flex h-5 w-5 md:h-6 md:w-6 items-center justify-center rounded-full text-[10px] md:text-xs ${isActive ? "bg-white/20" : "bg-muted"
                   }`}>
                   {step.num}
                 </span>
                 <span className="hidden sm:inline">{step.label}</span>
                 <span className="sm:hidden">
-                  <Icon3DInline name={step.icon} size={18} />
+                  <Icon3DInline name={step.icon} size={16} />
                 </span>
               </button>
             );
@@ -134,17 +134,19 @@ export function MascotCreator() {
       </div>
 
       {/* Main content */}
-      <div className="grid gap-8 lg:grid-cols-2">
+      <div className="grid gap-6 md:gap-8 lg:grid-cols-2">
         {/* Left: Preview */}
-        <div className="flex flex-col gap-4">
-          <MascotPreview
-            imageUrl={mascotBase64 ? `data:image/png;base64,${mascotBase64}` : null}
-            loading={loading && mode === "create"}
-          />
+        <div className="flex flex-col gap-3 md:gap-4 animate-pop-in stagger-1">
+          <div className="max-h-[50vh] md:max-h-none flex flex-col">
+            <MascotPreview
+              imageUrl={mascotBase64 ? `data:image/png;base64,${mascotBase64}` : null}
+              loading={loading && mode === "create"}
+            />
+          </div>
           {mascotBase64 && mode !== "create" && (
             <button
               onClick={() => setConfirmReset(true)}
-              className="self-center text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
+              className="self-center text-xs md:text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
             >
               ← Start over with a new mascot
             </button>
@@ -152,12 +154,12 @@ export function MascotCreator() {
         </div>
 
         {/* Right: Controls */}
-        <div className="flex flex-col">
-          <div className="rounded-3xl border-2 border-border bg-white/80 p-6 shadow-sm backdrop-blur-sm">
+        <div className="flex flex-col animate-pop-in stagger-2">
+          <div className="rounded-3xl border-2 border-border bg-white/80 p-5 md:p-6 shadow-sm backdrop-blur-sm">
             {mode === "create" && (
               <div>
-                <h2 className="font-display text-2xl text-foreground mb-1">Create Your Mascot</h2>
-                <p className="text-sm text-muted-foreground mb-5">
+                <h2 className="font-display text-xl md:text-2xl text-foreground mb-1">Create Your Mascot</h2>
+                <p className="text-xs md:text-sm text-muted-foreground mb-4 md:mb-5">
                   Describe a character or upload an image to transform
                 </p>
                 <PromptInput
@@ -182,7 +184,7 @@ export function MascotCreator() {
             )}
 
             {mode === "animate" && mascotBase64 && (
-              <div className="space-y-6">
+              <div className="space-y-4 md:space-y-6">
                 <AnimationPicker
                   mascotBase64={mascotBase64}
                   mascotDescription={mascotDescription}

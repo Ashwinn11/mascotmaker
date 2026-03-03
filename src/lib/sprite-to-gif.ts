@@ -17,7 +17,7 @@ export async function spriteSheetToGif(
   const frameWidth = Math.floor(effectiveWidth / GRID);
   const frameHeight = Math.floor(effectiveHeight / GRID);
 
-  // Extract each frame as raw RGB pixels (white background, no transparency)
+  // Extract each frame as raw RGBA pixels (preserve transparency)
   const rawFrames: Buffer[] = [];
   for (let row = 0; row < GRID; row++) {
     for (let col = 0; col < GRID; col++) {
@@ -26,7 +26,7 @@ export async function spriteSheetToGif(
 
       const raw = await sharp(spriteBuffer)
         .extract({ left, top, width: frameWidth, height: frameHeight })
-        .removeAlpha()
+        .ensureAlpha()
         .raw()
         .toBuffer();
 
@@ -41,7 +41,7 @@ export async function spriteSheetToGif(
     raw: {
       width: frameWidth,
       height: frameHeight * FRAME_COUNT,
-      channels: 3,
+      channels: 4,
       pageHeight: frameHeight,
     },
   })

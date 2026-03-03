@@ -74,21 +74,21 @@ export function AnimationPicker({
       </div>
 
       {/* Preset Actions Grid */}
-      <div className="grid grid-cols-3 gap-2.5">
+      <div className="grid grid-cols-2 xs:grid-cols-3 gap-2 md:gap-2.5">
         {PRESET_ACTIONS.map((action) => (
           <button
             key={action.label}
             onClick={() => handleAnimate(action.label.toLowerCase())}
             disabled={activeAction !== null}
-            className={`group relative overflow-hidden rounded-2xl border-2 border-border bg-white p-4 text-center transition-all hover:border-transparent hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-wait ${activeAction === action.label.toLowerCase() ? "border-candy-pink shadow-lg" : ""
+            className={`group relative overflow-hidden rounded-2xl border-2 border-border bg-white p-3 md:p-4 text-center transition-all hover:border-transparent hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-wait ${activeAction === action.label.toLowerCase() ? "border-candy-pink shadow-lg" : ""
               }`}
           >
             <div className={`absolute inset-0 bg-gradient-to-br ${action.color} opacity-0 transition-opacity group-hover:opacity-10`} />
             <div className="relative">
-              <div className="mb-1.5 flex justify-center">
-                <Icon3DInline name={action.icon} size={32} />
+              <div className="mb-1 flex md:mb-1.5 justify-center">
+                <Icon3DInline name={action.icon} size={28} className="md:w-[32px] md:h-[32px]" />
               </div>
-              <span className="text-xs font-bold text-warm-gray block">{action.label}</span>
+              <span className="text-[10px] md:text-xs font-bold text-warm-gray block">{action.label}</span>
             </div>
             {activeAction === action.label.toLowerCase() && (
               <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-2xl">
