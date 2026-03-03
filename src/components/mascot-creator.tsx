@@ -32,7 +32,6 @@ export function MascotCreator() {
   const { data: session, status, update: updateSession } = useSession();
   const [mode, setMode] = useState<Mode>("create");
   const [mascotBase64, setMascotBase64] = useState<string | null>(null);
-  const [mascotDescription, setMascotDescription] = useState<string | null>(null);
   const [animations, setAnimations] = useState<AnimationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -72,9 +71,8 @@ export function MascotCreator() {
     await updateSession();
   };
 
-  const handleGenerated = (imageBase64: string, analysis?: string) => {
+  const handleGenerated = (imageBase64: string) => {
     setMascotBase64(imageBase64);
-    if (analysis) setMascotDescription(analysis);
     setMode("refine");
   };
 
@@ -88,7 +86,6 @@ export function MascotCreator() {
 
   const handleStartOver = () => {
     setMascotBase64(null);
-    setMascotDescription(null);
     setAnimations([]);
     setMode("create");
     setConfirmReset(false);
@@ -189,7 +186,6 @@ export function MascotCreator() {
               <div className="space-y-4 md:space-y-6">
                 <AnimationPicker
                   mascotBase64={mascotBase64}
-                  mascotDescription={mascotDescription}
                   onAnimationGenerated={handleAnimationGenerated}
                   onLoadingChange={setLoading}
                   onApiError={handleApiError}

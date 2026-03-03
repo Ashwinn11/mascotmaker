@@ -113,7 +113,7 @@ export async function stylizeImage(
   const analysisContext = analysis
     ? `The image contains: ${analysis}. Use these details to preserve the subject's identity.`
     : "";
-  const fullPrompt = `Transform this image into a cute mascot character in a cartoon/chibi style. ${analysisContext} ${prompt}. Keep the character recognizable but make it adorable and suitable as a mascot. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
+  const fullPrompt = `Transform this image into a cute mascot character in a cartoon/chibi style. ${analysisContext} ${prompt}. Keep the character recognizable but make it adorable and suitable as a mascot. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
   return editImage(fullPrompt, imageBase64);
 }
 
@@ -128,7 +128,7 @@ export async function generateSpriteSheet(
   const characterContext = description
     ? `This character is: ${description}. `
     : "";
-  const prompt = `${characterContext}Sprite sheet of this character ${action}, 3x3 grid, sequence, frame by frame animation, square aspect ratio. Each frame must show the full body from head to feet. Follow the structure of the attached reference image exactly.`;
+  const prompt = `${characterContext}Sprite sheet of this character ${action}, 3x3 grid, sequence, frame by frame animation, square aspect ratio. Isolated on a plain white background. Each frame must show the full body from head to feet. Follow the structure of the attached reference image exactly.`;
 
   const response = await getAI().models.generateContent({
     model: SPRITE_MODEL_ID,

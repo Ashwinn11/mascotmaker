@@ -28,13 +28,12 @@ export async function POST(req: Request) {
     const buffer = Buffer.from(await file.arrayBuffer());
     const base64 = buffer.toString("base64");
 
-    const analysisResult = await analyzeImage(base64);
-    const stylizeResult = await stylizeImage(prompt, base64, analysisResult.data);
+    const stylizeResult = await stylizeImage(prompt, base64);
     const imageBase64 = stylizeResult.data;
 
     const creditsRemaining = await deductCredits(check.userId, "stylize");
 
-    return NextResponse.json({ imageBase64, analysis: analysisResult.data, creditsRemaining });
+    return NextResponse.json({ imageBase64, creditsRemaining });
   } catch (error) {
     console.error("Stylize error:", error);
     return NextResponse.json(

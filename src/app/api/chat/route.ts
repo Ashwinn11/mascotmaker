@@ -22,7 +22,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const prompt = `Modify this mascot character: ${message}. Keep the same art style and character identity. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
+    const prompt = `Modify this mascot character: ${message}. Keep the same art style and character identity. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
     const result = await editImage(prompt, mascotBase64);
     const imageBase64 = result.data;
 

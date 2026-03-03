@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 
 interface PromptInputProps {
-  onGenerated: (imageUrl: string, analysis?: string) => void;
+  onGenerated: (imageUrl: string) => void;
   onLoadingChange: (loading: boolean) => void;
   requireAuth: () => boolean;
   onApiError: (res: Response, data: Record<string, unknown>) => boolean;
@@ -63,7 +63,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
-      if (data.imageBase64) onGenerated(data.imageBase64, data.analysis);
+      if (data.imageBase64) onGenerated(data.imageBase64);
     } catch {
       toast.error("Failed to stylize image. Please try again.");
     } finally {

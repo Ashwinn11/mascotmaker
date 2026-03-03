@@ -10,7 +10,7 @@ export async function POST(req: Request) {
     const check = await requireCredits("animate");
     if (check instanceof Response) return check;
 
-    const { mascotBase64, action, description } = await req.json();
+    const { mascotBase64, action } = await req.json();
     if (!mascotBase64 || !action || typeof action !== "string") {
       return NextResponse.json(
         { error: "mascotBase64 and action are required" },
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = await generateSpriteSheet(mascotBase64, action, description);
+    const result = await generateSpriteSheet(mascotBase64, action);
 
     const spriteBuffer = Buffer.from(result.data, "base64");
     const [animationBuffer, svgResult] = await Promise.all([
