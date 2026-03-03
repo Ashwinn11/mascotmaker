@@ -16,7 +16,7 @@ export default function CreatePage() {
             Create Your <span className="text-gradient">Mascot</span>
           </h1>
           <p className="text-lg text-muted-foreground max-w-lg mx-auto animate-slide-up stagger-2">
-            Describe a character, upload an image, refine with AI chat, then animate it into a GIF — all in one place.
+            Describe a character, upload a photo, then animate it.
           </p>
         </div>
         <div className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-candy-pink/10 blur-3xl" />

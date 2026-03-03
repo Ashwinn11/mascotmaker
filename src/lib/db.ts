@@ -24,6 +24,7 @@ export async function initDb(): Promise<void> {
       description TEXT,
       image_url TEXT NOT NULL,
       gif_url TEXT,
+      sticker_url TEXT,
       user_id TEXT,
       created_at TIMESTAMPTZ DEFAULT NOW(),
       published INTEGER DEFAULT 1
@@ -114,6 +115,7 @@ export interface GalleryItem {
   description: string | null;
   image_url: string;
   gif_url: string | null;
+  sticker_url: string | null;
   user_id: string | null;
   created_at: string;
 }
@@ -139,12 +141,13 @@ export async function addToGallery(item: {
   description?: string;
   imageUrl: string;
   gifUrl?: string;
+  stickerUrl?: string;
   userId?: string;
 }): Promise<GalleryItem> {
   await ensureDb();
   const rows = await sql`
-    INSERT INTO gallery (name, description, image_url, gif_url, user_id)
-    VALUES (${item.name}, ${item.description || null}, ${item.imageUrl}, ${item.gifUrl || null}, ${item.userId || null})
+    INSERT INTO gallery (name, description, image_url, gif_url, sticker_url, user_id)
+    VALUES (${item.name}, ${item.description || null}, ${item.imageUrl}, ${item.gifUrl || null}, ${item.stickerUrl || null}, ${item.userId || null})
     RETURNING *
   `;
   return rows[0] as GalleryItem;

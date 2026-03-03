@@ -1,14 +1,17 @@
 import { NextResponse } from "next/server";
-import { generateImage } from "@/lib/gemini";
+import { generateImage, analyzeImage } from "@/lib/gemini";
 import { requireCredits, deductCredits } from "@/lib/credits";
 
 export async function POST(req: Request) {
   try {
+    const body = await req.json();
+    const { prompt, aspectRatio, imageSize, thinkingLevel, useSearch } = body;
+    const options = { aspectRatio, imageSize, thinkingLevel, useSearch };
+
     // Auth + credit check
-    const check = await requireCredits("generate");
+    const check = await requireCredits("generate", options);
     if (check instanceof Response) return check;
 
-    const { prompt } = await req.json();
     if (!prompt || typeof prompt !== "string") {
       return NextResponse.json({ error: "Prompt is required" }, { status: 400 });
     }
@@ -17,13 +20,17 @@ export async function POST(req: Request) {
     }
 
     const mascotPrompt = `Create a cute, expressive mascot character: ${prompt}. Cartoon style, vibrant colors. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The entire character must be visible including legs, feet, and any bottom details.`;
-    const result = await generateImage(mascotPrompt);
+    const result = await generateImage(mascotPrompt, options);
     const imageBase64 = result.data;
 
-    // Deduct credits after success based on tokens
-    const creditsRemaining = await deductCredits(check.userId, "generate");
+    // Analyze the generated mascot for better consistency in refinements/animations
+    const analysisResult = await analyzeImage(imageBase64);
+    const analysis = analysisResult.data;
 
-    return NextResponse.json({ imageBase64, creditsRemaining });
+    // Deduct credits after success based on tokens
+    const creditsRemaining = await deductCredits(check.userId, "generate", options);
+
+    return NextResponse.json({ imageBase64, analysis, creditsRemaining });
   } catch (error) {
     console.error("Generate error:", error);
     return NextResponse.json(

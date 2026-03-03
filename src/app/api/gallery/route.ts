@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, description, imageBase64, animationBase64 } = await req.json();
+    const { name, description, imageBase64, animationBase64, spriteBase64 } = await req.json();
     if (!name || typeof name !== "string" || !imageBase64) {
       return NextResponse.json(
         { error: "Name and imageBase64 are required" },
@@ -55,8 +55,13 @@ export async function POST(req: Request) {
       const animBuffer = Buffer.from(animationBase64, "base64");
       gifUrl = await saveBuffer(animBuffer, "webp");
     }
+    let stickerUrl: string | undefined;
+    if (spriteBase64) {
+      const stickerBuffer = Buffer.from(spriteBase64, "base64");
+      stickerUrl = await saveBuffer(stickerBuffer, "png");
+    }
 
-    const item = await addToGallery({ name, description, imageUrl, gifUrl, userId: session.user.id });
+    const item = await addToGallery({ name, description, imageUrl, gifUrl, stickerUrl, userId: session.user.id });
     return NextResponse.json({ item });
   } catch (error) {
     console.error("Gallery POST error:", error);
@@ -95,6 +100,9 @@ export async function DELETE(req: Request) {
       await deleteFile(deleted.image_url);
       if (deleted.gif_url) {
         await deleteFile(deleted.gif_url);
+      }
+      if (deleted.sticker_url) {
+        await deleteFile(deleted.sticker_url);
       }
     } catch (err) {
       console.error("Failed to delete R2 objects:", err);

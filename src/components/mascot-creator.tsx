@@ -10,15 +10,12 @@ import { AnimationPreview } from "./animation-preview";
 import { PaywallModal } from "./paywall-modal";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { Button } from "@/components/ui/button";
 
 type Mode = "create" | "refine" | "animate";
 
 interface AnimationItem {
   spriteBase64: string;
   animationBase64: string;
-  svgFrames: string[];
-  svgAnimated: string;
   action: string;
 }
 
@@ -32,6 +29,7 @@ export function MascotCreator() {
   const { data: session, status, update: updateSession } = useSession();
   const [mode, setMode] = useState<Mode>("create");
   const [mascotBase64, setMascotBase64] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<string | null>(null);
   const [animations, setAnimations] = useState<AnimationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
@@ -71,13 +69,15 @@ export function MascotCreator() {
     await updateSession();
   };
 
-  const handleGenerated = (imageBase64: string) => {
+  const handleGenerated = (imageBase64: string, mascotAnalysis?: string) => {
     setMascotBase64(imageBase64);
+    if (mascotAnalysis) setAnalysis(mascotAnalysis);
     setMode("refine");
   };
 
-  const handleMascotUpdate = (imageBase64: string) => {
+  const handleMascotUpdate = (imageBase64: string, mascotAnalysis?: string) => {
     setMascotBase64(imageBase64);
+    if (mascotAnalysis) setAnalysis(mascotAnalysis);
   };
 
   const handleAnimationGenerated = (anim: AnimationItem) => {
@@ -86,6 +86,7 @@ export function MascotCreator() {
 
   const handleStartOver = () => {
     setMascotBase64(null);
+    setAnalysis(null);
     setAnimations([]);
     setMode("create");
     setConfirmReset(false);
@@ -138,8 +139,9 @@ export function MascotCreator() {
         <div className="flex flex-col gap-3 md:gap-4 animate-pop-in stagger-1">
           <div className="max-h-[50vh] md:max-h-none flex flex-col">
             <MascotPreview
-              imageUrl={mascotBase64 ? `data:image/png;base64,${mascotBase64}` : null}
-              loading={loading && mode === "create"}
+              mascotBase64={mascotBase64}
+              animations={animations}
+              loading={loading && (mode === "create" || mode === "refine")}
             />
           </div>
           {mascotBase64 && mode !== "create" && (
@@ -157,9 +159,9 @@ export function MascotCreator() {
           <div className="rounded-3xl border-2 border-border bg-white/80 p-5 md:p-6 shadow-sm backdrop-blur-sm">
             {mode === "create" && (
               <div>
-                <h2 className="font-display text-xl md:text-2xl text-foreground mb-1">Create Your Mascot</h2>
+                <h2 className="font-display text-xl md:text-2xl text-foreground mb-1">Create Mascot</h2>
                 <p className="text-xs md:text-sm text-muted-foreground mb-4 md:mb-5">
-                  Describe a character or upload an image to transform
+                  Describe a character or upload a photo to start.
                 </p>
                 <PromptInput
                   onGenerated={handleGenerated}
@@ -174,6 +176,7 @@ export function MascotCreator() {
             {mode === "refine" && mascotBase64 && (
               <ChatRefiner
                 mascotBase64={mascotBase64}
+                analysis={analysis}
                 onMascotUpdate={handleMascotUpdate}
                 onLoadingChange={setLoading}
                 onDone={() => setMode("animate")}
@@ -186,6 +189,7 @@ export function MascotCreator() {
               <div className="space-y-4 md:space-y-6">
                 <AnimationPicker
                   mascotBase64={mascotBase64}
+                  description={analysis || undefined}
                   onAnimationGenerated={handleAnimationGenerated}
                   onLoadingChange={setLoading}
                   onApiError={handleApiError}
@@ -211,7 +215,7 @@ export function MascotCreator() {
         open={confirmReset}
         onOpenChange={setConfirmReset}
         title="Start Over?"
-        description="This will discard your current mascot and all animations. This action cannot be undone."
+        description="Discard current mascot and animations?"
         confirmText="Start Over"
         variant="destructive"
         onConfirm={handleStartOver}

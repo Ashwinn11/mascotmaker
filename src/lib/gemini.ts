@@ -28,14 +28,44 @@ export interface GeminiResult<T> {
   tokens: number;
 }
 
-export async function generateImage(prompt: string): Promise<GeminiResult<string>> {
+export interface ImageOptions {
+  aspectRatio?: string;
+  imageSize?: "512px" | "1K" | "2K" | "4K";
+  thinkingLevel?: "Minimal" | "High";
+  useSearch?: boolean;
+}
+
+export async function generateImage(prompt: string, options: ImageOptions = {}): Promise<GeminiResult<string>> {
+  const tools = options.useSearch
+    ? [
+      {
+        googleSearch: {
+          searchTypes: {
+            webSearch: {},
+            imageSearch: {},
+          },
+        },
+      } as any,
+    ]
+    : undefined;
+
   const response = await getAI().models.generateContent({
     model: MODEL_ID,
     contents: [{ role: "user", parts: [{ text: prompt }] }],
     config: {
-      responseModalities: ["IMAGE"],
-      imageConfig: { aspectRatio: "1:1" },
-    },
+      responseModalities: ["TEXT", "IMAGE"],
+      imageConfig: {
+        aspectRatio: options.aspectRatio || "1:1",
+        imageSize: options.imageSize || "1K",
+      },
+      thinkingConfig: options.thinkingLevel
+        ? {
+          thinkingLevel: options.thinkingLevel,
+          includeThoughts: true,
+        }
+        : undefined,
+      tools,
+    } as any,
   });
 
   const base64 = extractImageBase64(response);
@@ -43,14 +73,28 @@ export async function generateImage(prompt: string): Promise<GeminiResult<string
 
   return {
     data: base64,
-    tokens: response.usageMetadata?.totalTokenCount || 0
+    tokens: response.usageMetadata?.totalTokenCount || 0,
   };
 }
 
 export async function editImage(
   prompt: string,
-  imageBase64: string
+  imageBase64: string,
+  options: ImageOptions = {}
 ): Promise<GeminiResult<string>> {
+  const tools = options.useSearch
+    ? [
+      {
+        googleSearch: {
+          searchTypes: {
+            webSearch: {},
+            imageSearch: {},
+          },
+        },
+      } as any,
+    ]
+    : undefined;
+
   const response = await getAI().models.generateContent({
     model: MODEL_ID,
     contents: [
@@ -63,9 +107,19 @@ export async function editImage(
       },
     ],
     config: {
-      responseModalities: ["IMAGE"],
-      imageConfig: { aspectRatio: "1:1" },
-    },
+      responseModalities: ["TEXT", "IMAGE"],
+      imageConfig: {
+        aspectRatio: options.aspectRatio || "1:1",
+        imageSize: options.imageSize || "1K",
+      },
+      thinkingConfig: options.thinkingLevel
+        ? {
+          thinkingLevel: options.thinkingLevel,
+          includeThoughts: true,
+        }
+        : undefined,
+      tools,
+    } as any,
   });
 
   const base64 = extractImageBase64(response);
@@ -73,7 +127,7 @@ export async function editImage(
 
   return {
     data: base64,
-    tokens: response.usageMetadata?.totalTokenCount || 0
+    tokens: response.usageMetadata?.totalTokenCount || 0,
   };
 }
 
@@ -108,13 +162,14 @@ export async function analyzeImage(imageBase64: string): Promise<GeminiResult<st
 export async function stylizeImage(
   prompt: string,
   imageBase64: string,
-  analysis?: string
+  analysis?: string,
+  options: ImageOptions = {}
 ): Promise<GeminiResult<string>> {
   const analysisContext = analysis
     ? `The image contains: ${analysis}. Use these details to preserve the subject's identity.`
     : "";
   const fullPrompt = `Transform this image into a cute mascot character in a cartoon/chibi style. ${analysisContext} ${prompt}. Keep the character recognizable but make it adorable and suitable as a mascot. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
-  return editImage(fullPrompt, imageBase64);
+  return editImage(fullPrompt, imageBase64, options);
 }
 
 export async function generateSpriteSheet(

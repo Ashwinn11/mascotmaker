@@ -8,7 +8,8 @@ import type { FluentIcon3D } from "@/components/ui/icon-3d";
 
 interface AnimationPickerProps {
   mascotBase64: string;
-  onAnimationGenerated: (anim: { spriteBase64: string; animationBase64: string; svgFrames: string[]; svgAnimated: string; action: string }) => void;
+  description?: string;
+  onAnimationGenerated: (anim: { spriteBase64: string; animationBase64: string; action: string }) => void;
   onLoadingChange: (loading: boolean) => void;
   onApiError: (res: Response, data: Record<string, unknown>) => boolean;
   onCreditsUpdate: (creditsRemaining?: number) => void;
@@ -25,6 +26,7 @@ const PRESET_ACTIONS: { label: string; icon: FluentIcon3D; color: string }[] = [
 
 export function AnimationPicker({
   mascotBase64,
+  description,
   onAnimationGenerated,
   onLoadingChange,
   onApiError,
@@ -40,7 +42,7 @@ export function AnimationPicker({
       const res = await fetch("/api/animate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mascotBase64, action }),
+        body: JSON.stringify({ mascotBase64, action, description }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -53,8 +55,6 @@ export function AnimationPicker({
         onAnimationGenerated({
           spriteBase64: data.spriteBase64,
           animationBase64: data.animationBase64,
-          svgFrames: data.svgFrames || [],
-          svgAnimated: data.svgAnimated || "",
           action,
         });
       }

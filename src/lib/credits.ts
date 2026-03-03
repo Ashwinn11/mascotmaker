@@ -15,12 +15,42 @@ export const CREDIT_COSTS: Record<string, number> = {
     animate: 10,
 };
 
+export type ImageOptions = {
+    aspectRatio?: string;
+    imageSize?: "512px" | "1K" | "2K" | "4K";
+    thinkingLevel?: "Minimal" | "High";
+    useSearch?: boolean;
+};
+
+/**
+ * Dynamically calculate credit cost based on requested features.
+ */
+export function calculateCost(route: string, options?: ImageOptions): number {
+    let cost = CREDIT_COSTS[route] || 1;
+
+    if (!options) return cost;
+
+    // Advanced Resolution Multipliers
+    if (options.imageSize === "2K") cost += 5;
+    if (options.imageSize === "4K") cost += 15;
+    if (options.imageSize === "512px") cost = Math.max(1, cost - 2);
+
+    // High Thinking / Pro Mode
+    if (options.thinkingLevel === "High") cost += 5;
+
+    // Search Grounding
+    if (options.useSearch) cost += 2;
+
+    return cost;
+}
+
 /**
  * Check auth + credits for an API route.
  */
 export async function requireCredits(
-    route: string
-): Promise<{ userId: string; credits: number } | Response> {
+    route: string,
+    options?: ImageOptions
+): Promise<{ userId: string; credits: number; cost: number } | Response> {
     const session = await auth();
 
     if (!session?.user?.id) {
@@ -30,7 +60,7 @@ export async function requireCredits(
         );
     }
 
-    const cost = CREDIT_COSTS[route] || 1;
+    const cost = calculateCost(route, options);
     const currentCredits = await getUserCredits(session.user.id);
 
     if (currentCredits < cost) {
@@ -44,7 +74,7 @@ export async function requireCredits(
         );
     }
 
-    return { userId: session.user.id, credits: currentCredits };
+    return { userId: session.user.id, credits: currentCredits, cost };
 }
 
 /**
@@ -53,21 +83,27 @@ export async function requireCredits(
  */
 export async function deductCredits(
     userId: string,
-    route: string
+    route: string,
+    options?: ImageOptions
 ): Promise<number> {
-    const cost = CREDIT_COSTS[route] || 1;
+    const cost = calculateCost(route, options);
     const newBalance = await atomicDeductCredits(userId, cost);
 
     if (newBalance === null) {
         throw new Error("Insufficient credits");
     }
 
+    let description = `Used ${route}`;
+    if (options?.imageSize === "4K") description += " (4K)";
+    if (options?.thinkingLevel === "High") description += " (Pro)";
+    if (options?.useSearch) description += " (Search)";
+
     await addTransaction({
         userId,
         type: "deduction",
         amount: -cost,
         balanceAfter: newBalance,
-        description: `Used ${route}`,
+        description,
     });
     await logUsage({
         userId,

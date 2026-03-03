@@ -14,6 +14,7 @@ interface GalleryItem {
   description: string | null;
   image_url: string;
   gif_url: string | null;
+  sticker_url: string | null;
   created_at: string;
 }
 
@@ -145,28 +146,34 @@ function GalleryCard({
   index: number;
   onDelete: (item: GalleryItem) => void;
 }) {
-  const [hovered, setHovered] = useState(false);
+  const [previewMode, setPreviewMode] = useState<"image" | "gif" | "sticker">("image");
 
-  const downloadUrl = item.gif_url || item.image_url;
-  const ext = item.gif_url?.endsWith(".gif") ? "gif" : item.gif_url ? "webp" : "png";
-  const downloadName = `${item.name.replace(/\s+/g, "-").toLowerCase()}.${ext}`;
+  const downloadName = `${item.name.replace(/\s+/g, "-").toLowerCase()}`;
 
   return (
     <div
       className="group relative mb-4 break-inside-avoid overflow-hidden rounded-3xl border-2 border-border bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-candy-pink/10 hover:-translate-y-1 animate-pop-in"
       style={{ animationDelay: `${index * 0.05}s` }}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseLeave={() => setPreviewMode("image")}
     >
-      <div className="relative aspect-square overflow-hidden">
+      <div className="relative aspect-square overflow-hidden bg-white hover:cursor-pointer">
         <img
-          src={hovered && item.gif_url ? item.gif_url : item.image_url}
+          src={previewMode === "gif" && item.gif_url ? item.gif_url : previewMode === "sticker" && item.sticker_url ? item.sticker_url : item.image_url}
           alt={item.name}
-          className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-105"
+          className={`h-full w-full object-contain transition-all duration-300 ${previewMode === "sticker" ? "scale-95" : "scale-100"}`}
         />
-        {item.gif_url && (
-          <div className={`absolute top-3 right-3 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${hovered ? "opacity-100" : "opacity-0"}`}>
-            ANIM
+        {(item.gif_url || item.sticker_url) && (
+          <div className="absolute top-3 right-3 flex gap-1">
+            {item.gif_url && (
+              <div className={`rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${previewMode === "gif" ? "opacity-100" : "opacity-40"}`}>
+                ANIM
+              </div>
+            )}
+            {item.sticker_url && (
+              <div className={`rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${previewMode === "sticker" ? "opacity-100" : "opacity-40"}`}>
+                STICKERS
+              </div>
+            )}
           </div>
         )}
       </div>
@@ -175,33 +182,53 @@ function GalleryCard({
         {item.description && (
           <p className="mt-0.5 text-[10px] md:text-xs text-muted-foreground line-clamp-2">{item.description}</p>
         )}
-        <div className="flex gap-1.5 mt-2.5">
+        <div className="flex flex-wrap gap-1 mt-2.5">
           <button
             onClick={(e) => {
               e.stopPropagation();
-              downloadFile(downloadUrl, downloadName);
+              downloadFile(item.image_url, `${downloadName}.png`);
             }}
-            className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-muted py-2 md:py-1.5 text-[10px] md:text-xs font-bold text-warm-gray transition-colors hover:bg-border"
+            className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-[9px] font-bold text-warm-gray transition-colors hover:bg-border"
           >
-            <svg width="10" height="10" className="md:w-3 md:h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
-            Download
+            Mascot
           </button>
+          {item.gif_url && (
+            <button
+              onMouseEnter={() => setPreviewMode("gif")}
+              onMouseLeave={() => setPreviewMode("image")}
+              onClick={(e) => {
+                e.stopPropagation();
+                downloadFile(item.gif_url!, `${downloadName}.webp`);
+              }}
+              className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-[9px] font-bold text-warm-gray transition-colors hover:bg-border"
+            >
+              Animated
+            </button>
+          )}
+          {item.sticker_url && (
+            <button
+              onMouseEnter={() => setPreviewMode("sticker")}
+              onMouseLeave={() => setPreviewMode("image")}
+              onClick={(e) => {
+                e.stopPropagation();
+                downloadFile(item.sticker_url!, `${downloadName}-pack.png`);
+              }}
+              className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-candy-blue/80 to-candy-purple/80 py-1.5 text-[9px] font-bold text-white transition-all hover:brightness-105"
+            >
+              Stickers
+            </button>
+          )}
           <button
             onClick={(e) => {
               e.stopPropagation();
               onDelete(item);
             }}
-            className="flex flex-1 items-center justify-center gap-1 rounded-lg bg-muted py-2 md:py-1.5 text-[10px] md:text-xs font-bold text-destructive transition-colors hover:bg-red-50"
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-50 text-destructive transition-colors hover:bg-red-100"
           >
-            <svg width="10" height="10" className="md:w-3 md:h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="3 6 5 6 21 6" />
               <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
             </svg>
-            Delete
           </button>
         </div>
       </div>

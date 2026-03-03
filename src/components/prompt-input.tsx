@@ -7,7 +7,7 @@ import { toast } from "sonner";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 
 interface PromptInputProps {
-  onGenerated: (imageUrl: string) => void;
+  onGenerated: (imageUrl: string, analysis?: string) => void;
   onLoadingChange: (loading: boolean) => void;
   requireAuth: () => boolean;
   onApiError: (res: Response, data: Record<string, unknown>) => boolean;
@@ -19,13 +19,18 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
   const [prompt, setPrompt] = useState("");
   const [stylePrompt, setStylePrompt] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [mounted, setMounted] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [aspectRatio, setAspectRatio] = useState("1:1");
+  const [imageSize, setImageSize] = useState("1K");
+  const [thinkingLevel, setThinkingLevel] = useState<"Minimal" | "High">("Minimal");
+  const [useSearch, setUseSearch] = useState(false);
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [mounted, setMounted] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -35,7 +40,13 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
       const res = await fetch("/api/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ prompt: prompt.trim() }),
+        body: JSON.stringify({
+          prompt: prompt.trim(),
+          aspectRatio,
+          imageSize,
+          thinkingLevel,
+          useSearch,
+        }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -44,7 +55,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
-      if (data.imageBase64) onGenerated(data.imageBase64);
+      if (data.imageBase64) onGenerated(data.imageBase64, data.analysis);
     } catch {
       toast.error("Failed to generate mascot. Please try again.");
     } finally {
@@ -60,6 +71,10 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
       const formData = new FormData();
       formData.append("image", file);
       formData.append("prompt", stylePrompt);
+      formData.append("aspectRatio", aspectRatio);
+      formData.append("imageSize", imageSize);
+      formData.append("thinkingLevel", thinkingLevel);
+      formData.append("useSearch", useSearch.toString());
       const res = await fetch("/api/stylize", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok) {
@@ -68,7 +83,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
-      if (data.imageBase64) onGenerated(data.imageBase64);
+      if (data.imageBase64) onGenerated(data.imageBase64, data.analysis);
     } catch {
       toast.error("Failed to stylize image. Please try again.");
     } finally {
@@ -84,10 +99,10 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
   };
 
   const suggestions = [
-    "A round panda DJ with headphones and turntables",
-    "A cheerful cactus with sunglasses and sneakers",
-    "A tiny dragon barista holding a latte",
-    "A fluffy cloud cat floating on a rainbow",
+    "Panda DJ with turntables",
+    "Cactus with sneakers",
+    "Dragon barista",
+    "Cloud cat on rainbow",
   ];
 
   return (
@@ -122,14 +137,14 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe your dream mascot..."
+              placeholder="Describe your mascot..."
               className="min-h-[100px] md:min-h-[120px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-base placeholder:text-muted-foreground/60 focus:border-candy-pink focus:ring-candy-pink/20"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate();
               }}
             />
             <span className="absolute bottom-2 right-3 hidden md:block text-[10px] text-muted-foreground/50">
-              {mounted && navigator.platform?.includes("Mac") ? "⌘" : "Ctrl"}+Enter to generate
+              {mounted && typeof navigator !== "undefined" && navigator.platform?.toLowerCase().includes("mac") ? "⌘" : "Ctrl"}+Enter to generate
             </span>
           </div>
           {/* Suggestion chips */}
@@ -144,14 +159,107 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
               </button>
             ))}
           </div>
-          <Button
-            onClick={handleGenerate}
-            disabled={!prompt.trim()}
-            className="w-full rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange py-6 text-base font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:shadow-candy-pink/30 hover:brightness-105 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
+
+          <button
+            onClick={() => setShowAdvanced(!showAdvanced)}
+            className="flex items-center gap-2 text-xs font-bold text-warm-gray hover:text-foreground transition-all py-1 active:scale-95"
           >
-            <Icon3DInline name="sparkles" size={20} className="mr-1.5" />
-            Generate Mascot
-          </Button>
+            <Icon3DInline
+              name={showAdvanced ? "counterclockwise" : "magic-wand"}
+              size={14}
+              className={showAdvanced ? "rotate-180 transition-transform duration-500" : "transition-transform duration-500"}
+            />
+            {showAdvanced ? "Hide Advanced" : "Show Advanced"}
+          </button>
+
+          {showAdvanced && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl border-2 border-border bg-muted/30 p-4 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Aspect Ratio</label>
+                <select
+                  value={aspectRatio}
+                  onChange={(e) => setAspectRatio(e.target.value)}
+                  className="w-full rounded-xl border-2 border-border bg-white px-3 py-2 text-sm font-semibold focus:border-candy-pink focus:outline-none focus:ring-2 focus:ring-candy-pink/10"
+                >
+                  {["1:1", "16:9", "9:16", "21:9", "4:3", "3:4", "5:4", "4:5", "3:2", "2:3"].map(r => (
+                    <option key={r} value={r}>{r}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Resolution</label>
+                <select
+                  value={imageSize}
+                  onChange={(e) => setImageSize(e.target.value)}
+                  className="w-full rounded-xl border-2 border-border bg-white px-3 py-2 text-sm font-semibold focus:border-candy-pink focus:outline-none focus:ring-2 focus:ring-candy-pink/10"
+                >
+                  <option value="512px">Low-Res</option>
+                  <option value="1K">Standard (1K)</option>
+                  <option value="2K">High-Res (2K)</option>
+                  <option value="4K">Ultra-HD (4K)</option>
+                </select>
+              </div>
+
+              <div
+                onClick={() => setThinkingLevel(thinkingLevel === "High" ? "Minimal" : "High")}
+                className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${thinkingLevel === "High"
+                  ? "border-candy-pink/40 bg-candy-pink/5 shadow-inner"
+                  : "border-border bg-white hover:bg-muted"
+                  }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Icon3DInline name="high-voltage" size={16} />
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold">Pro Mode</span>
+                    <span className="text-[9px] text-muted-foreground leading-tight">Deep thinking</span>
+                  </div>
+                </div>
+                <div className={`h-4 w-8 rounded-full p-0.5 transition-all ${thinkingLevel === "High" ? "bg-candy-pink" : "bg-muted-foreground/30"}`}>
+                  <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${thinkingLevel === "High" ? "translate-x-4" : "translate-x-0"}`} />
+                </div>
+              </div>
+
+              <div
+                onClick={() => setUseSearch(!useSearch)}
+                className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${useSearch
+                  ? "border-candy-blue/40 bg-candy-blue/5 shadow-inner"
+                  : "border-border bg-white hover:bg-muted"
+                  }`}
+              >
+                <div className="flex items-center gap-2">
+                  <Icon3DInline name="globe" size={16} />
+                  <div className="flex flex-col">
+                    <span className="text-[11px] font-bold">Search</span>
+                    <span className="text-[9px] text-muted-foreground leading-tight">Accurate info</span>
+                  </div>
+                </div>
+                <div className={`h-4 w-8 rounded-full p-0.5 transition-all ${useSearch ? "bg-candy-blue" : "bg-muted-foreground/30"}`}>
+                  <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${useSearch ? "translate-x-4" : "translate-x-0"}`} />
+                </div>
+              </div>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-2">
+            <Button
+              onClick={handleGenerate}
+              disabled={!prompt.trim()}
+              className="w-full rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange py-6 text-base font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:shadow-candy-pink/30 hover:brightness-105 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
+            >
+              <Icon3DInline name="sparkles" size={20} className="mr-1.5" />
+              Generate
+            </Button>
+            <div className="flex items-center justify-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              <span>Cost:</span>
+              <div className="flex items-center gap-0.5 text-candy-orange bg-candy-orange/10 px-2 py-0.5 rounded-full">
+                <Icon3DInline name="high-voltage" size={10} />
+                <span>
+                  {5 + (imageSize === "2K" ? 5 : imageSize === "4K" ? 15 : imageSize === "512px" ? -2 : 0) + (thinkingLevel === "High" ? 5 : 0) + (useSearch ? 2 : 0)} Credits
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       ) : (
         <div className="space-y-4">
@@ -184,10 +292,10 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
               <div className="flex flex-col items-center gap-2">
                 <Icon3DInline name="open-folder" size={36} />
                 <p className="text-sm font-semibold text-warm-gray">
-                  Drop an image or click to browse
+                  Drop image or click to browse
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  PNG, JPG, WebP up to 10MB
+                  PNG, JPG, WebP (10MB)
                 </p>
               </div>
             )}
@@ -195,7 +303,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
           <Textarea
             value={stylePrompt}
             onChange={(e) => setStylePrompt(e.target.value)}
-            placeholder="Optional: describe the mascot style you want..."
+            placeholder="Style description (optional)..."
             className="min-h-[80px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-sm placeholder:text-muted-foreground/60 focus:border-candy-blue focus:ring-candy-blue/20"
           />
           <Button
@@ -204,7 +312,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
             className="w-full rounded-2xl bg-gradient-to-r from-candy-blue to-candy-purple py-6 text-base font-bold text-white shadow-lg shadow-candy-blue/25 transition-all hover:shadow-xl hover:shadow-candy-blue/30 hover:brightness-105 active:scale-[0.98] disabled:opacity-50 disabled:shadow-none"
           >
             <Icon3DInline name="magic-wand" size={20} className="mr-1.5" />
-            Transform to Mascot
+            Stylize
           </Button>
         </div>
       )}

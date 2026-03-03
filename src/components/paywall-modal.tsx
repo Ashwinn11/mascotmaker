@@ -57,10 +57,10 @@ export function PaywallModal({
                 <DialogContent className="rounded-3xl border-2 border-border sm:max-w-md">
                     <DialogHeader>
                         <DialogTitle className="font-display text-2xl text-center">
-                            Sign in to start creating
+                            Sign in to create
                         </DialogTitle>
                         <DialogDescription className="text-center">
-                            Create an account to generate, refine, and animate mascot characters.
+                            Join to generate and animate your mascot.
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col items-center gap-6 py-6">
@@ -78,7 +78,7 @@ export function PaywallModal({
                             Continue with Google
                         </button>
                         <p className="text-xs text-muted-foreground text-center max-w-sm">
-                            Free account includes 25 credits to get started. No credit card required.
+                            Free account includes 25 credits. No card required.
                         </p>
                     </div>
                 </DialogContent>
@@ -94,7 +94,7 @@ export function PaywallModal({
                         Out of credits
                     </DialogTitle>
                     <DialogDescription className="text-center">
-                        You need {creditsRequired} credits for this action but only have {creditsRemaining}.
+                        Need {creditsRequired} credits ({creditsRemaining} left).
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col items-center gap-6 py-6">

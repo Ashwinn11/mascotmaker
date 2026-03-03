@@ -7,21 +7,20 @@ const STEPS: { num: number; title: string; description: string; icon: FluentIcon
     num: 1,
     title: "Describe or Upload",
     description:
-      "Just type what you imagine — or upload a photo, sketch, or logo. AI turns it into a polished mascot character in seconds.",
+      "Just type what you imagine — or upload a photo, sketch, or logo. Nano Banana 2 turns it into a polished mascot in seconds.",
     icon: "pencil",
   },
   {
     num: 2,
     title: "Refine with Chat",
     description:
-      "Not quite right? Talk to the AI like a creative partner. Tweak colors, swap outfits, change expressions — keep iterating until it's perfect.",
+      "Talk to the AI like a creative partner. AI analyzes your mascot's identity to ensure consistent refinements as you iterate.",
     icon: "speech-balloon",
   },
   {
     num: 3,
-    title: "Animate & Share",
-    description:
-      "Choose an action — wave, dance, jump — and your mascot springs to life as a looping animated GIF. Download or publish to the gallery.",
+    title: "Animate & Download",
+    description: "Bring your character to life with actions like wave, dance, or jump. Download as an animated WebP or stickers.",
     icon: "clapper-board",
   },
 ];
@@ -29,35 +28,35 @@ const STEPS: { num: number; title: string; description: string; icon: FluentIcon
 const FEATURES: { icon: FluentIcon3D; title: string; description: string; span?: string }[] = [
   {
     icon: "high-voltage",
-    title: "Instant Generation",
-    description: "From text to mascot in seconds, powered by Nano Banana 2. Just describe your idea and watch it come to life.",
+    title: "Nano Banana 2",
+    description: "The latest in mascot generation technology. Faster, higher quality, and better style consistency than ever before.",
     span: "sm:col-span-2",
   },
   {
-    icon: "artist-palette",
-    title: "Upload Anything",
-    description: "Turn photos, sketches, or logos into cartoon mascot characters.",
+    icon: "camera",
+    title: "Photo to Mascot",
+    description: "Our advanced vision system analyzes your uploads to preserve colors and character traits during transformation.",
   },
   {
     icon: "counterclockwise",
-    title: "Iterative Refinement",
-    description: "Chat-based editing — just describe what to change and the AI handles the rest.",
+    title: "Identity Preservation",
+    description: "Refine your mascot with chat while preserving its core identity. The AI 'remembers' your character's unique features.",
   },
   {
     icon: "film-frames",
-    title: "Animated GIFs",
-    description: "Generate sprite-sheet animations with one click. Choose from wave, dance, jump, walk, and more actions.",
+    title: "Animations & Stickers",
+    description: "Generate perfectly consistent sprite-sheet animations and stickers with one click. 3-in-1 download options!",
     span: "sm:col-span-2",
   },
   {
     icon: "globe",
     title: "Community Gallery",
-    description: "Publish creations and browse what others have made.",
+    description: "Publish your creations to the showcase and browse what the community has brought to life.",
   },
   {
     icon: "inbox-tray",
     title: "Free Downloads",
-    description: "Download your mascots and GIFs — no watermarks, no strings attached.",
+    description: "Download high-res mascots, animated WebPs, and stickers for free — no watermarks.",
   },
 ];
 
@@ -91,8 +90,7 @@ export default function Home() {
           </h1>
 
           <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto mb-10 animate-slide-up stagger-2">
-            Create one-of-a-kind mascot characters from text or images.
-            Refine with AI chat, bring them to life as animated GIFs, and share with the world — all for free.
+            Create, refine, and animate mascot characters in seconds.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up stagger-3">
@@ -245,7 +243,7 @@ export default function Home() {
               Your Mascot Awaits
             </h2>
             <p className="text-muted-foreground max-w-md mx-auto mb-8 leading-relaxed">
-              One prompt is all it takes. Create a character that&apos;s uniquely yours, animate it, and share it with the world — completely free.
+              Create a character that&apos;s uniquely yours with Nano Banana 2. Pick an action, generate stickers, and share it with the world.
             </p>
             <Link
               href="/create"
