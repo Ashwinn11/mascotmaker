@@ -60,7 +60,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ success: true, duplicate: true });
         }
 
-        console.log(`[LS] ${eventName} — sub ${lsSubId}, user ${userId ?? "unknown"}`);
+        console.log(`[LS] ${eventName} — sub ${lsSubId}, user ${userId ?? "unknown"}, variantId: "${variantId}", attrs.variant_id: ${JSON.stringify(attrs.variant_id)}, attrs.subscription_id: ${JSON.stringify(attrs.subscription_id)}`);
 
         switch (eventName) {
             case "subscription_created": {
@@ -88,13 +88,16 @@ export async function POST(req: Request) {
                     return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
                 }
 
-                // Check if this is a proration payment from a plan change (not a renewal).
+                // Payment events may not have variant_id — look up from existing subscription
                 const existingSubForPayment = await getSubscriptionByLsId(lsSubId);
+                const effectiveVariantId = variantId || existingSubForPayment?.variant_id || "";
+
+                // Check if this is a proration payment from a plan change (not a renewal).
                 const isRenewal = !existingSubForPayment ||
-                    existingSubForPayment.variant_id === variantId;
+                    existingSubForPayment.variant_id === effectiveVariantId;
 
                 if (isRenewal) {
-                    const creditsToAdd = getPlanCredits(variantId);
+                    const creditsToAdd = getPlanCredits(effectiveVariantId);
                     const currentCredits = await getUserCredits(userId);
                     const newBalance = currentCredits + creditsToAdd;
 
@@ -107,7 +110,7 @@ export async function POST(req: Request) {
                         description: `Subscription renewal: ${creditsToAdd} credits added`,
                     });
 
-                    console.log(`[LS] renewal user ${userId} +${creditsToAdd} → ${newBalance}`);
+                    console.log(`[LS] renewal user ${userId} +${creditsToAdd} (variant ${effectiveVariantId}) → ${newBalance}`);
                 } else {
                     console.log(`[LS] skipping proration payment for user ${userId} (credits handled in subscription_updated)`);
                 }
