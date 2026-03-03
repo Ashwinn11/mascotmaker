@@ -88,8 +88,9 @@ export async function POST(req: Request) {
                     return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
                 }
 
-                // Payment events may not have variant_id — look up from existing subscription
-                const existingSubForPayment = await getSubscriptionByLsId(lsSubId);
+                // Payment events send an invoice object — subscription_id is in attrs, not data.id
+                const paymentSubId = String(attrs.subscription_id ?? lsSubId);
+                const existingSubForPayment = await getSubscriptionByLsId(paymentSubId);
                 const effectiveVariantId = variantId || existingSubForPayment?.variant_id || "";
 
                 // Check if this is a proration payment from a plan change (not a renewal).
@@ -116,7 +117,7 @@ export async function POST(req: Request) {
                 }
 
                 // Update subscription status/period
-                await updateSubscriptionByLsId(lsSubId, {
+                await updateSubscriptionByLsId(paymentSubId, {
                     status: "active",
                     currentPeriodEnd: attrs.renews_at ?? undefined,
                 });
@@ -193,7 +194,10 @@ export async function POST(req: Request) {
 
             case "subscription_payment_refunded": {
                 if (userId) {
-                    const creditsToDeduct = getPlanCredits(variantId);
+                    const refundSubId = String(attrs.subscription_id ?? lsSubId);
+                    const refundSub = await getSubscriptionByLsId(refundSubId);
+                    const refundVariantId = variantId || refundSub?.variant_id || "";
+                    const creditsToDeduct = getPlanCredits(refundVariantId);
                     const currentCredits = await getUserCredits(userId);
                     const newBalance = Math.max(0, currentCredits - creditsToDeduct);
                     await updateUserCredits(userId, newBalance);
