@@ -7,8 +7,6 @@ import {
     createSubscription,
     updateSubscriptionByLsId,
     getSubscriptionByLsId,
-    isWebhookProcessed,
-    markWebhookProcessed,
 } from "@/lib/db";
 import { getPlanByVariantId, getPlanCredits } from "@/lib/pricing";
 
@@ -52,13 +50,6 @@ export async function POST(req: Request) {
         const lsSubId = String(payload.data.id);
         const variantId = String(attrs.variant_id ?? "");
         const userId = await resolveUserId(payload);
-
-        // Webhook idempotency: use event_name + subscription_id as unique key
-        const eventId = `${eventName}_${lsSubId}_${attrs.updated_at ?? Date.now()}`;
-        if (await isWebhookProcessed(eventId)) {
-            console.log(`[LS] Skipping duplicate event: ${eventId}`);
-            return NextResponse.json({ success: true, duplicate: true });
-        }
 
         console.log(`[LS] ${eventName} — sub ${lsSubId}, user ${userId ?? "unknown"}, variantId: "${variantId}", attrs.variant_id: ${JSON.stringify(attrs.variant_id)}, attrs.subscription_id: ${JSON.stringify(attrs.subscription_id)}`);
 
@@ -222,9 +213,6 @@ export async function POST(req: Request) {
             default:
                 console.log(`[LS] Unhandled event: ${eventName}`);
         }
-
-        // Mark event as processed after successful handling
-        await markWebhookProcessed(eventId, eventName);
 
         return NextResponse.json({ success: true });
     } catch (error) {

@@ -1,14 +1,12 @@
 import sharp from "sharp";
 
-const WHITE_THRESHOLD = 250;
-const GRADIENT_LOW = 245; // pixels between 245-255 get gradient alpha for smooth edges
-
 /**
- * Removes white/near-white background from a PNG image by setting those pixels to transparent.
- * Uses gradient alpha for pixels near the threshold to produce smooth anti-aliased edges.
+ * Removes a bright green (#00FF00) background from a PNG image by setting those pixels to transparent.
+ * Uses gradient alpha for near-green edge pixels to produce smooth anti-aliased edges.
+ * White pixels are completely untouched — only green is removed.
  * Takes a base64-encoded PNG and returns a base64-encoded PNG with transparency.
  */
-export async function removeWhiteBackground(base64: string): Promise<string> {
+export async function removeGreenBackground(base64: string): Promise<string> {
   const input = Buffer.from(base64, "base64");
   const { data, info } = await sharp(input)
     .ensureAlpha()
@@ -20,16 +18,18 @@ export async function removeWhiteBackground(base64: string): Promise<string> {
     const r = pixels[i];
     const g = pixels[i + 1];
     const b = pixels[i + 2];
-    const minChannel = Math.min(r, g, b);
 
-    if (r >= WHITE_THRESHOLD && g >= WHITE_THRESHOLD && b >= WHITE_THRESHOLD) {
+    // Pure green: high G, low R and B
+    if (g >= 240 && r <= 30 && b <= 30) {
       pixels[i + 3] = 0; // fully transparent
-    } else if (minChannel >= GRADIENT_LOW) {
-      // Gradient alpha: the closer to white, the more transparent
-      const brightness = (r + g + b) / 3;
-      const range = WHITE_THRESHOLD - GRADIENT_LOW; // 5
-      const alpha = Math.round(((WHITE_THRESHOLD - brightness) / range) * 255);
-      pixels[i + 3] = Math.max(0, Math.min(255, alpha));
+    } else if (g >= 200 && r <= 80 && b <= 80) {
+      // Near-green edge pixels: gradient alpha for anti-aliasing
+      const greenness = g - Math.max(r, b);
+      if (greenness > 120) {
+        // The more green-dominant, the more transparent
+        const alpha = Math.round(((200 - greenness) / 80) * 255);
+        pixels[i + 3] = Math.max(0, Math.min(255, alpha));
+      }
     }
   }
 

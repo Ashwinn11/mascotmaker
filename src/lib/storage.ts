@@ -1,7 +1,7 @@
 import {
   S3Client,
   PutObjectCommand,
-  GetObjectCommand,
+  DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 
@@ -48,24 +48,20 @@ export async function saveBuffer(buffer: Buffer, ext = "gif"): Promise<string> {
   return `${PUBLIC_URL}/${key}`;
 }
 
-export async function loadImageAsBase64(url: string): Promise<string> {
-  // If it's a full R2 URL, extract the key
+export async function deleteFile(url: string): Promise<void> {
   let key = url;
   if (url.startsWith(PUBLIC_URL)) {
-    key = url.slice(PUBLIC_URL.length + 1); // strip leading /
+    key = url.slice(PUBLIC_URL.length + 1);
   } else if (url.startsWith("/uploads/")) {
-    key = url.slice(1); // strip leading /
+    key = url.slice(1);
   } else if (url.startsWith("uploads/")) {
     key = url;
   }
 
-  const response = await R2.send(
-    new GetObjectCommand({
+  await R2.send(
+    new DeleteObjectCommand({
       Bucket: BUCKET,
       Key: key,
     })
   );
-
-  const bytes = await response.Body!.transformToByteArray();
-  return Buffer.from(bytes).toString("base64");
 }

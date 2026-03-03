@@ -77,15 +77,6 @@ export async function initDb(): Promise<void> {
       updated_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS webhook_events (
-      id SERIAL PRIMARY KEY,
-      event_id TEXT UNIQUE NOT NULL,
-      event_name TEXT NOT NULL,
-      processed_at TIMESTAMPTZ DEFAULT NOW()
-    )
-  `;
-
   // Add foreign keys with CASCADE (safe to run multiple times — DO NOTHING if already exists)
   await sql`
     DO $$ BEGIN
@@ -115,24 +106,6 @@ async function ensureDb(): Promise<void> {
   await initDb();
 }
 
-// ─── Webhook Idempotency ───
-
-export async function isWebhookProcessed(eventId: string): Promise<boolean> {
-  await ensureDb();
-  const rows = await sql`
-    SELECT 1 FROM webhook_events WHERE event_id = ${eventId} LIMIT 1
-  `;
-  return rows.length > 0;
-}
-
-export async function markWebhookProcessed(eventId: string, eventName: string): Promise<void> {
-  await sql`
-    INSERT INTO webhook_events (event_id, event_name)
-    VALUES (${eventId}, ${eventName})
-    ON CONFLICT (event_id) DO NOTHING
-  `;
-}
-
 // ─── Gallery ───
 
 export interface GalleryItem {
@@ -153,12 +126,12 @@ export async function getGalleryItems(userId: string): Promise<GalleryItem[]> {
   return rows as GalleryItem[];
 }
 
-export async function deleteGalleryItem(id: number, userId: string): Promise<boolean> {
+export async function deleteGalleryItem(id: number, userId: string): Promise<GalleryItem | null> {
   await ensureDb();
   const rows = await sql`
-    DELETE FROM gallery WHERE id = ${id} AND user_id = ${userId} RETURNING id
+    DELETE FROM gallery WHERE id = ${id} AND user_id = ${userId} RETURNING *
   `;
-  return rows.length > 0;
+  return (rows[0] as GalleryItem) || null;
 }
 
 export async function addToGallery(item: {

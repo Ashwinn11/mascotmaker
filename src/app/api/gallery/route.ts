@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { getGalleryItems, addToGallery, deleteGalleryItem } from "@/lib/db";
+import { saveImage, saveBuffer, deleteFile } from "@/lib/storage";
 
 export async function GET() {
   try {
@@ -27,10 +28,10 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, description, imageUrl, gifUrl } = await req.json();
-    if (!name || typeof name !== "string" || !imageUrl) {
+    const { name, description, imageBase64, gifBase64 } = await req.json();
+    if (!name || typeof name !== "string" || !imageBase64) {
       return NextResponse.json(
-        { error: "Name and imageUrl are required" },
+        { error: "Name and imageBase64 are required" },
         { status: 400 }
       );
     }
@@ -45,6 +46,14 @@ export async function POST(req: Request) {
         { error: "Description must be under 500 characters" },
         { status: 400 }
       );
+    }
+
+    // Upload to R2 at publish time
+    const imageUrl = await saveImage(imageBase64);
+    let gifUrl: string | undefined;
+    if (gifBase64) {
+      const gifBuffer = Buffer.from(gifBase64, "base64");
+      gifUrl = await saveBuffer(gifBuffer, "gif");
     }
 
     const item = await addToGallery({ name, description, imageUrl, gifUrl, userId: session.user.id });
@@ -79,6 +88,17 @@ export async function DELETE(req: Request) {
         { error: "Item not found or not yours" },
         { status: 404 }
       );
+    }
+
+    // Clean up R2 objects
+    try {
+      await deleteFile(deleted.image_url);
+      if (deleted.gif_url) {
+        await deleteFile(deleted.gif_url);
+      }
+    } catch (err) {
+      console.error("Failed to delete R2 objects:", err);
+      // Don't fail the request — DB row is already deleted
     }
 
     return NextResponse.json({ success: true });

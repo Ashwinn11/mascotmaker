@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { editImage } from "@/lib/gemini";
-import { saveImage, loadImageAsBase64 } from "@/lib/storage";
-import { removeWhiteBackground } from "@/lib/image";
+import { removeGreenBackground } from "@/lib/image";
 import { requireCredits, deductCredits } from "@/lib/credits";
 
 export async function POST(req: Request) {
@@ -10,10 +9,10 @@ export async function POST(req: Request) {
     const check = await requireCredits("chat");
     if (check instanceof Response) return check;
 
-    const { message, mascotImageUrl } = await req.json();
-    if (!message || typeof message !== "string" || !mascotImageUrl) {
+    const { message, mascotBase64 } = await req.json();
+    if (!message || typeof message !== "string" || !mascotBase64) {
       return NextResponse.json(
-        { error: "Message and mascotImageUrl are required" },
+        { error: "Message and mascotBase64 are required" },
         { status: 400 }
       );
     }
@@ -24,15 +23,13 @@ export async function POST(req: Request) {
       );
     }
 
-    const imageBase64 = await loadImageAsBase64(mascotImageUrl);
-    const prompt = `Modify this mascot character: ${message}. Keep the same art style and character identity. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The background must be plain white with no patterns, objects, or shadows.`;
-    const result = await editImage(prompt, imageBase64);
-    const resultBase64 = await removeWhiteBackground(result.data);
-    const imageUrl = await saveImage(resultBase64);
+    const prompt = `Modify this mascot character: ${message}. Keep the same art style and character identity. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The background must be solid bright green (#00FF00) with no patterns, objects, or shadows.`;
+    const result = await editImage(prompt, mascotBase64);
+    const imageBase64 = await removeGreenBackground(result.data);
 
     const creditsRemaining = await deductCredits(check.userId, "chat");
 
-    return NextResponse.json({ imageUrl, creditsRemaining });
+    return NextResponse.json({ imageBase64, creditsRemaining });
   } catch (error) {
     console.error("Chat error:", error);
     return NextResponse.json(

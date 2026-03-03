@@ -17,17 +17,17 @@ import { toast } from "sonner";
 import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
 
 interface GifItem {
-  spriteUrl: string;
-  gifUrl: string;
+  spriteBase64: string;
+  gifBase64: string;
   action: string;
 }
 
 interface GifPreviewProps {
   gifs: GifItem[];
-  mascotImageUrl: string;
+  mascotBase64: string;
 }
 
-export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
+export function GifPreview({ gifs, mascotBase64 }: GifPreviewProps) {
   const [publishOpen, setPublishOpen] = useState(false);
   const [selectedGif, setSelectedGif] = useState<GifItem | null>(null);
   const [name, setName] = useState("");
@@ -45,8 +45,8 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
         body: JSON.stringify({
           name: name.trim(),
           description: description.trim(),
-          imageUrl: mascotImageUrl,
-          gifUrl: selectedGif.gifUrl,
+          imageBase64: mascotBase64,
+          gifBase64: selectedGif.gifBase64,
         }),
       });
       if (!res.ok) {
@@ -83,7 +83,7 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
           >
             <div className="aspect-square overflow-hidden">
               <img
-                src={gif.gifUrl}
+                src={`data:image/gif;base64,${gif.gifBase64}`}
                 alt={`${gif.action} animation`}
                 className="h-full w-full object-contain"
               />
@@ -92,7 +92,7 @@ export function GifPreview({ gifs, mascotImageUrl }: GifPreviewProps) {
               <p className="text-xs font-bold text-warm-gray capitalize mb-2">{gif.action}</p>
               <div className="flex gap-1.5">
                 <button
-                  onClick={() => downloadFile(gif.gifUrl, `mascot-${gif.action}.gif`)}
+                  onClick={() => downloadFile(`data:image/gif;base64,${gif.gifBase64}`, `mascot-${gif.action}.gif`)}
                   className="flex-1 rounded-lg bg-muted py-1.5 text-center text-xs font-bold text-warm-gray transition-colors hover:bg-border"
                 >
                   Download

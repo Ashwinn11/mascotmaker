@@ -8,12 +8,12 @@ import { Icon3D } from "@/components/ui/icon-3d";
 interface Message {
   role: "user" | "assistant";
   content: string;
-  imageUrl?: string;
+  imageBase64?: string;
 }
 
 interface ChatRefinerProps {
-  mascotImageUrl: string;
-  onMascotUpdate: (imageUrl: string) => void;
+  mascotBase64: string;
+  onMascotUpdate: (imageBase64: string) => void;
   onLoadingChange: (loading: boolean) => void;
   onDone: () => void;
   onApiError: (res: Response, data: Record<string, unknown>) => boolean;
@@ -21,7 +21,7 @@ interface ChatRefinerProps {
 }
 
 export function ChatRefiner({
-  mascotImageUrl,
+  mascotBase64,
   onMascotUpdate,
   onLoadingChange,
   onDone,
@@ -49,7 +49,7 @@ export function ChatRefiner({
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: userMsg, mascotImageUrl }),
+        body: JSON.stringify({ message: userMsg, mascotBase64 }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -62,11 +62,11 @@ export function ChatRefiner({
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
-      if (data.imageUrl) {
-        onMascotUpdate(data.imageUrl);
+      if (data.imageBase64) {
+        onMascotUpdate(data.imageBase64);
         setMessages((prev) => [
           ...prev,
-          { role: "assistant", content: "Here's the updated mascot!", imageUrl: data.imageUrl },
+          { role: "assistant", content: "Here's the updated mascot!", imageBase64: data.imageBase64 },
         ]);
       }
     } catch {

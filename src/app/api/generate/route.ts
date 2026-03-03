@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateImage } from "@/lib/gemini";
-import { saveImage } from "@/lib/storage";
-import { removeWhiteBackground } from "@/lib/image";
+import { removeGreenBackground } from "@/lib/image";
 import { requireCredits, deductCredits } from "@/lib/credits";
 
 export async function POST(req: Request) {
@@ -18,15 +17,14 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt must be under 2000 characters" }, { status: 400 });
     }
 
-    const mascotPrompt = `Create a cute, expressive mascot character: ${prompt}. Cartoon style, transparent background, vibrant colors. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The entire character must be visible including legs, feet, and any bottom details. The background must be plain white with no patterns, objects, or shadows.`;
+    const mascotPrompt = `Create a cute, expressive mascot character: ${prompt}. Cartoon style, transparent background, vibrant colors. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The entire character must be visible including legs, feet, and any bottom details. The background must be solid bright green (#00FF00) with no patterns, objects, or shadows.`;
     const result = await generateImage(mascotPrompt);
-    const base64 = await removeWhiteBackground(result.data);
-    const imageUrl = await saveImage(base64);
+    const imageBase64 = await removeGreenBackground(result.data);
 
     // Deduct credits after success based on tokens
     const creditsRemaining = await deductCredits(check.userId, "generate");
 
-    return NextResponse.json({ imageUrl, creditsRemaining });
+    return NextResponse.json({ imageBase64, creditsRemaining });
   } catch (error) {
     console.error("Generate error:", error);
     return NextResponse.json(

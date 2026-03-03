@@ -15,8 +15,8 @@ import { Button } from "@/components/ui/button";
 type Mode = "create" | "refine" | "animate";
 
 interface GifItem {
-  spriteUrl: string;
-  gifUrl: string;
+  spriteBase64: string;
+  gifBase64: string;
   action: string;
 }
 
@@ -29,7 +29,7 @@ const STEPS = [
 export function MascotCreator() {
   const { data: session, status, update: updateSession } = useSession();
   const [mode, setMode] = useState<Mode>("create");
-  const [mascotImageUrl, setMascotImageUrl] = useState<string | null>(null);
+  const [mascotBase64, setMascotBase64] = useState<string | null>(null);
   const [mascotDescription, setMascotDescription] = useState<string | null>(null);
   const [gifs, setGifs] = useState<GifItem[]>([]);
   const [loading, setLoading] = useState(false);
@@ -70,14 +70,14 @@ export function MascotCreator() {
     await updateSession();
   };
 
-  const handleGenerated = (imageUrl: string, analysis?: string) => {
-    setMascotImageUrl(imageUrl);
+  const handleGenerated = (imageBase64: string, analysis?: string) => {
+    setMascotBase64(imageBase64);
     if (analysis) setMascotDescription(analysis);
     setMode("refine");
   };
 
-  const handleMascotUpdate = (imageUrl: string) => {
-    setMascotImageUrl(imageUrl);
+  const handleMascotUpdate = (imageBase64: string) => {
+    setMascotBase64(imageBase64);
   };
 
   const handleAnimationGenerated = (gif: GifItem) => {
@@ -85,7 +85,7 @@ export function MascotCreator() {
   };
 
   const handleStartOver = () => {
-    setMascotImageUrl(null);
+    setMascotBase64(null);
     setMascotDescription(null);
     setGifs([]);
     setMode("create");
@@ -94,8 +94,8 @@ export function MascotCreator() {
 
   const canGoTo = (step: Mode) => {
     if (step === "create") return true;
-    if (step === "refine") return !!mascotImageUrl;
-    if (step === "animate") return !!mascotImageUrl;
+    if (step === "refine") return !!mascotBase64;
+    if (step === "animate") return !!mascotBase64;
     return false;
   };
 
@@ -137,8 +137,11 @@ export function MascotCreator() {
       <div className="grid gap-8 lg:grid-cols-2">
         {/* Left: Preview */}
         <div className="flex flex-col gap-4">
-          <MascotPreview imageUrl={mascotImageUrl} loading={loading && mode === "create"} />
-          {mascotImageUrl && mode !== "create" && (
+          <MascotPreview
+            imageUrl={mascotBase64 ? `data:image/png;base64,${mascotBase64}` : null}
+            loading={loading && mode === "create"}
+          />
+          {mascotBase64 && mode !== "create" && (
             <button
               onClick={() => setConfirmReset(true)}
               className="self-center text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
@@ -167,9 +170,9 @@ export function MascotCreator() {
               </div>
             )}
 
-            {mode === "refine" && mascotImageUrl && (
+            {mode === "refine" && mascotBase64 && (
               <ChatRefiner
-                mascotImageUrl={mascotImageUrl}
+                mascotBase64={mascotBase64}
                 onMascotUpdate={handleMascotUpdate}
                 onLoadingChange={setLoading}
                 onDone={() => setMode("animate")}
@@ -178,17 +181,17 @@ export function MascotCreator() {
               />
             )}
 
-            {mode === "animate" && mascotImageUrl && (
+            {mode === "animate" && mascotBase64 && (
               <div className="space-y-6">
                 <AnimationPicker
-                  mascotImageUrl={mascotImageUrl}
+                  mascotBase64={mascotBase64}
                   mascotDescription={mascotDescription}
                   onAnimationGenerated={handleAnimationGenerated}
                   onLoadingChange={setLoading}
                   onApiError={handleApiError}
                   onCreditsUpdate={handleCreditsUpdate}
                 />
-                <GifPreview gifs={gifs} mascotImageUrl={mascotImageUrl} />
+                <GifPreview gifs={gifs} mascotBase64={mascotBase64} />
               </div>
             )}
           </div>

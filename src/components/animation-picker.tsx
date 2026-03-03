@@ -7,9 +7,9 @@ import { Icon3DInline } from "@/components/ui/icon-3d";
 import type { FluentIcon3D } from "@/components/ui/icon-3d";
 
 interface AnimationPickerProps {
-  mascotImageUrl: string;
+  mascotBase64: string;
   mascotDescription?: string | null;
-  onAnimationGenerated: (gif: { spriteUrl: string; gifUrl: string; action: string }) => void;
+  onAnimationGenerated: (gif: { spriteBase64: string; gifBase64: string; action: string }) => void;
   onLoadingChange: (loading: boolean) => void;
   onApiError: (res: Response, data: Record<string, unknown>) => boolean;
   onCreditsUpdate: (creditsRemaining?: number) => void;
@@ -25,7 +25,7 @@ const PRESET_ACTIONS: { label: string; icon: FluentIcon3D; color: string }[] = [
 ];
 
 export function AnimationPicker({
-  mascotImageUrl,
+  mascotBase64,
   mascotDescription,
   onAnimationGenerated,
   onLoadingChange,
@@ -42,7 +42,7 @@ export function AnimationPicker({
       const res = await fetch("/api/animate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mascotImageUrl, action, description: mascotDescription }),
+        body: JSON.stringify({ mascotBase64, action, description: mascotDescription }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -51,10 +51,10 @@ export function AnimationPicker({
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
-      if (data.gifUrl) {
+      if (data.gifBase64) {
         onAnimationGenerated({
-          spriteUrl: data.spriteUrl,
-          gifUrl: data.gifUrl,
+          spriteBase64: data.spriteBase64,
+          gifBase64: data.gifBase64,
           action,
         });
       }

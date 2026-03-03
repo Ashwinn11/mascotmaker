@@ -39,7 +39,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
-      if (data.imageUrl) onGenerated(data.imageUrl);
+      if (data.imageBase64) onGenerated(data.imageBase64);
     } catch {
       toast.error("Failed to generate mascot. Please try again.");
     } finally {
@@ -63,7 +63,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
-      if (data.imageUrl) onGenerated(data.imageUrl, data.analysis);
+      if (data.imageBase64) onGenerated(data.imageBase64, data.analysis);
     } catch {
       toast.error("Failed to stylize image. Please try again.");
     } finally {

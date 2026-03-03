@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { analyzeImage, stylizeImage } from "@/lib/gemini";
-import { saveImage } from "@/lib/storage";
 import { requireCredits, deductCredits } from "@/lib/credits";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -31,14 +30,12 @@ export async function POST(req: Request) {
 
     const analysisResult = await analyzeImage(base64);
     const stylizeResult = await stylizeImage(prompt, base64, analysisResult.data);
-    const { removeWhiteBackground } = await import("@/lib/image");
-    const resultBase64 = await removeWhiteBackground(stylizeResult.data);
-    const imageUrl = await saveImage(resultBase64);
+    const { removeGreenBackground } = await import("@/lib/image");
+    const imageBase64 = await removeGreenBackground(stylizeResult.data);
 
-    const totalTokens = analysisResult.tokens + stylizeResult.tokens;
     const creditsRemaining = await deductCredits(check.userId, "stylize");
 
-    return NextResponse.json({ imageUrl, analysis: analysisResult.data, creditsRemaining });
+    return NextResponse.json({ imageBase64, analysis: analysisResult.data, creditsRemaining });
   } catch (error) {
     console.error("Stylize error:", error);
     return NextResponse.json(
