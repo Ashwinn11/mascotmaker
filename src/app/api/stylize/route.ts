@@ -30,8 +30,7 @@ export async function POST(req: Request) {
 
     const analysisResult = await analyzeImage(base64);
     const stylizeResult = await stylizeImage(prompt, base64, analysisResult.data);
-    const { removeGreenBackground } = await import("@/lib/image");
-    const imageBase64 = await removeGreenBackground(stylizeResult.data);
+    const imageBase64 = stylizeResult.data;
 
     const creditsRemaining = await deductCredits(check.userId, "stylize");
 

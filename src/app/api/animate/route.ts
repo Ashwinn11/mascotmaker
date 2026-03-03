@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { generateSpriteSheet } from "@/lib/gemini";
-import { removeGreenBackground } from "@/lib/image";
 import { spriteSheetToWebp } from "@/lib/sprite-to-webp";
 import { spriteSheetToSvg } from "@/lib/sprite-to-svg";
 import { requireCredits, deductCredits } from "@/lib/credits";
@@ -27,9 +26,7 @@ export async function POST(req: Request) {
 
     const result = await generateSpriteSheet(mascotBase64, action, description);
 
-    // Remove green background from sprite sheet before WebP conversion
-    const spriteBase64 = await removeGreenBackground(result.data);
-    const spriteBuffer = Buffer.from(spriteBase64, "base64");
+    const spriteBuffer = Buffer.from(result.data, "base64");
     const [animationBuffer, svgResult] = await Promise.all([
       spriteSheetToWebp(spriteBuffer),
       spriteSheetToSvg(spriteBuffer),
@@ -39,7 +36,7 @@ export async function POST(req: Request) {
     const creditsRemaining = await deductCredits(check.userId, "animate");
 
     return NextResponse.json({
-      spriteBase64,
+      spriteBase64: result.data,
       animationBase64,
       svgFrames: svgResult.frames,
       svgAnimated: svgResult.animated,
