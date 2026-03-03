@@ -113,7 +113,7 @@ export async function stylizeImage(
   const analysisContext = analysis
     ? `The image contains: ${analysis}. Use these details to preserve the subject's identity.`
     : "";
-  const fullPrompt = `Transform this image into a cute mascot character in a cartoon/chibi style. ${analysisContext} ${prompt}. Keep the character recognizable but make it adorable and suitable as a mascot. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The background must be solid bright green (#00FF00) with no patterns, objects, or shadows.`;
+  const fullPrompt = `Transform this image into a cute mascot character in a cartoon/chibi style. ${analysisContext} ${prompt}. Keep the character recognizable but make it adorable and suitable as a mascot. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The background must be solid flat bright green (#00FF00) — no ground, no floor, no shadow, no gradient. The character should float on a perfectly uniform green screen.`;
   return editImage(fullPrompt, imageBase64);
 }
 
@@ -128,7 +128,7 @@ export async function generateSpriteSheet(
   const characterContext = description
     ? `This character is: ${description}. `
     : "";
-  const prompt = `${characterContext}Sprite sheet of this character ${action}, 3x3 grid, solid bright green (#00FF00) background, sequence, frame by frame animation, square aspect ratio. Each frame must show the full body from head to feet. Follow the structure of the attached reference image exactly.`;
+  const prompt = `${characterContext}Sprite sheet of this character ${action}, 3x3 grid, solid flat bright green (#00FF00) background with no ground/floor/shadow/gradient, sequence, frame by frame animation, square aspect ratio. Each frame must show the full body from head to feet floating on uniform green. Follow the structure of the attached reference image exactly.`;
 
   const response = await getAI().models.generateContent({
     model: SPRITE_MODEL_ID,

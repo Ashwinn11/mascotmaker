@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const prompt = `Modify this mascot character: ${message}. Keep the same art style and character identity. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The background must be solid bright green (#00FF00) with no patterns, objects, or shadows.`;
+    const prompt = `Modify this mascot character: ${message}. Keep the same art style and character identity. IMPORTANT: Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character. The background must be solid flat bright green (#00FF00) — no ground, no floor, no shadow, no gradient. The character should float on a perfectly uniform green screen.`;
     const result = await editImage(prompt, mascotBase64);
     const imageBase64 = await removeGreenBackground(result.data);
 
