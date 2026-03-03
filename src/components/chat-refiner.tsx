@@ -31,7 +31,12 @@ export function ChatRefiner({
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -100,7 +105,7 @@ export function ChatRefiner({
           className="rounded-xl border-2 border-candy-green text-candy-green hover:bg-candy-green/10 font-bold whitespace-nowrap"
           size="sm"
         >
-          {typeof window !== "undefined" && window.innerWidth < 640 ? "Done" : "Done Refining"} →
+          {mounted && window.innerWidth < 640 ? "Done" : "Done Refining"} →
         </Button>
       </div>
 

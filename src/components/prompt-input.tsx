@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -19,7 +19,12 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
   const [prompt, setPrompt] = useState("");
   const [stylePrompt, setStylePrompt] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleGenerate = async () => {
@@ -124,7 +129,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
               }}
             />
             <span className="absolute bottom-2 right-3 hidden md:block text-[10px] text-muted-foreground/50">
-              {typeof window !== "undefined" && navigator.platform?.includes("Mac") ? "⌘" : "Ctrl"}+Enter to generate
+              {mounted && navigator.platform?.includes("Mac") ? "⌘" : "Ctrl"}+Enter to generate
             </span>
           </div>
           {/* Suggestion chips */}
