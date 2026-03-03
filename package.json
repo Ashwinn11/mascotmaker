@@ -14,6 +14,7 @@
     "@google/genai": "^1.43.0",
     "@lemonsqueezy/lemonsqueezy.js": "^4.0.0",
     "@neondatabase/serverless": "^1.0.2",
+    "@neplex/vectorizer": "^0.0.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.575.0",

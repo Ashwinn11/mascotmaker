@@ -19,12 +19,26 @@ import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
 interface AnimationItem {
   spriteBase64: string;
   animationBase64: string;
+  svgFrames: string[];
+  svgAnimated: string;
   action: string;
 }
 
 interface AnimationPreviewProps {
   animations: AnimationItem[];
   mascotBase64: string;
+}
+
+function downloadSvg(svgContent: string, filename: string) {
+  const blob = new Blob([svgContent], { type: "image/svg+xml" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
 
 export function AnimationPreview({ animations, mascotBase64 }: AnimationPreviewProps) {
@@ -95,8 +109,16 @@ export function AnimationPreview({ animations, mascotBase64 }: AnimationPreviewP
                   onClick={() => downloadFile(`data:image/webp;base64,${anim.animationBase64}`, `mascot-${anim.action}.webp`)}
                   className="flex-1 rounded-lg bg-muted py-1.5 text-center text-xs font-bold text-warm-gray transition-colors hover:bg-border"
                 >
-                  Download
+                  WebP
                 </button>
+                {anim.svgAnimated && (
+                  <button
+                    onClick={() => downloadSvg(anim.svgAnimated, `mascot-${anim.action}.svg`)}
+                    className="flex-1 rounded-lg bg-gradient-to-r from-candy-blue to-candy-purple py-1.5 text-center text-xs font-bold text-white transition-all hover:brightness-105"
+                  >
+                    SVG
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     setSelectedAnim(anim);

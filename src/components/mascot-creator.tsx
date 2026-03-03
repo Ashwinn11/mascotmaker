@@ -17,6 +17,8 @@ type Mode = "create" | "refine" | "animate";
 interface AnimationItem {
   spriteBase64: string;
   animationBase64: string;
+  svgFrames: string[];
+  svgAnimated: string;
   action: string;
 }
 
