@@ -23,6 +23,7 @@ export async function POST(req: Request) {
         if (activeSub && activeSub.status === "active") {
             const { error } = await updateSubscription(activeSub.ls_subscription_id, {
                 variantId: Number(variantId),
+                invoiceImmediately: true,
             });
 
             if (error) {

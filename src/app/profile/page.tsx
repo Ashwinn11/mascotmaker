@@ -69,6 +69,16 @@ export default function ProfilePage() {
     }, [session]);
 
     const handleBuyCredits = async (variantId: string, credits: number) => {
+        // Confirm plan change if user already has an active subscription
+        if (subscription?.status === "active") {
+            const targetPlan = PLANS.find(p => p.variantId === variantId);
+            if (!targetPlan) return;
+            const confirmed = confirm(
+                `Switch to ${targetPlan.name} plan (${targetPlan.credits} credits/mo at ${targetPlan.priceLabel})? You'll be charged a prorated amount immediately.`
+            );
+            if (!confirmed) return;
+        }
+
         setPurchaseLoading(credits);
         try {
             const res = await fetch("/api/checkout", {
@@ -290,16 +300,15 @@ export default function ProfilePage() {
                                         : "bg-white border-2 border-border hover:border-candy-pink/50 text-foreground"
                                         }`}
                                 >
-                                    {plan.popular && (
-                                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-foreground text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border-2 border-white">
-                                            Most Popular
-                                        </span>
-                                    )}
-                                    {subscription?.status === "active" && subscription?.planName === plan.name && (
+                                    {subscription?.status === "active" && subscription?.planName === plan.name ? (
                                         <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-candy-green text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border-2 border-white">
                                             Current
                                         </span>
-                                    )}
+                                    ) : plan.popular ? (
+                                        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-foreground text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1 rounded-full border-2 border-white">
+                                            Most Popular
+                                        </span>
+                                    ) : null}
                                     <span className="text-sm font-bold opacity-80 mb-1 leading-none">{plan.credits} Credits</span>
                                     <span className="font-display text-3xl mb-3 leading-none">{plan.priceLabel}</span>
                                     <span className="text-xs font-bold bg-white/20 px-3 py-1 rounded-full">
