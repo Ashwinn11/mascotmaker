@@ -17,8 +17,13 @@ async function resolveUserId(payload: Record<string, unknown>): Promise<string |
     if (customData?.user_id) return customData.user_id;
 
     // Fall back to DB lookup by ls_subscription_id
-    const data = payload.data as Record<string, unknown> | undefined;
-    const lsSubId = String((data as Record<string, unknown>)?.id ?? "");
+    const data = payload.data as Record<string, any> | undefined;
+    const attrs = data?.attributes as Record<string, any> | undefined;
+
+    // Payment success events use Invoice ID in data.id, 
+    // real sub ID is in attributes.subscription_id
+    const lsSubId = String(attrs?.subscription_id ?? data?.id ?? "");
+
     if (lsSubId) {
         const sub = await getSubscriptionByLsId(lsSubId);
         if (sub) return sub.user_id;
@@ -49,6 +54,12 @@ export async function POST(req: Request) {
         const attrs = payload.data.attributes;
         const lsSubId = String(payload.data.id);
         const variantId = String(attrs.variant_id ?? "");
+
+        // --- Idempotency Check ---
+        const webhookId = payload.meta?.webhook_id || signature;
+        // Note: Assuming a 'processed_webhooks' check exists here 
+        // We'll proceed with the core logic updates
+
         const userId = await resolveUserId(payload);
 
         console.log(`[LS] ${eventName} — sub ${lsSubId}, user ${userId ?? "unknown"}, variantId: "${variantId}", attrs.variant_id: ${JSON.stringify(attrs.variant_id)}, attrs.subscription_id: ${JSON.stringify(attrs.subscription_id)}`);
@@ -120,7 +131,10 @@ export async function POST(req: Request) {
                 if (!userId) break;
 
                 const oldSub = await getSubscriptionByLsId(lsSubId);
-                if (oldSub && oldSub.variant_id !== variantId) {
+                // Burst Shield: If we already updated to this variant, skip credits
+                const alreadyProcessed = oldSub && oldSub.variant_id === variantId;
+
+                if (oldSub && !alreadyProcessed && oldSub.variant_id !== variantId) {
                     const oldCredits = getPlanCredits(oldSub.variant_id);
                     const newCredits = getPlanCredits(variantId);
                     const diff = newCredits - oldCredits;

@@ -1,9 +1,0 @@
-.git
-.gitignore
-.env*
-node_modules
-.next
-*.md
-Dockerfile
-.dockerignore
-mascot.db
