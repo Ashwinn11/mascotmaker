@@ -26,7 +26,9 @@ export async function spriteSheetToSvg(
   const frameWidth = Math.floor(effectiveWidth / GRID);
   const frameHeight = Math.floor(effectiveHeight / GRID);
 
-  // Extract each frame as PNG buffer for vectorization
+  // Downscale frames to reduce vectorization complexity
+  const targetSize = 256;
+
   const framePngs: Buffer[] = [];
   for (let row = 0; row < GRID; row++) {
     for (let col = 0; col < GRID; col++) {
@@ -36,6 +38,7 @@ export async function spriteSheetToSvg(
       const png = await sharp(spriteBuffer)
         .extract({ left, top, width: frameWidth, height: frameHeight })
         .ensureAlpha()
+        .resize(targetSize, targetSize, { fit: "inside" })
         .png()
         .toBuffer();
 
@@ -43,48 +46,43 @@ export async function spriteSheetToSvg(
     }
   }
 
-  // Vectorize each frame
+  // Vectorize each frame with aggressive simplification for small file size
   const frames = await Promise.all(
     framePngs.map((png) =>
       vectorize(png, {
         colorMode: 0,        // ColorMode.Color
-        colorPrecision: 8,
-        filterSpeckle: 4,
+        colorPrecision: 4,
+        filterSpeckle: 8,
         spliceThreshold: 45,
-        cornerThreshold: 60,
+        cornerThreshold: 120,
         hierarchical: 0,     // Hierarchical.Stacked
         mode: 2,             // PathSimplifyMode.Spline
-        layerDifference: 6,
-        lengthThreshold: 4,
+        layerDifference: 16,
+        lengthThreshold: 6,
         maxIterations: 2,
-        pathPrecision: 3,
+        pathPrecision: 1,
       })
     )
   );
 
-  // Build animated SVG with CSS keyframes
+  // Build animated SVG — each frame gets its own @keyframes that toggles visibility
   const totalDuration = frameDuration * FRAME_COUNT;
   const stepPct = 100 / FRAME_COUNT;
 
-  let keyframes = "@keyframes play{";
+  // Each frame is visible only during its 1/9th slice, hidden otherwise
+  let styles = "";
   for (let i = 0; i < FRAME_COUNT; i++) {
-    const start = (stepPct * i).toFixed(2);
-    const end = (stepPct * (i + 1)).toFixed(2);
-    // Each frame is visible only during its slice of the animation
-    keyframes += `${start}%,${i === FRAME_COUNT - 1 ? "100" : end}%{`;
-    for (let j = 0; j < FRAME_COUNT; j++) {
-      if (j > 0) keyframes += ";";
-      keyframes += `--f${j}:${j === i ? "visible" : "hidden"}`;
-    }
-    keyframes += "}";
+    const showStart = (stepPct * i).toFixed(2);
+    const showEnd = (stepPct * (i + 1)).toFixed(2);
+    styles += `.f${i}{visibility:hidden;animation:f${i} ${totalDuration}ms steps(1) infinite}`;
+    styles += `@keyframes f${i}{${showStart}%{visibility:visible}${showEnd}%{visibility:hidden}}`;
   }
-  keyframes += "}";
 
   // Extract inner SVG content (paths) from each frame, stripping the outer <svg> wrapper
   const innerFrames = frames.map((svg, i) => {
     const innerMatch = svg.match(/<svg[^>]*>([\s\S]*)<\/svg>/);
     const inner = innerMatch ? innerMatch[1] : svg;
-    return `<g style="visibility:var(--f${i},hidden)">${inner}</g>`;
+    return `<g class="f${i}">${inner}</g>`;
   });
 
   // Get viewBox from first frame SVG
@@ -93,10 +91,8 @@ export async function spriteSheetToSvg(
 
   const animated = [
     `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${viewBox}" width="${frameWidth}" height="${frameHeight}">`,
-    `<style>${keyframes}.anim{animation:play ${totalDuration}ms steps(1) infinite}</style>`,
-    `<g class="anim">`,
+    `<style>${styles}</style>`,
     ...innerFrames,
-    `</g>`,
     `</svg>`,
   ].join("");
 
