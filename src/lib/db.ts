@@ -86,6 +86,28 @@ export async function initDb(): Promise<void> {
     )
   `;
 
+  // Add foreign keys with CASCADE (safe to run multiple times — DO NOTHING if already exists)
+  await sql`
+    DO $$ BEGIN
+      ALTER TABLE gallery ADD CONSTRAINT fk_gallery_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$
+  `;
+  await sql`
+    DO $$ BEGIN
+      ALTER TABLE transactions ADD CONSTRAINT fk_transactions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$
+  `;
+  await sql`
+    DO $$ BEGIN
+      ALTER TABLE usage_logs ADD CONSTRAINT fk_usage_logs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$
+  `;
+  await sql`
+    DO $$ BEGIN
+      ALTER TABLE subscriptions ADD CONSTRAINT fk_subscriptions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+    EXCEPTION WHEN duplicate_object THEN NULL; END $$
+  `;
+
   initialized = true;
 }
 
