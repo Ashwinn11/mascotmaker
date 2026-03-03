@@ -11,7 +11,7 @@ export async function POST() {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const sub = getActiveSubscription(session.user.id);
+        const sub = await getActiveSubscription(session.user.id);
         if (!sub || sub.status !== "active") {
             return NextResponse.json({ error: "No active subscription" }, { status: 400 });
         }
@@ -25,7 +25,7 @@ export async function POST() {
         }
 
         // Update DB immediately for instant UI feedback
-        updateSubscriptionByLsId(sub.ls_subscription_id, { status: "cancelled" });
+        await updateSubscriptionByLsId(sub.ls_subscription_id, { status: "cancelled" });
 
         return NextResponse.json({ success: true });
     } catch (error) {

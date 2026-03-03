@@ -9,7 +9,7 @@ export async function GET() {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const sub = getActiveSubscription(session.user.id);
+        const sub = await getActiveSubscription(session.user.id);
         if (!sub?.customer_portal_url) {
             return NextResponse.json({ error: "No subscription found" }, { status: 404 });
         }

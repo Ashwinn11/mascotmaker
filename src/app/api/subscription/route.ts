@@ -10,7 +10,7 @@ export async function GET() {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const sub = getActiveSubscription(session.user.id);
+        const sub = await getActiveSubscription(session.user.id);
         if (!sub) {
             return NextResponse.json({ subscription: null });
         }

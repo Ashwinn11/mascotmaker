@@ -11,7 +11,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
         }
 
-        const { variantId, credits } = await req.json();
+        const { variantId } = await req.json();
         if (!variantId) {
             return NextResponse.json({ error: "Variant ID is required" }, { status: 400 });
         }
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
         initLemonSqueezy();
 
         // Check for existing active subscription — change plan instead of new checkout
-        const activeSub = getActiveSubscription(session.user.id);
+        const activeSub = await getActiveSubscription(session.user.id);
         if (activeSub && activeSub.status === "active") {
             const { error } = await updateSubscription(activeSub.ls_subscription_id, {
                 variantId: Number(variantId),
@@ -44,7 +44,6 @@ export async function POST(req: Request) {
                 email: session.user.email ?? "",
                 custom: {
                     user_id: session.user.id,
-                    credits: credits.toString(),
                 },
             },
             productOptions: {

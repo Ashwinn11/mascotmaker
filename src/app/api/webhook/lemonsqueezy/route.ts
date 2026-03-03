@@ -7,10 +7,12 @@ import {
     createSubscription,
     updateSubscriptionByLsId,
     getSubscriptionByLsId,
+    isWebhookProcessed,
+    markWebhookProcessed,
 } from "@/lib/db";
 import { getPlanByVariantId, getPlanCredits } from "@/lib/pricing";
 
-function resolveUserId(payload: Record<string, unknown>): string | null {
+async function resolveUserId(payload: Record<string, unknown>): Promise<string | null> {
     // Try custom_data first
     const meta = payload.meta as Record<string, unknown> | undefined;
     const customData = meta?.custom_data as Record<string, string> | undefined;
@@ -20,26 +22,11 @@ function resolveUserId(payload: Record<string, unknown>): string | null {
     const data = payload.data as Record<string, unknown> | undefined;
     const lsSubId = String((data as Record<string, unknown>)?.id ?? "");
     if (lsSubId) {
-        const sub = getSubscriptionByLsId(lsSubId);
+        const sub = await getSubscriptionByLsId(lsSubId);
         if (sub) return sub.user_id;
     }
 
     return null;
-}
-
-function resolveCredits(payload: Record<string, unknown>, variantId: string): number {
-    // Primary: credits from checkout custom_data (set at checkout time)
-    const meta = payload.meta as Record<string, unknown> | undefined;
-    const customData = meta?.custom_data as Record<string, string> | undefined;
-    const customCredits = parseInt(customData?.credits ?? "", 10);
-    if (customCredits > 0) return customCredits;
-
-    // Fallback: lookup by variant ID
-    const planCredits = getPlanCredits(variantId);
-    if (planCredits > 0) return planCredits;
-
-    console.error(`[LS] Could not resolve credits for variant ${variantId}`);
-    return 0;
 }
 
 export async function POST(req: Request) {
@@ -64,7 +51,14 @@ export async function POST(req: Request) {
         const attrs = payload.data.attributes;
         const lsSubId = String(payload.data.id);
         const variantId = String(attrs.variant_id ?? "");
-        const userId = resolveUserId(payload);
+        const userId = await resolveUserId(payload);
+
+        // Webhook idempotency: use event_name + subscription_id as unique key
+        const eventId = `${eventName}_${lsSubId}_${attrs.updated_at ?? Date.now()}`;
+        if (await isWebhookProcessed(eventId)) {
+            console.log(`[LS] Skipping duplicate event: ${eventId}`);
+            return NextResponse.json({ success: true, duplicate: true });
+        }
 
         console.log(`[LS] ${eventName} — sub ${lsSubId}, user ${userId ?? "unknown"}`);
 
@@ -74,7 +68,7 @@ export async function POST(req: Request) {
                     return NextResponse.json({ error: "Missing user_id" }, { status: 400 });
                 }
                 const plan = getPlanByVariantId(variantId);
-                createSubscription({
+                await createSubscription({
                     userId,
                     lsSubscriptionId: lsSubId,
                     lsCustomerId: String(attrs.customer_id ?? ""),
@@ -95,20 +89,17 @@ export async function POST(req: Request) {
                 }
 
                 // Check if this is a proration payment from a plan change (not a renewal).
-                // LemonSqueezy sends subscription_updated + subscription_payment_success
-                // on upgrades. We handle credits in subscription_updated to give only
-                // the difference, so skip crediting here for non-renewal payments.
-                const existingSubForPayment = getSubscriptionByLsId(lsSubId);
+                const existingSubForPayment = await getSubscriptionByLsId(lsSubId);
                 const isRenewal = !existingSubForPayment ||
                     existingSubForPayment.variant_id === variantId;
 
                 if (isRenewal) {
-                    const creditsToAdd = resolveCredits(payload, variantId);
-                    const currentCredits = getUserCredits(userId);
+                    const creditsToAdd = getPlanCredits(variantId);
+                    const currentCredits = await getUserCredits(userId);
                     const newBalance = currentCredits + creditsToAdd;
 
-                    updateUserCredits(userId, newBalance);
-                    addTransaction({
+                    await updateUserCredits(userId, newBalance);
+                    await addTransaction({
                         userId,
                         type: "purchase",
                         amount: creditsToAdd,
@@ -122,7 +113,7 @@ export async function POST(req: Request) {
                 }
 
                 // Update subscription status/period
-                updateSubscriptionByLsId(lsSubId, {
+                await updateSubscriptionByLsId(lsSubId, {
                     status: "active",
                     currentPeriodEnd: attrs.renews_at ?? undefined,
                 });
@@ -131,7 +122,7 @@ export async function POST(req: Request) {
             }
 
             case "subscription_updated": {
-                const existingSub = getSubscriptionByLsId(lsSubId);
+                const existingSub = await getSubscriptionByLsId(lsSubId);
                 const plan = getPlanByVariantId(variantId);
 
                 // If plan changed, grant or revoke the credit difference
@@ -142,10 +133,10 @@ export async function POST(req: Request) {
 
                     if (diff > 0) {
                         // Upgrade: grant the difference
-                        const currentCredits = getUserCredits(userId);
+                        const currentCredits = await getUserCredits(userId);
                         const newBalance = currentCredits + diff;
-                        updateUserCredits(userId, newBalance);
-                        addTransaction({
+                        await updateUserCredits(userId, newBalance);
+                        await addTransaction({
                             userId,
                             type: "purchase",
                             amount: diff,
@@ -157,7 +148,7 @@ export async function POST(req: Request) {
                     // Downgrade: don't claw back — user already paid for current period
                 }
 
-                updateSubscriptionByLsId(lsSubId, {
+                await updateSubscriptionByLsId(lsSubId, {
                     variantId,
                     planName: plan?.name ?? "Unknown",
                     status: String(attrs.status ?? "active"),
@@ -170,7 +161,7 @@ export async function POST(req: Request) {
             }
 
             case "subscription_cancelled": {
-                updateSubscriptionByLsId(lsSubId, {
+                await updateSubscriptionByLsId(lsSubId, {
                     status: "cancelled",
                     cancelAt: attrs.ends_at ?? undefined,
                 });
@@ -178,32 +169,32 @@ export async function POST(req: Request) {
             }
 
             case "subscription_expired": {
-                updateSubscriptionByLsId(lsSubId, { status: "expired" });
+                await updateSubscriptionByLsId(lsSubId, { status: "expired" });
                 break;
             }
 
             case "subscription_paused": {
-                updateSubscriptionByLsId(lsSubId, { status: "paused" });
+                await updateSubscriptionByLsId(lsSubId, { status: "paused" });
                 break;
             }
 
             case "subscription_resumed": {
-                updateSubscriptionByLsId(lsSubId, { status: "active" });
+                await updateSubscriptionByLsId(lsSubId, { status: "active" });
                 break;
             }
 
             case "subscription_payment_failed": {
-                updateSubscriptionByLsId(lsSubId, { status: "past_due" });
+                await updateSubscriptionByLsId(lsSubId, { status: "past_due" });
                 break;
             }
 
             case "subscription_payment_refunded": {
                 if (userId) {
                     const creditsToDeduct = getPlanCredits(variantId);
-                    const currentCredits = getUserCredits(userId);
+                    const currentCredits = await getUserCredits(userId);
                     const newBalance = Math.max(0, currentCredits - creditsToDeduct);
-                    updateUserCredits(userId, newBalance);
-                    addTransaction({
+                    await updateUserCredits(userId, newBalance);
+                    await addTransaction({
                         userId,
                         type: "deduction",
                         amount: -creditsToDeduct,
@@ -218,6 +209,9 @@ export async function POST(req: Request) {
             default:
                 console.log(`[LS] Unhandled event: ${eventName}`);
         }
+
+        // Mark event as processed after successful handling
+        await markWebhookProcessed(eventId, eventName);
 
         return NextResponse.json({ success: true });
     } catch (error) {

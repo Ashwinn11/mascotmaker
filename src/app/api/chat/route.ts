@@ -30,7 +30,7 @@ export async function POST(req: Request) {
     const resultBase64 = await removeWhiteBackground(result.data);
     const imageUrl = await saveImage(resultBase64);
 
-    const creditsRemaining = deductCredits(check.userId, "chat");
+    const creditsRemaining = await deductCredits(check.userId, "chat");
 
     return NextResponse.json({ imageUrl, creditsRemaining });
   } catch (error) {

@@ -24,7 +24,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks: {
         async signIn({ user, account }) {
             if (account?.provider === "google" && user.email) {
-                findOrCreateUser({
+                await findOrCreateUser({
                     googleId: account.providerAccountId,
                     email: user.email,
                     name: user.name || null,
@@ -39,7 +39,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             }
             // Refresh user data from DB on every token refresh
             if (token.googleId) {
-                const dbUser = findOrCreateUser({
+                const dbUser = await findOrCreateUser({
                     googleId: token.googleId as string,
                     email: token.email!,
                     name: token.name || null,

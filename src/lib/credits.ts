@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import {
     getUserCredits,
-    updateUserCredits,
+    atomicDeductCredits,
     addTransaction,
     logUsage,
 } from "@/lib/db";
@@ -31,7 +31,7 @@ export async function requireCredits(
     }
 
     const cost = CREDIT_COSTS[route] || 1;
-    const currentCredits = getUserCredits(session.user.id);
+    const currentCredits = await getUserCredits(session.user.id);
 
     if (currentCredits < cost) {
         return new Response(
@@ -48,25 +48,28 @@ export async function requireCredits(
 }
 
 /**
- * Deduct fixed credits based on the route.
+ * Atomically deduct fixed credits based on the route.
+ * Returns new balance, or throws if insufficient credits (race condition protection).
  */
-export function deductCredits(
+export async function deductCredits(
     userId: string,
     route: string
-): number {
+): Promise<number> {
     const cost = CREDIT_COSTS[route] || 1;
-    const currentCredits = getUserCredits(userId);
-    const newBalance = currentCredits - cost;
+    const newBalance = await atomicDeductCredits(userId, cost);
 
-    updateUserCredits(userId, newBalance);
-    addTransaction({
+    if (newBalance === null) {
+        throw new Error("Insufficient credits");
+    }
+
+    await addTransaction({
         userId,
         type: "deduction",
         amount: -cost,
         balanceAfter: newBalance,
         description: `Used ${route}`,
     });
-    logUsage({
+    await logUsage({
         userId,
         apiRoute: route,
         creditsCharged: cost,
@@ -74,4 +77,3 @@ export function deductCredits(
 
     return newBalance;
 }
-

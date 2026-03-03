@@ -24,7 +24,7 @@ export async function POST(req: Request) {
     const imageUrl = await saveImage(base64);
 
     // Deduct credits after success based on tokens
-    const creditsRemaining = deductCredits(check.userId, "generate");
+    const creditsRemaining = await deductCredits(check.userId, "generate");
 
     return NextResponse.json({ imageUrl, creditsRemaining });
   } catch (error) {

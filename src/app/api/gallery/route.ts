@@ -9,7 +9,7 @@ export async function GET() {
       return NextResponse.json({ items: [] });
     }
 
-    const items = getGalleryItems(session.user.id);
+    const items = await getGalleryItems(session.user.id);
     return NextResponse.json({ items });
   } catch (error) {
     console.error("Gallery GET error:", error);
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const item = addToGallery({ name, description, imageUrl, gifUrl, userId: session.user.id });
+    const item = await addToGallery({ name, description, imageUrl, gifUrl, userId: session.user.id });
     return NextResponse.json({ item });
   } catch (error) {
     console.error("Gallery POST error:", error);
@@ -73,7 +73,7 @@ export async function DELETE(req: Request) {
       );
     }
 
-    const deleted = deleteGalleryItem(id, session.user.id);
+    const deleted = await deleteGalleryItem(id, session.user.id);
     if (!deleted) {
       return NextResponse.json(
         { error: "Item not found or not yours" },

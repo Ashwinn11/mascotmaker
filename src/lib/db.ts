@@ -1,77 +1,114 @@
-import Database from "better-sqlite3";
-import path from "path";
+import { neon } from "@neondatabase/serverless";
 import { v4 as uuidv4 } from "uuid";
 
-const DB_PATH = process.env.DATABASE_PATH ?? path.join(process.cwd(), "mascot.db");
+// ─── Connection ───
 
-let db: Database.Database | null = null;
+function sql(strings: TemplateStringsArray, ...values: unknown[]) {
+  const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+  if (!databaseUrl) throw new Error("DATABASE_URL or POSTGRES_URL env var is required");
+  const query = neon(databaseUrl);
+  return query(strings, ...values);
+}
 
-function getDb(): Database.Database {
-  if (!db) {
-    db = new Database(DB_PATH);
-    db.pragma("journal_mode = WAL");
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS gallery (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT NOT NULL,
-        description TEXT,
-        image_url TEXT NOT NULL,
-        gif_url TEXT,
-        user_id TEXT,
-        created_at TEXT DEFAULT (datetime('now')),
-        published INTEGER DEFAULT 1
-      )
-    `);
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS users (
-        id TEXT PRIMARY KEY,
-        google_id TEXT UNIQUE NOT NULL,
-        email TEXT NOT NULL,
-        name TEXT,
-        avatar_url TEXT,
-        credits INTEGER DEFAULT 25,
-        created_at TEXT DEFAULT (datetime('now'))
-      )
-    `);
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS transactions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id TEXT NOT NULL,
-        type TEXT NOT NULL,
-        amount INTEGER NOT NULL,
-        balance_after INTEGER NOT NULL,
-        description TEXT,
-        created_at TEXT DEFAULT (datetime('now'))
-      )
-    `);
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS usage_logs (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id TEXT NOT NULL,
-        api_route TEXT NOT NULL,
-        credits_charged INTEGER NOT NULL,
-        created_at TEXT DEFAULT (datetime('now'))
-      )
-    `);
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS subscriptions (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        user_id TEXT NOT NULL,
-        ls_subscription_id TEXT UNIQUE NOT NULL,
-        ls_customer_id TEXT,
-        variant_id TEXT NOT NULL,
-        plan_name TEXT NOT NULL,
-        status TEXT NOT NULL DEFAULT 'active',
-        current_period_end TEXT,
-        cancel_at TEXT,
-        customer_portal_url TEXT,
-        update_payment_url TEXT,
-        created_at TEXT DEFAULT (datetime('now')),
-        updated_at TEXT DEFAULT (datetime('now'))
-      )
-    `);
-  }
-  return db;
+// ─── Schema Init ───
+
+let initialized = false;
+
+export async function initDb(): Promise<void> {
+  if (initialized) return;
+
+  await sql`
+    CREATE TABLE IF NOT EXISTS gallery (
+      id SERIAL PRIMARY KEY,
+      name TEXT NOT NULL,
+      description TEXT,
+      image_url TEXT NOT NULL,
+      gif_url TEXT,
+      user_id TEXT,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      published INTEGER DEFAULT 1
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS users (
+      id TEXT PRIMARY KEY,
+      google_id TEXT UNIQUE NOT NULL,
+      email TEXT NOT NULL,
+      name TEXT,
+      avatar_url TEXT,
+      credits INTEGER DEFAULT 25,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS transactions (
+      id SERIAL PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      type TEXT NOT NULL,
+      amount INTEGER NOT NULL,
+      balance_after INTEGER NOT NULL,
+      description TEXT,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS usage_logs (
+      id SERIAL PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      api_route TEXT NOT NULL,
+      credits_charged INTEGER NOT NULL,
+      created_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS subscriptions (
+      id SERIAL PRIMARY KEY,
+      user_id TEXT NOT NULL,
+      ls_subscription_id TEXT UNIQUE NOT NULL,
+      ls_customer_id TEXT,
+      variant_id TEXT NOT NULL,
+      plan_name TEXT NOT NULL,
+      status TEXT NOT NULL DEFAULT 'active',
+      current_period_end TIMESTAMPTZ,
+      cancel_at TIMESTAMPTZ,
+      customer_portal_url TEXT,
+      update_payment_url TEXT,
+      created_at TIMESTAMPTZ DEFAULT NOW(),
+      updated_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+  await sql`
+    CREATE TABLE IF NOT EXISTS webhook_events (
+      id SERIAL PRIMARY KEY,
+      event_id TEXT UNIQUE NOT NULL,
+      event_name TEXT NOT NULL,
+      processed_at TIMESTAMPTZ DEFAULT NOW()
+    )
+  `;
+
+  initialized = true;
+}
+
+async function ensureDb(): Promise<void> {
+  await initDb();
+}
+
+// ─── Webhook Idempotency ───
+
+export async function isWebhookProcessed(eventId: string): Promise<boolean> {
+  await ensureDb();
+  const rows = await sql`
+    SELECT 1 FROM webhook_events WHERE event_id = ${eventId} LIMIT 1
+  `;
+  return rows.length > 0;
+}
+
+export async function markWebhookProcessed(eventId: string, eventName: string): Promise<void> {
+  await sql`
+    INSERT INTO webhook_events (event_id, event_name)
+    VALUES (${eventId}, ${eventName})
+    ON CONFLICT (event_id) DO NOTHING
+  `;
 }
 
 // ─── Gallery ───
@@ -86,38 +123,36 @@ export interface GalleryItem {
   created_at: string;
 }
 
-export function getGalleryItems(userId: string): GalleryItem[] {
-  return getDb()
-    .prepare("SELECT * FROM gallery WHERE user_id = ? ORDER BY created_at DESC")
-    .all(userId) as GalleryItem[];
+export async function getGalleryItems(userId: string): Promise<GalleryItem[]> {
+  await ensureDb();
+  const rows = await sql`
+    SELECT * FROM gallery WHERE user_id = ${userId} ORDER BY created_at DESC
+  `;
+  return rows as GalleryItem[];
 }
 
-export function deleteGalleryItem(id: number, userId: string): boolean {
-  const result = getDb()
-    .prepare("DELETE FROM gallery WHERE id = ? AND user_id = ?")
-    .run(id, userId);
-  return result.changes > 0;
+export async function deleteGalleryItem(id: number, userId: string): Promise<boolean> {
+  await ensureDb();
+  const rows = await sql`
+    DELETE FROM gallery WHERE id = ${id} AND user_id = ${userId} RETURNING id
+  `;
+  return rows.length > 0;
 }
 
-export function addToGallery(item: {
+export async function addToGallery(item: {
   name: string;
   description?: string;
   imageUrl: string;
   gifUrl?: string;
   userId?: string;
-}): GalleryItem {
-  const db = getDb();
-  const stmt = db.prepare(
-    "INSERT INTO gallery (name, description, image_url, gif_url, user_id) VALUES (?, ?, ?, ?, ?)"
-  );
-  const result = stmt.run(
-    item.name,
-    item.description || null,
-    item.imageUrl,
-    item.gifUrl || null,
-    item.userId || null
-  );
-  return db.prepare("SELECT * FROM gallery WHERE id = ?").get(result.lastInsertRowid) as GalleryItem;
+}): Promise<GalleryItem> {
+  await ensureDb();
+  const rows = await sql`
+    INSERT INTO gallery (name, description, image_url, gif_url, user_id)
+    VALUES (${item.name}, ${item.description || null}, ${item.imageUrl}, ${item.gifUrl || null}, ${item.userId || null})
+    RETURNING *
+  `;
+  return rows[0] as GalleryItem;
 }
 
 // ─── Users ───
@@ -132,46 +167,62 @@ export interface User {
   created_at: string;
 }
 
-export function findOrCreateUser(params: {
+export async function findOrCreateUser(params: {
   googleId: string;
   email: string;
   name: string | null;
   avatarUrl: string | null;
-}): User {
-  const db = getDb();
-  const existing = db
-    .prepare("SELECT * FROM users WHERE google_id = ?")
-    .get(params.googleId) as User | undefined;
+}): Promise<User> {
+  await ensureDb();
+  const existing = await sql`
+    SELECT * FROM users WHERE google_id = ${params.googleId}
+  `;
 
-  if (existing) {
-    // Update name/avatar if changed
-    db.prepare("UPDATE users SET name = ?, avatar_url = ? WHERE id = ?").run(
-      params.name,
-      params.avatarUrl,
-      existing.id
-    );
-    return { ...existing, name: params.name, avatar_url: params.avatarUrl };
+  if (existing.length > 0) {
+    await sql`
+      UPDATE users SET name = ${params.name}, avatar_url = ${params.avatarUrl}
+      WHERE id = ${existing[0].id}
+    `;
+    return { ...existing[0], name: params.name, avatar_url: params.avatarUrl } as User;
   }
 
   const id = uuidv4();
-  db.prepare(
-    "INSERT INTO users (id, google_id, email, name, avatar_url, credits) VALUES (?, ?, ?, ?, ?, 25)"
-  ).run(id, params.googleId, params.email, params.name, params.avatarUrl);
-
-  return db.prepare("SELECT * FROM users WHERE id = ?").get(id) as User;
+  const rows = await sql`
+    INSERT INTO users (id, google_id, email, name, avatar_url, credits)
+    VALUES (${id}, ${params.googleId}, ${params.email}, ${params.name}, ${params.avatarUrl}, 25)
+    RETURNING *
+  `;
+  return rows[0] as User;
 }
 
-export function getUserById(id: string): User | null {
-  return (getDb().prepare("SELECT * FROM users WHERE id = ?").get(id) as User) || null;
+export async function getUserById(id: string): Promise<User | null> {
+  await ensureDb();
+  const rows = await sql`SELECT * FROM users WHERE id = ${id}`;
+  return (rows[0] as User) || null;
 }
 
-export function getUserCredits(userId: string): number {
-  const user = getUserById(userId);
+export async function getUserCredits(userId: string): Promise<number> {
+  const user = await getUserById(userId);
   return user?.credits ?? 0;
 }
 
-export function updateUserCredits(userId: string, newBalance: number): void {
-  getDb().prepare("UPDATE users SET credits = ? WHERE id = ?").run(newBalance, userId);
+export async function updateUserCredits(userId: string, newBalance: number): Promise<void> {
+  await ensureDb();
+  await sql`UPDATE users SET credits = ${newBalance} WHERE id = ${userId}`;
+}
+
+/**
+ * Atomically deduct credits. Returns the new balance, or null if insufficient.
+ */
+export async function atomicDeductCredits(userId: string, cost: number): Promise<number | null> {
+  await ensureDb();
+  const rows = await sql`
+    UPDATE users SET credits = credits - ${cost}
+    WHERE id = ${userId} AND credits >= ${cost}
+    RETURNING credits
+  `;
+  if (rows.length === 0) return null;
+  return rows[0].credits as number;
 }
 
 // ─── Transactions ───
@@ -186,38 +237,41 @@ export interface Transaction {
   created_at: string;
 }
 
-export function addTransaction(params: {
+export async function addTransaction(params: {
   userId: string;
   type: "deduction" | "purchase" | "bonus";
   amount: number;
   balanceAfter: number;
   description: string;
-}): void {
-  getDb()
-    .prepare(
-      "INSERT INTO transactions (user_id, type, amount, balance_after, description) VALUES (?, ?, ?, ?, ?)"
-    )
-    .run(params.userId, params.type, params.amount, params.balanceAfter, params.description);
+}): Promise<void> {
+  await ensureDb();
+  await sql`
+    INSERT INTO transactions (user_id, type, amount, balance_after, description)
+    VALUES (${params.userId}, ${params.type}, ${params.amount}, ${params.balanceAfter}, ${params.description})
+  `;
 }
 
-export function getTransactions(userId: string, limit = 50): Transaction[] {
-  return getDb()
-    .prepare("SELECT * FROM transactions WHERE user_id = ? ORDER BY created_at DESC LIMIT ?")
-    .all(userId, limit) as Transaction[];
+export async function getTransactions(userId: string, limit = 50): Promise<Transaction[]> {
+  await ensureDb();
+  const rows = await sql`
+    SELECT * FROM transactions WHERE user_id = ${userId}
+    ORDER BY created_at DESC LIMIT ${limit}
+  `;
+  return rows as Transaction[];
 }
 
 // ─── Usage Logs ───
 
-export function logUsage(params: {
+export async function logUsage(params: {
   userId: string;
   apiRoute: string;
   creditsCharged: number;
-}): void {
-  getDb()
-    .prepare(
-      "INSERT INTO usage_logs (user_id, api_route, credits_charged) VALUES (?, ?, ?)"
-    )
-    .run(params.userId, params.apiRoute, params.creditsCharged);
+}): Promise<void> {
+  await ensureDb();
+  await sql`
+    INSERT INTO usage_logs (user_id, api_route, credits_charged)
+    VALUES (${params.userId}, ${params.apiRoute}, ${params.creditsCharged})
+  `;
 }
 
 // ─── Subscriptions ───
@@ -238,7 +292,7 @@ export interface Subscription {
   updated_at: string;
 }
 
-export function createSubscription(params: {
+export async function createSubscription(params: {
   userId: string;
   lsSubscriptionId: string;
   lsCustomerId?: string;
@@ -248,34 +302,23 @@ export function createSubscription(params: {
   currentPeriodEnd?: string;
   customerPortalUrl?: string;
   updatePaymentUrl?: string;
-}): void {
-  getDb()
-    .prepare(
-      `INSERT INTO subscriptions (user_id, ls_subscription_id, ls_customer_id, variant_id, plan_name, status, current_period_end, customer_portal_url, update_payment_url)
-       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-       ON CONFLICT(ls_subscription_id) DO UPDATE SET
-         variant_id = excluded.variant_id,
-         plan_name = excluded.plan_name,
-         status = excluded.status,
-         current_period_end = excluded.current_period_end,
-         customer_portal_url = excluded.customer_portal_url,
-         update_payment_url = excluded.update_payment_url,
-         updated_at = datetime('now')`
-    )
-    .run(
-      params.userId,
-      params.lsSubscriptionId,
-      params.lsCustomerId || null,
-      params.variantId,
-      params.planName,
-      params.status || "active",
-      params.currentPeriodEnd || null,
-      params.customerPortalUrl || null,
-      params.updatePaymentUrl || null
-    );
+}): Promise<void> {
+  await ensureDb();
+  await sql`
+    INSERT INTO subscriptions (user_id, ls_subscription_id, ls_customer_id, variant_id, plan_name, status, current_period_end, customer_portal_url, update_payment_url)
+    VALUES (${params.userId}, ${params.lsSubscriptionId}, ${params.lsCustomerId || null}, ${params.variantId}, ${params.planName}, ${params.status || "active"}, ${params.currentPeriodEnd || null}, ${params.customerPortalUrl || null}, ${params.updatePaymentUrl || null})
+    ON CONFLICT (ls_subscription_id) DO UPDATE SET
+      variant_id = EXCLUDED.variant_id,
+      plan_name = EXCLUDED.plan_name,
+      status = EXCLUDED.status,
+      current_period_end = EXCLUDED.current_period_end,
+      customer_portal_url = EXCLUDED.customer_portal_url,
+      update_payment_url = EXCLUDED.update_payment_url,
+      updated_at = NOW()
+  `;
 }
 
-export function updateSubscriptionByLsId(
+export async function updateSubscriptionByLsId(
   lsSubscriptionId: string,
   updates: Partial<{
     variantId: string;
@@ -286,62 +329,36 @@ export function updateSubscriptionByLsId(
     customerPortalUrl: string;
     updatePaymentUrl: string;
   }>
-): void {
-  const setClauses: string[] = ["updated_at = datetime('now')"];
-  const values: unknown[] = [];
-
-  if (updates.variantId !== undefined) {
-    setClauses.push("variant_id = ?");
-    values.push(updates.variantId);
-  }
-  if (updates.planName !== undefined) {
-    setClauses.push("plan_name = ?");
-    values.push(updates.planName);
-  }
-  if (updates.status !== undefined) {
-    setClauses.push("status = ?");
-    values.push(updates.status);
-  }
-  if (updates.currentPeriodEnd !== undefined) {
-    setClauses.push("current_period_end = ?");
-    values.push(updates.currentPeriodEnd);
-  }
-  if (updates.cancelAt !== undefined) {
-    setClauses.push("cancel_at = ?");
-    values.push(updates.cancelAt);
-  }
-  if (updates.customerPortalUrl !== undefined) {
-    setClauses.push("customer_portal_url = ?");
-    values.push(updates.customerPortalUrl);
-  }
-  if (updates.updatePaymentUrl !== undefined) {
-    setClauses.push("update_payment_url = ?");
-    values.push(updates.updatePaymentUrl);
-  }
-
-  values.push(lsSubscriptionId);
-
-  getDb()
-    .prepare(
-      `UPDATE subscriptions SET ${setClauses.join(", ")} WHERE ls_subscription_id = ?`
-    )
-    .run(...values);
+): Promise<void> {
+  await ensureDb();
+  await sql`
+    UPDATE subscriptions SET
+      variant_id = COALESCE(${updates.variantId ?? null}, variant_id),
+      plan_name = COALESCE(${updates.planName ?? null}, plan_name),
+      status = COALESCE(${updates.status ?? null}, status),
+      current_period_end = COALESCE(${updates.currentPeriodEnd ?? null}, current_period_end),
+      cancel_at = COALESCE(${updates.cancelAt ?? null}, cancel_at),
+      customer_portal_url = COALESCE(${updates.customerPortalUrl ?? null}, customer_portal_url),
+      update_payment_url = COALESCE(${updates.updatePaymentUrl ?? null}, update_payment_url),
+      updated_at = NOW()
+    WHERE ls_subscription_id = ${lsSubscriptionId}
+  `;
 }
 
-export function getActiveSubscription(userId: string): Subscription | null {
-  return (
-    (getDb()
-      .prepare(
-        "SELECT * FROM subscriptions WHERE user_id = ? AND status IN ('active', 'cancelled', 'past_due', 'paused') ORDER BY created_at DESC LIMIT 1"
-      )
-      .get(userId) as Subscription) || null
-  );
+export async function getActiveSubscription(userId: string): Promise<Subscription | null> {
+  await ensureDb();
+  const rows = await sql`
+    SELECT * FROM subscriptions
+    WHERE user_id = ${userId} AND status IN ('active', 'cancelled', 'past_due', 'paused')
+    ORDER BY created_at DESC LIMIT 1
+  `;
+  return (rows[0] as Subscription) || null;
 }
 
-export function getSubscriptionByLsId(lsSubscriptionId: string): Subscription | null {
-  return (
-    (getDb()
-      .prepare("SELECT * FROM subscriptions WHERE ls_subscription_id = ?")
-      .get(lsSubscriptionId) as Subscription) || null
-  );
+export async function getSubscriptionByLsId(lsSubscriptionId: string): Promise<Subscription | null> {
+  await ensureDb();
+  const rows = await sql`
+    SELECT * FROM subscriptions WHERE ls_subscription_id = ${lsSubscriptionId}
+  `;
+  return (rows[0] as Subscription) || null;
 }

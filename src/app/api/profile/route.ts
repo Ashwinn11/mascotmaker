@@ -8,8 +8,8 @@ export async function GET() {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const credits = getUserCredits(session.user.id);
-    const transactions = getTransactions(session.user.id);
+    const credits = await getUserCredits(session.user.id);
+    const transactions = await getTransactions(session.user.id);
 
     return NextResponse.json({ credits, transactions });
 }

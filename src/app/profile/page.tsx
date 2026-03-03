@@ -84,7 +84,7 @@ export default function ProfilePage() {
             const res = await fetch("/api/checkout", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ variantId, credits }),
+                body: JSON.stringify({ variantId }),
             });
             const data = await res.json();
             if (data.updated) {
