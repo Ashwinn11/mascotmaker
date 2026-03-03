@@ -148,7 +148,8 @@ function GalleryCard({
   const [hovered, setHovered] = useState(false);
 
   const downloadUrl = item.gif_url || item.image_url;
-  const downloadName = `${item.name.replace(/\s+/g, "-").toLowerCase()}.${item.gif_url ? "gif" : "png"}`;
+  const ext = item.gif_url?.endsWith(".gif") ? "gif" : item.gif_url ? "webp" : "png";
+  const downloadName = `${item.name.replace(/\s+/g, "-").toLowerCase()}.${ext}`;
 
   return (
     <div
@@ -165,7 +166,7 @@ function GalleryCard({
         />
         {item.gif_url && (
           <div className={`absolute top-3 right-3 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${hovered ? "opacity-100" : "opacity-0"}`}>
-            GIF
+            ANIM
           </div>
         )}
       </div>

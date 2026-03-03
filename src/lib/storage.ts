@@ -26,14 +26,14 @@ export async function saveImage(base64Data: string, ext = "png"): Promise<string
       Bucket: BUCKET,
       Key: key,
       Body: buffer,
-      ContentType: ext === "gif" ? "image/gif" : "image/png",
+      ContentType: ext === "webp" ? "image/webp" : ext === "gif" ? "image/gif" : "image/png",
     })
   );
 
   return `${PUBLIC_URL}/${key}`;
 }
 
-export async function saveBuffer(buffer: Buffer, ext = "gif"): Promise<string> {
+export async function saveBuffer(buffer: Buffer, ext = "webp"): Promise<string> {
   const key = `uploads/${uuidv4()}.${ext}`;
 
   await R2.send(
@@ -41,7 +41,7 @@ export async function saveBuffer(buffer: Buffer, ext = "gif"): Promise<string> {
       Bucket: BUCKET,
       Key: key,
       Body: buffer,
-      ContentType: ext === "gif" ? "image/gif" : "image/png",
+      ContentType: ext === "webp" ? "image/webp" : ext === "gif" ? "image/gif" : "image/png",
     })
   );
 

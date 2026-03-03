@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateSpriteSheet } from "@/lib/gemini";
 import { removeGreenBackground } from "@/lib/image";
-import { spriteSheetToGif } from "@/lib/sprite-to-gif";
+import { spriteSheetToWebp } from "@/lib/sprite-to-webp";
 import { requireCredits, deductCredits } from "@/lib/credits";
 
 export async function POST(req: Request) {
@@ -26,15 +26,15 @@ export async function POST(req: Request) {
 
     const result = await generateSpriteSheet(mascotBase64, action, description);
 
-    // Remove green background from sprite sheet before GIF conversion
+    // Remove green background from sprite sheet before WebP conversion
     const spriteBase64 = await removeGreenBackground(result.data);
     const spriteBuffer = Buffer.from(spriteBase64, "base64");
-    const gifBuffer = await spriteSheetToGif(spriteBuffer);
-    const gifBase64 = gifBuffer.toString("base64");
+    const animationBuffer = await spriteSheetToWebp(spriteBuffer);
+    const animationBase64 = animationBuffer.toString("base64");
 
     const creditsRemaining = await deductCredits(check.userId, "animate");
 
-    return NextResponse.json({ spriteBase64, gifBase64, creditsRemaining });
+    return NextResponse.json({ spriteBase64, animationBase64, creditsRemaining });
   } catch (error) {
     console.error("Animate error:", error);
     return NextResponse.json(

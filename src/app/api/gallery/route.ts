@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, description, imageBase64, gifBase64 } = await req.json();
+    const { name, description, imageBase64, animationBase64 } = await req.json();
     if (!name || typeof name !== "string" || !imageBase64) {
       return NextResponse.json(
         { error: "Name and imageBase64 are required" },
@@ -51,9 +51,9 @@ export async function POST(req: Request) {
     // Upload to R2 at publish time
     const imageUrl = await saveImage(imageBase64);
     let gifUrl: string | undefined;
-    if (gifBase64) {
-      const gifBuffer = Buffer.from(gifBase64, "base64");
-      gifUrl = await saveBuffer(gifBuffer, "gif");
+    if (animationBase64) {
+      const animBuffer = Buffer.from(animationBase64, "base64");
+      gifUrl = await saveBuffer(animBuffer, "webp");
     }
 
     const item = await addToGallery({ name, description, imageUrl, gifUrl, userId: session.user.id });

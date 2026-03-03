@@ -9,7 +9,7 @@ import type { FluentIcon3D } from "@/components/ui/icon-3d";
 interface AnimationPickerProps {
   mascotBase64: string;
   mascotDescription?: string | null;
-  onAnimationGenerated: (gif: { spriteBase64: string; gifBase64: string; action: string }) => void;
+  onAnimationGenerated: (anim: { spriteBase64: string; animationBase64: string; action: string }) => void;
   onLoadingChange: (loading: boolean) => void;
   onApiError: (res: Response, data: Record<string, unknown>) => boolean;
   onCreditsUpdate: (creditsRemaining?: number) => void;
@@ -51,10 +51,10 @@ export function AnimationPicker({
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
-      if (data.gifBase64) {
+      if (data.animationBase64) {
         onAnimationGenerated({
           spriteBase64: data.spriteBase64,
-          gifBase64: data.gifBase64,
+          animationBase64: data.animationBase64,
           action,
         });
       }

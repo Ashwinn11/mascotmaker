@@ -3,7 +3,7 @@ import sharp from "sharp";
 const GRID = 3;
 const FRAME_COUNT = GRID * GRID;
 
-export async function spriteSheetToGif(
+export async function spriteSheetToWebp(
   spriteBuffer: Buffer,
   frameDuration = 200
 ): Promise<Buffer> {
@@ -34,7 +34,7 @@ export async function spriteSheetToGif(
     }
   }
 
-  // Stack all frames into one tall raw buffer and encode as animated GIF
+  // Stack all frames into one tall raw buffer and encode as animated WebP
   const allPixels = Buffer.concat(rawFrames);
 
   return sharp(allPixels, {
@@ -45,7 +45,7 @@ export async function spriteSheetToGif(
       pageHeight: frameHeight,
     },
   })
-    .gif({
+    .webp({
       delay: rawFrames.map(() => frameDuration),
       loop: 0,
     })

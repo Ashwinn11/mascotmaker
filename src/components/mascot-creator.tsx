@@ -6,7 +6,7 @@ import { PromptInput } from "./prompt-input";
 import { MascotPreview } from "./mascot-preview";
 import { ChatRefiner } from "./chat-refiner";
 import { AnimationPicker } from "./animation-picker";
-import { GifPreview } from "./gif-preview";
+import { AnimationPreview } from "./animation-preview";
 import { PaywallModal } from "./paywall-modal";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -14,9 +14,9 @@ import { Button } from "@/components/ui/button";
 
 type Mode = "create" | "refine" | "animate";
 
-interface GifItem {
+interface AnimationItem {
   spriteBase64: string;
-  gifBase64: string;
+  animationBase64: string;
   action: string;
 }
 
@@ -31,7 +31,7 @@ export function MascotCreator() {
   const [mode, setMode] = useState<Mode>("create");
   const [mascotBase64, setMascotBase64] = useState<string | null>(null);
   const [mascotDescription, setMascotDescription] = useState<string | null>(null);
-  const [gifs, setGifs] = useState<GifItem[]>([]);
+  const [animations, setAnimations] = useState<AnimationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -80,14 +80,14 @@ export function MascotCreator() {
     setMascotBase64(imageBase64);
   };
 
-  const handleAnimationGenerated = (gif: GifItem) => {
-    setGifs((prev) => [...prev, gif]);
+  const handleAnimationGenerated = (anim: AnimationItem) => {
+    setAnimations((prev) => [...prev, anim]);
   };
 
   const handleStartOver = () => {
     setMascotBase64(null);
     setMascotDescription(null);
-    setGifs([]);
+    setAnimations([]);
     setMode("create");
     setConfirmReset(false);
   };
@@ -193,7 +193,7 @@ export function MascotCreator() {
                   onApiError={handleApiError}
                   onCreditsUpdate={handleCreditsUpdate}
                 />
-                <GifPreview gifs={gifs} mascotBase64={mascotBase64} />
+                <AnimationPreview animations={animations} mascotBase64={mascotBase64} />
               </div>
             )}
           </div>

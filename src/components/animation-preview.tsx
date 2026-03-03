@@ -16,27 +16,27 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
 
-interface GifItem {
+interface AnimationItem {
   spriteBase64: string;
-  gifBase64: string;
+  animationBase64: string;
   action: string;
 }
 
-interface GifPreviewProps {
-  gifs: GifItem[];
+interface AnimationPreviewProps {
+  animations: AnimationItem[];
   mascotBase64: string;
 }
 
-export function GifPreview({ gifs, mascotBase64 }: GifPreviewProps) {
+export function AnimationPreview({ animations, mascotBase64 }: AnimationPreviewProps) {
   const [publishOpen, setPublishOpen] = useState(false);
-  const [selectedGif, setSelectedGif] = useState<GifItem | null>(null);
+  const [selectedAnim, setSelectedAnim] = useState<AnimationItem | null>(null);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [publishing, setPublishing] = useState(false);
   const [published, setPublished] = useState(false);
 
   const handlePublish = async () => {
-    if (!name.trim() || !selectedGif) return;
+    if (!name.trim() || !selectedAnim) return;
     setPublishing(true);
     try {
       const res = await fetch("/api/gallery", {
@@ -46,7 +46,7 @@ export function GifPreview({ gifs, mascotBase64 }: GifPreviewProps) {
           name: name.trim(),
           description: description.trim(),
           imageBase64: mascotBase64,
-          gifBase64: selectedGif.gifBase64,
+          animationBase64: selectedAnim.animationBase64,
         }),
       });
       if (!res.ok) {
@@ -69,13 +69,13 @@ export function GifPreview({ gifs, mascotBase64 }: GifPreviewProps) {
     }
   };
 
-  if (gifs.length === 0) return null;
+  if (animations.length === 0) return null;
 
   return (
     <div className="space-y-4">
       <h3 className="font-display text-lg text-foreground">Your Animations</h3>
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-        {gifs.map((gif, i) => (
+        {animations.map((anim, i) => (
           <div
             key={i}
             className="group relative overflow-hidden rounded-2xl border-2 border-border bg-white shadow-sm transition-all hover:shadow-md animate-pop-in"
@@ -83,23 +83,23 @@ export function GifPreview({ gifs, mascotBase64 }: GifPreviewProps) {
           >
             <div className="aspect-square overflow-hidden">
               <img
-                src={`data:image/gif;base64,${gif.gifBase64}`}
-                alt={`${gif.action} animation`}
+                src={`data:image/webp;base64,${anim.animationBase64}`}
+                alt={`${anim.action} animation`}
                 className="h-full w-full object-contain"
               />
             </div>
             <div className="p-2.5">
-              <p className="text-xs font-bold text-warm-gray capitalize mb-2">{gif.action}</p>
+              <p className="text-xs font-bold text-warm-gray capitalize mb-2">{anim.action}</p>
               <div className="flex gap-1.5">
                 <button
-                  onClick={() => downloadFile(`data:image/gif;base64,${gif.gifBase64}`, `mascot-${gif.action}.gif`)}
+                  onClick={() => downloadFile(`data:image/webp;base64,${anim.animationBase64}`, `mascot-${anim.action}.webp`)}
                   className="flex-1 rounded-lg bg-muted py-1.5 text-center text-xs font-bold text-warm-gray transition-colors hover:bg-border"
                 >
                   Download
                 </button>
                 <button
                   onClick={() => {
-                    setSelectedGif(gif);
+                    setSelectedAnim(anim);
                     setPublishOpen(true);
                   }}
                   className="flex-1 rounded-lg bg-gradient-to-r from-candy-pink to-candy-orange py-1.5 text-center text-xs font-bold text-white transition-all hover:brightness-105"
