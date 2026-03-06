@@ -59,7 +59,7 @@ export function AnimationPreview({ animations }: AnimationPreviewProps) {
                 <img
                   src={hoverStates[i] === "pack"
                     ? `data:image/png;base64,${anim.spriteBase64}`
-                    : `data:image/webp;base64,${anim.animationBase64}`
+                    : `data:image/gif;base64,${anim.animationBase64}`
                   }
                   alt={`${anim.action} animation`}
                   className={`h-full w-full object-contain transition-all duration-300 ${hoverStates[i] === "pack" ? "scale-95" : "scale-100"}`}
@@ -71,7 +71,7 @@ export function AnimationPreview({ animations }: AnimationPreviewProps) {
                   <button
                     onMouseEnter={() => setHoverStates(prev => ({ ...prev, [i]: "gif" }))}
                     onMouseLeave={() => setHoverStates(prev => ({ ...prev, [i]: null }))}
-                    onClick={() => downloadFile(`data:image/webp;base64,${anim.animationBase64}`, `mascot-${anim.action}.webp`)}
+                    onClick={() => downloadFile(`data:image/gif;base64,${anim.animationBase64}`, `mascot-${anim.action}.gif`)}
                     className="flex-1 rounded-lg bg-muted py-1.5 text-center text-[9px] font-bold text-warm-gray transition-colors hover:bg-border truncate px-1"
                   >
                     Animated

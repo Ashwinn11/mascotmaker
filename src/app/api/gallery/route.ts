@@ -53,7 +53,7 @@ export async function POST(req: Request) {
     let gifUrl: string | undefined;
     if (animationBase64) {
       const animBuffer = Buffer.from(animationBase64, "base64");
-      gifUrl = await saveBuffer(animBuffer, "webp");
+      gifUrl = await saveBuffer(animBuffer, "gif");
     }
     let stickerUrl: string | undefined;
     if (spriteBase64) {

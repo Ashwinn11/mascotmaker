@@ -33,7 +33,7 @@ export async function saveImage(base64Data: string, ext = "png"): Promise<string
   return `${PUBLIC_URL}/${key}`;
 }
 
-export async function saveBuffer(buffer: Buffer, ext = "webp"): Promise<string> {
+export async function saveBuffer(buffer: Buffer, ext = "gif"): Promise<string> {
   const key = `uploads/${uuidv4()}.${ext}`;
 
   await R2.send(

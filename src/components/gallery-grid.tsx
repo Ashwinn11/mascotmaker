@@ -198,7 +198,7 @@ function GalleryCard({
               onMouseLeave={() => setPreviewMode("image")}
               onClick={(e) => {
                 e.stopPropagation();
-                downloadFile(item.gif_url!, `${downloadName}.webp`);
+                downloadFile(item.gif_url!, `${downloadName}.gif`);
               }}
               className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-[9px] font-bold text-warm-gray transition-colors hover:bg-border"
             >

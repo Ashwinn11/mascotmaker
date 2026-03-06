@@ -137,7 +137,7 @@ export function MascotCreator() {
       <div className="grid gap-6 md:gap-8 lg:grid-cols-2">
         {/* Left: Preview */}
         <div className="flex flex-col gap-3 md:gap-4 animate-pop-in stagger-1">
-          <div className="max-h-[50vh] md:max-h-none flex flex-col">
+          <div className="flex flex-col">
             <MascotPreview
               mascotBase64={mascotBase64}
               animations={animations}

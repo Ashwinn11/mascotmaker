@@ -165,7 +165,7 @@ export function MascotPreview({ mascotBase64, animations, loading }: MascotPrevi
                     ? `data:image/png;base64,${latest.spriteBase64}`
                     : hoverState === "mascot"
                       ? `data:image/png;base64,${mascotBase64}`
-                      : `data:image/webp;base64,${latest.animationBase64}`
+                      : `data:image/gif;base64,${latest.animationBase64}`
                 }
                 alt={`${latest.action} preview`}
                 className={`h-full w-full object-contain transition-all duration-300 ${hoverState === "pack" || hoverState === "mascot" ? "scale-95" : "scale-100"}`}
@@ -210,7 +210,7 @@ export function MascotPreview({ mascotBase64, animations, loading }: MascotPrevi
                 <button
                   onMouseEnter={() => setHoverState("gif")}
                   onMouseLeave={() => setHoverState(null)}
-                  onClick={() => downloadFile(`data:image/webp;base64,${latest.animationBase64}`, `mascot-${latest.action}.webp`)}
+                  onClick={() => downloadFile(`data:image/gif;base64,${latest.animationBase64}`, `mascot-${latest.action}.gif`)}
                   className="flex-1 min-w-[100px] flex items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs font-bold text-warm-gray shadow-sm transition-all hover:border-candy-orange/30 hover:bg-candy-orange/5 active:scale-95"
                 >
                   <Icon3DInline name="film-frames" size={16} />

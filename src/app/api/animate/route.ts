@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { generateSpriteSheet } from "@/lib/gemini";
-import { spriteSheetToWebp } from "@/lib/sprite-to-webp";
+import { spriteSheetToGif } from "@/lib/sprite-to-gif";
 import { requireCredits, deductCredits } from "@/lib/credits";
 
 export async function POST(req: Request) {
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
     const result = await generateSpriteSheet(mascotBase64, action, description);
 
     const spriteBuffer = Buffer.from(result.data, "base64");
-    const animationBuffer = await spriteSheetToWebp(spriteBuffer);
+    const animationBuffer = await spriteSheetToGif(spriteBuffer);
     const animationBase64 = animationBuffer.toString("base64");
 
     const creditsRemaining = await deductCredits(check.userId, "animate");
