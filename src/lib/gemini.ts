@@ -33,6 +33,8 @@ export interface ImageOptions {
   imageSize?: "512px" | "1K" | "2K" | "4K";
   thinkingLevel?: "Minimal" | "High";
   useSearch?: boolean;
+  style?: string;
+  subjectType?: "Character" | "Object" | "Logo" | "Scene";
 }
 
 export async function generateImage(prompt: string, options: ImageOptions = {}): Promise<GeminiResult<string>> {
@@ -168,7 +170,20 @@ export async function stylizeImage(
   const analysisContext = analysis
     ? `The image contains: ${analysis}. Use these details to preserve the subject's identity.`
     : "";
-  const fullPrompt = `Transform this image into a cute mascot character in a cartoon/chibi style. ${analysisContext} ${prompt}. Keep the character recognizable but make it adorable and suitable as a mascot. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
+  const characterStyle = options.style || "cute mascot character in a cartoon/chibi style, vibrant colors";
+  let fullPrompt = "";
+
+  if (options.subjectType === "Character") {
+    fullPrompt = `Transform this image into a ${characterStyle}. ${analysisContext} ${prompt}. Keep the subject recognizable. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
+  } else if (options.subjectType === "Object") {
+    fullPrompt = `Transform this image into a ${characterStyle} showing only this object: ${prompt}. ${analysisContext} Isolated on a plain white background. Show the complete object clearly.`;
+  } else if (options.subjectType === "Logo") {
+    fullPrompt = `Transform this image into a ${characterStyle} logo: ${prompt}. ${analysisContext} Minimalist vector style, clean lines, isolated on a plain white background.`;
+  } else {
+    // Scene or default
+    fullPrompt = `Transform this image into a ${characterStyle} scene: ${prompt}. ${analysisContext} High quality, professional composition. Maintain the spirit and key elements of the original image.`;
+  }
+
   return editImage(fullPrompt, imageBase64, options);
 }
 

@@ -24,6 +24,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
   const [imageSize, setImageSize] = useState("1K");
   const [thinkingLevel, setThinkingLevel] = useState<"Minimal" | "High">("Minimal");
   const [useSearch, setUseSearch] = useState(false);
+  const [subjectType, setSubjectType] = useState<"Character" | "Object" | "Logo" | "Scene">("Character");
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [mounted, setMounted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -31,6 +32,20 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const [selectedStyleId, setSelectedStyleId] = useState("chibi");
+
+  const STYLES = [
+    { id: "chibi", label: "Chibi", desc: "Cute & Cartoon", icon: "artist-palette" as const, prompt: "cute expressive mascot character in a cartoon/chibi style, vibrant colors" },
+    { id: "pixar", label: "Pixar", desc: "3D Cinematic", icon: "sparkles" as const, prompt: "3D modeled cinematic mascot character, Disney Pixar style, soft studio lighting, high detail" },
+    { id: "game", label: "Game", desc: "Isometric 3D", icon: "classical-building" as const, prompt: "isometric 3D game asset, high-quality game art, detailed isometric perspective" },
+    { id: "retro", label: "Retro", desc: "80s Film", icon: "camera" as const, prompt: "mascot character as an 80s photograph, Kodak film grain, retro vibes, slightly faded colors" },
+    { id: "pop", label: "Pop Art", desc: "Bold Comic", icon: "magic-wand" as const, prompt: "Pop Art style mascot, thick black outlines, vibrant primary colors, Ben-Day dots" },
+    { id: "logo", label: "Logo", desc: "Minimalist", icon: "pencil" as const, prompt: "minimalist vector logo, clean lines, professional branding style, simplistic design" },
+    { id: "clay", label: "Clay", desc: "Claymation", icon: "relieved-face" as const, prompt: "mascot character made of clay, claymation style, tactile texture, fingerprints visible, Aardman style" },
+  ];
+
+  const currentStyle = STYLES.find(s => s.id === selectedStyleId) || STYLES[0];
 
   const handleGenerate = async () => {
     if (!prompt.trim()) return;
@@ -46,6 +61,8 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
           imageSize,
           thinkingLevel,
           useSearch,
+          style: currentStyle.prompt,
+          subjectType
         }),
       });
       const data = await res.json();
@@ -75,6 +92,8 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
       formData.append("imageSize", imageSize);
       formData.append("thinkingLevel", thinkingLevel);
       formData.append("useSearch", useSearch.toString());
+      formData.append("style", currentStyle.prompt);
+      formData.append("subjectType", subjectType);
       const res = await fetch("/api/stylize", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok) {
@@ -107,6 +126,33 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
 
   return (
     <div className="space-y-5">
+      {/* Style Gallery */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between px-1">
+          <label className="text-[10px] font-black uppercase tracking-[0.2em] text-candy-pink bg-candy-pink/10 px-3 py-1.5 rounded-full border border-candy-pink/20">Studio Style Selection</label>
+        </div>
+        <div className="flex gap-3 overflow-x-auto pb-4 -mx-1 px-1 scrollbar-hide no-scrollbar" style={{ msOverflowStyle: 'none', scrollbarWidth: 'none' }}>
+          {STYLES.map((style) => (
+            <button
+              key={style.id}
+              onClick={() => setSelectedStyleId(style.id)}
+              className={`flex-shrink-0 flex flex-col items-center gap-2 p-3 rounded-2xl border-2 transition-all duration-300 ${selectedStyleId === style.id
+                ? "border-candy-pink bg-candy-pink/5 shadow-inner scale-[1.02]"
+                : "border-border bg-white hover:border-candy-pink/20"
+                }`}
+            >
+              <div className={`h-12 w-12 rounded-xl flex items-center justify-center transition-transform ${selectedStyleId === style.id ? "scale-110" : "group-hover:scale-110"}`}>
+                <Icon3DInline name={style.icon} size={32} />
+              </div>
+              <div className="text-center">
+                <p className={`text-[11px] font-black uppercase leading-none transition-colors ${selectedStyleId === style.id ? "text-candy-pink" : "text-foreground"}`}>{style.label}</p>
+                <p className="text-[9px] text-muted-foreground mt-0.5 font-medium">{style.desc}</p>
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
       {/* Mode Toggle */}
       <div className="flex gap-1 rounded-2xl bg-muted p-1">
         <button
@@ -116,7 +162,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
             : "text-muted-foreground hover:text-foreground"
             }`}
         >
-          <Icon3DInline name="pencil" size={16} className="md:w-[18px] md:h-[18px]" />
+          <Icon3DInline name="pencil" size={16} />
           Describe
         </button>
         <button
@@ -126,7 +172,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
             : "text-muted-foreground hover:text-foreground"
             }`}
         >
-          <Icon3DInline name="camera" size={16} className="md:w-[18px] md:h-[18px]" />
+          <Icon3DInline name="camera" size={16} />
           Upload
         </button>
       </div>
@@ -137,7 +183,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
             <Textarea
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="Describe your mascot..."
+              placeholder={`Describe your ${currentStyle.label.toLowerCase()}...`}
               className="min-h-[100px] md:min-h-[120px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-base placeholder:text-muted-foreground/60 focus:border-candy-pink focus:ring-candy-pink/20"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) handleGenerate();
@@ -153,7 +199,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
               <button
                 key={s}
                 onClick={() => setPrompt(s)}
-                className="rounded-full border-2 border-border bg-white px-2.5 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 hover:text-foreground active:scale-95"
+                className="rounded-full border-2 border-border bg-white px-2.5 py-1 md:px-3 md:py-1.5 text-[10px] md:text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 hover:text-candy-pink active:scale-95 shadow-sm"
               >
                 {s}
               </button>
@@ -175,7 +221,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
           {showAdvanced && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 rounded-2xl border-2 border-border bg-muted/30 p-4 animate-in fade-in slide-in-from-top-2 duration-300">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Aspect Ratio</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-candy-pink bg-candy-pink/10 px-2 py-1 rounded-md mb-1 inline-block">Aspect Ratio</label>
                 <select
                   value={aspectRatio}
                   onChange={(e) => setAspectRatio(e.target.value)}
@@ -188,7 +234,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Resolution</label>
+                <label className="text-[10px] font-bold uppercase tracking-wider text-candy-blue bg-candy-blue/10 px-2 py-1 rounded-md mb-1 inline-block">Resolution</label>
                 <select
                   value={imageSize}
                   onChange={(e) => setImageSize(e.target.value)}
@@ -198,6 +244,20 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
                   <option value="1K">Standard (1K)</option>
                   <option value="2K">High-Res (2K)</option>
                   <option value="4K">Ultra-HD (4K)</option>
+                </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-[10px] font-bold uppercase tracking-wider text-candy-purple bg-candy-purple/10 px-2 py-1 rounded-md mb-1 inline-block">Subject</label>
+                <select
+                  value={subjectType}
+                  onChange={(e) => setSubjectType(e.target.value as any)}
+                  className="w-full rounded-xl border-2 border-border bg-white px-3 py-2 text-sm font-semibold focus:border-candy-blue focus:outline-none focus:ring-2 focus:ring-candy-blue/10"
+                >
+                  <option value="Character">Character</option>
+                  <option value="Object">Object/Product</option>
+                  <option value="Logo">Logo/Icon</option>
+                  <option value="Scene">Full Scene</option>
                 </select>
               </div>
 

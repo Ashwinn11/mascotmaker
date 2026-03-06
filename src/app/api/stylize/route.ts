@@ -14,7 +14,9 @@ export async function POST(req: Request) {
     const imageSize = (formData.get("imageSize") as "512px" | "1K" | "2K" | "4K") || "1K";
     const thinkingLevel = (formData.get("thinkingLevel") as "Minimal" | "High") || "Minimal";
     const useSearch = formData.get("useSearch") === "true";
-    const options = { aspectRatio, imageSize, thinkingLevel, useSearch };
+    const style = (formData.get("style") as string) || "";
+    const subjectType = (formData.get("subjectType") as "Character" | "Object" | "Logo" | "Scene") || "Character";
+    const options = { aspectRatio, imageSize, thinkingLevel, useSearch, style, subjectType };
 
     // Auth + credit check
     const check = await requireCredits("stylize", options);
