@@ -14,8 +14,8 @@ export function CreditsDisplay() {
     return (
         <div
             className={`flex items-center gap-1.5 rounded-xl border-2 px-3 py-1.5 text-sm font-bold transition-colors ${isLow
-                    ? "border-red-200 bg-red-50 text-red-600"
-                    : "border-border bg-white text-warm-gray"
+                ? "border-red-200 bg-red-50 text-red-600"
+                : "border-border bg-white text-warm-gray"
                 }`}
         >
             <Icon3DInline name="high-voltage" size={16} />

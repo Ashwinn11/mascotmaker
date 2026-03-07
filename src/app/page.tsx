@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
 import Image from "next/image";
+import { Sparkles, Palette, Clapperboard, Check, Zap, Play, Layers } from "lucide-react";
 
 const EXAMPLES = [
   "Flat Minimalist Logo",
@@ -20,7 +21,7 @@ const ENGINES = [
     title: "Mascot Engine",
     subtitle: "Identity Consistency",
     desc: "Create professional 3D, 2D, or retro characters with full DNA preservation across every action.",
-    icon: "artist-palette",
+    icon: Palette,
     color: "bg-candy-pink",
     shadow: "shadow-[12px_12px_0_#ff6b9d]",
     border: "border-candy-pink",
@@ -32,7 +33,7 @@ const ENGINES = [
     title: "Story Studio",
     subtitle: "Narrative Flow",
     desc: "Design seamless 8-frame narratives. Perfect for storyboards, social content, and brand storytelling.",
-    icon: "clapper-board",
+    icon: Clapperboard,
     color: "bg-candy-blue",
     shadow: "shadow-[12px_12px_0_#4ea8de]",
     border: "border-candy-blue",
@@ -44,7 +45,7 @@ const ENGINES = [
     title: "Mix Studio",
     subtitle: "Product Integration",
     desc: "Seamlessly composite characters with real-world products or complex environments for high-end ads.",
-    icon: "sparkles",
+    icon: Layers,
     color: "bg-candy-green",
     shadow: "shadow-[12px_12px_0_#5cd85c]",
     border: "border-candy-green",
@@ -89,7 +90,7 @@ export default function Home() {
                   href="/create"
                   className="group relative inline-flex items-center justify-center gap-5 rounded-[2.5rem] bg-foreground px-14 py-7 text-2xl font-black text-white shadow-[8px_8px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-[0.95]"
                 >
-                  <Icon3DInline name="sparkles" size={28} />
+                  <Sparkles size={28} className="text-candy-yellow" />
                   LAUNCH STUDIO
                 </Link>
                 <Link
@@ -121,7 +122,7 @@ export default function Home() {
                   <div className="absolute bottom-10 left-10 glass-card px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">Asset Packs</div>
                 </div>
 
-                {/* Floating Props */}
+                {/* Floating Props - Kept as 3D for Flair */}
                 <div className="absolute top-[40%] right-[-10%] animate-float z-30">
                   <Icon3D name="party-popper" size="2xl" />
                 </div>
@@ -148,12 +149,11 @@ export default function Home() {
             <div className="relative group">
               <div className="relative z-10 rounded-[4rem] border-4 border-foreground overflow-hidden shadow-[30px_30px_0_#ffc857] transition-transform duration-700 group-hover:scale-[1.02]">
                 <Image src="/demo/style-showcase.webp" alt="Style Showcase" width={800} height={800} className="w-full h-auto object-cover" />
-                {/* Decorative Overlays */}
                 <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none" />
               </div>
               <div className="absolute -bottom-10 -right-10 animate-float z-20">
                 <div className="w-32 h-32 rounded-3xl border-4 border-foreground bg-candy-green flex items-center justify-center shadow-[10px_10px_0_#2d2420] rotate-12">
-                  <Icon3DInline name="artist-palette" size={64} className="text-white" />
+                  <Palette size={64} className="text-white" />
                 </div>
               </div>
             </div>
@@ -210,10 +210,10 @@ export default function Home() {
                   <div className="absolute top-6 left-6">
                     <div className="glass-card px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg border-2 border-foreground/5">{engine.badge}</div>
                   </div>
-                  {/* Icon */}
+                  {/* Lucide Icon in solid box */}
                   <div className="absolute bottom-6 right-6">
-                    <div className={`w-14 h-14 rounded-2xl border-2 border-foreground ${engine.color} flex items-center justify-center text-white shadow-[4px_4px_0_#2d2420] group-hover:rotate-12 transition-transform`}>
-                      <Icon3DInline name={engine.icon as any} size={28} />
+                    <div className={`w-14 h-14 rounded-2xl border-4 border-foreground ${engine.color} flex items-center justify-center text-white shadow-[4px_4px_0_#2d2420] group-hover:rotate-12 transition-transform`}>
+                      <engine.icon size={28} />
                     </div>
                   </div>
                 </div>
@@ -223,7 +223,7 @@ export default function Home() {
                   <p className="text-muted-foreground font-bold leading-relaxed text-sm">{engine.desc}</p>
 
                   <div className="mt-auto pt-8 flex items-center gap-2 font-black text-xs uppercase tracking-widest text-foreground group-hover:gap-4 transition-all">
-                    Open Engine <Icon3DInline name="check-mark" size={14} className="text-candy-green" />
+                    Open Engine <Play size={14} className="fill-candy-green text-candy-green" />
                   </div>
                 </div>
               </Link>
@@ -270,7 +270,7 @@ export default function Home() {
                   ].map((item, i) => (
                     <div key={i} className="flex items-center gap-5 text-2xl font-black text-foreground uppercase tracking-tight group/item">
                       <div className="h-8 w-8 rounded-xl border-3 border-foreground bg-white flex items-center justify-center group-hover/item:rotate-12 transition-transform">
-                        <Icon3DInline name="check-mark" size={18} className="text-candy-green" />
+                        <Check size={18} className="text-candy-green stroke-[4px]" />
                       </div>
                       {item.label}
                     </div>
