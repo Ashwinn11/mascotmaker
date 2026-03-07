@@ -25,6 +25,7 @@ interface AnimationItem {
 
 interface MascotPreviewProps {
   mascotBase64: string | null;
+  images: string[];
   animations: AnimationItem[];
   loading: boolean;
 }
@@ -54,9 +55,10 @@ const LOADING_MESSAGES = [
   "Almost there...",
 ];
 
-export function MascotPreview({ mascotBase64, animations, loading }: MascotPreviewProps) {
+export function MascotPreview({ mascotBase64, images, animations, loading }: MascotPreviewProps) {
   const [msgIndex, setMsgIndex] = useState(0);
   const [hoverState, setHoverState] = useState<"gif" | "pack" | "mascot" | null>(null);
+  const [activeImageIndex, setActiveImageIndex] = useState(0);
 
   // Publish state
   const [publishOpen, setPublishOpen] = useState(false);
@@ -75,6 +77,11 @@ export function MascotPreview({ mascotBase64, animations, loading }: MascotPrevi
     }, 3000);
     return () => clearInterval(interval);
   }, [loading]);
+
+  // Reset active index when images change
+  useEffect(() => {
+    setActiveImageIndex(0);
+  }, [images]);
 
   const handlePublish = async () => {
     if (!name.trim() || !animations.length || !mascotBase64) return;
@@ -131,7 +138,7 @@ export function MascotPreview({ mascotBase64, animations, loading }: MascotPrevi
     );
   }
 
-  if (!mascotBase64) {
+  if (!mascotBase64 && (!images || images.length === 0)) {
     return (
       <div className="relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-dashed border-border bg-white/50">
         <div className="absolute inset-0 flex items-center justify-center bg-dotted">
@@ -144,6 +151,8 @@ export function MascotPreview({ mascotBase64, animations, loading }: MascotPrevi
       </div>
     );
   }
+
+  const currentDisplayImage = images && images.length > 0 ? images[activeImageIndex] : mascotBase64;
 
   // If we have an animation, show the special 3-in-1 featured block
   if (animations.length > 0) {
@@ -285,29 +294,61 @@ export function MascotPreview({ mascotBase64, animations, loading }: MascotPrevi
     );
   }
 
-  // Default static mascot preview
+  // Default image view (with gallery support if multiple images)
   return (
-    <div className="relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-white bg-checkerboard shadow-xl shadow-candy-pink/10 animate-pop-in">
-      <img
-        src={`data:image/png;base64,${mascotBase64}`}
-        alt="Your mascot"
-        className="h-full w-full object-contain"
-      />
-      <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-black/5" />
-      <button
-        className="absolute bottom-4 right-4 flex items-center gap-2 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold text-warm-gray shadow-lg backdrop-blur-sm transition-all hover:bg-white"
-        onClick={(e) => {
-          e.stopPropagation();
-          downloadFile(`data:image/png;base64,${mascotBase64}`, "mascot.png");
-        }}
-      >
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-          <polyline points="7 10 12 15 17 10" />
-          <line x1="12" y1="15" x2="12" y2="3" />
-        </svg>
-        Download
-      </button>
+    <div className="space-y-4">
+      <div className="relative w-full overflow-hidden rounded-3xl border-4 border-white bg-checkerboard shadow-xl shadow-candy-pink/10 animate-pop-in">
+        <img
+          src={`data:image/png;base64,${currentDisplayImage}`}
+          alt="Your mascot"
+          className="w-full h-auto block"
+        />
+        <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-black/5" />
+        <div className="absolute top-4 left-4 flex gap-2">
+          {images && images.length > 1 && (
+            <div className="rounded-full bg-black/60 px-3 py-1 text-[10px] font-black text-white uppercase tracking-widest backdrop-blur-md">
+              Frame {activeImageIndex + 1} / {images.length}
+            </div>
+          )}
+        </div>
+        <button
+          className="absolute bottom-4 right-4 flex items-center gap-2 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold text-warm-gray shadow-lg backdrop-blur-sm transition-all hover:bg-white"
+          onClick={(e) => {
+            e.stopPropagation();
+            downloadFile(`data:image/png;base64,${currentDisplayImage}`, `mascot${images && images.length > 1 ? `_frame_${activeImageIndex + 1}` : ""}.png`);
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download
+        </button>
+      </div>
+
+      {/* Gallery Reel */}
+      {images && images.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+          {images.map((img, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveImageIndex(idx)}
+              className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all ${activeImageIndex === idx ? "border-candy-pink scale-105 shadow-md" : "border-border hover:border-candy-pink/40"
+                }`}
+            >
+              <img
+                src={`data:image/png;base64,${img}`}
+                alt={`Frame ${idx + 1}`}
+                className="h-full w-full object-cover"
+              />
+              {activeImageIndex === idx && (
+                <div className="absolute inset-0 bg-candy-pink/10" />
+              )}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

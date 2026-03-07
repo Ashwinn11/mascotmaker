@@ -14,13 +14,15 @@ function getAI(): GoogleGenAI {
 }
 
 function extractImageBase64(response: GenerateContentResponse): string | null {
-  if (!response.candidates?.[0]?.content?.parts) return null;
-  for (const part of response.candidates[0].content.parts) {
-    if (part.inlineData?.data) {
-      return part.inlineData.data;
-    }
-  }
-  return null;
+  const images = extractImagesBase64(response);
+  return images.length > 0 ? images[0] : null;
+}
+
+function extractImagesBase64(response: GenerateContentResponse): string[] {
+  if (!response.candidates?.[0]?.content?.parts) return [];
+  return response.candidates[0].content.parts
+    .filter(part => part.inlineData?.data)
+    .map(part => part.inlineData!.data!);
 }
 
 export interface GeminiResult<T> {
@@ -37,7 +39,7 @@ export interface ImageOptions {
   subjectType?: "Character" | "Object" | "Logo" | "Scene";
 }
 
-export async function generateImage(prompt: string, options: ImageOptions = {}): Promise<GeminiResult<string>> {
+export async function generateImage(prompt: string, options: ImageOptions = {}): Promise<GeminiResult<string[]>> {
   const tools = options.useSearch
     ? [
       {
@@ -67,14 +69,15 @@ export async function generateImage(prompt: string, options: ImageOptions = {}):
         }
         : undefined,
       tools,
+      maxOutputTokens: 8192,
     } as any,
   });
 
-  const base64 = extractImageBase64(response);
-  if (!base64) throw new Error("No image generated");
+  const images = extractImagesBase64(response);
+  if (images.length === 0) throw new Error("No image generated");
 
   return {
-    data: base64,
+    data: images,
     tokens: response.usageMetadata?.totalTokenCount || 0,
   };
 }
@@ -121,6 +124,7 @@ export async function editImage(
         }
         : undefined,
       tools,
+      maxOutputTokens: 8192,
     } as any,
   });
 

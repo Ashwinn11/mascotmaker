@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
+import { Icon3D } from "@/components/ui/icon-3d";
 
 interface Message {
   role: "user" | "assistant";
@@ -14,6 +14,11 @@ interface Message {
 interface ChatRefinerProps {
   mascotBase64: string;
   analysis: string | null;
+  // Options inherited from the Create step — not re-asked here
+  aspectRatio?: string;
+  imageSize?: string;
+  thinkingLevel?: "Minimal" | "High";
+  useSearch?: boolean;
   onMascotUpdate: (imageBase64: string, mascotAnalysis?: string) => void;
   onLoadingChange: (loading: boolean) => void;
   onDone: () => void;
@@ -24,6 +29,10 @@ interface ChatRefinerProps {
 export function ChatRefiner({
   mascotBase64,
   analysis,
+  aspectRatio = "1:1",
+  imageSize = "1K",
+  thinkingLevel = "Minimal",
+  useSearch = false,
   onMascotUpdate,
   onLoadingChange,
   onDone,
@@ -33,17 +42,7 @@ export function ChatRefiner({
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [mounted, setMounted] = useState(false);
-  const [aspectRatio, setAspectRatio] = useState("1:1");
-  const [imageSize, setImageSize] = useState("1K");
-  const [thinkingLevel, setThinkingLevel] = useState<"Minimal" | "High">("Minimal");
-  const [useSearch, setUseSearch] = useState(false);
-  const [showAdvanced, setShowAdvanced] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setMounted(true);
-  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -65,6 +64,7 @@ export function ChatRefiner({
           message: userMsg,
           mascotBase64,
           analysis,
+          // Inherit options from the Create step
           aspectRatio,
           imageSize,
           thinkingLevel,
@@ -110,17 +110,31 @@ export function ChatRefiner({
     "Make it fluffier",
   ];
 
+  // Show current settings inherited from Create step as a subtle info bar
+  const settingsLabel = [
+    imageSize !== "1K" ? imageSize : null,
+    thinkingLevel === "High" ? "Pro" : null,
+    useSearch ? "Search" : null,
+  ].filter(Boolean).join(" · ");
+
   return (
     <div className="flex h-full flex-col">
       <div className="mb-3 flex items-center justify-between gap-2">
-        <h3 className="font-display text-base md:text-lg text-foreground truncate">Refine</h3>
+        <div>
+          <h3 className="font-display text-base md:text-lg text-foreground">Refine</h3>
+          {settingsLabel && (
+            <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">
+              Using: {aspectRatio} · {settingsLabel}
+            </p>
+          )}
+        </div>
         <Button
           onClick={onDone}
           variant="outline"
           className="rounded-xl border-2 border-candy-green text-candy-green hover:bg-candy-green/10 font-bold whitespace-nowrap"
           size="sm"
         >
-          {mounted && typeof window !== "undefined" && window.innerWidth < 640 ? "Done" : "Finishing"} →
+          Animate →
         </Button>
       </div>
 
@@ -178,76 +192,7 @@ export function ChatRefiner({
       </div>
 
       <div className="border-t border-border pt-3 mt-auto">
-        {/* Advanced Options Toggle */}
-        <button
-          onClick={() => setShowAdvanced(!showAdvanced)}
-          className="mb-2 flex items-center gap-2 text-[10px] font-bold text-warm-gray hover:text-foreground transition-all py-1 active:scale-95"
-        >
-          <Icon3DInline
-            name={showAdvanced ? "counterclockwise" : "magic-wand"}
-            size={12}
-            className={showAdvanced ? "rotate-180 transition-transform duration-500" : "transition-transform duration-500"}
-          />
-          {showAdvanced ? "Hide Advanced" : "Advanced"}
-        </button>
-
-        {showAdvanced && (
-          <div className="mb-3 grid grid-cols-2 gap-2 rounded-xl border-2 border-border bg-muted/30 p-3 animate-in fade-in slide-in-from-top-2 duration-300">
-            <div className="space-y-1">
-              <label className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Aspect Ratio</label>
-              <select
-                value={aspectRatio}
-                onChange={(e) => setAspectRatio(e.target.value)}
-                className="w-full rounded-lg border-2 border-border bg-white px-2 py-1 text-xs font-semibold focus:border-candy-pink focus:outline-none"
-              >
-                {["1:1", "16:9", "9:16", "21:9", "4:3", "3:4", "5:4", "4:5", "3:2", "2:3"].map(r => (
-                  <option key={r} value={r}>{r}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="space-y-1">
-              <label className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground ml-1">Resolution</label>
-              <select
-                value={imageSize}
-                onChange={(e) => setImageSize(e.target.value)}
-                className="w-full rounded-lg border-2 border-border bg-white px-2 py-1 text-xs font-semibold focus:border-candy-pink focus:outline-none"
-              >
-                <option value="512px">Fast</option>
-                <option value="1K">Std (1K)</option>
-                <option value="2K">High (2K)</option>
-                <option value="4K">Ultra (4K)</option>
-              </select>
-            </div>
-
-            <div
-              onClick={() => setThinkingLevel(thinkingLevel === "High" ? "Minimal" : "High")}
-              className={`flex cursor-pointer items-center justify-between rounded-lg border-2 px-2 py-1 transition-all ${thinkingLevel === "High" ? "border-candy-pink/40 bg-candy-pink/5 shadow-inner" : "bg-white hover:bg-muted"}`}
-            >
-              <div className="flex items-center gap-1.5">
-                <Icon3DInline name="high-voltage" size={14} />
-                <span className="text-[10px] font-bold">Pro</span>
-              </div>
-              <div className={`h-3 w-6 rounded-full p-0.5 transition-all ${thinkingLevel === "High" ? "bg-candy-pink" : "bg-muted-foreground/30"}`}>
-                <div className={`h-2 w-2 rounded-full bg-white shadow-sm transition-all ${thinkingLevel === "High" ? "translate-x-3" : "translate-x-0"}`} />
-              </div>
-            </div>
-
-            <div
-              onClick={() => setUseSearch(!useSearch)}
-              className={`flex cursor-pointer items-center justify-between rounded-lg border-2 px-2 py-1 transition-all ${useSearch ? "border-candy-blue/40 bg-candy-blue/5 shadow-inner" : "bg-white hover:bg-muted"}`}
-            >
-              <div className="flex items-center gap-1.5">
-                <Icon3DInline name="globe" size={14} />
-                <span className="text-[10px] font-bold">Search</span>
-              </div>
-              <div className={`h-3 w-6 rounded-full p-0.5 transition-all ${useSearch ? "bg-candy-blue" : "bg-muted-foreground/30"}`}>
-                <div className={`h-2 w-2 rounded-full bg-white shadow-sm transition-all ${useSearch ? "translate-x-3" : "translate-x-0"}`} />
-              </div>
-            </div>
-          </div>
-        )}
-
+        {/* Cost label — inherits from Create step settings */}
         <div className="flex items-center justify-center gap-2 mb-2">
           <div className="flex-1 h-[1px] bg-border/50" />
           <div className="flex items-center gap-1 text-[8px] font-bold text-muted-foreground uppercase tracking-widest">

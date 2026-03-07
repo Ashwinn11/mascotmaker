@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { PromptInput } from "./prompt-input";
+import { StudioMascot } from "./studio-mascot";
+import { StudioStory } from "./studio-story";
+import { StudioMix } from "./studio-mix";
 import { MascotPreview } from "./mascot-preview";
 import { ChatRefiner } from "./chat-refiner";
 import { AnimationPicker } from "./animation-picker";
@@ -10,8 +12,10 @@ import { AnimationPreview } from "./animation-preview";
 import { PaywallModal } from "./paywall-modal";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
+import { downloadFile } from "@/lib/download";
 
-type Mode = "create" | "refine" | "animate";
+type StudioTab = "mascot" | "story" | "mix";
+type MascotStep = "create" | "refine" | "animate";
 
 interface AnimationItem {
   spriteBase64: string;
@@ -19,207 +23,328 @@ interface AnimationItem {
   action: string;
 }
 
-const STEPS = [
-  { key: "create" as Mode, label: "Create", icon: "artist-palette" as const, num: 1 },
-  { key: "refine" as Mode, label: "Refine", icon: "sparkles" as const, num: 2 },
-  { key: "animate" as Mode, label: "Animate", icon: "clapper-board" as const, num: 3 },
+const STUDIO_TABS = [
+  { key: "mascot" as StudioTab, label: "Mascot", icon: "artist-palette" as const, desc: "Create a single asset" },
+  { key: "story" as StudioTab, label: "Story", icon: "clapper-board" as const, desc: "Generate 8 frames" },
+  { key: "mix" as StudioTab, label: "Mix", icon: "sparkles" as const, desc: "Combine 2 images" },
 ];
 
+const MASCOT_STEPS = [
+  { key: "create" as MascotStep, label: "Create", num: 1 },
+  { key: "refine" as MascotStep, label: "Refine", num: 2 },
+  { key: "animate" as MascotStep, label: "Animate", num: 3 },
+];
+
+const DownloadIcon = () => (
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
+  </svg>
+);
+
+// ── Shared left-panel placeholder shown before any result exists ──────────────
+function EmptyPreview({ icon, title, subtitle }: { icon: string; title: string; subtitle: string }) {
+  return (
+    <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-4 rounded-3xl border-4 border-dashed border-border bg-white/50 p-8 text-center">
+      <Icon3DInline name={icon as any} size={48} className="opacity-40" />
+      <div>
+        <p className="text-sm font-black text-muted-foreground">{title}</p>
+        <p className="text-xs text-muted-foreground/60 mt-1">{subtitle}</p>
+      </div>
+    </div>
+  );
+}
+
+// ── Story left panel ──────────────────────────────────────────────────────────
+function StoryPreview({ frames, loading }: { frames: string[]; loading: boolean }) {
+  const [activeFrame, setActiveFrame] = useState(0);
+
+  if (loading) return (
+    <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-4 rounded-3xl border-4 border-dashed border-candy-blue/30 bg-candy-blue/5 p-8">
+      <span className="text-4xl animate-spin">⏳</span>
+      <p className="text-sm font-black text-candy-blue">Generating 8 frames…</p>
+    </div>
+  );
+
+  if (frames.length === 0) return (
+    <EmptyPreview icon="clapper-board" title="Your story will appear here"
+      subtitle="Fill in the details on the right and hit Generate" />
+  );
+
+  const isStoryboard = frames.length === 1;
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+          {isStoryboard ? "Story · Complete Storyboard" : `Story · ${frames.length} Frames`}
+        </p>
+        <button onClick={() => frames.forEach((f, i) => setTimeout(() =>
+          downloadFile(`data:image/png;base64,${f}`, isStoryboard ? "story_storyboard.png" : `story_frame_${i + 1}.png`), i * 200))}
+          className="text-[10px] font-black uppercase text-candy-blue hover:underline">
+          {isStoryboard ? "Download Storyboard" : "Download All"}
+        </button>
+      </div>
+
+      <div className="relative w-full overflow-hidden rounded-3xl border-4 border-white bg-checkerboard shadow-xl">
+        <img src={`data:image/png;base64,${frames[activeFrame]}`} alt={`Frame ${activeFrame + 1}`} className="w-full h-auto block" />
+        {frames.length > 1 && (
+          <div className="absolute top-3 left-3 rounded-full bg-black/60 px-3 py-1 text-[10px] font-black text-white backdrop-blur-md">
+            Frame {activeFrame + 1} / {frames.length}
+          </div>
+        )}
+        {frames.length > 1 && (<>
+          <button onClick={() => setActiveFrame(i => Math.max(0, i - 1))} disabled={activeFrame === 0}
+            className="absolute left-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-black/60 text-white text-sm flex items-center justify-center hover:bg-black/80 disabled:opacity-30">‹</button>
+          <button onClick={() => setActiveFrame(i => Math.min(frames.length - 1, i + 1))} disabled={activeFrame === frames.length - 1}
+            className="absolute right-3 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full bg-black/60 text-white text-sm flex items-center justify-center hover:bg-black/80 disabled:opacity-30">›</button>
+        </>)}
+        <button onClick={() => downloadFile(`data:image/png;base64,${frames[activeFrame]}`, `story_frame_${activeFrame + 1}.png`)}
+          className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold text-warm-gray shadow-lg backdrop-blur-sm hover:bg-white">
+          <DownloadIcon /> {isStoryboard ? "Save" : "Save Frame"}
+        </button>
+      </div>
+
+      {frames.length > 1 && (
+        <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
+          {frames.map((frame, idx) => (
+            <button key={idx} onClick={() => setActiveFrame(idx)}
+              className={`relative flex-shrink-0 h-16 w-16 overflow-hidden rounded-xl border-2 transition-all ${activeFrame === idx ? "border-candy-blue scale-110 shadow-md" : "border-border hover:border-candy-blue/40"}`}>
+              <img src={`data:image/png;base64,${frame}`} alt={`Frame ${idx + 1}`} className="h-full w-full object-cover" />
+              <div className="absolute bottom-0 left-0 right-0 bg-black/50 text-center text-[8px] font-black text-white">{idx + 1}</div>
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Mix left panel ────────────────────────────────────────────────────────────
+function MixPreview({ result, loading }: { result: string | null; loading: boolean }) {
+  if (loading) return (
+    <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-4 rounded-3xl border-4 border-dashed border-candy-green/30 bg-candy-green/5 p-8">
+      <span className="text-4xl animate-spin">⏳</span>
+      <p className="text-sm font-black text-candy-green">Compositing your images…</p>
+    </div>
+  );
+
+  if (!result) return (
+    <EmptyPreview icon="sparkles" title="Your composite will appear here"
+      subtitle="Upload 2 images and describe how to combine them" />
+  );
+
+  return (
+    <div className="space-y-3">
+      <div className="flex items-center justify-between">
+        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Result</p>
+        <button onClick={() => downloadFile(`data:image/png;base64,${result}`, "composite.png")}
+          className="text-[10px] font-black uppercase text-candy-green hover:underline">Download</button>
+      </div>
+      <div className="relative w-full overflow-hidden rounded-3xl border-4 border-white bg-checkerboard shadow-xl">
+        <img src={`data:image/png;base64,${result}`} alt="Composite result" className="w-full h-auto block" />
+        <button onClick={() => downloadFile(`data:image/png;base64,${result}`, "composite.png")}
+          className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold text-warm-gray shadow-lg backdrop-blur-sm hover:bg-white">
+          <DownloadIcon /> Save
+        </button>
+      </div>
+    </div>
+  );
+}
+
+// ── Main ──────────────────────────────────────────────────────────────────────
 export function MascotCreator() {
   const { data: session, status, update: updateSession } = useSession();
-  const [mode, setMode] = useState<Mode>("create");
+
+  const [activeTab, setActiveTab] = useState<StudioTab>("mascot");
+
+  // Mascot workflow
+  const [mascotStep, setMascotStep] = useState<MascotStep>("create");
   const [mascotBase64, setMascotBase64] = useState<string | null>(null);
+  const [mascotImages, setMascotImages] = useState<string[]>([]);
   const [analysis, setAnalysis] = useState<string | null>(null);
   const [animations, setAnimations] = useState<AnimationItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [mascotLoading, setMascotLoading] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [createOptions, setCreateOptions] = useState({
+    aspectRatio: "1:1",
+    imageSize: "1K" as "512px" | "1K" | "2K" | "4K",
+    thinkingLevel: "Minimal" as "Minimal" | "High",
+    useSearch: false,
+  });
+
+  // Story workflow
+  const [storyFrames, setStoryFrames] = useState<string[]>([]);
+  const [storyLoading, setStoryLoading] = useState(false);
+
+  // Mix workflow
+  const [mixResult, setMixResult] = useState<string | null>(null);
+  const [mixLoading, setMixLoading] = useState(false);
+
+  // Paywall
   const [paywallOpen, setPaywallOpen] = useState(false);
   const [paywallType, setPaywallType] = useState<"auth" | "credits">("auth");
   const [paywallCreditsRequired, setPaywallCreditsRequired] = useState(0);
 
-  // Show paywall if not authenticated
   const requireAuth = (): boolean => {
     if (status === "loading") return false;
-    if (!session?.user) {
-      setPaywallType("auth");
-      setPaywallOpen(true);
-      return false;
-    }
+    if (!session?.user) { setPaywallType("auth"); setPaywallOpen(true); return false; }
     return true;
   };
 
-  // Handle API errors that indicate auth/credit issues
-  const handleApiError = (res: Response, data: { error?: string; creditsRequired?: number; creditsRemaining?: number }): boolean => {
-    if (res.status === 401) {
-      setPaywallType("auth");
-      setPaywallOpen(true);
-      return false;
-    }
-    if (res.status === 402) {
-      setPaywallType("credits");
-      setPaywallCreditsRequired(data.creditsRequired || 0);
-      setPaywallOpen(true);
-      return false;
-    }
+  const handleApiError = (res: Response, data: { error?: string; creditsRequired?: number }): boolean => {
+    if (res.status === 401) { setPaywallType("auth"); setPaywallOpen(true); return false; }
+    if (res.status === 402) { setPaywallType("credits"); setPaywallCreditsRequired(data.creditsRequired || 0); setPaywallOpen(true); return false; }
     return true;
   };
 
-  // Refresh session to pick up updated credit balance from DB
-  const handleCreditsUpdate = async (_creditsRemaining?: number) => {
-    await updateSession();
+  const handleCreditsUpdate = async () => { await updateSession(); };
+
+  const handleMascotGenerated = (images: string[], newAnalysis?: string, options?: typeof createOptions) => {
+    setMascotImages(images);
+    setMascotBase64(images[0]);
+    if (newAnalysis) setAnalysis(newAnalysis);
+    if (options) setCreateOptions(options);
+    setMascotStep("refine");
   };
 
-  const handleGenerated = (imageBase64: string, mascotAnalysis?: string) => {
+  const handleMascotUpdate = (imageBase64: string, newAnalysis?: string) => {
     setMascotBase64(imageBase64);
-    if (mascotAnalysis) setAnalysis(mascotAnalysis);
-    setMode("refine");
-  };
-
-  const handleMascotUpdate = (imageBase64: string, mascotAnalysis?: string) => {
-    setMascotBase64(imageBase64);
-    if (mascotAnalysis) setAnalysis(mascotAnalysis);
-  };
-
-  const handleAnimationGenerated = (anim: AnimationItem) => {
-    setAnimations((prev) => [...prev, anim]);
+    setMascotImages([imageBase64]);
+    if (newAnalysis) setAnalysis(newAnalysis);
   };
 
   const handleStartOver = () => {
-    setMascotBase64(null);
-    setAnalysis(null);
-    setAnimations([]);
-    setMode("create");
-    setConfirmReset(false);
+    setMascotBase64(null); setMascotImages([]); setAnalysis(null);
+    setAnimations([]); setMascotStep("create"); setConfirmReset(false);
   };
 
-  const canGoTo = (step: Mode) => {
-    if (step === "create") return true;
-    if (step === "refine") return !!mascotBase64;
-    if (step === "animate") return !!mascotBase64;
-    return false;
-  };
+  const canGoToStep = (step: MascotStep) => step === "create" || !!mascotBase64;
+
+  // Shared props
+  const sharedProps = { requireAuth, onApiError: handleApiError, onCreditsUpdate: handleCreditsUpdate };
 
   return (
     <div className="mx-auto max-w-6xl px-4 py-4 md:px-6 md:py-8 mb-16 md:mb-0">
-      {/* Step indicator */}
-      <div className="mb-6 md:mb-8 flex items-center justify-center">
-        <div className="flex items-center gap-1 md:gap-2 rounded-2xl bg-white border-2 border-border p-1 md:p-1.5 shadow-sm">
-          {STEPS.map((step) => {
-            const isActive = mode === step.key;
-            const isAccessible = canGoTo(step.key);
-            return (
-              <button
-                key={step.key}
-                onClick={() => isAccessible && setMode(step.key)}
-                disabled={!isAccessible}
-                className={`flex items-center gap-1.5 md:gap-2 rounded-xl px-3 py-2 md:px-4 md:py-2.5 text-xs md:text-sm font-bold transition-all ${isActive
-                  ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md scale-105"
-                  : isAccessible
-                    ? "text-warm-gray hover:bg-muted"
-                    : "text-muted-foreground/40 cursor-not-allowed"
-                  }`}
-              >
-                <span className={`flex h-5 w-5 md:h-6 md:w-6 items-center justify-center rounded-full text-[10px] md:text-xs ${isActive ? "bg-white/20" : "bg-muted"
-                  }`}>
-                  {step.num}
-                </span>
-                <span className="hidden sm:inline">{step.label}</span>
-                <span className="sm:hidden">
-                  <Icon3DInline name={step.icon} size={16} />
-                </span>
-              </button>
-            );
-          })}
-        </div>
+
+      {/* Top-Level Tab Selector */}
+      <div className="mb-6 grid grid-cols-3 gap-3">
+        {STUDIO_TABS.map((tab) => {
+          const isActive = activeTab === tab.key;
+          return (
+            <button key={tab.key} onClick={() => setActiveTab(tab.key)}
+              className={`flex flex-col items-center gap-1.5 rounded-2xl border-2 p-3 transition-all duration-200 ${isActive
+                ? "border-foreground bg-foreground text-white shadow-[4px_4px_0_#2d2420] -translate-y-0.5"
+                : "border-border bg-white text-muted-foreground hover:border-foreground/20"}`}>
+              <Icon3DInline name={tab.icon} size={24} />
+              <span className="text-xs font-black uppercase tracking-tight leading-none">{tab.label}</span>
+              <span className="text-[9px] font-semibold opacity-60 leading-none">{tab.desc}</span>
+            </button>
+          );
+        })}
       </div>
 
-      {/* Main content */}
+      {/* Always 2-column: Left = Preview, Right = Form */}
       <div className="grid gap-6 md:gap-8 lg:grid-cols-2">
-        {/* Left: Preview */}
-        <div className="flex flex-col gap-3 md:gap-4 animate-pop-in stagger-1">
-          <div className="flex flex-col">
-            <MascotPreview
-              mascotBase64={mascotBase64}
-              animations={animations}
-              loading={loading && (mode === "create" || mode === "refine")}
-            />
-          </div>
-          {mascotBase64 && mode !== "create" && (
-            <button
-              onClick={() => setConfirmReset(true)}
-              className="self-center text-xs md:text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors"
-            >
-              ← Start over with a new mascot
-            </button>
+
+        {/* ── LEFT: Preview Panel ── */}
+        <div className="flex flex-col gap-3 md:gap-4">
+          {activeTab === "mascot" && (
+            <>
+              <MascotPreview
+                mascotBase64={mascotBase64}
+                images={mascotImages}
+                animations={animations}
+                loading={mascotLoading && mascotStep !== "animate"}
+              />
+              {mascotBase64 && mascotStep !== "create" && (
+                <button onClick={() => setConfirmReset(true)}
+                  className="self-center text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                  ← Start over with a new mascot
+                </button>
+              )}
+            </>
+          )}
+          {activeTab === "story" && (
+            <StoryPreview frames={storyFrames} loading={storyLoading} />
+          )}
+          {activeTab === "mix" && (
+            <MixPreview result={mixResult} loading={mixLoading} />
           )}
         </div>
 
-        {/* Right: Controls */}
-        <div className="flex flex-col animate-pop-in stagger-2">
+        {/* ── RIGHT: Form Panel ── */}
+        <div className="flex flex-col">
           <div className="rounded-3xl border-2 border-border bg-white/80 p-5 md:p-6 shadow-sm backdrop-blur-sm">
-            {mode === "create" && (
-              <div>
-                <h2 className="font-display text-xl md:text-2xl text-foreground mb-1">Create Mascot</h2>
-                <p className="text-xs md:text-sm text-muted-foreground mb-4 md:mb-5">
-                  Describe a character or upload a photo to start.
-                </p>
-                <PromptInput
-                  onGenerated={handleGenerated}
-                  onLoadingChange={setLoading}
-                  requireAuth={requireAuth}
-                  onApiError={handleApiError}
-                  onCreditsUpdate={handleCreditsUpdate}
-                />
-              </div>
+
+            {/* MASCOT */}
+            {activeTab === "mascot" && (
+              <>
+                <div className="mb-5 flex items-center justify-center">
+                  <div className="flex items-center gap-1 rounded-2xl bg-white border-2 border-border p-1 shadow-sm">
+                    {MASCOT_STEPS.map((step) => {
+                      const isActive = mascotStep === step.key;
+                      const isAccessible = canGoToStep(step.key);
+                      return (
+                        <button key={step.key} onClick={() => isAccessible && setMascotStep(step.key)}
+                          disabled={!isAccessible}
+                          className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all ${isActive
+                            ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md"
+                            : isAccessible ? "text-muted-foreground hover:bg-muted" : "text-muted-foreground/30 cursor-not-allowed"}`}>
+                          <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${isActive ? "bg-white/20" : "bg-muted"}`}>
+                            {step.num}
+                          </span>
+                          {step.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+                {mascotStep === "create" && (
+                  <StudioMascot onGenerated={handleMascotGenerated} onLoadingChange={setMascotLoading} {...sharedProps} />
+                )}
+                {mascotStep === "refine" && mascotBase64 && (
+                  <ChatRefiner mascotBase64={mascotBase64} analysis={analysis}
+                    aspectRatio={createOptions.aspectRatio} imageSize={createOptions.imageSize}
+                    thinkingLevel={createOptions.thinkingLevel} useSearch={createOptions.useSearch}
+                    onMascotUpdate={handleMascotUpdate} onLoadingChange={setMascotLoading}
+                    onDone={() => setMascotStep("animate")} {...sharedProps} />
+                )}
+                {mascotStep === "animate" && mascotBase64 && (
+                  <div className="space-y-4 md:space-y-6">
+                    <AnimationPicker mascotBase64={mascotBase64} description={analysis || undefined}
+                      onAnimationGenerated={(anim) => setAnimations(prev => [...prev, anim])}
+                      onLoadingChange={setMascotLoading} {...sharedProps} />
+                    <AnimationPreview animations={animations} mascotBase64={mascotBase64} />
+                  </div>
+                )}
+              </>
             )}
 
-            {mode === "refine" && mascotBase64 && (
-              <ChatRefiner
-                mascotBase64={mascotBase64}
-                analysis={analysis}
-                onMascotUpdate={handleMascotUpdate}
-                onLoadingChange={setLoading}
-                onDone={() => setMode("animate")}
-                onApiError={handleApiError}
-                onCreditsUpdate={handleCreditsUpdate}
-              />
+            {/* STORY */}
+            {activeTab === "story" && (
+              <StudioStory existingMascotBase64={mascotBase64} existingAnalysis={analysis}
+                onFramesChange={(frames) => { setStoryFrames(frames); }}
+                onLoadingChange={setStoryLoading}
+                {...sharedProps} />
             )}
 
-            {mode === "animate" && mascotBase64 && (
-              <div className="space-y-4 md:space-y-6">
-                <AnimationPicker
-                  mascotBase64={mascotBase64}
-                  description={analysis || undefined}
-                  onAnimationGenerated={handleAnimationGenerated}
-                  onLoadingChange={setLoading}
-                  onApiError={handleApiError}
-                  onCreditsUpdate={handleCreditsUpdate}
-                />
-                <AnimationPreview animations={animations} mascotBase64={mascotBase64} />
-              </div>
+            {/* MIX */}
+            {activeTab === "mix" && (
+              <StudioMix existingMascotBase64={mascotBase64}
+                onResultChange={setMixResult}
+                onLoadingChange={setMixLoading}
+                {...sharedProps} />
             )}
           </div>
         </div>
       </div>
 
-      {/* Paywall Modal */}
-      <PaywallModal
-        open={paywallOpen}
-        onOpenChange={setPaywallOpen}
-        type={paywallType}
-        creditsRequired={paywallCreditsRequired}
-        creditsRemaining={session?.user?.credits ?? 0}
-      />
-
-      <ConfirmDialog
-        open={confirmReset}
-        onOpenChange={setConfirmReset}
-        title="Start Over?"
-        description="Discard current mascot and animations?"
-        confirmText="Start Over"
-        variant="destructive"
-        onConfirm={handleStartOver}
-      />
+      <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} type={paywallType}
+        creditsRequired={paywallCreditsRequired} creditsRemaining={session?.user?.credits ?? 0} />
+      <ConfirmDialog open={confirmReset} onOpenChange={setConfirmReset}
+        title="Start Over?" description="Discard current mascot and animations?"
+        confirmText="Start Over" variant="destructive" onConfirm={handleStartOver} />
     </div>
   );
 }

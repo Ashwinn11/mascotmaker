@@ -25,11 +25,16 @@ export async function POST(req: Request) {
       );
     }
 
-    const analysisContext = previousAnalysis
-      ? `The current mascot is: ${previousAnalysis}. `
+    // nano-banana best practice: when editing iteratively, always remind the model of
+    // the character's key traits AND the original art style to prevent drift.
+    const characterContext = previousAnalysis
+      ? `This character is: ${previousAnalysis}. Preserve all these traits.`
       : "";
 
-    const prompt = `Modify this mascot character: ${message}. ${analysisContext}Keep the same art style and character identity. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
+    const prompt = `Apply this change to the mascot: "${message}".
+    ${characterContext}
+    CRITICAL: Keep the same art style, color palette, and character identity — only apply the requested change.
+    Isolated on a plain white background. Show the COMPLETE full body from head to feet — do NOT crop any part of the character.`;
     const result = await editImage(prompt, mascotBase64, options);
     const imageBase64 = result.data;
 

@@ -20,28 +20,36 @@ export type ImageOptions = {
     imageSize?: "512px" | "1K" | "2K" | "4K";
     thinkingLevel?: "Minimal" | "High";
     useSearch?: boolean;
+    subjectType?: string;
+    studioMode?: string;
 };
 
 /**
  * Dynamically calculate credit cost based on requested features.
  */
 export function calculateCost(route: string, options?: ImageOptions): number {
-    let cost = CREDIT_COSTS[route] || 1;
+    let baseCost = CREDIT_COSTS[route] || 5;
+    if (options?.studioMode === "Story") baseCost = 40;
+    else if (options?.studioMode === "Composite") baseCost = 15;
 
-    if (!options) return cost;
+    if (!options) return baseCost;
 
+    let extras = 0;
     // Advanced Resolution Multipliers
-    if (options.imageSize === "2K") cost += 5;
-    if (options.imageSize === "4K") cost += 15;
-    if (options.imageSize === "512px") cost = Math.max(1, cost - 2);
+    if (options.imageSize === "2K") extras += 5;
+    else if (options.imageSize === "4K") extras += 15;
+    else if (options.imageSize === "512px") extras = -2;
 
     // High Thinking / Pro Mode
-    if (options.thinkingLevel === "High") cost += 5;
+    if (options.thinkingLevel === "High") extras += 5;
 
     // Search Grounding
-    if (options.useSearch) cost += 2;
+    if (options.useSearch) extras += 10;
 
-    return cost;
+    // Subject Premium
+    if (options.subjectType === "Sticker") extras += 3;
+
+    return Math.max(1, baseCost + extras);
 }
 
 /**
