@@ -56,8 +56,41 @@ const ENGINES = [
 ];
 
 export default function Home() {
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "Mascot Maker Studio",
+    "url": "https://mascotmaker.io",
+    "logo": "https://mascotmaker.io/app-icon.png",
+    "description": "The world's most powerful AI design hub for characters, storyboards, and product ads.",
+    "sameAs": [
+      "https://twitter.com/mascotmaker",
+      "https://discord.gg/mascotmaker"
+    ]
+  };
+
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Mascot Maker",
+    "url": "https://mascotmaker.io",
+    "potentialAction": {
+      "@type": "SearchAction",
+      "target": "https://mascotmaker.io/gallery?q={search_term_string}",
+      "query-input": "required name=search_term_string"
+    }
+  };
+
   return (
     <div className="bg-cream selection:bg-candy-pink/30 pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
 
       {/* ─── Hero Section ─── */}
       <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-white bg-grain flex items-center border-b-4 border-foreground selection:bg-candy-yellow/30">
@@ -109,7 +142,13 @@ export default function Home() {
                 {/* Animation Card - Top Right */}
                 <div className="absolute top-0 right-[-5%] w-[75%] aspect-square rounded-[4rem] border-4 border-foreground bg-white p-6 shadow-[24px_24px_0_#4ea8de] rotate-6 hover:rotate-2 transition-all duration-700 overflow-hidden group z-20">
                   <div className="relative w-full h-full rounded-[3.5rem] overflow-hidden bg-dotted/20">
-                    <Image src="/demo/hero-animation.webp" alt="Animation" fill className="object-contain p-8 group-hover:scale-110 transition-transform duration-1000" />
+                    <Image
+                      src="/demo/hero-animation.webp"
+                      alt="Animation"
+                      fill
+                      priority={true}
+                      className="object-contain p-8 group-hover:scale-110 transition-transform duration-1000"
+                    />
                   </div>
                   <div className="absolute top-10 right-10 glass-card px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">Motion Engine</div>
                 </div>
@@ -316,6 +355,67 @@ export default function Home() {
 
         {/* Decorative Lines */}
         <div className="absolute top-0 right-0 w-1/3 h-full border-l-4 border-foreground/5 skew-x-[-15deg] pointer-events-none" />
+      </section>
+      {/* ─── Footer SEO Links ─── */}
+      <section className="py-20 bg-cream/50 border-t-4 border-foreground">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-12">
+            <div>
+              <h5 className="font-display text-xl mb-6 uppercase">Engines</h5>
+              <ul className="space-y-3">
+                <li><Link href="/mascot-maker/character-generator" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Character Gen</Link></li>
+                <li><Link href="/mascot-maker/story-studio" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Story Studio</Link></li>
+                <li><Link href="/mascot-maker/mix-studio" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Mix Studio</Link></li>
+                <li><Link href="/mascot-maker/icon-generator" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Icon Maker</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-display text-xl mb-6 uppercase">Industries</h5>
+              <ul className="space-y-3">
+                {["SaaS", "Discord", "Gaming", "E-commerce"].map((name) => (
+                  <li key={name}>
+                    <Link href={`/mascot-maker/${name.toLowerCase().replace(' ', '-')}`} className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">
+                      {name} Assets
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-display text-xl mb-6 uppercase">Styles</h5>
+              <ul className="space-y-3">
+                {["3D Pixar", "Claymation", "Minimalist", "Vector Art"].map((name) => (
+                  <li key={name}>
+                    <Link href={`/mascot-maker/${name.toLowerCase().replace(' ', '-')}`} className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">
+                      {name} Style
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-display text-xl mb-6 uppercase">Locations</h5>
+              <ul className="space-y-3">
+                {["New York", "London", "Tokyo", "Austin"].map((name) => (
+                  <li key={name}>
+                    <Link href={`/mascot-maker/near/${name.toLowerCase().replace(' ', '-')}`} className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">
+                      Studio in {name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div>
+              <h5 className="font-display text-xl mb-6 uppercase">Company</h5>
+              <ul className="space-y-3">
+                <li><Link href="/gallery" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Gallery</Link></li>
+                <li><Link href="/create" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Create</Link></li>
+                <li><Link href="/privacy" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Privacy</Link></li>
+                <li><Link href="/terms" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Terms</Link></li>
+              </ul>
+            </div>
+          </div>
+        </div>
       </section>
     </div>
   );

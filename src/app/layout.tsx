@@ -55,6 +55,9 @@ export const metadata: Metadata = {
     description:
       "The all-in-one platform for creating and animating custom AI mascot characters.",
   },
+  alternates: {
+    canonical: "https://mascotmaker.io",
+  },
 };
 
 export default function RootLayout({
