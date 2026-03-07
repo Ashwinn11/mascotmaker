@@ -22,6 +22,7 @@ const body = Nunito({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://mascotmaker.io"),
   title: {
     template: "%s | Mascot Maker",
     default: "Mascot Maker — AI Mascot & Character Generator at mascotmaker.io",
@@ -36,6 +37,12 @@ export const metadata: Metadata = {
     "animated mascot creator",
     "AI cartoon avatar",
     "mascot animation tool",
+    "AI Character Generator",
+    "Mascot Maker",
+    "Storyboard Creator",
+    "AI Icon Maker",
+    "Character Consistency",
+    "Professional AI Design",
   ],
   robots: { index: true, follow: true },
   icons: {

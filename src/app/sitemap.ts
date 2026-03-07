@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { ENGINES, INDUSTRIES, STYLES, LOCATIONS } from "@/lib/seo-data";
+import { ENGINES, INDUSTRIES, STYLES, LOCATIONS, COMPETITORS } from "@/lib/seo-data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://mascotmaker.io";
@@ -10,33 +10,49 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/gallery`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.8, },
   ];
 
-  const engineRoutes = ENGINES.map((item) => ({
-    url: `${baseUrl}/mascot-maker/${item.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.8,
-  }));
+  const categoricalRoutes = [...ENGINES, ...INDUSTRIES, ...STYLES].map((item) => {
+    const url = `${baseUrl}/mascot-maker/${item.slug}`;
+    return {
+      url,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+      languages: {
+        'en-US': url,
+        'en-GB': url,
+        'x-default': url,
+      }
+    };
+  });
 
-  const industryRoutes = INDUSTRIES.map((item) => ({
-    url: `${baseUrl}/mascot-maker/${item.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  const locationRoutes = LOCATIONS.map((item) => {
+    const locale = item.country === "USA" ? "en-US" : item.country === "UK" ? "en-GB" : "en";
+    const url = `${baseUrl}/mascot-maker/near/${item.slug}`;
+    return {
+      url,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+      languages: {
+        [locale]: url,
+        'x-default': url,
+      }
+    };
+  });
 
-  const styleRoutes = STYLES.map((item) => ({
-    url: `${baseUrl}/mascot-maker/${item.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.7,
-  }));
+  const competitorRoutes = COMPETITORS.map((item) => {
+    const url = `${baseUrl}/mascot-maker/compare/${item.slug}`;
+    return {
+      url,
+      lastModified: new Date(),
+      changeFrequency: "monthly" as const,
+      priority: 0.8,
+      languages: {
+        'en-US': url,
+        'x-default': url,
+      }
+    };
+  });
 
-  const locationRoutes = LOCATIONS.map((item) => ({
-    url: `${baseUrl}/mascot-maker/near/${item.slug}`,
-    lastModified: new Date(),
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
-
-  return [...staticRoutes, ...engineRoutes, ...industryRoutes, ...styleRoutes, ...locationRoutes];
+  return [...staticRoutes, ...categoricalRoutes, ...locationRoutes, ...competitorRoutes];
 }

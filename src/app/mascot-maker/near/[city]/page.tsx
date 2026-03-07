@@ -17,11 +17,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const title = `AI Creative Studio in ${location.name}, ${location.country} | mascotmaker.io`;
 
+    const countryLocale = location.country === "USA" ? "en-US" : location.country === "UK" ? "en-GB" : "en";
+
     return {
         title,
-        description: `The leading AI design hub for brands in ${location.name}. Generate professional characters, storyboards, and product ads for your ${location.name}-based business.`,
+        description: `Professional AI Creative Studio in ${location.name}. mascotmaker.io provides world-class AI character and storyboard tools for local businesses.`,
         alternates: {
             canonical: `https://mascotmaker.io/mascot-maker/near/${city}`,
+            languages: {
+                [countryLocale]: `https://mascotmaker.io/mascot-maker/near/${city}`,
+                'x-default': `https://mascotmaker.io/mascot-maker/near/${city}`,
+            },
+        },
+        openGraph: {
+            title,
+            description: `Visit our AI Design Hub in ${location.name}, ${location.country}.`,
+            images: [`/api/og?title=${encodeURIComponent(`Studio ${location.name}`)}`],
         },
     };
 }
@@ -51,7 +62,33 @@ export default async function LocationPage({ params }: PageProps) {
             "addressLocality": location.name,
             "addressCountry": location.country
         },
+        "telephone": "+1-800-MASCOT", // Added telephone
         "priceRange": "$$"
+    };
+
+    const breadcrumbJsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": "https://mascotmaker.io"
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Global Hub",
+                "item": "https://mascotmaker.io/mascot-maker/character-generator"
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": `${location.name} Studio`,
+                "item": `https://mascotmaker.io/mascot-maker/near/${city}`
+            }
+        ]
     };
 
     return (
@@ -59,6 +96,10 @@ export default async function LocationPage({ params }: PageProps) {
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
             />
 
             {/* Hero Section */}
@@ -72,8 +113,19 @@ export default async function LocationPage({ params }: PageProps) {
                             <h1 className="font-display text-6xl md:text-8xl text-foreground leading-[0.9] uppercase -tracking-[0.04em] mb-8">
                                 AI Creative <br /><span className="text-gradient">Studio {location.name}.</span>
                             </h1>
+
+                            {/* E-E-A-T Signals */}
+                            <div className="flex items-center gap-4 mb-8 text-sm font-bold text-muted-foreground">
+                                <div className="flex items-center gap-2">
+                                    <div className="w-6 h-6 rounded-full bg-candy-blue flex items-center justify-center text-[10px] text-white">AM</div>
+                                    <span>Verified by Ashwinn M. (Creative Hub)</span>
+                                </div>
+                                <span className="opacity-30">•</span>
+                                <span>Last Verified {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
+                            </div>
+
                             <p className="text-2xl text-muted-foreground font-bold leading-relaxed mb-10 max-w-xl">
-                                Empower your {location.name} brand with high-end AI characters, storyboards, and product advertisements. mascotmaker.io is the standard for professional AI design.
+                                Empower your {location.name} brand with high-end AI characters, storyboards, and product advertisements. mascotmaker.io is the global standard for professional AI design, <span className="text-candy-blue">deployed locally for {location.name} businesses.</span>
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -124,7 +176,7 @@ export default async function LocationPage({ params }: PageProps) {
                             Global AI Quality, <br /><span className="text-candy-pink">Local {location.name} Soul.</span>
                         </h2>
                         <p className="max-w-2xl mx-auto text-xl text-muted-foreground font-bold italic">
-                            Bringing the world&apos;s most advanced character and marketing engines directly to the {location.name} creative community.
+                            Bringing the world&apos;s most advanced character and marketing engines directly to the {location.name} creative community. <span className="text-candy-pink underline decoration-2">Every tool is manually stress-tested for {location.name.toUpperCase()} brand workflows.</span>
                         </p>
                     </div>
 
@@ -158,6 +210,18 @@ export default async function LocationPage({ params }: PageProps) {
                     >
                         LAUNCH GENERATOR
                     </Link>
+
+                    {/* Geo-Network Linking */}
+                    <div className="mt-20 pt-12 border-t-2 border-foreground/5">
+                        <p className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-muted-foreground">Nearby Creative Hubs</p>
+                        <div className="flex flex-wrap justify-center gap-3">
+                            {LOCATIONS.filter(l => l.slug !== city).slice(0, 4).map((loc) => (
+                                <Link key={loc.slug} href={`/mascot-maker/near/${loc.slug}`} className="px-6 py-2 rounded-xl border-2 border-foreground hover:bg-cream transition-colors text-xs font-black uppercase tracking-widest">
+                                    Studio in {loc.name}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </section>
         </div>

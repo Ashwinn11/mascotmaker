@@ -1,0 +1,18 @@
+# Mascot Maker Studio
+> The world's most powerful AI design hub for consistent characters, 8-frame storyboards, and generic design assets.
+
+## Core Engines
+- [Character Generator](https://mascotmaker.io/mascot-maker/character-generator): Create professional 3D and 2D characters with identity consistency.
+- [Story Studio](https://mascotmaker.io/mascot-maker/story-studio): Generate seamless 8-frame narratives for storyboards and social content.
+- [Mix Studio](https://mascotmaker.io/mascot-maker/mix-studio): Composite characters with real-world products for high-end advertisements.
+- [Icon Maker](https://mascotmaker.io/mascot-maker/icon-generator): Generate minimalist, 3D, or vector logos and icons.
+
+## Popular Solutions
+- [SaaS Branding](https://mascotmaker.io/mascot-maker/saas): Custom assets optimized for software platforms.
+- [Gaming Assets](https://mascotmaker.io/mascot-maker/gaming): 3D characters and isometric props for game developers.
+- [3D Pixar Style](https://mascotmaker.io/mascot-maker/3d-pixar): Cinematic character generation with high-fidelity renders.
+
+## Localized Studios
+- [AI Design Hub London](https://mascotmaker.io/mascot-maker/near/london)
+- [AI Design Hub New York](https://mascotmaker.io/mascot-maker/near/new-york)
+- [AI Design Hub Austin](https://mascotmaker.io/mascot-maker/near/austin)
