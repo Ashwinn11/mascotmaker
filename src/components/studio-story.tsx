@@ -123,16 +123,19 @@ export function StudioStory({
             </div>
 
             {/* Art Style */}
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
                 <SectionLabel>Art Style</SectionLabel>
-                <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-                    {STYLES.map((s) => (
-                        <button key={s.id} onClick={() => setSelectedStyleId(s.id)}
-                            className={`flex-shrink-0 flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all ${selectedStyleId === s.id ? "border-candy-blue bg-candy-blue/5" : "border-border bg-white hover:border-candy-blue/20"}`}>
-                            <Icon3DInline name={s.icon} size={26} />
-                            <p className={`text-[9px] font-black uppercase ${selectedStyleId === s.id ? "text-candy-blue" : "text-foreground"}`}>{s.label}</p>
-                        </button>
-                    ))}
+                <div className="relative">
+                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar scroll-smooth">
+                        {STYLES.map((s) => (
+                            <button key={s.id} onClick={() => setSelectedStyleId(s.id)}
+                                className={`flex-shrink-0 flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all min-w-[70px] ${selectedStyleId === s.id ? "border-candy-blue bg-candy-blue/5" : "border-border bg-white hover:border-candy-blue/20"}`}>
+                                <Icon3DInline name={s.icon} size={24} className="md:w-[26px] md:h-[26px]" />
+                                <p className={`text-[9px] font-black uppercase ${selectedStyleId === s.id ? "text-candy-blue" : "text-foreground"}`}>{s.label}</p>
+                            </button>
+                        ))}
+                    </div>
+                    <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/80 to-transparent pointer-events-none md:hidden" />
                 </div>
             </div>
 
@@ -177,10 +180,10 @@ export function StudioStory({
 
             {/* Generate Button */}
             <Button onClick={handleGenerate} disabled={!prompt.trim() || loading}
-                className="w-full rounded-[2rem] bg-candy-blue py-7 text-lg font-black text-white shadow-xl hover:opacity-90 transition-all active:scale-[0.98] disabled:opacity-40">
+                className="w-full rounded-[2rem] bg-candy-blue py-6 md:py-7 text-sm md:text-lg font-black text-white shadow-xl hover:opacity-90 transition-all active:scale-[0.98] disabled:opacity-40">
                 {loading
-                    ? <><span className="animate-spin mr-2">⏳</span> Generating story...</>
-                    : <><Icon3DInline name="clapper-board" size={22} className="mr-2" /> Generate Story · {calculateCost()} Credits</>}
+                    ? <><span className="animate-spin mr-2">⏳</span> Generating...</>
+                    : <><Icon3DInline name="clapper-board" size={20} className="mr-1.5 md:mr-2" /> Generate Story · {calculateCost()} Credits</>}
             </Button>
         </div>
     );

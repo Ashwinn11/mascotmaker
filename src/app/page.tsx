@@ -8,357 +8,315 @@ const EXAMPLES = [
   "Flat Minimalist Logo",
   "3D Pixar Character",
   "Isometric Game Asset",
+  "8-Frame Storyboard",
+  "Character-Product Mix",
   "Retro 80s Vibe",
-  "Hand-drawn Sketch",
-  "Chibi Panda DJ",
   "Claymation Robot",
   "Cyberpunk Scene",
 ];
 
+const ENGINES = [
+  {
+    title: "Mascot Engine",
+    subtitle: "Identity Consistency",
+    desc: "Create professional 3D, 2D, or retro characters with full DNA preservation across every action.",
+    icon: "artist-palette",
+    color: "bg-candy-pink",
+    shadow: "shadow-[12px_12px_0_#ff6b9d]",
+    border: "border-candy-pink",
+    image: "/demo/hero-shiba.webp",
+    link: "/create?tab=mascot",
+    badge: "Most Popular"
+  },
+  {
+    title: "Story Studio",
+    subtitle: "Narrative Flow",
+    desc: "Design seamless 8-frame narratives. Perfect for storyboards, social content, and brand storytelling.",
+    icon: "clapper-board",
+    color: "bg-candy-blue",
+    shadow: "shadow-[12px_12px_0_#4ea8de]",
+    border: "border-candy-blue",
+    image: "/demo/landing-story-v2.webp",
+    link: "/create?tab=story",
+    badge: "New Feature"
+  },
+  {
+    title: "Mix Studio",
+    subtitle: "Product Integration",
+    desc: "Seamlessly composite characters with real-world products or complex environments for high-end ads.",
+    icon: "sparkles",
+    color: "bg-candy-green",
+    shadow: "shadow-[12px_12px_0_#5cd85c]",
+    border: "border-candy-green",
+    image: "/demo/landing-mix-v2.webp",
+    link: "/create?tab=mix",
+    badge: "Pro Engine"
+  }
+];
+
 export default function Home() {
   return (
-    <div className="bg-cream selection:bg-candy-pink/30">
+    <div className="bg-cream selection:bg-candy-pink/30 pb-20">
+
       {/* ─── Hero Section ─── */}
-      <section className="relative min-h-[95vh] overflow-hidden bg-white bg-grain flex items-center border-b-2 border-border/50">
+      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-white bg-grain flex items-center border-b-4 border-foreground selection:bg-candy-yellow/30">
+
+        {/* Background Decorative Blobs */}
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] aspect-square bg-candy-pink/5 blur-[120px] rounded-full animate-float-delayed" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] aspect-square bg-candy-blue/5 blur-[120px] rounded-full animate-float" />
+
         <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 w-full">
           <div className="grid lg:grid-cols-12 gap-16 items-center">
-            {/* Left Column: Text Content */}
-            <div className="lg:col-span-7 text-left animate-slide-up">
-              <div className="mb-10 inline-flex items-center gap-3 rounded-full border-2 border-candy-pink/20 bg-candy-pink/10 px-5 py-2 text-xs font-black uppercase tracking-widest text-candy-pink shadow-sm">
-                <span className="relative flex h-2.5 w-2.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-candy-pink opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-candy-pink" />
-                </span>
-                Studio V2 • Asset Engine Active
+
+            {/* Left Column: Massive Typography */}
+            <div className="lg:col-span-12 xl:col-span-7 text-left">
+              <div className="mb-10 inline-flex items-center gap-3 rounded-full border-3 border-foreground bg-white px-6 py-2.5 text-xs font-black uppercase tracking-[0.2em] text-foreground shadow-[4px_4px_0_#2d2420] animate-slide-up">
+                <Image src="/app-icon.png" alt="Icon" width={24} height={24} className="rounded-md" />
+                Studio V2.5 • The Asset Engine
               </div>
 
-              <h1 className="font-display text-7xl sm:text-8xl lg:text-[9rem] text-foreground leading-[0.85] mb-10 stagger-1 -tracking-[0.05em]">
-                Characters, <br />
-                <span className="text-gradient">Assets</span> <br />
-                & Worlds.
+              <h1 className="font-display text-7xl sm:text-8xl lg:text-[11.5rem] text-foreground leading-[0.82] mb-12 -tracking-[0.06em] animate-slide-up stagger-1">
+                CREATE <br />
+                <span className="text-gradient drop-shadow-sm">WORLDS.</span>
               </h1>
 
-              <p className="text-2xl sm:text-3xl text-muted-foreground/80 max-w-xl mb-14 stagger-2 font-medium leading-[1.15] -tracking-wide">
-                The ultimate creative gear to generate, refine, and animate professional assets in any aesthetic.
+              <p className="text-2xl sm:text-3xl text-muted-foreground/90 max-w-xl mb-16 font-semibold leading-[1.1] -tracking-wide animate-slide-up stagger-2">
+                Unified design engines for characters, cinematically consistent stories, and professional product compositing.
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-6 stagger-3">
+              <div className="flex flex-col sm:flex-row gap-6 animate-slide-up stagger-3">
                 <Link
                   href="/create"
-                  className="group relative inline-flex items-center justify-center gap-4 rounded-[2rem] bg-foreground px-12 py-6 text-2xl font-black text-white shadow-2xl transition-all hover:scale-[1.05] active:scale-[0.95]"
+                  className="group relative inline-flex items-center justify-center gap-5 rounded-[2.5rem] bg-foreground px-14 py-7 text-2xl font-black text-white shadow-[8px_8px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-[0.95]"
                 >
-                  <Icon3DInline name="sparkles" size={24} />
-                  GO STUDIO
+                  <Icon3DInline name="sparkles" size={28} />
+                  LAUNCH STUDIO
                 </Link>
                 <Link
                   href="/gallery"
-                  className="inline-flex items-center justify-center gap-4 rounded-[2rem] border-2 border-border bg-white px-12 py-6 text-2xl font-black text-warm-gray transition-all hover:border-candy-pink/40 hover:text-foreground active:scale-[0.95]"
+                  className="inline-flex items-center justify-center gap-5 rounded-[2.5rem] border-4 border-foreground bg-white px-14 py-7 text-2xl font-black text-foreground shadow-[8px_8px_0_#e8ddd4] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-[0.95]"
                 >
-                  BROWSE
+                  EXPLORE
                 </Link>
               </div>
             </div>
 
-            {/* Right Column: Visual Showcase */}
-            <div className="lg:col-span-5 relative animate-pop-in stagger-4">
-              <div className="relative z-10 grid gap-6">
-                {/* Featured Mascot Card */}
-                <div className="group relative overflow-hidden rounded-[3.5rem] border-2 border-border bg-white shadow-2xl transition-all duration-700 hover:-translate-y-4 hover:shadow-candy-pink/10">
-                  <div className="aspect-[4/3] bg-dotted/10 relative overflow-hidden">
-                    <Image
-                      src="/demo/hero-shiba.png"
-                      alt="Cool Shiba Mascot"
-                      fill
-                      className="object-contain p-8 transition-transform duration-1000 group-hover:scale-105"
-                    />
-                    <div className="absolute top-8 left-8">
-                      <div className="bg-candy-blue/20 backdrop-blur-md px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-lg text-white border border-white/30">Character Engine v2.0</div>
-                    </div>
+            {/* Right Column: Visual Stack - SPREAD OUT FOR FULL VISIBILITY */}
+            <div className="lg:col-span-12 xl:col-span-5 relative hidden lg:block animate-pop-in stagger-4">
+              <div className="relative w-full h-[650px] max-w-[600px] ml-auto">
+
+                {/* Animation Card - Top Right */}
+                <div className="absolute top-0 right-[-5%] w-[75%] aspect-square rounded-[4rem] border-4 border-foreground bg-white p-6 shadow-[24px_24px_0_#4ea8de] rotate-6 hover:rotate-2 transition-all duration-700 overflow-hidden group z-20">
+                  <div className="relative w-full h-full rounded-[3.5rem] overflow-hidden bg-dotted/20">
+                    <Image src="/demo/hero-animation.webp" alt="Animation" fill className="object-contain p-8 group-hover:scale-110 transition-transform duration-1000" />
                   </div>
+                  <div className="absolute top-10 right-10 glass-card px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">Motion Engine</div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-6">
-                  {/* Stickers Card */}
-                  <div className="group relative overflow-hidden rounded-[2.5rem] border-2 border-border bg-white shadow-xl transition-all duration-700 hover:-translate-y-2">
-                    <div className="aspect-square bg-white relative">
-                      <div className="absolute inset-0 bg-dotted opacity-20" />
-                      <Image
-                        src="/demo/hero-stickers.png"
-                        alt="Cat Stickers"
-                        fill
-                        className="object-cover p-4 transition-transform duration-700 group-hover:scale-110"
-                      />
-                    </div>
+                {/* Stickers Card - Bottom Left, Moved further for visibility */}
+                <div className="absolute bottom-0 left-[-15%] w-[70%] aspect-square rounded-[4rem] border-4 border-foreground bg-candy-yellow p-6 shadow-[20px_20px_0_#2d2420] -rotate-12 hover:-rotate-6 transition-all duration-700 overflow-hidden group z-10">
+                  <div className="relative w-full h-full rounded-[3.5rem] overflow-hidden bg-white/40">
+                    <Image src="/demo/hero-stickers.webp" alt="Stickers" fill className="object-cover p-6 group-hover:scale-110 transition-transform duration-1000" />
                   </div>
-
-                  {/* Animation Card */}
-                  <div className="group relative overflow-hidden rounded-[2.5rem] border-2 border-border bg-white shadow-xl transition-all duration-700 hover:-translate-y-2">
-                    <div className="aspect-square bg-white relative">
-                      <div className="absolute inset-0 bg-checkerboard opacity-[0.05]" />
-                      <Image
-                        src="/demo/hero-animation.png"
-                        alt="Robot Animation"
-                        fill
-                        className="object-contain p-6 transition-transform duration-700 group-hover:scale-110"
-                      />
-                    </div>
-                  </div>
+                  <div className="absolute bottom-10 left-10 glass-card px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">Asset Packs</div>
                 </div>
+
+                {/* Floating Props */}
+                <div className="absolute top-[40%] right-[-10%] animate-float z-30">
+                  <Icon3D name="party-popper" size="2xl" />
+                </div>
+                <div className="absolute top-[-5%] left-[10%] animate-float-delayed z-30 opacity-80 rotate-12">
+                  <Icon3D name="high-voltage" size="xl" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
+          <div className="w-1 h-12 rounded-full bg-foreground/20 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1/2 bg-foreground animate-[shimmer_2s_infinite]" />
+          </div>
+        </div>
+      </section>
+
+      {/* ─── Style Showcase ─── */}
+      <section className="py-40 bg-white border-b-4 border-foreground overflow-hidden">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            <div className="relative group">
+              <div className="relative z-10 rounded-[4rem] border-4 border-foreground overflow-hidden shadow-[30px_30px_0_#ffc857] transition-transform duration-700 group-hover:scale-[1.02]">
+                <Image src="/demo/style-showcase.webp" alt="Style Showcase" width={800} height={800} className="w-full h-auto object-cover" />
+                {/* Decorative Overlays */}
+                <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none" />
+              </div>
+              <div className="absolute -bottom-10 -right-10 animate-float z-20">
+                <div className="w-32 h-32 rounded-3xl border-4 border-foreground bg-candy-green flex items-center justify-center shadow-[10px_10px_0_#2d2420] rotate-12">
+                  <Icon3DInline name="artist-palette" size={64} className="text-white" />
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="mb-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
+                Visual DNA
+              </div>
+              <h2 className="font-display text-7xl md:text-9xl text-foreground leading-[0.85] uppercase -tracking-[0.05em] mb-10">
+                ANY <span className="text-gradient">STYLE.</span> <br />
+                ZERO LIMITS.
+              </h2>
+              <p className="text-2xl text-muted-foreground font-bold leading-relaxed mb-12">
+                From Pixar-grade 3D renders to retro pixel art and high-fidelity isometric game assets. Our engines learn your brand&apos;s style and keep it consistent across every frame.
+              </p>
+
+              <div className="flex flex-wrap gap-4">
+                {["3D Pixar", "Claymation", "Isometric", "Aureepunk", "8-Bit Retro", "Minimalist"].map((style, i) => (
+                  <span key={i} className="px-6 py-2.5 rounded-2xl border-2 border-foreground bg-cream text-xs font-black uppercase tracking-widest shadow-[4px_4px_0_#2d2420]">
+                    {style}
+                  </span>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
+      {/* ─── Unified Engines (Grid) ─── */}
+      <section className="py-40 bg-white relative overflow-hidden">
+        <div className="mx-auto max-w-7xl px-6 relative z-10">
+          <div className="max-w-4xl mb-24 text-center lg:text-left mx-auto lg:ml-0">
+            <h2 className="font-display text-8xl md:text-[8.5rem] text-foreground leading-[0.85] uppercase -tracking-[0.05em] mb-10 stagger-1">
+              THE STUDIO <br />
+              <span className="text-gradient">WORKFLOW.</span>
+            </h2>
+            <p className="text-3xl text-muted-foreground font-bold leading-tight max-w-2xl stagger-2">
+              Three specialized engines designed to handle every stage of your creative production.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-12 items-stretch">
+            {ENGINES.map((engine, i) => (
+              <Link key={i} href={engine.link} className={`group flex flex-col rounded-[3.5rem] border-4 border-foreground bg-white overflow-hidden transition-all duration-500 hover:-translate-y-3 ${engine.shadow}`}>
+                <div className="relative aspect-square overflow-hidden border-b-4 border-foreground">
+                  <div className="absolute inset-0 bg-dotted opacity-[0.05]" />
+                  <Image
+                    src={engine.image}
+                    alt={engine.title}
+                    fill
+                    className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                  />
+                  {/* Badge */}
+                  <div className="absolute top-6 left-6">
+                    <div className="glass-card px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg border-2 border-foreground/5">{engine.badge}</div>
+                  </div>
+                  {/* Icon */}
+                  <div className="absolute bottom-6 right-6">
+                    <div className={`w-14 h-14 rounded-2xl border-2 border-foreground ${engine.color} flex items-center justify-center text-white shadow-[4px_4px_0_#2d2420] group-hover:rotate-12 transition-transform`}>
+                      <Icon3DInline name={engine.icon as any} size={28} />
+                    </div>
+                  </div>
+                </div>
+                <div className="p-10 flex-1 flex flex-col">
+                  <span className={`text-xs font-black uppercase tracking-[0.2em] mb-2 ${engine.color.replace('bg-', 'text-')}`}>{engine.subtitle}</span>
+                  <h3 className="font-display text-4xl mb-4 leading-none uppercase -tracking-tighter">{engine.title}</h3>
+                  <p className="text-muted-foreground font-bold leading-relaxed text-sm">{engine.desc}</p>
+
+                  <div className="mt-auto pt-8 flex items-center gap-2 font-black text-xs uppercase tracking-widest text-foreground group-hover:gap-4 transition-all">
+                    Open Engine <Icon3DInline name="check-mark" size={14} className="text-candy-green" />
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ─── Marquee Section ─── */}
-      <section className="bg-foreground py-6 overflow-hidden">
-        <div className="flex animate-marquee gap-8 whitespace-nowrap">
+      <section className="bg-foreground py-10 overflow-hidden border-b-4 border-foreground">
+        <div className="flex animate-marquee gap-12 whitespace-nowrap">
           {[...EXAMPLES, ...EXAMPLES, ...EXAMPLES].map((ex, i) => (
             <span
               key={i}
-              className="inline-flex items-center gap-3 text-2xl font-display font-black text-white/40 uppercase tracking-tighter"
+              className="inline-flex items-center gap-5 text-4xl font-display font-black text-white/30 uppercase tracking-tighter"
             >
-              <span className="text-candy-pink text-3xl">★</span>
+              <span className="text-candy-pink text-5xl">★</span>
               {ex}
             </span>
           ))}
         </div>
       </section>
 
-
-      {/* ─── Style Studio ─── */}
-      <section className="py-32 bg-white relative overflow-hidden">
+      {/* ─── Rights Section (High Energy) ─── */}
+      <section className="py-40 bg-cream relative border-b-4 border-foreground overflow-hidden">
         <div className="mx-auto max-w-7xl px-6 relative z-10">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-24 gap-12">
-            <div className="max-w-3xl">
-              <h2 className="font-display text-7xl md:text-8xl text-foreground mb-10 uppercase -tracking-[0.05em] leading-[0.85]">
-                Style <br />
-                <span className="text-gradient">Intelligence.</span>
-              </h2>
-              <p className="text-2xl text-muted-foreground/80 font-medium leading-relaxed max-w-2xl">
-                A professional generative engine that understands artistic aesthetics. No generic outputs—pure creative control.
-              </p>
+          <div className="grid lg:grid-cols-2 gap-24 items-center">
+
+            <div className="relative">
+              <div className="relative z-10 rounded-[4rem] border-4 border-foreground bg-white p-16 shadow-[24px_24px_0_#ff6b9d] group overflow-hidden">
+                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-candy-pink/5 to-transparent -z-10" />
+
+                <h3 className="font-display text-7xl md:text-9xl mb-10 leading-[0.8] uppercase -tracking-[0.05em]">
+                  OWN THE <br />
+                  <span className="text-candy-pink">OUTPUT.</span>
+                </h3>
+
+                <div className="grid gap-6">
+                  {[
+                    { label: "Full Commercial Freedom", color: "text-candy-green" },
+                    { label: "Zero Attribution Required", color: "text-candy-blue" },
+                    { label: "High-Resolution Masters", color: "text-candy-purple" },
+                    { label: "Direct Layered Exports", color: "text-candy-orange" },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-5 text-2xl font-black text-foreground uppercase tracking-tight group/item">
+                      <div className="h-8 w-8 rounded-xl border-3 border-foreground bg-white flex items-center justify-center group-hover/item:rotate-12 transition-transform">
+                        <Icon3DInline name="check-mark" size={18} className="text-candy-green" />
+                      </div>
+                      {item.label}
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Massive Floating Prop */}
+              <div className="absolute -top-16 -right-16 animate-float-delayed z-20">
+                <div className="w-32 h-32 rounded-[2.5rem] border-4 border-foreground bg-candy-yellow flex items-center justify-center shadow-[8px_8px_0_#2d2420] rotate-12">
+                  <Icon3D name="party-popper" size="2xl" />
+                </div>
+              </div>
             </div>
-            <div className="flex gap-4">
-              <div className="h-2 w-20 rounded-full bg-gradient-to-r from-candy-pink to-candy-blue opacity-50 self-center hidden sm:block" />
+
+            <div className="space-y-12">
+              <div>
+                <h4 className="font-display text-5xl mb-6 leading-[0.9] uppercase -tracking-tighter">
+                  DESIGNED FOR <br />CREATIVE TEAMS.
+                </h4>
+                <p className="text-2xl text-muted-foreground leading-relaxed font-bold italic">
+                  &ldquo;Mascot Maker provides the consistency of a custom photoshoot with the speed of pure thought.&rdquo;
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-4">
+                {["/demo/hero-animation.webp", "/demo/landing-story-v2.webp", "/demo/landing-mix-v2.webp", "/demo/hero-shiba.webp"].map((img, i) => (
+                  <div key={i} className="group relative w-24 aspect-square rounded-[2rem] border-3 border-foreground bg-white overflow-hidden shadow-[6px_6px_0_#e8ddd4] rotate-[-5deg] hover:rotate-0 transition-all">
+                    <Image src={img} alt="example" fill className="object-cover p-2" />
+                  </div>
+                ))}
+              </div>
+
               <Link
                 href="/create"
-                className="px-10 py-5 rounded-[2rem] bg-foreground text-white font-black text-xl hover:bg-candy-pink transition-all active:scale-95 shadow-xl"
+                className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-10 py-5 text-xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
               >
-                OPEN STUDIO
+                START CREATING NOW
               </Link>
             </div>
           </div>
-
-          <div className="relative mt-24">
-            <div className="relative z-20 group">
-              {/* Main Showcase Image */}
-              <div className="relative overflow-hidden rounded-[4rem] border-2 border-border/40 bg-white/50 shadow-[0_32px_80px_-15px_rgba(0,0,0,0.1)] transition-all duration-700 hover:shadow-[0_45px_100px_-15px_rgba(0,0,0,0.15)]">
-                <div className="aspect-[16/9] relative">
-                  <div className="absolute inset-0 bg-dotted opacity-[0.05]" />
-                  <Image
-                    src="/demo/style-showcase.png"
-                    alt="Style Studio Showcase"
-                    fill
-                    className="object-contain p-12 transition-transform duration-1000 group-hover:scale-105"
-                  />
-
-                  {/* Style Labels Floating */}
-                  <div className="absolute top-12 left-12 flex flex-col gap-3">
-                    <span className="bg-candy-blue/90 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl animate-float border border-white/20">Pixar V2</span>
-                    <span className="bg-candy-pink/90 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl animate-float-delayed border border-white/20">Retro Film</span>
-                  </div>
-                  <div className="absolute bottom-12 right-12 flex flex-col items-end gap-3 text-right">
-                    <span className="bg-candy-yellow/90 backdrop-blur-sm text-foreground px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl animate-float border border-foreground/10">Pro Branding</span>
-                    <span className="bg-candy-green/90 backdrop-blur-sm text-white px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-xl animate-float-delayed border border-white/20">Isometric Engine</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Backglow Effects */}
-              <div className="absolute -inset-10 bg-gradient-to-r from-candy-pink/5 via-candy-blue/5 to-candy-green/5 blur-3xl -z-10 opacity-60 rounded-[5rem] group-hover:opacity-100 transition-opacity duration-700" />
-            </div>
-          </div>
         </div>
-      </section>
 
-      {/* ─── Studio Dashboard (Compact & Vibrant) ─── */}
-      <section className="py-24 bg-cream relative overflow-hidden border-t-4 border-foreground">
-        <div className="mx-auto max-w-7xl px-6 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-8 items-start">
-
-            {/* Left: Engine Modules (Vibrant / Compact) */}
-            <div className="lg:col-span-7 grid grid-cols-2 gap-6 scale-[0.95] origin-top-left">
-              <div className="col-span-2">
-                <h2 className="font-display text-6xl text-foreground mb-4 uppercase -tracking-tighter">
-                  Studio <span className="text-gradient">Gear.</span>
-                </h2>
-                <p className="text-lg text-muted-foreground font-bold leading-tight max-w-md">Professional creative engines in one compact dashboard.</p>
-              </div>
-
-              {/* Identity Module */}
-              <div className="col-span-2 rounded-[2.5rem] bg-candy-pink border-4 border-foreground p-8 text-white shadow-[8px_8px_0_#2d2420] relative overflow-hidden group">
-                <div className="relative z-10">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-candy-pink shadow-lg group-hover:rotate-12 transition-transform">
-                      <Icon3DInline name="high-voltage" size={24} />
-                    </div>
-                    <span className="text-xs font-black uppercase tracking-[0.2em] opacity-80">Identity Link</span>
-                  </div>
-                  <h3 className="font-display text-4xl mb-2 uppercase leading-none">Consistency Core</h3>
-                  <p className="text-xs font-bold leading-relaxed opacity-90 max-w-xs">Our advanced neutral reasoning preserves your character&apos;s unique DNA across every generated action.</p>
-                </div>
-                <div className="absolute top-0 right-[-10%] h-full w-1/2 bg-white/10 skew-x-[-15deg] group-hover:translate-x-[-10%] transition-transform duration-1000" />
-              </div>
-
-              {/* Stylize Module */}
-              <div className="rounded-[2.5rem] bg-candy-blue border-4 border-foreground p-6 text-white shadow-[6px_6px_0_#2d2420] hover:translate-y-[-2px] hover:shadow-[8px_8px_0_#2d2420] transition-all group">
-                <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-candy-blue mb-4 shadow-md group-hover:scale-110 transition-transform">
-                  <Icon3DInline name="camera" size={20} />
-                </div>
-                <h4 className="font-display text-xl mb-1 uppercase tracking-tighter">Stylize</h4>
-                <p className="text-[10px] font-black uppercase opacity-70 tracking-widest leading-none">Global Asset Hub</p>
-              </div>
-
-              {/* Prompt Module */}
-              <div className="rounded-[2.5rem] bg-candy-orange border-4 border-foreground p-6 text-white shadow-[6px_6px_0_#2d2420] hover:translate-y-[-2px] hover:shadow-[8px_8px_0_#2d2420] transition-all group">
-                <div className="h-10 w-10 rounded-xl bg-white flex items-center justify-center text-candy-orange mb-4 shadow-md group-hover:scale-110 transition-transform">
-                  <Icon3DInline name="magic-wand" size={20} />
-                </div>
-                <h4 className="font-display text-xl mb-1 uppercase tracking-tighter">Reasoning</h4>
-                <p className="text-[10px] font-black uppercase opacity-70 tracking-widest leading-none">Artistic Intelligence</p>
-              </div>
-            </div>
-
-            {/* Right: Output Tray & Rights (Dense) */}
-            <div className="lg:col-span-5 space-y-4 lg:pt-0">
-              <div className="flex items-center gap-2 mb-6 ml-2">
-                <div className="h-2 w-2 rounded-full bg-candy-green animate-pulse" />
-                <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Output Bundle V2</span>
-              </div>
-
-              {[
-                { title: "4K Master File", icon: "sparkles", color: "bg-candy-yellow" },
-                { title: "3x3 Expression Grid", icon: "artist-palette", color: "bg-candy-blue" },
-                { title: "Pro Animation Loop", icon: "clapper-board", color: "bg-candy-green" }
-              ].map((item, i) => (
-                <div key={i} className="group relative flex items-center gap-4 rounded-3xl border-3 border-foreground bg-white p-4 shadow-[4px_4px_0_#2d2420] hover:translate-x-1 transition-all">
-                  <div className={`w-12 h-12 rounded-xl border-2 border-foreground ${item.color} flex items-center justify-center text-foreground shadow-sm group-hover:scale-110 transition-transform`}>
-                    <Icon3DInline name={item.icon as any} size={20} />
-                  </div>
-                  <div className="flex-1">
-                    <h4 className="font-display text-lg uppercase tracking-tighter leading-none mb-1">{item.title}</h4>
-                    <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Studio Asset {i + 1}</p>
-                  </div>
-                  <div className="text-candy-green opacity-0 group-hover:opacity-100 transition-opacity pr-4">
-                    <Icon3DInline name="check-mark" size={16} />
-                  </div>
-                </div>
-              ))}
-
-              {/* Ownership Banner (Compact Vibrant) */}
-              <div className="mt-8 rounded-3xl bg-foreground p-8 text-white relative overflow-hidden group shadow-[8px_8px_0_#ff6b9d]">
-                <div className="relative z-10 flex items-center justify-between gap-6">
-                  <div>
-                    <h4 className="font-display text-3xl uppercase -tracking-tighter mb-1 leading-none">YOU OWN IT.</h4>
-                    <p className="text-[10px] font-bold text-white/50 leading-tight uppercase tracking-widest">Full Commercial Rights • No Watermarks</p>
-                  </div>
-                  <div className="h-12 w-12 flex items-center justify-center bg-white/10 rounded-2xl group-hover:rotate-12 transition-transform shadow-2xl backdrop-blur-md">
-                    <Icon3DInline name="inbox-tray" size={28} />
-                  </div>
-                </div>
-                <div className="absolute top-0 right-0 h-full w-full bg-gradient-to-tr from-candy-pink/30 to-transparent -z-10 group-hover:opacity-100 opacity-60 transition-opacity" />
-              </div>
-            </div>
-          </div>
-        </div>
+        {/* Decorative Lines */}
+        <div className="absolute top-0 right-0 w-1/3 h-full border-l-4 border-foreground/5 skew-x-[-15deg] pointer-events-none" />
       </section>
     </div>
   );
-}
-
-/**
- * Abstract CSS/SVG visual tokens representing different artistic styles
- * Fulfills the "be creative instead of just images/basic icons" requirement
- */
-function StyleToken({ type }: { type: 'pixar' | 'retro' | 'isometric' | 'clay' | 'minimal' | 'chibi' | 'pop' | 'scene' }) {
-  switch (type) {
-    case 'pixar':
-      return (
-        <div className="relative w-24 h-24 flex items-center justify-center">
-          <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white to-slate-200 shadow-xl" />
-          <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-candy-blue/40 to-white/80 blur-sm animate-pulse" />
-          <div className="absolute top-4 right-6 w-4 h-4 rounded-full bg-white opacity-90 blur-[1px]" />
-          <div className="w-20 h-20 rounded-full border-2 border-white/50 backdrop-blur-[2px] shadow-inner" />
-        </div>
-      );
-    case 'retro':
-      return (
-        <div className="w-24 h-18 relative rounded-xl bg-slate-100 border-4 border-slate-300 overflow-hidden shadow-lg">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-candy-pink/5 to-transparent animate-marquee" style={{ animationDuration: '3s' }} />
-          <div className="absolute inset-0 opacity-20 bg-grain" />
-          <div className="absolute bottom-2 left-2 flex gap-1">
-            <div className="h-1 w-4 bg-candy-pink rounded-full" />
-            <div className="h-1 w-2 bg-candy-blue rounded-full" />
-          </div>
-        </div>
-      );
-    case 'isometric':
-      return (
-        <div className="relative w-24 h-24 flex items-center justify-center">
-          <div className="w-12 h-12 bg-slate-200 rotate-45 skew-x-12 relative shadow-lg transform translate-y-2">
-            <div className="absolute -top-12 left-0 w-12 h-12 bg-slate-300 skew-y-[30deg]" />
-            <div className="absolute top-0 -left-12 w-12 h-12 bg-slate-100 -skew-y-[30deg]" />
-          </div>
-          <div className="absolute inset-0 border-2 border-dashed border-slate-300 rounded-2xl rotate-12 group-hover:rotate-45 transition-transform duration-700" />
-        </div>
-      );
-    case 'clay':
-      return (
-        <div className="relative w-24 h-24 flex items-center justify-center">
-          <div className="w-18 h-18 bg-candy-orange rounded-[40%_60%_70%_30%/40%_50%_60%_50%] animate-wobble shadow-[inset_-4px_-4px_12px_rgba(0,0,0,0.1),8px_8px_20px_rgba(255,138,80,0.2)]" />
-          <div className="absolute top-6 left-6 w-3 h-3 bg-white/20 rounded-full blur-[2px]" />
-        </div>
-      );
-    case 'minimal':
-      return (
-        <div className="w-24 h-24 relative flex items-center justify-center">
-          <div className="w-16 h-16 border-2 border-slate-900 rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
-            <div className="w-8 h-8 bg-slate-900 rotate-45" />
-          </div>
-          <div className="absolute w-20 h-px bg-slate-900/10 rotate-[135deg]" />
-        </div>
-      );
-    case 'chibi':
-      return (
-        <div className="relative w-24 h-24 flex items-center justify-center">
-          <div className="w-12 h-12 bg-candy-pink rounded-full animate-float shadow-xl flex items-center justify-center gap-1.5 p-2">
-            <div className="w-1.5 h-1.5 bg-white rounded-full" />
-            <div className="w-1.5 h-1.5 bg-white rounded-full" />
-          </div>
-          <div className="absolute w-16 h-16 border-4 border-candy-pink/10 rounded-full" />
-          <div className="absolute w-20 h-20 border-2 border-candy-pink/5 rounded-full" />
-        </div>
-      );
-    case 'pop':
-      return (
-        <div className="w-24 h-24 relative flex items-center justify-center">
-          <div className="w-18 h-18 bg-candy-yellow border-4 border-slate-900 overflow-hidden shadow-[8px_8px_0_#ff6b9d]">
-            <div className="absolute inset-0 opacity-20" style={{ backgroundImage: 'radial-gradient(circle, #000 1px, transparent 1px)', backgroundSize: '4px 4px' }} />
-            <div className="absolute top-2 right-2 w-4 h-4 bg-white border-2 border-slate-900 -rotate-12" />
-          </div>
-        </div>
-      );
-    case 'scene':
-      return (
-        <div className="w-24 h-20 relative bg-slate-900 rounded-xl shadow-2xl overflow-hidden group-hover:scale-110 transition-transform">
-          <div className="absolute inset-0 bg-gradient-to-tr from-candy-purple/30 to-candy-blue/10" />
-          <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-white/10" />
-          <div className="absolute top-4 left-4 w-4 h-4 bg-candy-yellow rounded-full blur-[4px] animate-pulse" />
-          <div className="absolute bottom-3 left-4 right-4 h-1 bg-white/20 rounded-full" />
-        </div>
-      );
-    default:
-      return null;
-  }
 }

@@ -130,35 +130,39 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
         <div className="space-y-5">
 
             {/* Art Style */}
-            <div className="space-y-2">
+            <div className="space-y-2 relative">
                 <SectionLabel>Art Style</SectionLabel>
-                <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar">
-                    {STYLES.map((s) => (
-                        <button key={s.id} onClick={() => setSelectedStyleId(s.id)}
-                            className={`flex-shrink-0 flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all ${selectedStyleId === s.id
-                                ? `border-${ACCENT} bg-${ACCENT}/5 shadow-sm`
-                                : "border-border bg-white hover:border-candy-pink/20"}`}>
-                            <Icon3DInline name={s.icon} size={26} />
-                            <p className={`text-[9px] font-black uppercase ${selectedStyleId === s.id ? `text-${ACCENT}` : "text-foreground"}`}>{s.label}</p>
-                        </button>
-                    ))}
+                <div className="relative">
+                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar scroll-smooth">
+                        {STYLES.map((s) => (
+                            <button key={s.id} onClick={() => setSelectedStyleId(s.id)}
+                                className={`flex-shrink-0 flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all min-w-[70px] ${selectedStyleId === s.id
+                                    ? `border-${ACCENT} bg-${ACCENT}/5 shadow-sm`
+                                    : "border-border bg-white hover:border-candy-pink/20"}`}>
+                                <Icon3DInline name={s.icon} size={24} className="md:w-[26px] md:h-[26px]" />
+                                <p className={`text-[9px] font-black uppercase ${selectedStyleId === s.id ? `text-${ACCENT}` : "text-foreground"}`}>{s.label}</p>
+                            </button>
+                        ))}
+                    </div>
+                    {/* Fade indicators for mobile scroll */}
+                    <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/80 to-transparent pointer-events-none md:hidden" />
                 </div>
             </div>
 
             {/* What are you creating? */}
             <div className="space-y-2">
                 <SectionLabel>What are you creating?</SectionLabel>
-                <div className="grid grid-cols-5 gap-1.5">
+                <div className="grid grid-cols-3 md:grid-cols-5 gap-1.5">
                     {SUBJECT_TYPES.map((s) => (
                         <button key={s.value} onClick={() => setSubjectType(s.value)} title={s.desc}
-                            className={`flex flex-col items-center gap-1 p-2 rounded-xl border-2 transition-all ${subjectType === s.value
+                            className={`flex flex-col items-center justify-center gap-1 p-2 min-h-[40px] rounded-xl border-2 transition-all ${subjectType === s.value
                                 ? "border-candy-pink bg-candy-pink/5 text-candy-pink"
                                 : "border-border bg-white text-muted-foreground hover:border-candy-pink/20"}`}>
-                            <span className="text-[9px] font-black uppercase leading-none">{s.label}</span>
+                            <span className="text-[9px] font-black uppercase leading-none text-center">{s.label}</span>
                         </button>
                     ))}
                 </div>
-                <p className="text-[10px] text-muted-foreground">{SUBJECT_TYPES.find(s => s.value === subjectType)?.desc}</p>
+                <p className="text-[10px] text-muted-foreground hidden md:block">{SUBJECT_TYPES.find(s => s.value === subjectType)?.desc}</p>
             </div>
 
             {/* Describe or Upload */}
@@ -247,8 +251,8 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             {/* Generate Button */}
             <Button onClick={inputMode === "upload" && file ? handleStylize : handleGenerate}
                 disabled={!canSubmit}
-                className="w-full rounded-[2rem] bg-foreground py-7 text-lg font-black text-white shadow-xl hover:bg-candy-pink transition-all active:scale-[0.98] disabled:opacity-40">
-                <Icon3DInline name="sparkles" size={22} className="mr-2" />
+                className="w-full rounded-[2rem] bg-foreground py-6 md:py-7 text-sm md:text-lg font-black text-white shadow-xl hover:bg-candy-pink transition-all active:scale-[0.98] disabled:opacity-40">
+                <Icon3DInline name="sparkles" size={20} className="mr-1.5 md:mr-2" />
                 Generate Mascot · {calculateCost()} Credits
             </Button>
 

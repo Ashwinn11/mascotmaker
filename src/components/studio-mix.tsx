@@ -109,16 +109,16 @@ export function StudioMix({
             {/* Two image slots */}
             <div className="space-y-2">
                 <SectionLabel>Images to Combine</SectionLabel>
-                <div className="flex gap-3">
+                <div className="flex items-center gap-2 md:gap-3">
                     <ImageSlot image={image1} label={image1Label} slotRef={file1Ref}
                         onFile={handleFile1}
                         onClear={() => { setImage1(null); setImage1Label(""); }}
-                        slotNumber={1} hint="Mascot or main character" />
-                    <div className="flex items-center justify-center text-2xl font-black text-muted-foreground/40 pt-5">+</div>
+                        slotNumber={1} hint="Character" />
+                    <div className="flex items-center justify-center text-xl md:text-2xl font-black text-muted-foreground/40 mt-6">+</div>
                     <ImageSlot image={image2} label={image2Label} slotRef={file2Ref}
                         onFile={handleFile2}
                         onClear={() => { setImage2(null); setImage2Label(""); }}
-                        slotNumber={2} hint="Product, background, or second character" />
+                        slotNumber={2} hint="Asset/BG" />
                 </div>
             </div>
 
@@ -161,10 +161,10 @@ export function StudioMix({
 
             {/* Composite Button */}
             <Button onClick={handleComposite} disabled={!canSubmit || loading}
-                className="w-full rounded-[2rem] bg-candy-green py-7 text-lg font-black text-white shadow-xl hover:opacity-90 transition-all active:scale-[0.98] disabled:opacity-40">
+                className="w-full rounded-[2rem] bg-candy-green py-6 md:py-7 text-sm md:text-lg font-black text-white shadow-xl hover:opacity-90 transition-all active:scale-[0.98] disabled:opacity-40">
                 {loading
                     ? <><span className="mr-2 animate-spin">⏳</span> Compositing...</>
-                    : <><Icon3DInline name="artist-palette" size={22} className="mr-2" /> Composite · 15 Credits</>}
+                    : <><Icon3DInline name="artist-palette" size={20} className="mr-1.5 md:mr-2" /> Composite · 15 Credits</>}
             </Button>
         </div>
     );

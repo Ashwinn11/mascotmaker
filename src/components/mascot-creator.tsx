@@ -13,6 +13,8 @@ import { PaywallModal } from "./paywall-modal";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { downloadFile } from "@/lib/download";
+import { useSearchParams } from "next/navigation";
+import { useEffect } from "react";
 
 type StudioTab = "mascot" | "story" | "mix";
 type MascotStep = "create" | "refine" | "animate";
@@ -154,8 +156,17 @@ function MixPreview({ result, loading }: { result: string | null; loading: boole
 // ── Main ──────────────────────────────────────────────────────────────────────
 export function MascotCreator() {
   const { data: session, status, update: updateSession } = useSession();
+  const searchParams = useSearchParams();
 
   const [activeTab, setActiveTab] = useState<StudioTab>("mascot");
+
+  // Handle deep-linking to specific tabs
+  useEffect(() => {
+    const tabParam = searchParams.get("tab") as StudioTab;
+    if (tabParam && STUDIO_TABS.some(t => t.key === tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [searchParams]);
 
   // Mascot workflow
   const [mascotStep, setMascotStep] = useState<MascotStep>("create");
@@ -224,57 +235,31 @@ export function MascotCreator() {
   const sharedProps = { requireAuth, onApiError: handleApiError, onCreditsUpdate: handleCreditsUpdate };
 
   return (
-    <div className="mx-auto max-w-6xl px-4 py-4 md:px-6 md:py-8 mb-16 md:mb-0">
+    <div className="mx-auto max-w-6xl px-3 py-4 md:px-6 md:py-8 mb-16 md:mb-0">
 
       {/* Top-Level Tab Selector */}
-      <div className="mb-6 grid grid-cols-3 gap-3">
+      <div className="mb-6 grid grid-cols-3 gap-2 md:gap-3">
         {STUDIO_TABS.map((tab) => {
           const isActive = activeTab === tab.key;
           return (
             <button key={tab.key} onClick={() => setActiveTab(tab.key)}
-              className={`flex flex-col items-center gap-1.5 rounded-2xl border-2 p-3 transition-all duration-200 ${isActive
-                ? "border-foreground bg-foreground text-white shadow-[4px_4px_0_#2d2420] -translate-y-0.5"
+              className={`flex flex-col items-center gap-1 rounded-xl md:rounded-2xl border-2 p-2 md:p-3 transition-all duration-200 ${isActive
+                ? "border-foreground bg-foreground text-white shadow-[3px_3px_0_#2d2420] md:shadow-[4px_4px_0_#2d2420] -translate-y-0.5"
                 : "border-border bg-white text-muted-foreground hover:border-foreground/20"}`}>
-              <Icon3DInline name={tab.icon} size={24} />
-              <span className="text-xs font-black uppercase tracking-tight leading-none">{tab.label}</span>
-              <span className="text-[9px] font-semibold opacity-60 leading-none">{tab.desc}</span>
+              <Icon3DInline name={tab.icon} size={20} className="md:w-6 md:h-6" />
+              <span className="text-[10px] md:text-sm font-black uppercase tracking-tight leading-none text-center">{tab.label}</span>
+              <span className="hidden md:block text-[9px] font-semibold opacity-60 leading-none">{tab.desc}</span>
             </button>
           );
         })}
       </div>
 
-      {/* Always 2-column: Left = Preview, Right = Form */}
-      <div className="grid gap-6 md:gap-8 lg:grid-cols-2">
+      {/* Main Content: Reordered for mobile: Form top, Preview bottom */}
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 md:gap-8">
 
-        {/* ── LEFT: Preview Panel ── */}
-        <div className="flex flex-col gap-3 md:gap-4">
-          {activeTab === "mascot" && (
-            <>
-              <MascotPreview
-                mascotBase64={mascotBase64}
-                images={mascotImages}
-                animations={animations}
-                loading={mascotLoading && mascotStep !== "animate"}
-              />
-              {mascotBase64 && mascotStep !== "create" && (
-                <button onClick={() => setConfirmReset(true)}
-                  className="self-center text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">
-                  ← Start over with a new mascot
-                </button>
-              )}
-            </>
-          )}
-          {activeTab === "story" && (
-            <StoryPreview frames={storyFrames} loading={storyLoading} />
-          )}
-          {activeTab === "mix" && (
-            <MixPreview result={mixResult} loading={mixLoading} />
-          )}
-        </div>
-
-        {/* ── RIGHT: Form Panel ── */}
-        <div className="flex flex-col">
-          <div className="rounded-3xl border-2 border-border bg-white/80 p-5 md:p-6 shadow-sm backdrop-blur-sm">
+        {/* ── RIGHT (now Top on mobile): Studio Panel ── */}
+        <div className={`order-first lg:order-last flex flex-col ${activeTab !== "mascot" ? "w-full lg:max-w-2xl lg:ml-auto" : ""}`}>
+          <div className="rounded-3xl border-2 border-border bg-white/90 p-4 md:p-6 shadow-sm backdrop-blur-md">
 
             {/* MASCOT */}
             {activeTab === "mascot" && (
@@ -337,6 +322,32 @@ export function MascotCreator() {
                 {...sharedProps} />
             )}
           </div>
+        </div>
+
+        {/* ── LEFT (now Bottom on mobile): Preview Panel ── */}
+        <div className="order-last lg:order-first flex flex-col gap-3 md:gap-4">
+          {activeTab === "mascot" && (
+            <>
+              <MascotPreview
+                mascotBase64={mascotBase64}
+                images={mascotImages}
+                animations={animations}
+                loading={mascotLoading && mascotStep !== "animate"}
+              />
+              {mascotBase64 && mascotStep !== "create" && (
+                <button onClick={() => setConfirmReset(true)}
+                  className="self-center text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                  ← Start over with a new mascot
+                </button>
+              )}
+            </>
+          )}
+          {activeTab === "story" && (
+            <StoryPreview frames={storyFrames} loading={storyLoading} />
+          )}
+          {activeTab === "mix" && (
+            <MixPreview result={mixResult} loading={mixLoading} />
+          )}
         </div>
       </div>
 
