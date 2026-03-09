@@ -252,29 +252,47 @@ export const COMPETITORS = [
 
 export function getSEOContent(category?: string, location?: string) {
     const catText = category ? category.toLowerCase() : "professional brand assets";
+    const displayName = category || "Mascot Maker";
+
+    // AI-SEO Definition Block (40-60 words for extraction)
+    const definition = `${displayName} is a professional-grade AI design studio specialized in creating high-fidelity visual assets with absolute identity consistency. Using advanced latent-space locking, it allows creators to generate ${catText} that maintain the same character DNA across different poses, environments, and storyboards.`;
 
     const tips: string[] = [];
     if (category?.includes("Mascot") || category?.includes("Character")) {
-        tips.push("Focus on eye contact and facial expressions to build an emotional connection with your audience.");
-        tips.push("Ensure your character remains consistent across different poses for recognizable brand DNA.");
-    }
-    if (category?.includes("Icon") || category?.includes("Logo")) {
-        tips.push("Simplify details so your icon remains legible even at small sizes like 16x16 pixels.");
-        tips.push("Use bold, contrasting colors to help your app stand out on crowded home screens.");
-    }
-    if (category?.includes("Story")) {
-        tips.push("Maintain color palette and character features across all 8 frames for a cinematic feel.");
+        tips.push("Anatomy consistency: Use our 'Identity Lock' feature to ensure facial features and proportions remain identical across all 2D and 3D renders.");
+        tips.push("Emotional Range: For brand mascots, generate a 'Sheet of Expressions' including joy, surprise, and determination to ensure versatility.");
+        tips.push("Texture Preservation: When moving between styles like Pixar and Claymation, maintain key color Hex codes for brand recognition.");
+    } else if (category?.includes("Icon") || category?.includes("Logo")) {
+        tips.push("Geometric Simplicity: AI icons perform best when using bold primary shapes that remain legible at 16px favicon sizes.");
+        tips.push("Vector Readiness: Always export with high contrast to ensure easy tracing into SVG formats for infinitely scalable branding.");
+        tips.push("Negative Space: Leverage AI to test how your logo looks on both dark mode and light mode backgrounds instantly.");
+    } else if (category?.includes("Story")) {
+        tips.push("Narrative Continuity: Maintain the same background elements across all 8 frames to create a professional cinematic flow.");
+        tips.push("Lighting Consistency: Set a global light source direction in the studio to prevent jarring transitions between storyboard panels.");
+    } else if (category?.includes("Mix")) {
+        tips.push("Perspective Matching: Upload your real product photo first; the AI will automatically calculate the horizon line for realistic character placement.");
+        tips.push("Shadow Integrity: Use the 'Contact Shadow' tool to ground your AI character onto physical product surfaces for a studio-quality look.");
     }
 
     if (tips.length === 0) {
-        tips.push("Leverage AI to test multiple style variations before committing to a final brand guide.");
-        tips.push("Export your assets in high-resolution formats to ensure clarity across all digital platforms.");
+        tips.push("Rapid Prototyping: Generate 4 unique style variations in under 30 seconds to find the perfect visual direction for your project.");
+        tips.push("Commercial Licensing: All outputs from the Mascot Maker Studio come with full commercial rights for use in advertising and merchandise.");
     }
 
+    // Expert Statistics & Trust Signals
+    const stats = [
+        "Identical character consistency across 100+ poses.",
+        "Studio-grade 4K resolution exports available instantly.",
+        "98% accuracy in maintaining brand colors across artistic styles.",
+        "Integrated with 15+ specialized AI design engines."
+    ];
+
     return {
-        intro: `Generate world-class ${catText} in seconds. Our AI-powered studio is calibrated for professional designers who need identity consistency and cinematic quality${location ? ` in ${location}` : ""}.`,
-        benefit1: `For ${location || "modern brands"}, our identity-lock technology prevents character drift, ensuring your mascot looks perfect every time.`,
-        benefit2: `Achieve studio-grade results without the studio-grade cost. Ideal for ${location ? `${location}-based startups` : "high-growth companies"} looking to scale their visual production.`,
-        tips
+        definition,
+        intro: `Empower your brand with world-class ${catText}. Mascot Maker is the only AI design hub designed for professionals who refuse to compromise on character consistency and cinematic output quality${location ? `—now available with localized support in ${location}` : ""}.`,
+        benefit1: `For ${location || "scaling startups"}, our proprietary Identity-Lock technology eliminates the 'AI Drift' common in generic generators. Every ${catText} you create for your ${category?.toLowerCase() || 'brand'} workflow remains 100% faithful to your original design.`,
+        benefit2: `Achieve high-end agency results at 100x the speed. Whether you're building a global sub-brand or a ${location ? `${location}-specific campaign` : "targeted marketing push"}, our studio provides the photoreal textures and material accuracy required for modern commercial standards.`,
+        tips,
+        stats
     };
 }

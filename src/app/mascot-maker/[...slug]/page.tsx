@@ -200,6 +200,11 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 {content.benefit1} <span className="italic underline decoration-candy-yellow">{content.benefit2}</span>
                             </p>
 
+                            {/* AI-SEO Definition Block for Search Engines/LLMs */}
+                            <div className="sr-only" aria-hidden="true">
+                                {content.definition}
+                            </div>
+
                             <div className="mt-12 space-y-6">
                                 <h3 className="text-candy-pink uppercase tracking-widest text-xs font-black">Expert Creation Tips</h3>
                                 {content.tips.map((tip: string, i: number) => (
@@ -208,6 +213,19 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                             <div className="w-1.5 h-1.5 rounded-full bg-candy-pink" />
                                         </div>
                                         <p className="text-foreground font-bold italic">{tip}</p>
+                                    </div>
+                                ))}
+                            </div>
+
+                            <div className="mt-12 pt-8 border-t-2 border-foreground/5 grid grid-cols-2 gap-6">
+                                {content.stats?.map((stat: string, i: number) => (
+                                    <div key={i} className="space-y-1">
+                                        <div className="text-candy-pink">
+                                            <Check size={16} className="stroke-[4px]" />
+                                        </div>
+                                        <p className="text-sm font-black uppercase tracking-tight leading-tight">
+                                            {stat}
+                                        </p>
                                     </div>
                                 ))}
                             </div>
@@ -238,6 +256,21 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                     >
                         LAUNCH STUDIO <ArrowRight size={28} />
                     </Link>
+
+                    <div className="mt-20 pt-12 border-t-2 border-foreground/5 text-left">
+                        <h3 className="font-display text-2xl uppercase mb-8">Related {primaryItem?.title} Studios</h3>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            {(engine1 ? INDUSTRIES : engine1 ? STYLES : INDUSTRIES).slice(0, 12).map((item) => (
+                                <Link
+                                    key={item.slug}
+                                    href={`/mascot-maker/${part1}/${item.slug}`}
+                                    className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors"
+                                >
+                                    • {primaryItem?.title} for {item.title}
+                                </Link>
+                            ))}
+                        </div>
+                    </div>
 
                     <div className="mt-20 pt-12 border-t-2 border-foreground/5">
                         <ExploreLinks />
