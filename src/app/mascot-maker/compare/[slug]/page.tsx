@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Check, X, Sparkles, ArrowRight, ShieldCheck, Zap, Layers } from "lucide-react";
+import { ExploreLinks } from "@/components/explore-links";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -206,6 +207,8 @@ export default async function ComparisonPage({ params }: PageProps) {
                     GET STARTED FREE <ArrowRight size={28} />
                 </Link>
             </section>
+
+            <ExploreLinks />
         </div>
     );
 }

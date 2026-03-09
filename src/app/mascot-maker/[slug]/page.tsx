@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, Palette, Check, ArrowRight, Layers, Clapperboard, Monitor } from "lucide-react";
 import { Icon3D } from "@/components/ui/icon-3d";
+import { ExploreLinks } from "@/components/explore-links";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -315,16 +316,8 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                         LAUNCH STUDIO <ArrowRight size={28} />
                     </Link>
 
-                    {/* Related Discovery */}
                     <div className="mt-20 pt-12 border-t-2 border-foreground/5">
-                        <p className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-muted-foreground">Explore Related Categories</p>
-                        <div className="flex flex-wrap justify-center gap-3">
-                            {ENGINES.filter(e => e.slug !== slug).map((eng) => (
-                                <Link key={eng.slug} href={`/mascot-maker/${eng.slug}`} className="px-6 py-2 rounded-xl border-2 border-foreground hover:bg-cream transition-colors text-xs font-black uppercase tracking-widest">
-                                    {eng.title}
-                                </Link>
-                            ))}
-                        </div>
+                        <ExploreLinks />
                     </div>
                 </div>
             </section>

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, MapPin, Check, Camera, Monitor, Zap } from "lucide-react";
+import { ExploreLinks } from "@/components/explore-links";
 
 interface PageProps {
     params: Promise<{ city: string }>;
@@ -213,14 +214,7 @@ export default async function LocationPage({ params }: PageProps) {
 
                     {/* Geo-Network Linking */}
                     <div className="mt-20 pt-12 border-t-2 border-foreground/5">
-                        <p className="text-xs font-black uppercase tracking-[0.2em] mb-6 text-muted-foreground">Nearby Creative Hubs</p>
-                        <div className="flex flex-wrap justify-center gap-3">
-                            {LOCATIONS.filter(l => l.slug !== city).slice(0, 4).map((loc) => (
-                                <Link key={loc.slug} href={`/mascot-maker/near/${loc.slug}`} className="px-6 py-2 rounded-xl border-2 border-foreground hover:bg-cream transition-colors text-xs font-black uppercase tracking-widest">
-                                    Studio in {loc.name}
-                                </Link>
-                            ))}
-                        </div>
+                        <ExploreLinks />
                     </div>
                 </div>
             </section>

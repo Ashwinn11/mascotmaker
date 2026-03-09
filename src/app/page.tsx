@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
 import Image from "next/image";
 import { Sparkles, Palette, Clapperboard, Check, Zap, Play, Layers } from "lucide-react";
+import { ExploreLinks } from "@/components/explore-links";
 
 const EXAMPLES = [
   "Flat Minimalist Logo",
@@ -356,67 +357,9 @@ export default function Home() {
         {/* Decorative Lines */}
         <div className="absolute top-0 right-0 w-1/3 h-full border-l-4 border-foreground/5 skew-x-[-15deg] pointer-events-none" />
       </section>
+
       {/* ─── Footer SEO Links ─── */}
-      <section className="py-20 bg-cream/50 border-t-4 border-foreground">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-12">
-            <div>
-              <h5 className="font-display text-xl mb-6 uppercase">Engines</h5>
-              <ul className="space-y-3">
-                <li><Link href="/mascot-maker/character-generator" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Character Gen</Link></li>
-                <li><Link href="/mascot-maker/story-studio" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Story Studio</Link></li>
-                <li><Link href="/mascot-maker/mix-studio" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Mix Studio</Link></li>
-                <li><Link href="/mascot-maker/icon-generator" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Icon Maker</Link></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-display text-xl mb-6 uppercase">Industries</h5>
-              <ul className="space-y-3">
-                {["SaaS", "Discord", "Gaming", "E-commerce"].map((name) => (
-                  <li key={name}>
-                    <Link href={`/mascot-maker/${name.toLowerCase().replace(' ', '-')}`} className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">
-                      {name} Assets
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-display text-xl mb-6 uppercase">Styles</h5>
-              <ul className="space-y-3">
-                {["3D Pixar", "Claymation", "Minimalist", "Vector Art"].map((name) => (
-                  <li key={name}>
-                    <Link href={`/mascot-maker/${name.toLowerCase().replace(' ', '-')}`} className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">
-                      {name} Style
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-display text-xl mb-6 uppercase">Locations</h5>
-              <ul className="space-y-3">
-                {["New York", "London", "Tokyo", "Austin"].map((name) => (
-                  <li key={name}>
-                    <Link href={`/mascot-maker/near/${name.toLowerCase().replace(' ', '-')}`} className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">
-                      Studio in {name}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h5 className="font-display text-xl mb-6 uppercase">Company</h5>
-              <ul className="space-y-3">
-                <li><Link href="/gallery" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Gallery</Link></li>
-                <li><Link href="/create" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Create</Link></li>
-                <li><Link href="/privacy" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Privacy</Link></li>
-                <li><Link href="/terms" className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors">Terms</Link></li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+      <ExploreLinks />
     </div>
   );
 }
