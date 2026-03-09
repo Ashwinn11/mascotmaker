@@ -249,6 +249,12 @@ export const COMPETITORS = [
     { slug: "leonardo-ai", name: "Leonardo.ai", type: "AI Creative Suite", strength: "Fine-tuned models", weakness: "Complexity" },
     { slug: "adobe-firefly", name: "Adobe Firefly", type: "Enterprise AI", strength: "Integration with Creative Cloud", weakness: "Commercial restrictions" },
 ];
+export function slugify(text: string) {
+    return text
+        .toLowerCase()
+        .replace(/[^\w ]+/g, "")
+        .replace(/ +/g, "-");
+}
 
 export function getSEOContent(category?: string, location?: string) {
     const catText = category ? category.toLowerCase() : "professional brand assets";

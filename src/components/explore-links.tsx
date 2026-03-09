@@ -12,13 +12,13 @@ export function ExploreLinks() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-                    <div className="space-y-4">
-                        <h4 className="font-black uppercase tracking-widest text-sm text-candy-pink border-b-2 border-candy-pink/20 pb-2">Engines</h4>
-                        <ul className="space-y-2 text-sm font-bold text-muted-foreground">
-                            {ENGINES.map((e) => (
+                <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-12">
+                    <div className="space-y-6">
+                        <h4 className="font-black uppercase tracking-widest text-xs text-candy-pink border-b-2 border-candy-pink/10 pb-3">Engines</h4>
+                        <ul className="space-y-3 text-sm font-bold text-muted-foreground">
+                            {ENGINES.slice(0, 6).map((e) => (
                                 <li key={e.slug}>
-                                    <Link href={`/mascot-maker/${e.slug}`} className="hover:text-foreground transition-colors">
+                                    <Link href={`/mascot-maker/${e.slug}`} className="hover:text-foreground transition-all hover:pl-1">
                                         {e.title}
                                     </Link>
                                 </li>
@@ -26,12 +26,12 @@ export function ExploreLinks() {
                         </ul>
                     </div>
 
-                    <div className="space-y-4">
-                        <h4 className="font-black uppercase tracking-widest text-sm text-candy-blue border-b-2 border-candy-blue/20 pb-2">Industries</h4>
-                        <ul className="space-y-2 text-sm font-bold text-muted-foreground">
-                            {INDUSTRIES.map((i) => (
+                    <div className="space-y-6">
+                        <h4 className="font-black uppercase tracking-widest text-xs text-candy-blue border-b-2 border-candy-blue/10 pb-3">Industries</h4>
+                        <ul className="space-y-3 text-sm font-bold text-muted-foreground">
+                            {INDUSTRIES.slice(0, 6).map((i) => (
                                 <li key={i.slug}>
-                                    <Link href={`/mascot-maker/${i.slug}`} className="hover:text-foreground transition-colors">
+                                    <Link href={`/mascot-maker/${i.slug}`} className="hover:text-foreground transition-all hover:pl-1">
                                         {i.title} Assets
                                     </Link>
                                 </li>
@@ -39,12 +39,12 @@ export function ExploreLinks() {
                         </ul>
                     </div>
 
-                    <div className="space-y-4">
-                        <h4 className="font-black uppercase tracking-widest text-sm text-candy-green border-b-2 border-candy-green/20 pb-2">Art Styles</h4>
-                        <ul className="space-y-2 text-sm font-bold text-muted-foreground">
-                            {STYLES.map((s) => (
+                    <div className="space-y-6">
+                        <h4 className="font-black uppercase tracking-widest text-xs text-candy-green border-b-2 border-candy-green/10 pb-3">Art Styles</h4>
+                        <ul className="space-y-3 text-sm font-bold text-muted-foreground">
+                            {STYLES.slice(0, 6).map((s) => (
                                 <li key={s.slug}>
-                                    <Link href={`/mascot-maker/${s.slug}`} className="hover:text-foreground transition-colors">
+                                    <Link href={`/mascot-maker/${s.slug}`} className="hover:text-foreground transition-all hover:pl-1">
                                         {s.title} Design
                                     </Link>
                                 </li>
@@ -52,31 +52,34 @@ export function ExploreLinks() {
                         </ul>
                     </div>
 
-                    <div className="space-y-4">
-                        <h4 className="font-black uppercase tracking-widest text-sm text-candy-yellow border-b-2 border-candy-yellow/20 pb-2">Locations</h4>
-                        <div className="max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
-                            <ul className="space-y-2 text-sm font-bold text-muted-foreground">
-                                {LOCATIONS.map((l) => (
-                                    <li key={l.slug}>
-                                        <Link href={`/mascot-maker/near/${l.slug}`} className="hover:text-foreground transition-colors">
-                                            Studio in {l.name}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div className="space-y-4">
-                        <h4 className="font-black uppercase tracking-widest text-sm text-foreground/50 border-b-2 border-foreground/10 pb-2">Compare</h4>
-                        <ul className="space-y-2 text-sm font-bold text-muted-foreground">
-                            {COMPETITORS.map((c) => (
-                                <li key={c.slug}>
-                                    <Link href={`/mascot-maker/compare/${c.slug}`} className="hover:text-foreground transition-colors">
-                                        Mascot Maker vs {c.name}
+                    <div className="space-y-6">
+                        <h4 className="font-black uppercase tracking-widest text-xs text-candy-yellow border-b-2 border-candy-yellow/10 pb-3">Global Studios</h4>
+                        <ul className="space-y-3 text-sm font-bold text-muted-foreground">
+                            {LOCATIONS.slice(0, 6).map((l) => (
+                                <li key={l.slug}>
+                                    <Link href={`/mascot-maker/near/${l.slug}`} className="hover:text-foreground transition-all hover:pl-1">
+                                        Studio in {l.name}
                                     </Link>
                                 </li>
                             ))}
+                        </ul>
+                    </div>
+
+                    <div className="space-y-6">
+                        <h4 className="font-black uppercase tracking-widest text-xs text-foreground/30 border-b-2 border-foreground/5 pb-3">Resources</h4>
+                        <ul className="space-y-3 text-sm font-bold text-muted-foreground">
+                            {COMPETITORS.slice(0, 3).map((c) => (
+                                <li key={c.slug}>
+                                    <Link href={`/mascot-maker/compare/${c.slug}`} className="hover:text-foreground transition-all">
+                                        vs {c.name}
+                                    </Link>
+                                </li>
+                            ))}
+                            <li>
+                                <Link href="/explore" className="text-candy-pink hover:underline uppercase text-[10px] font-black tracking-tighter">
+                                    View Full Index →
+                                </Link>
+                            </li>
                         </ul>
                     </div>
                 </div>
