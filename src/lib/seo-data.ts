@@ -121,11 +121,8 @@ export const LOCATIONS = [
     { slug: "warsaw", name: "Warsaw", country: "Poland" },
     { slug: "prague", name: "Prague", country: "Czech Republic" },
     { slug: "istanbul", name: "Istanbul", country: "Turkey" },
-    { slug: "madrid", name: "Madrid", country: "Spain" },
-    { slug: "barcelona", name: "Barcelona", country: "Spain" },
     { slug: "bangkok", name: "Bangkok", country: "Thailand" },
     { slug: "hong-kong", name: "Hong Kong", country: "China" },
-    { slug: "singapore", name: "Singapore", country: "Singapore" },
     { slug: "kuala-lumpur", name: "Kuala Lumpur", country: "Malaysia" },
     { slug: "jakarta", name: "Jakarta", country: "Indonesia" },
     { slug: "manila", name: "Manila", country: "Philippines" },
@@ -135,9 +132,7 @@ export const LOCATIONS = [
     { slug: "shanghai", name: "Shanghai", country: "China" },
     { slug: "guangzhou", name: "Guangzhou", country: "China" },
     { slug: "shenzhen", name: "Shenzhen", country: "China" },
-    { slug: "mumbai", name: "Mumbai", country: "India" },
     { slug: "delhi", name: "Delhi", country: "India" },
-    { slug: "bangalore", name: "Bangalore", country: "India" },
     { slug: "chennai", name: "Chennai", country: "India" },
     { slug: "hyderabad", name: "Hyderabad", country: "India" },
     { slug: "pune", name: "Pune", country: "India" },
@@ -145,21 +140,16 @@ export const LOCATIONS = [
     { slug: "karachi", name: "Karachi", country: "Pakistan" },
     { slug: "lahore", name: "Lahore", country: "Pakistan" },
     { slug: "dhaka", name: "Dhaka", country: "Bangladesh" },
-    { slug: "dubai", name: "Dubai", country: "UAE" },
     { slug: "abu-dhabi", name: "Abu Dhabi", country: "UAE" },
     { slug: "riyadh", name: "Riyadh", country: "Saudi Arabia" },
     { slug: "jeddah", name: "Jeddah", country: "Saudi Arabia" },
-    { slug: "tel-aviv", name: "Tel Aviv", country: "Israel" },
     { slug: "cairo", name: "Cairo", country: "Egypt" },
     { slug: "lagos", name: "Lagos", country: "Nigeria" },
     { slug: "nairobi", name: "Nairobi", country: "Kenya" },
     { slug: "johannesburg", name: "Johannesburg", country: "South Africa" },
-    { slug: "cape-town", name: "Cape Town", country: "South Africa" },
     { slug: "casablanca", name: "Casablanca", country: "Morocco" },
-    { slug: "mexico-city", name: "Mexico City", country: "Mexico" },
     { slug: "guadalajara", name: "Guadalajara", country: "Mexico" },
     { slug: "monterrey", name: "Monterrey", country: "Mexico" },
-    { slug: "sao-paulo", name: "Sao Paulo", country: "Brazil" },
     { slug: "rio-de-janeiro", name: "Rio de Janeiro", country: "Brazil" },
     { slug: "buenos-aires", name: "Buenos Aires", country: "Argentina" },
     { slug: "santiago", name: "Santiago", country: "Chile" },
@@ -192,11 +182,9 @@ export const LOCATIONS = [
     { slug: "kansas-city", name: "Kansas City", country: "USA" },
     { slug: "mesa", name: "Mesa", country: "USA" },
     { slug: "virginia-beach", name: "Virginia Beach", country: "USA" },
-    { slug: "atlanta", name: "Atlanta", country: "USA" },
     { slug: "colorado-springs", name: "Colorado Springs", country: "USA" },
     { slug: "raleigh", name: "Raleigh", country: "USA" },
     { slug: "omaha", name: "Omaha", country: "USA" },
-    { slug: "miami", name: "Miami", country: "USA" },
     { slug: "oakland", name: "Oakland", country: "USA" },
     { slug: "tulsa", name: "Tulsa", country: "USA" },
     { slug: "minneapolis", name: "Minneapolis", country: "USA" },
@@ -261,3 +249,32 @@ export const COMPETITORS = [
     { slug: "leonardo-ai", name: "Leonardo.ai", type: "AI Creative Suite", strength: "Fine-tuned models", weakness: "Complexity" },
     { slug: "adobe-firefly", name: "Adobe Firefly", type: "Enterprise AI", strength: "Integration with Creative Cloud", weakness: "Commercial restrictions" },
 ];
+
+export function getSEOContent(category?: string, location?: string) {
+    const catText = category ? category.toLowerCase() : "professional brand assets";
+
+    const tips: string[] = [];
+    if (category?.includes("Mascot") || category?.includes("Character")) {
+        tips.push("Focus on eye contact and facial expressions to build an emotional connection with your audience.");
+        tips.push("Ensure your character remains consistent across different poses for recognizable brand DNA.");
+    }
+    if (category?.includes("Icon") || category?.includes("Logo")) {
+        tips.push("Simplify details so your icon remains legible even at small sizes like 16x16 pixels.");
+        tips.push("Use bold, contrasting colors to help your app stand out on crowded home screens.");
+    }
+    if (category?.includes("Story")) {
+        tips.push("Maintain color palette and character features across all 8 frames for a cinematic feel.");
+    }
+
+    if (tips.length === 0) {
+        tips.push("Leverage AI to test multiple style variations before committing to a final brand guide.");
+        tips.push("Export your assets in high-resolution formats to ensure clarity across all digital platforms.");
+    }
+
+    return {
+        intro: `Generate world-class ${catText} in seconds. Our AI-powered studio is calibrated for professional designers who need identity consistency and cinematic quality${location ? ` in ${location}` : ""}.`,
+        benefit1: `For ${location || "modern brands"}, our identity-lock technology prevents character drift, ensuring your mascot looks perfect every time.`,
+        benefit2: `Achieve studio-grade results without the studio-grade cost. Ideal for ${location ? `${location}-based startups` : "high-growth companies"} looking to scale their visual production.`,
+        tips
+    };
+}

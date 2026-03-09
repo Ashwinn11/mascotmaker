@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { INDUSTRIES, STYLES, ENGINES } from "@/lib/seo-data";
+import { INDUSTRIES, STYLES, ENGINES, getSEOContent } from "@/lib/seo-data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -65,9 +65,10 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
         notFound();
     }
 
+    const content = getSEOContent(item.title);
+
     const isStory = slug.includes("story") || slug.includes("narrative");
     const isMix = slug.includes("mix") || slug.includes("ad") || slug.includes("product");
-    const isIcon = slug.includes("icon") || slug.includes("logo");
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -87,6 +88,16 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             "Mix Studio Product Ads",
             "Icon & Logo Creation"
         ]
+    };
+
+    const faqSchema = {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": content.tips.map((tip: string, i: number) => ({
+            "@type": "Question",
+            "name": `Pro Tip #${i + 1} for ${item.title}`,
+            "acceptedAnswer": { "@type": "Answer", "text": tip }
+        }))
     };
 
     const breadcrumbJsonLd = {
@@ -116,14 +127,9 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
 
     return (
         <div className="bg-cream min-h-screen">
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }}
-            />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 overflow-hidden bg-white border-b-4 border-foreground">
@@ -139,7 +145,6 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 {item.title} <br /><span className="text-gradient">for Professionals.</span>
                             </h1>
 
-                            {/* E-E-A-T Signals */}
                             <div className="flex items-center gap-4 mb-8 text-sm font-bold text-muted-foreground">
                                 <div className="flex items-center gap-2">
                                     <div className="w-6 h-6 rounded-full bg-candy-pink flex items-center justify-center text-[10px] text-white">AM</div>
@@ -150,7 +155,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                             </div>
 
                             <p className="text-2xl text-muted-foreground font-bold leading-relaxed mb-10 max-w-xl">
-                                {item.description} Our specialized AI workflows handle everything from character design to cinematic storyboards. <span className="text-candy-pink">Tested and verified by our in-house creative team for commercial production.</span>
+                                {item.description} {content.intro}
                             </p>
 
                             <div className="flex flex-col sm:flex-row gap-4">
@@ -178,15 +183,10 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     width={600}
                                     height={600}
                                     priority={true}
-                                    // @ts-ignore - fetchpriority is a valid experimental attribute in modern browsers and handled by Next.js in future versions
+                                    // @ts-ignore
                                     fetchpriority="high"
                                     className="w-full h-auto object-cover p-4"
                                 />
-                            </div>
-                            <div className="absolute -bottom-10 -right-10 animate-float">
-                                <div className={`w-28 h-28 rounded-3xl border-4 border-foreground ${isMix ? 'bg-candy-green' : isStory ? 'bg-candy-blue' : 'bg-candy-yellow'} flex items-center justify-center shadow-[8px_8px_0_#2d2420] rotate-[12deg]`}>
-                                    {isMix ? <Layers size={48} className="text-white" /> : isStory ? <Clapperboard size={48} className="text-white" /> : <Icon3D name="sparkles" size="xl" />}
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -202,31 +202,48 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 UNLOCK THE <br /><span className="text-candy-pink">FULL WORKFLOW.</span>
                             </h2>
                             <p className="text-2xl text-muted-foreground font-bold">
-                                Whether you need high-fidelity 3D characters, pixel-perfect icons, or 8-frame storyboards, our AI keeps your brand DNA intact. <span className="italic underline decoration-candy-yellow">Every engine is calibrated in our Austin studio for maximum fidelity.</span>
+                                {content.benefit1} <span className="italic underline decoration-candy-yellow">{content.benefit2}</span>
                             </p>
-                            <ul className="space-y-4">
-                                {["Identity Consistency", "Cinematic Quality", "Commercial Rights", "Studio-Tested Prompts"].map((check, i) => (
-                                    <li key={i} className="flex items-center gap-4 text-xl font-black uppercase tracking-tight">
-                                        <div className="w-8 h-8 rounded-lg bg-white border-3 border-foreground flex items-center justify-center">
-                                            <Check size={18} className="text-candy-green stroke-[4px]" />
+
+                            <div className="mt-12 space-y-6">
+                                <h3 className="text-candy-pink uppercase tracking-widest text-xs font-black">Expert Creation Tips</h3>
+                                {content.tips.map((tip: string, i: number) => (
+                                    <div key={i} className="flex gap-4 items-start">
+                                        <div className="w-6 h-6 rounded-full border-2 border-candy-pink/30 flex items-center justify-center shrink-0 mt-1">
+                                            <div className="w-1.5 h-1.5 rounded-full bg-candy-pink" />
                                         </div>
-                                        {check}
-                                    </li>
+                                        <p className="text-foreground font-bold italic">{tip}</p>
+                                    </div>
                                 ))}
-                            </ul>
+                            </div>
                         </div>
-                        <div className="relative rounded-[3rem] border-4 border-foreground overflow-hidden shadow-[12px_12px_0_#2d2420]">
-                            <Image
-                                src="/demo/style-showcase.webp"
-                                alt={`${item.title} Portfolio Showcase`}
-                                width={800}
-                                height={800}
-                                className="w-full h-auto"
-                                // @ts-ignore
-                                decoding="async"
-                                loading="lazy"
-                            />
-                        </div>
+                        <ul className="space-y-4">
+                            {["Identity Consistency", "Cinematic Quality", "Commercial Rights", "Studio-Tested Prompts"].map((check, i) => (
+                                <li key={i} className="flex items-center gap-4 text-xl font-black uppercase tracking-tight">
+                                    <div className="w-8 h-8 rounded-lg bg-white border-3 border-foreground flex items-center justify-center">
+                                        <Check size={18} className="text-candy-green stroke-[4px]" />
+                                    </div>
+                                    {check}
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section className="py-20 bg-cream">
+                <div className="mx-auto max-w-7xl px-6">
+                    <div className="relative rounded-[3rem] border-4 border-foreground overflow-hidden shadow-[12px_12px_0_#2d2420]">
+                        <Image
+                            src="/demo/style-showcase.webp"
+                            alt={`${item.title} Portfolio Showcase`}
+                            width={800}
+                            height={800}
+                            className="w-full h-auto"
+                            // @ts-ignore
+                            decoding="async"
+                            loading="lazy"
+                        />
                     </div>
 
                     {/* WHY SECTION (Competitor Targeting) */}
@@ -311,6 +328,6 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                     </div>
                 </div>
             </section>
-        </div>
+        </div >
     );
 }
