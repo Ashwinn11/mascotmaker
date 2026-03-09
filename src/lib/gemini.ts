@@ -3,8 +3,6 @@ import fs from "fs";
 import path from "path";
 
 const MODEL_ID = "gemini-3.1-flash-image-preview";
-const SPRITE_MODEL_ID = "gemini-3.1-flash-image-preview";
-
 let _ai: GoogleGenAI | null = null;
 function getAI(): GoogleGenAI {
   if (!_ai) {
@@ -32,27 +30,12 @@ export interface GeminiResult<T> {
 
 export interface ImageOptions {
   aspectRatio?: string;
-  imageSize?: "512px" | "1K" | "2K" | "4K";
-  thinkingLevel?: "Minimal" | "High";
-  useSearch?: boolean;
+  imageSize?: "1K";
   style?: string;
-  subjectType?: "Character" | "Object" | "Logo" | "Scene";
+  subjectType?: "Character" | "Sticker" | "Logo";
 }
 
 export async function generateImage(prompt: string, options: ImageOptions = {}): Promise<GeminiResult<string[]>> {
-  const tools = options.useSearch
-    ? [
-      {
-        googleSearch: {
-          searchTypes: {
-            webSearch: {},
-            imageSearch: {},
-          },
-        },
-      } as any,
-    ]
-    : undefined;
-
   const response = await getAI().models.generateContent({
     model: MODEL_ID,
     contents: [{ role: "user", parts: [{ text: prompt }] }],
@@ -62,13 +45,6 @@ export async function generateImage(prompt: string, options: ImageOptions = {}):
         aspectRatio: options.aspectRatio || "1:1",
         imageSize: options.imageSize || "1K",
       },
-      thinkingConfig: options.thinkingLevel
-        ? {
-          thinkingLevel: options.thinkingLevel,
-          includeThoughts: true,
-        }
-        : undefined,
-      tools,
       maxOutputTokens: 8192,
     } as any,
   });
@@ -87,19 +63,6 @@ export async function editImage(
   imageBase64: string,
   options: ImageOptions = {}
 ): Promise<GeminiResult<string>> {
-  const tools = options.useSearch
-    ? [
-      {
-        googleSearch: {
-          searchTypes: {
-            webSearch: {},
-            imageSearch: {},
-          },
-        },
-      } as any,
-    ]
-    : undefined;
-
   const response = await getAI().models.generateContent({
     model: MODEL_ID,
     contents: [
@@ -117,13 +80,6 @@ export async function editImage(
         aspectRatio: options.aspectRatio || "1:1",
         imageSize: options.imageSize || "1K",
       },
-      thinkingConfig: options.thinkingLevel
-        ? {
-          thinkingLevel: options.thinkingLevel,
-          includeThoughts: true,
-        }
-        : undefined,
-      tools,
       maxOutputTokens: 8192,
     } as any,
   });
@@ -179,13 +135,11 @@ export async function stylizeImage(
 
   if (options.subjectType === "Character") {
     fullPrompt = `Transform this image into a ${characterStyle}. ${analysisContext} ${prompt}. Keep the subject recognizable. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
-  } else if (options.subjectType === "Object") {
-    fullPrompt = `Transform this image into a ${characterStyle} showing only this object: ${prompt}. ${analysisContext} Isolated on a plain white background. Show the complete object clearly.`;
-  } else if (options.subjectType === "Logo") {
-    fullPrompt = `Transform this image into a ${characterStyle} logo: ${prompt}. ${analysisContext} Minimalist vector style, clean lines, isolated on a plain white background.`;
+  } else if (options.subjectType === "Sticker") {
+    fullPrompt = `Transform this image into a single sticker in the distinct ${characterStyle} style: ${prompt}. ${analysisContext} Bold, thick black outlines. Flat color palette. Clean white border around the subject. Isolated on a plain white background.`;
   } else {
-    // Scene or default
-    fullPrompt = `Transform this image into a ${characterStyle} scene: ${prompt}. ${analysisContext} High quality, professional composition. Maintain the spirit and key elements of the original image.`;
+    // Logo or default
+    fullPrompt = `Transform this image into a ${characterStyle} logo: ${prompt}. ${analysisContext} Minimalist vector style, clean lines, isolated on a plain white background.`;
   }
 
   return editImage(fullPrompt, imageBase64, options);
@@ -196,23 +150,22 @@ export async function generateSpriteSheet(
   action: string,
   description?: string
 ): Promise<GeminiResult<string>> {
-  const gridImagePath = path.join(process.cwd(), "public", "grid_3x3_1024.png");
+  const gridImagePath = path.join(process.cwd(), "public", "grid_3x3_1024_white.png");
   const gridImageBase64 = fs.readFileSync(gridImagePath).toString("base64");
 
   const characterContext = description
     ? `This character is: ${description}. `
     : "";
-  const prompt = `${characterContext}Sprite sheet of this character ${action}, 3x3 grid, sequence, frame by frame animation, square aspect ratio. Isolated on a plain white background. Each frame must show the full body from head to feet. Follow the structure of the attached reference image exactly.`;
+  const prompt = `${characterContext}Sprite sheet of this character ${action}, sequence, frame by frame animation, exactly 3 rows and 3 columns on a pure, continuous plain white background. IMPORTANT: Do NOT draw any separator lines, boxes, borders, or grid patterns between the frames. The background must be completely blank. Each frame must show the full body from head to feet.`;
 
   const response = await getAI().models.generateContent({
-    model: SPRITE_MODEL_ID,
+    model: MODEL_ID,
     contents: [
       {
         role: "user",
         parts: [
           { text: prompt },
           { inlineData: { mimeType: "image/png", data: mascotImageBase64 } },
-          { inlineData: { mimeType: "image/png", data: gridImageBase64 } },
         ],
       },
     ],

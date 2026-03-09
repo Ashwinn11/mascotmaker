@@ -20,11 +20,8 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
   const [stylePrompt, setStylePrompt] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [subjectType, setSubjectType] = useState<"Character" | "Sticker" | "Logo">("Character");
   const [aspectRatio, setAspectRatio] = useState("1:1");
-  const [imageSize, setImageSize] = useState("1K");
-  const [thinkingLevel, setThinkingLevel] = useState<"Minimal" | "High">("Minimal");
-  const [useSearch, setUseSearch] = useState(false);
-  const [subjectType, setSubjectType] = useState<"Character" | "Sticker" | "Object" | "Logo" | "Scene">("Character");
   const [studioMode, setStudioMode] = useState<"Single" | "Story" | "Composite">("Single");
   const [mounted, setMounted] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -57,13 +54,12 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           prompt: prompt.trim(),
-          aspectRatio,
-          imageSize,
-          thinkingLevel,
-          useSearch,
+          aspectRatio: studioMode === "Single" ? "1:1" : aspectRatio,
+          imageSize: "1K",
           style: currentStyle.prompt,
           subjectType,
-          studioMode
+          studioMode,
+          removeBackground: subjectType === "Sticker"
         }),
       });
       const data = await res.json();
@@ -90,12 +86,11 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
       const formData = new FormData();
       formData.append("image", file);
       formData.append("prompt", stylePrompt);
-      formData.append("aspectRatio", aspectRatio);
-      formData.append("imageSize", imageSize);
-      formData.append("thinkingLevel", thinkingLevel);
-      formData.append("useSearch", useSearch.toString());
+      formData.append("aspectRatio", studioMode === "Single" ? "1:1" : aspectRatio);
+      formData.append("imageSize", "1K");
       formData.append("style", currentStyle.prompt);
       formData.append("subjectType", subjectType);
+      formData.append("removeBackground", (subjectType === "Sticker").toString());
       const res = await fetch("/api/stylize", { method: "POST", body: formData });
       const data = await res.json();
       if (!res.ok) {
@@ -120,32 +115,14 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
     if (dropped?.type.startsWith("image/")) setFile(dropped);
   };
 
-  const suggestions = [
-    "Panda DJ with turntables",
-    "Cactus with sneakers",
-    "Dragon barista",
-    "Cloud cat on rainbow",
-  ];
 
-  // Cost calculator based on all options
   // Cost calculator based on all options
   const calculateCost = () => {
     let baseCost = 5;
     if (studioMode === "Story") baseCost = 40;
     else if (studioMode === "Composite") baseCost = 15;
 
-    let extras = 0;
-    if (imageSize === "2K") extras += 5;
-    else if (imageSize === "4K") extras += 15;
-    else if (imageSize === "512px") extras -= 2;
-
-    if (thinkingLevel === "High") extras += 5;
-    if (useSearch) extras += 10;
-    if (subjectType === "Sticker") extras += 3;
-
-    // For Story Mode, extras are applied per session (or could be per frame, 
-    // but for now we'll keep it as a session premium to keep it accessible)
-    return baseCost + extras;
+    return baseCost;
   };
 
   return (
@@ -248,35 +225,23 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
       </div>
 
       {/* Dashboard Controls (Always Exposed) */}
-      <div className="grid grid-cols-2 gap-4 rounded-[2rem] border-2 border-border bg-muted/20 p-5">
-        <div className="space-y-1.5">
-          <label className="text-[9px] font-black uppercase tracking-wider text-candy-pink bg-candy-pink/10 px-2 py-1 rounded-md mb-1 inline-block">Aspect Ratio</label>
-          <select
-            value={aspectRatio}
-            onChange={(e) => setAspectRatio(e.target.value)}
-            className="w-full rounded-xl border-2 border-border bg-white px-3 py-1.5 text-xs font-bold focus:border-candy-pink focus:outline-none"
-          >
-            {["1:1", "16:9", "9:16", "21:9", "4:3", "3:4", "3:2", "2:3"].map(r => (
-              <option key={r} value={r}>{r}</option>
-            ))}
-          </select>
-        </div>
+      <div className={`grid gap-4 rounded-[2rem] border-2 border-border bg-muted/20 p-5 ${studioMode === "Single" ? "grid-cols-1 max-w-xs mx-auto text-center" : "grid-cols-2"}`}>
+        {studioMode !== "Single" && (
+          <div className="space-y-1.5 text-left">
+            <label className="text-[9px] font-black uppercase tracking-wider text-candy-pink bg-candy-pink/10 px-2 py-1 rounded-md mb-1 inline-block">Aspect Ratio</label>
+            <select
+              value={aspectRatio}
+              onChange={(e) => setAspectRatio(e.target.value)}
+              className="w-full rounded-xl border-2 border-border bg-white px-3 py-1.5 text-xs font-bold focus:border-candy-pink focus:outline-none"
+            >
+              {["1:1", "16:9", "9:16", "21:9", "4:3", "3:4", "3:2", "2:3"].map(r => (
+                <option key={r} value={r}>{r}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
-        <div className="space-y-1.5">
-          <label className="text-[9px] font-black uppercase tracking-wider text-candy-blue bg-candy-blue/10 px-2 py-1 rounded-md mb-1 inline-block">Resolution</label>
-          <select
-            value={imageSize}
-            onChange={(e) => setImageSize(e.target.value)}
-            className="w-full rounded-xl border-2 border-border bg-white px-3 py-1.5 text-xs font-bold focus:border-candy-blue focus:outline-none"
-          >
-            <option value="512px">Low-Res</option>
-            <option value="1K">Standard (1K)</option>
-            <option value="2K">High-Res (2K)</option>
-            <option value="4K">Ultra-HD (4K)</option>
-          </select>
-        </div>
-
-        <div className="space-y-1.5">
+        <div className={`space-y-1.5 ${studioMode === "Single" ? "" : "text-left"}`}>
           <label className="text-[9px] font-black uppercase tracking-wider text-candy-purple bg-candy-purple/10 px-2 py-1 rounded-md mb-1 inline-block">Subject</label>
           <select
             value={subjectType}
@@ -285,34 +250,8 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
           >
             <option value="Character">Character</option>
             <option value="Sticker">Pro Sticker</option>
-            <option value="Object">Object/Product</option>
             <option value="Logo">Logo/Icon</option>
-            <option value="Scene">Full Scene</option>
           </select>
-        </div>
-
-        <div className="flex flex-col gap-2 pt-1">
-          <div
-            onClick={() => setThinkingLevel(thinkingLevel === "High" ? "Minimal" : "High")}
-            className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${thinkingLevel === "High" ? "border-candy-pink/40 bg-candy-pink/5" : "border-border bg-white"}`}
-          >
-            <Icon3DInline name="high-voltage" size={14} className={thinkingLevel === "High" ? "text-candy-pink" : "text-muted-foreground"} />
-            <span className="text-[9px] font-black uppercase tracking-tighter">Pro Mode</span>
-            <div className={`h-4 w-7 rounded-full p-0.5 ${thinkingLevel === "High" ? "bg-candy-pink" : "bg-muted-foreground/30"}`}>
-              <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${thinkingLevel === "High" ? "translate-x-3" : "translate-x-0"}`} />
-            </div>
-          </div>
-
-          <div
-            onClick={() => setUseSearch(!useSearch)}
-            className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${useSearch ? "border-candy-blue/40 bg-candy-blue/5" : "border-border bg-white"}`}
-          >
-            <Icon3DInline name="globe" size={14} className={useSearch ? "text-candy-blue" : "text-muted-foreground"} />
-            <span className="text-[9px] font-black uppercase tracking-tighter">Search</span>
-            <div className={`h-4 w-7 rounded-full p-0.5 ${useSearch ? "bg-candy-blue" : "bg-muted-foreground/30"}`}>
-              <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${useSearch ? "translate-x-3" : "translate-x-0"}`} />
-            </div>
-          </div>
         </div>
       </div>
 

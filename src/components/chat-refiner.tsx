@@ -17,8 +17,7 @@ interface ChatRefinerProps {
   // Options inherited from the Create step — not re-asked here
   aspectRatio?: string;
   imageSize?: string;
-  thinkingLevel?: "Minimal" | "High";
-  useSearch?: boolean;
+  removeBackground?: boolean;
   onMascotUpdate: (imageBase64: string, mascotAnalysis?: string) => void;
   onLoadingChange: (loading: boolean) => void;
   onDone: () => void;
@@ -31,8 +30,7 @@ export function ChatRefiner({
   analysis,
   aspectRatio = "1:1",
   imageSize = "1K",
-  thinkingLevel = "Minimal",
-  useSearch = false,
+  removeBackground = false,
   onMascotUpdate,
   onLoadingChange,
   onDone,
@@ -67,8 +65,7 @@ export function ChatRefiner({
           // Inherit options from the Create step
           aspectRatio,
           imageSize,
-          thinkingLevel,
-          useSearch,
+          removeBackground,
         }),
       });
       const data = await res.json();
@@ -113,12 +110,11 @@ export function ChatRefiner({
   // Show current settings inherited from Create step as a subtle info bar
   const settingsLabel = [
     imageSize !== "1K" ? imageSize : null,
-    thinkingLevel === "High" ? "Pro" : null,
-    useSearch ? "Search" : null,
+    removeBackground ? "Transp." : null,
   ].filter(Boolean).join(" · ");
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex flex-1 flex-col">
       <div className="mb-3 flex items-center justify-between gap-2">
         <div>
           <h3 className="font-display text-base md:text-lg text-foreground">Refine</h3>
@@ -178,25 +174,25 @@ export function ChatRefiner({
       </div>
 
       {/* Quick edit chips */}
-      <div className="flex flex-wrap gap-1.5 mb-3">
+      <div className="flex flex-wrap gap-2 mb-4">
         {quickEdits.map((edit) => (
           <button
             key={edit}
             onClick={() => setInput(edit)}
             disabled={loading}
-            className="rounded-full bg-white border-2 border-border px-2 py-0.5 md:px-2.5 md:py-1 text-[10px] md:text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 active:scale-95 disabled:opacity-50"
+            className="rounded-full bg-white border-2 border-border px-3 py-1 text-[10px] md:text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 active:scale-95 disabled:opacity-50"
           >
             {edit}
           </button>
         ))}
       </div>
 
-      <div className="border-t border-border pt-3 mt-auto">
+      <div className="border-t border-border pt-4 mt-auto">
         {/* Cost label — inherits from Create step settings */}
-        <div className="flex items-center justify-center gap-2 mb-2">
+        <div className="flex items-center justify-center gap-2 mb-3">
           <div className="flex-1 h-[1px] bg-border/50" />
-          <div className="flex items-center gap-1 text-[8px] font-bold text-muted-foreground uppercase tracking-widest">
-            <span>Cost: {5 + (imageSize === "2K" ? 5 : imageSize === "4K" ? 15 : imageSize === "512px" ? -2 : 0) + (thinkingLevel === "High" ? 5 : 0) + (useSearch ? 2 : 0)} Cr</span>
+          <div className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
+            <span>Cost: {5 + (imageSize === "2K" ? 5 : imageSize === "4K" ? 15 : imageSize === "512px" ? -2 : 0)} Cr</span>
           </div>
           <div className="flex-1 h-[1px] bg-border/50" />
         </div>

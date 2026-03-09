@@ -17,9 +17,7 @@ export const CREDIT_COSTS: Record<string, number> = {
 
 export type ImageOptions = {
     aspectRatio?: string;
-    imageSize?: "512px" | "1K" | "2K" | "4K";
-    thinkingLevel?: "Minimal" | "High";
-    useSearch?: boolean;
+    imageSize?: "1K";
     subjectType?: string;
     studioMode?: string;
 };
@@ -34,22 +32,7 @@ export function calculateCost(route: string, options?: ImageOptions): number {
 
     if (!options) return baseCost;
 
-    let extras = 0;
-    // Advanced Resolution Multipliers
-    if (options.imageSize === "2K") extras += 5;
-    else if (options.imageSize === "4K") extras += 15;
-    else if (options.imageSize === "512px") extras = -2;
-
-    // High Thinking / Pro Mode
-    if (options.thinkingLevel === "High") extras += 5;
-
-    // Search Grounding
-    if (options.useSearch) extras += 10;
-
-    // Subject Premium
-    if (options.subjectType === "Sticker") extras += 3;
-
-    return Math.max(1, baseCost + extras);
+    return Math.max(1, baseCost);
 }
 
 /**
@@ -101,10 +84,7 @@ export async function deductCredits(
         throw new Error("Insufficient credits");
     }
 
-    let description = `Used ${route}`;
-    if (options?.imageSize === "4K") description += " (4K)";
-    if (options?.thinkingLevel === "High") description += " (Pro)";
-    if (options?.useSearch) description += " (Search)";
+    const description = `Used ${route}`;
 
     await addTransaction({
         userId,

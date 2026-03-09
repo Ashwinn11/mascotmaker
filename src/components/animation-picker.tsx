@@ -13,6 +13,7 @@ interface AnimationPickerProps {
   onLoadingChange: (loading: boolean) => void;
   onApiError: (res: Response, data: Record<string, unknown>) => boolean;
   onCreditsUpdate: (creditsRemaining?: number) => void;
+  removeBackground?: boolean;
 }
 
 const PRESET_ACTIONS: { label: string; icon: FluentIcon3D; color: string }[] = [
@@ -31,6 +32,7 @@ export function AnimationPicker({
   onLoadingChange,
   onApiError,
   onCreditsUpdate,
+  removeBackground = false,
 }: AnimationPickerProps) {
   const [customAction, setCustomAction] = useState("");
   const [activeAction, setActiveAction] = useState<string | null>(null);
@@ -42,7 +44,7 @@ export function AnimationPicker({
       const res = await fetch("/api/animate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mascotBase64, action, description }),
+        body: JSON.stringify({ mascotBase64, action, description, removeBackground }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -98,6 +100,7 @@ export function AnimationPicker({
           </button>
         ))}
       </div>
+
 
       {/* Custom Action */}
       <div className="flex gap-2">

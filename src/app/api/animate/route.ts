@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const check = await requireCredits("animate");
     if (check instanceof Response) return check;
 
-    const { mascotBase64, action, description } = await req.json();
+    const { mascotBase64, action, description, removeBackground: shouldRemoveBackground = false } = await req.json();
     if (!mascotBase64 || !action || typeof action !== "string") {
       return NextResponse.json(
         { error: "mascotBase64 and action are required" },
@@ -24,15 +24,23 @@ export async function POST(req: Request) {
     }
 
     const result = await generateSpriteSheet(mascotBase64, action, description);
+    let spriteData = result.data;
 
-    const spriteBuffer = Buffer.from(result.data, "base64");
+    if (shouldRemoveBackground) {
+      const { removeBackground } = await import("@/lib/background-removal");
+      const buffer = Buffer.from(spriteData, "base64");
+      const transparentBuffer = await removeBackground(buffer);
+      spriteData = transparentBuffer.toString("base64");
+    }
+
+    const spriteBuffer = Buffer.from(spriteData, "base64");
     const animationBuffer = await spriteSheetToGif(spriteBuffer);
     const animationBase64 = animationBuffer.toString("base64");
 
     const creditsRemaining = await deductCredits(check.userId, "animate");
 
     return NextResponse.json({
-      spriteBase64: result.data,
+      spriteBase64: spriteData,
       animationBase64,
       creditsRemaining,
     });

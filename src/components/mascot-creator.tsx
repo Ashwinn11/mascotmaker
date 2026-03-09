@@ -176,11 +176,11 @@ export function MascotCreator() {
   const [animations, setAnimations] = useState<AnimationItem[]>([]);
   const [mascotLoading, setMascotLoading] = useState(false);
   const [confirmReset, setConfirmReset] = useState(false);
+  const [pendingStep, setPendingStep] = useState<MascotStep | null>(null);
   const [createOptions, setCreateOptions] = useState({
     aspectRatio: "1:1",
     imageSize: "1K" as "512px" | "1K" | "2K" | "4K",
-    thinkingLevel: "Minimal" as "Minimal" | "High",
-    useSearch: false,
+    removeBackground: false,
   });
 
   // Story workflow
@@ -210,11 +210,14 @@ export function MascotCreator() {
 
   const handleCreditsUpdate = async () => { await updateSession(); };
 
-  const handleMascotGenerated = (images: string[], newAnalysis?: string, options?: typeof createOptions) => {
+  const handleMascotGenerated = (images: string[], newAnalysis?: string, options?: any) => {
     setMascotImages(images);
     setMascotBase64(images[0]);
     if (newAnalysis) setAnalysis(newAnalysis);
-    if (options) setCreateOptions(options);
+    if (options) setCreateOptions(prev => ({ ...prev, ...options }));
+    setAnimations([]);
+    setStoryFrames([]);
+    setMixResult(null);
     setMascotStep("refine");
   };
 
@@ -222,11 +225,51 @@ export function MascotCreator() {
     setMascotBase64(imageBase64);
     setMascotImages([imageBase64]);
     if (newAnalysis) setAnalysis(newAnalysis);
+    setAnimations([]);
+    setStoryFrames([]);
+    setMixResult(null);
   };
 
   const handleStartOver = () => {
-    setMascotBase64(null); setMascotImages([]); setAnalysis(null);
-    setAnimations([]); setMascotStep("create"); setConfirmReset(false);
+    setPendingStep("create");
+    setConfirmReset(true);
+  };
+
+  const confirmStepChange = () => {
+    if (pendingStep === "create") {
+      setMascotBase64(null); setMascotImages([]); setAnalysis(null);
+      setAnimations([]);
+      setStoryFrames([]);
+      setMixResult(null);
+      setMascotStep("create");
+    } else if (pendingStep === "refine") {
+      setAnimations([]);
+      setStoryFrames([]);
+      setMixResult(null);
+      setMascotStep("refine");
+    }
+    setConfirmReset(false);
+    setPendingStep(null);
+  };
+
+  const handleStepClick = (targetStep: MascotStep) => {
+    if (!canGoToStep(targetStep)) return;
+
+    // Going backward to create clears everything
+    if (targetStep === "create" && mascotBase64) {
+      setPendingStep("create");
+      setConfirmReset(true);
+      return;
+    }
+
+    // Going backward to refine clears animations
+    if (targetStep === "refine" && mascotStep === "animate" && animations.length > 0) {
+      setPendingStep("refine");
+      setConfirmReset(true);
+      return;
+    }
+
+    setMascotStep(targetStep);
   };
 
   const canGoToStep = (step: MascotStep) => step === "create" || !!mascotBase64;
@@ -258,8 +301,8 @@ export function MascotCreator() {
       <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 md:gap-8">
 
         {/* ── RIGHT (now Top on mobile): Studio Panel ── */}
-        <div className={`order-first lg:order-last flex flex-col ${activeTab !== "mascot" ? "w-full lg:max-w-2xl lg:ml-auto" : ""}`}>
-          <div className="rounded-3xl border-2 border-border bg-white/90 p-4 md:p-6 shadow-sm backdrop-blur-md">
+        <div className={`order-first lg:order-last flex flex-col ${activeTab !== "mascot" ? "w-full lg:max-w-2xl lg:ml-auto" : "h-full"}`}>
+          <div className="rounded-3xl border-2 border-border bg-white/90 p-4 md:p-6 shadow-sm backdrop-blur-md flex-1 h-full flex flex-col">
 
             {/* MASCOT */}
             {activeTab === "mascot" && (
@@ -270,7 +313,7 @@ export function MascotCreator() {
                       const isActive = mascotStep === step.key;
                       const isAccessible = canGoToStep(step.key);
                       return (
-                        <button key={step.key} onClick={() => isAccessible && setMascotStep(step.key)}
+                        <button key={step.key} onClick={() => isAccessible && handleStepClick(step.key)}
                           disabled={!isAccessible}
                           className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all ${isActive
                             ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md"
@@ -291,13 +334,15 @@ export function MascotCreator() {
                 {mascotStep === "refine" && mascotBase64 && (
                   <ChatRefiner mascotBase64={mascotBase64} analysis={analysis}
                     aspectRatio={createOptions.aspectRatio} imageSize={createOptions.imageSize}
-                    thinkingLevel={createOptions.thinkingLevel} useSearch={createOptions.useSearch}
+                    removeBackground={createOptions.removeBackground}
                     onMascotUpdate={handleMascotUpdate} onLoadingChange={setMascotLoading}
                     onDone={() => setMascotStep("animate")} {...sharedProps} />
                 )}
+
                 {mascotStep === "animate" && mascotBase64 && (
                   <div className="space-y-4 md:space-y-6">
                     <AnimationPicker mascotBase64={mascotBase64} description={analysis || undefined}
+                      removeBackground={createOptions.removeBackground}
                       onAnimationGenerated={(anim) => setAnimations(prev => [...prev, anim])}
                       onLoadingChange={setMascotLoading} {...sharedProps} />
                     <AnimationPreview animations={animations} mascotBase64={mascotBase64} />
@@ -333,9 +378,10 @@ export function MascotCreator() {
                 images={mascotImages}
                 animations={animations}
                 loading={mascotLoading && mascotStep !== "animate"}
+                removeBackground={createOptions.removeBackground}
               />
               {mascotBase64 && mascotStep !== "create" && (
-                <button onClick={() => setConfirmReset(true)}
+                <button onClick={handleStartOver}
                   className="self-center text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">
                   ← Start over with a new mascot
                 </button>
@@ -353,9 +399,11 @@ export function MascotCreator() {
 
       <PaywallModal open={paywallOpen} onOpenChange={setPaywallOpen} type={paywallType}
         creditsRequired={paywallCreditsRequired} creditsRemaining={session?.user?.credits ?? 0} />
-      <ConfirmDialog open={confirmReset} onOpenChange={setConfirmReset}
-        title="Start Over?" description="Discard current mascot and animations?"
-        confirmText="Start Over" variant="destructive" onConfirm={handleStartOver} />
+      <ConfirmDialog open={confirmReset} onOpenChange={(open) => { setConfirmReset(open); if (!open) setPendingStep(null); }}
+        title={pendingStep === "create" ? "Start Over?" : "Clear Animations?"}
+        description={pendingStep === "create" ? "Discard current mascot and all generated animations, stories, and mixes completely?" : "Going back to refine will discard your current animations and mode results because it modifies the mascot. Continue?"}
+        confirmText={pendingStep === "create" ? "Start Over" : "Clear & Go Back"}
+        variant="destructive" onConfirm={confirmStepChange} />
     </div>
   );
 }

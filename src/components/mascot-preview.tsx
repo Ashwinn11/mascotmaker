@@ -28,6 +28,7 @@ interface MascotPreviewProps {
   images: string[];
   animations: AnimationItem[];
   loading: boolean;
+  removeBackground?: boolean;
 }
 
 function downloadBase64(base64: string, filename: string, mimeType: string = "image/png") {
@@ -55,7 +56,7 @@ const LOADING_MESSAGES = [
   "Almost there...",
 ];
 
-export function MascotPreview({ mascotBase64, images, animations, loading }: MascotPreviewProps) {
+export function MascotPreview({ mascotBase64, images, animations, loading, removeBackground = false }: MascotPreviewProps) {
   const [msgIndex, setMsgIndex] = useState(0);
   const [hoverState, setHoverState] = useState<"gif" | "pack" | "mascot" | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
@@ -167,7 +168,7 @@ export function MascotPreview({ mascotBase64, images, animations, loading }: Mas
 
           <div className="space-y-5 flex flex-col items-center">
             {/* Large Preview */}
-            <div className="relative aspect-square w-full max-w-[400px] overflow-hidden rounded-2xl border-2 border-white bg-white shadow-md">
+            <div className={`relative aspect-square w-full max-w-[400px] overflow-hidden rounded-2xl border-2 border-white shadow-md ${removeBackground ? "bg-checkerboard" : "bg-white"}`}>
               <img
                 src={
                   hoverState === "pack"
@@ -297,7 +298,7 @@ export function MascotPreview({ mascotBase64, images, animations, loading }: Mas
   // Default image view (with gallery support if multiple images)
   return (
     <div className="space-y-4">
-      <div className="relative w-full overflow-hidden rounded-3xl border-4 border-white bg-checkerboard shadow-xl shadow-candy-pink/10 animate-pop-in">
+      <div className={`relative w-full overflow-hidden rounded-3xl border-4 border-white shadow-xl shadow-candy-pink/10 animate-pop-in ${removeBackground ? "bg-checkerboard" : "bg-white"}`}>
         <img
           src={`data:image/png;base64,${currentDisplayImage}`}
           alt="Your mascot"

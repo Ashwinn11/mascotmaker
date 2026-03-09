@@ -21,14 +21,12 @@ const SUBJECT_TYPES = [
     { value: "Character", label: "Character", desc: "Full body mascot, head to feet" },
     { value: "Sticker", label: "Sticker", desc: "Die-cut Pop Art sticker" },
     { value: "Logo", label: "Logo", desc: "Minimalist vector icon" },
-    { value: "Object", label: "Object", desc: "A single product or item" },
-    { value: "Scene", label: "Scene", desc: "A full illustrated scene" },
 ] as const;
 
 type SubjectType = typeof SUBJECT_TYPES[number]["value"];
 
 interface StudioMascotProps {
-    onGenerated: (images: string[], analysis?: string) => void;
+    onGenerated: (images: string[], analysis?: string, options?: any) => void;
     onLoadingChange: (loading: boolean) => void;
     requireAuth: () => boolean;
     onApiError: (res: Response, data: Record<string, unknown>) => boolean;
@@ -52,25 +50,15 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
     const [dragOver, setDragOver] = useState(false);
     const [selectedStyleId, setSelectedStyleId] = useState("chibi");
     const [subjectType, setSubjectType] = useState<SubjectType>("Character");
-    const [aspectRatio, setAspectRatio] = useState("1:1");
-    const [imageSize, setImageSize] = useState("1K");
-    const [thinkingLevel, setThinkingLevel] = useState<"Minimal" | "High">("Minimal");
-    const [useSearch, setUseSearch] = useState(false);
-    const [showAdvanced, setShowAdvanced] = useState(false);
+    const [removeBackground, setRemoveBackground] = useState(false);
     const [result, setResult] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const currentStyle = STYLES.find(s => s.id === selectedStyleId) || STYLES[0];
 
     const calculateCost = () => {
-        let cost = 5;
-        if (imageSize === "2K") cost += 5;
-        else if (imageSize === "4K") cost += 15;
-        else if (imageSize === "512px") cost -= 2;
-        if (thinkingLevel === "High") cost += 5;
-        if (useSearch) cost += 10;
-        if (subjectType === "Sticker") cost += 3;
-        return Math.max(1, cost);
+        let baseCost = 5;
+        return baseCost;
     };
 
     const handleGenerate = async () => {
@@ -84,17 +72,26 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     prompt: prompt.trim(),
-                    aspectRatio, imageSize, thinkingLevel, useSearch,
                     style: currentStyle.prompt,
                     subjectType,
                     studioMode: "Single",
+                    removeBackground: subjectType === "Sticker" ? true : removeBackground,
+                    aspectRatio: "1:1",
+                    imageSize: "1K"
                 }),
             });
             const data = await res.json();
             if (!res.ok) { if (!onApiError(res, data)) return; toast.error(data.error || "Failed"); return; }
             onCreditsUpdate(data.creditsRemaining);
             const images = data.images || (data.imageBase64 ? [data.imageBase64] : []);
-            if (images.length > 0) { setResult(images[0]); onGenerated(images, data.analysis); }
+            if (images.length > 0) {
+                setResult(images[0]);
+                onGenerated(images, data.analysis, {
+                    aspectRatio: "1:1",
+                    imageSize: "1K",
+                    removeBackground: subjectType === "Sticker" ? true : removeBackground
+                });
+            }
         } catch { toast.error("Failed to generate. Please try again."); }
         finally { onLoadingChange(false); }
     };
@@ -108,17 +105,23 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             const formData = new FormData();
             formData.append("image", file);
             formData.append("prompt", prompt);
-            formData.append("aspectRatio", aspectRatio);
-            formData.append("imageSize", imageSize);
-            formData.append("thinkingLevel", thinkingLevel);
-            formData.append("useSearch", useSearch.toString());
+            formData.append("removeBackground", (subjectType === "Sticker" ? true : removeBackground).toString());
             formData.append("style", currentStyle.prompt);
             formData.append("subjectType", subjectType);
+            formData.append("aspectRatio", "1:1");
+            formData.append("imageSize", "1K");
             const res = await fetch("/api/stylize", { method: "POST", body: formData });
             const data = await res.json();
             if (!res.ok) { if (!onApiError(res, data)) return; toast.error(data.error || "Failed"); return; }
             onCreditsUpdate(data.creditsRemaining);
-            if (data.imageBase64) { setResult(data.imageBase64); onGenerated([data.imageBase64], data.analysis); }
+            if (data.imageBase64) {
+                setResult(data.imageBase64);
+                onGenerated([data.imageBase64], data.analysis, {
+                    aspectRatio: "1:1",
+                    imageSize: "1K",
+                    removeBackground: subjectType === "Sticker" ? true : removeBackground
+                });
+            }
         } catch { toast.error("Failed to stylize. Please try again."); }
         finally { onLoadingChange(false); }
     };
@@ -205,46 +208,21 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             </div>
 
             {/* Quality & Options */}
-            <div className="rounded-2xl border-2 border-border overflow-hidden">
-                <button onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 bg-white hover:bg-muted/30 transition-colors">
-                    <SectionLabel>Quality & Options</SectionLabel>
-                    <span className="text-[10px] text-muted-foreground font-black">{showAdvanced ? "▲" : "▼"}</span>
-                </button>
-                {showAdvanced && (
-                    <div className="p-4 grid grid-cols-2 gap-3 bg-muted/20 border-t-2 border-border">
-                        <div className="space-y-1">
-                            <label className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">Aspect Ratio</label>
-                            <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)}
-                                className="w-full rounded-xl border-2 border-border bg-white px-2 py-1.5 text-xs font-bold focus:border-candy-pink focus:outline-none">
-                                {["1:1", "16:9", "9:16", "4:3", "3:4", "3:2", "2:3"].map(r => <option key={r} value={r}>{r}</option>)}
-                            </select>
-                        </div>
-                        <div className="space-y-1">
-                            <label className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">Resolution</label>
-                            <select value={imageSize} onChange={(e) => setImageSize(e.target.value)}
-                                className="w-full rounded-xl border-2 border-border bg-white px-2 py-1.5 text-xs font-bold focus:border-candy-pink focus:outline-none">
-                                <option value="512px">Low (512px)</option>
-                                <option value="1K">Standard (1K)</option>
-                                <option value="2K">High (2K) +5cr</option>
-                                <option value="4K">Ultra (4K) +15cr</option>
-                            </select>
-                        </div>
-                        <div onClick={() => setThinkingLevel(thinkingLevel === "High" ? "Minimal" : "High")}
-                            className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-2 transition-all ${thinkingLevel === "High" ? "border-candy-pink/40 bg-candy-pink/5" : "border-border bg-white hover:bg-muted/30"}`}>
-                            <span className="text-[9px] font-black uppercase">Pro Mode <span className="text-muted-foreground">+5cr</span></span>
-                            <div className={`h-4 w-7 rounded-full p-0.5 transition-all ${thinkingLevel === "High" ? "bg-candy-pink" : "bg-muted-foreground/30"}`}>
-                                <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${thinkingLevel === "High" ? "translate-x-3" : "translate-x-0"}`} />
-                            </div>
-                        </div>
-                        <div onClick={() => setUseSearch(!useSearch)}
-                            className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-2 transition-all ${useSearch ? "border-candy-blue/40 bg-candy-blue/5" : "border-border bg-white hover:bg-muted/30"}`}>
-                            <span className="text-[9px] font-black uppercase">Search <span className="text-muted-foreground">+10cr</span></span>
-                            <div className={`h-4 w-7 rounded-full p-0.5 transition-all ${useSearch ? "bg-candy-blue" : "bg-muted-foreground/30"}`}>
-                                <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${useSearch ? "translate-x-3" : "translate-x-0"}`} />
-                            </div>
+            <div className="rounded-2xl border-2 border-border overflow-hidden bg-white px-4 py-3">
+                <div className="flex items-center justify-between">
+                    <SectionLabel>Transparent Background</SectionLabel>
+                    <div onClick={() => subjectType !== "Sticker" && setRemoveBackground(!removeBackground)}
+                        className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${removeBackground || subjectType === "Sticker" ? "border-candy-green/40 bg-candy-green/5" : "border-border bg-white hover:bg-muted/30"} ${subjectType === "Sticker" ? "opacity-100 cursor-not-allowed" : ""}`}>
+                        <span className="text-[9px] font-black uppercase text-foreground mr-3">
+                            {subjectType === "Sticker" ? "Required" : "Free"}
+                        </span>
+                        <div className={`h-4 w-7 rounded-full p-0.5 transition-all ${removeBackground || subjectType === "Sticker" ? "bg-candy-green" : "bg-muted-foreground/30"}`}>
+                            <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${removeBackground || subjectType === "Sticker" ? "translate-x-3" : "translate-x-0"}`} />
                         </div>
                     </div>
+                </div>
+                {subjectType === "Sticker" && (
+                    <p className="text-[9px] text-muted-foreground mt-1.5 font-semibold">Stickers automatically include transparent backgrounds.</p>
                 )}
             </div>
 

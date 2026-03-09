@@ -11,12 +11,11 @@ export async function POST(req: Request) {
     const file = formData.get("image") as File;
     const prompt = (formData.get("prompt") as string) || "";
     const aspectRatio = (formData.get("aspectRatio") as string) || "1:1";
-    const imageSize = (formData.get("imageSize") as "512px" | "1K" | "2K" | "4K") || "1K";
-    const thinkingLevel = (formData.get("thinkingLevel") as "Minimal" | "High") || "Minimal";
-    const useSearch = formData.get("useSearch") === "true";
+    const imageSize = (formData.get("imageSize") as "1K") || "1K";
     const style = (formData.get("style") as string) || "";
-    const subjectType = (formData.get("subjectType") as "Character" | "Object" | "Logo" | "Scene") || "Character";
-    const options = { aspectRatio, imageSize, thinkingLevel, useSearch, style, subjectType };
+    const subjectType = (formData.get("subjectType") as "Character" | "Sticker" | "Logo") || "Character";
+    const removeBackgroundFlag = formData.get("removeBackground") === "true";
+    const options = { aspectRatio, imageSize, style, subjectType };
 
     // Auth + credit check
     const check = await requireCredits("stylize", options);
@@ -40,11 +39,18 @@ export async function POST(req: Request) {
     const analysis = analysisResult.data;
 
     const stylizeResult = await stylizeImage(prompt, base64, analysis, options);
-    const imageBase64 = stylizeResult.data;
+    let outBase64 = stylizeResult.data;
+
+    if (removeBackgroundFlag) {
+      const { removeBackground } = await import("@/lib/background-removal");
+      const outBuffer = Buffer.from(outBase64, "base64");
+      const transparentBuffer = await removeBackground(outBuffer);
+      outBase64 = transparentBuffer.toString("base64");
+    }
 
     const creditsRemaining = await deductCredits(check.userId, "stylize", options);
 
-    return NextResponse.json({ imageBase64, analysis, creditsRemaining });
+    return NextResponse.json({ imageBase64: outBase64, analysis, creditsRemaining });
   } catch (error) {
     console.error("Stylize error:", error);
     return NextResponse.json(

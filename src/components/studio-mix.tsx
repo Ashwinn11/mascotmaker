@@ -30,8 +30,6 @@ export function StudioMix({
     const [prompt, setPrompt] = useState("");
     const [loading, setLoading] = useState(false);
     const [aspectRatio, setAspectRatio] = useState("1:1");
-    const [imageSize, setImageSize] = useState("1K");
-    const [showAdvanced, setShowAdvanced] = useState(false);
     const file1Ref = useRef<HTMLInputElement | null>(null);
     const file2Ref = useRef<HTMLInputElement | null>(null);
 
@@ -64,7 +62,7 @@ export function StudioMix({
             const res = await fetch("/api/mix", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ image1Base64: image1, image2Base64: image2, prompt: prompt.trim(), aspectRatio, imageSize }),
+                body: JSON.stringify({ image1Base64: image1, image2Base64: image2, prompt: prompt.trim(), aspectRatio, imageSize: "1K" }),
             });
             const data = await res.json();
             if (!res.ok) { if (!onApiError(res, data)) return; toast.error(data.error || "Failed to composite"); return; }
@@ -130,33 +128,15 @@ export function StudioMix({
                     className="min-h-[80px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-sm placeholder:text-muted-foreground/60 focus:border-candy-green" />
             </div>
 
-            {/* Quality & Options */}
-            <div className="rounded-2xl border-2 border-border overflow-hidden">
-                <button onClick={() => setShowAdvanced(!showAdvanced)}
-                    className="w-full flex items-center justify-between px-4 py-2.5 bg-white hover:bg-muted/30 transition-colors">
-                    <SectionLabel>Quality & Options</SectionLabel>
-                    <span className="text-[10px] font-black text-muted-foreground">{showAdvanced ? "▲" : "▼"}</span>
-                </button>
-                {showAdvanced && (
-                    <div className="p-4 grid grid-cols-2 gap-3 bg-muted/20 border-t-2 border-border">
-                        <div className="space-y-1">
-                            <label className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">Aspect Ratio</label>
-                            <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)}
-                                className="w-full rounded-xl border-2 border-border bg-white px-2 py-1.5 text-xs font-bold focus:border-candy-green focus:outline-none">
-                                {["1:1", "16:9", "9:16", "4:3", "3:4"].map(r => <option key={r} value={r}>{r}</option>)}
-                            </select>
-                        </div>
-                        <div className="space-y-1">
-                            <label className="text-[9px] font-black uppercase tracking-wider text-muted-foreground">Resolution</label>
-                            <select value={imageSize} onChange={(e) => setImageSize(e.target.value)}
-                                className="w-full rounded-xl border-2 border-border bg-white px-2 py-1.5 text-xs font-bold focus:border-candy-green focus:outline-none">
-                                <option value="1K">Standard (1K)</option>
-                                <option value="2K">High (2K) +5cr</option>
-                                <option value="4K">Ultra (4K) +15cr</option>
-                            </select>
-                        </div>
-                    </div>
-                )}
+            {/* Settings */}
+            <div className="rounded-2xl border-2 border-border bg-white px-4 py-3">
+                <div className="flex items-center justify-between">
+                    <SectionLabel>Aspect Ratio</SectionLabel>
+                    <select value={aspectRatio} onChange={(e) => setAspectRatio(e.target.value)}
+                        className="rounded-xl border-2 border-border bg-white px-2 py-1.5 text-xs font-bold focus:border-candy-green focus:outline-none min-w-[100px] text-center">
+                        {["1:1", "16:9", "9:16", "4:3", "3:4"].map(r => <option key={r} value={r}>{r}</option>)}
+                    </select>
+                </div>
             </div>
 
             {/* Composite Button */}

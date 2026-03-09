@@ -5,8 +5,15 @@ import { requireCredits, deductCredits } from "@/lib/credits";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { message, mascotBase64, analysis: previousAnalysis, aspectRatio, imageSize, thinkingLevel, useSearch } = body;
-    const options = { aspectRatio, imageSize, thinkingLevel, useSearch };
+    const {
+      message,
+      mascotBase64,
+      analysis: previousAnalysis,
+      aspectRatio,
+      imageSize,
+      removeBackground: shouldRemoveBackground = false,
+    } = body;
+    const options = { aspectRatio, imageSize };
 
     // Auth + credit check
     const check = await requireCredits("chat", options);
@@ -36,7 +43,14 @@ export async function POST(req: Request) {
     CRITICAL: Keep the same art style, color palette, and character identity — only apply the requested change.
     Isolated on a plain white background. Show the COMPLETE full body from head to feet — do NOT crop any part of the character.`;
     const result = await editImage(prompt, mascotBase64, options);
-    const imageBase64 = result.data;
+    let imageBase64 = result.data;
+
+    if (shouldRemoveBackground) {
+      const { removeBackground } = await import("@/lib/background-removal");
+      const buffer = Buffer.from(imageBase64, "base64");
+      const transparentBuffer = await removeBackground(buffer);
+      imageBase64 = transparentBuffer.toString("base64");
+    }
 
     // Re-analyze the refined mascot for ongoing consistency
     const analysisResult = await analyzeImage(imageBase64);
