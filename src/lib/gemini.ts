@@ -134,12 +134,12 @@ export async function stylizeImage(
   let fullPrompt = "";
 
   if (options.subjectType === "Character") {
-    fullPrompt = `Transform this image into a ${characterStyle}. ${analysisContext} ${prompt}. Keep the subject recognizable. IMPORTANT: Isolated on a plain white background. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
+    fullPrompt = `Transform this image into a ${characterStyle}. ${analysisContext} ${prompt}. Keep the subject recognizable. IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
   } else if (options.subjectType === "Sticker") {
-    fullPrompt = `Transform this image into a single sticker in the distinct ${characterStyle} style: ${prompt}. ${analysisContext} Bold, thick black outlines. Flat color palette. Clean white border around the subject. Isolated on a plain white background.`;
+    fullPrompt = `Transform this image into a single sticker in the distinct ${characterStyle} style: ${prompt}. ${analysisContext} Bold, thick black outlines. Flat color palette. Clean white border around the subject. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.`;
   } else {
     // Logo or default
-    fullPrompt = `Transform this image into a ${characterStyle} logo: ${prompt}. ${analysisContext} Minimalist vector style, clean lines, isolated on a plain white background.`;
+    fullPrompt = `Transform this image into a ${characterStyle} logo: ${prompt}. ${analysisContext} Minimalist vector style, clean lines, isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.`;
   }
 
   return editImage(fullPrompt, imageBase64, options);
@@ -150,13 +150,23 @@ export async function generateSpriteSheet(
   action: string,
   description?: string
 ): Promise<GeminiResult<string>> {
-  const gridImagePath = path.join(process.cwd(), "public", "grid_3x3_1024_white.png");
+  const gridImagePath = path.join(process.cwd(), "public", "grid_3x3_1024_grey.png");
   const gridImageBase64 = fs.readFileSync(gridImagePath).toString("base64");
 
   const characterContext = description
     ? `This character is: ${description}. `
     : "";
-  const prompt = `${characterContext}Sprite sheet of this character ${action}, sequence, frame by frame animation, exactly 3 rows and 3 columns on a pure, continuous plain white background. IMPORTANT: Do NOT draw any separator lines, boxes, borders, or grid patterns between the frames. The background must be completely blank. Each frame must show the full body from head to feet.`;
+  const prompt = `REFERENCE IMAGES: (1) Target character, (2) Dark Charcoal Grey template (#404040).
+
+PROMPT: Using the EXACT character from (1), create a 9-frame 3x3 sprite sheet on the SOLID, uniform Dark Charcoal Grey (#404040) background shown in (2). 
+
+CRITICAL INSTRUCTIONS:
+- PRESERVE IDENTITY: Reference (1) is the EXCLUSIVE and ONLY source for the character design. Every pixel of the character's design, face, and clothing must match (1).
+- ACTION ONLY: Only change the pose/action for ${action}. Do NOT add any new traits, accessories, or features.
+- STYLE MATCH: Use the identical art style and color palette as (1).
+- ROWS/COLS: Exactly 3 rows and 3 columns. Each frame must show the full body from head to feet.
+- BACKGROUND: Background MUST remain the continuous Dark Charcoal Grey from (2) with NO grid lines, borders, shadows, or texture between frames.
+${characterContext} Character is ${action}, sequence animation.`;
 
   const response = await getAI().models.generateContent({
     model: MODEL_ID,
@@ -166,12 +176,14 @@ export async function generateSpriteSheet(
         parts: [
           { text: prompt },
           { inlineData: { mimeType: "image/png", data: mascotImageBase64 } },
+          { inlineData: { mimeType: "image/png", data: gridImageBase64 } },
         ],
       },
     ],
     config: {
       responseModalities: ["IMAGE"],
       imageConfig: { aspectRatio: "1:1" },
+      temperature: 0.1, // Minimize creativity to maintain character identity
     },
   });
 

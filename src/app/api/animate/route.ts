@@ -24,23 +24,24 @@ export async function POST(req: Request) {
     }
 
     const result = await generateSpriteSheet(mascotBase64, action, description);
-    let spriteData = result.data;
+    const spriteDataData = result.data;
+    const spriteBuffer = Buffer.from(spriteDataData, "base64");
 
-    if (shouldRemoveBackground) {
-      const { removeBackground } = await import("@/lib/background-removal");
-      const buffer = Buffer.from(spriteData, "base64");
-      const transparentBuffer = await removeBackground(buffer);
-      spriteData = transparentBuffer.toString("base64");
-    }
+    // We pass shouldRemoveBackground to spriteSheetToGif which handles it per-frame
+    // and returns both a cleaned sprite sheet and a GIF
+    const { spriteBuffer: transparentSpriteBuffer, animationBuffer } = await spriteSheetToGif(
+      spriteBuffer,
+      200,
+      shouldRemoveBackground
+    );
 
-    const spriteBuffer = Buffer.from(spriteData, "base64");
-    const animationBuffer = await spriteSheetToGif(spriteBuffer);
     const animationBase64 = animationBuffer.toString("base64");
+    const transparentSpriteBase64 = transparentSpriteBuffer.toString("base64");
 
     const creditsRemaining = await deductCredits(check.userId, "animate");
 
     return NextResponse.json({
-      spriteBase64: spriteData,
+      spriteBase64: transparentSpriteBase64,
       animationBase64,
       creditsRemaining,
     });

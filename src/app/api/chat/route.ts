@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     const prompt = `Apply this change to the mascot: "${message}".
     ${characterContext}
     CRITICAL: Keep the same art style, color palette, and character identity — only apply the requested change.
-    Isolated on a plain white background. Show the COMPLETE full body from head to feet — do NOT crop any part of the character.`;
+    Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet — do NOT crop any part of the character.`;
     const result = await editImage(prompt, mascotBase64, options);
     let imageBase64 = result.data;
 

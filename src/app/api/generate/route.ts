@@ -33,15 +33,15 @@ export async function POST(req: Request) {
     if (subjectType === "Sticker") {
       basePrompt = `Create a single sticker in the distinct ${characterStyle} style for: ${prompt}.
       Bold, thick black outlines. Flat color palette.
-      Clean white border around the subject. Isolated on a plain white background.`;
+      Clean white border around the subject. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.`;
     } else if (subjectType === "Character") {
       basePrompt = `Create a ${characterStyle} of: ${prompt}.
-      IMPORTANT: Isolated on a plain white background with no shadows.
+      IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.
       Show the COMPLETE full body from head to feet — do NOT crop or cut off any part.
       Expressive face, clean outlines.`;
     } else if (subjectType === "Logo") {
       basePrompt = `Create a professional mascot logo icon in ${characterStyle} for: ${prompt}.
-      Isolated on a plain white background.`;
+      Isolated on a SOLID, uniform Dark Charcoal Grey (#404040).`;
     } else {
       basePrompt = `Create a richly detailed ${characterStyle} scene: ${prompt}.
       Cinematic composition, beautiful lighting.`;
