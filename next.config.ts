@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["@neplex/vectorizer"],
+  serverExternalPackages: ["@neplex/vectorizer", "onnxruntime-node", "@imgly/background-removal-node", "sharp"],
   reactCompiler: true,
   images: {
     remotePatterns: [
@@ -22,6 +22,9 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
+  },
+  outputFileTracingIncludes: {
+    "**": ["./node_modules/onnxruntime-node/bin/**/*"],
   },
 };
 
