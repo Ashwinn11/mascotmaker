@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import { Lilita_One, Nunito } from "next/font/google";
 import Link from "next/link";
 import Image from "next/image";
 import { Toaster } from "@/components/ui/sonner";
@@ -9,17 +8,6 @@ import { CreditsDisplay } from "@/components/credits-display";
 import { MobileNav } from "@/components/mobile-nav";
 import { Providers } from "@/components/providers";
 import "./globals.css";
-
-const heading = Lilita_One({
-  variable: "--font-heading",
-  weight: "400",
-  subsets: ["latin"],
-});
-
-const body = Nunito({
-  variable: "--font-body-text",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mascotmaker.io"),
@@ -74,7 +62,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${heading.variable} ${body.variable} antialiased`}>
+      <body className="antialiased">
         <Providers>
           <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
             <div className="mx-auto flex h-16 md:h-20 max-w-6xl items-center justify-between px-4 md:px-6">

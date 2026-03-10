@@ -34,7 +34,7 @@ const STUDIO_TABS = [
 const MASCOT_STEPS = [
   { key: "create" as MascotStep, label: "Create", num: 1 },
   { key: "refine" as MascotStep, label: "Refine", num: 2 },
-  { key: "animate" as MascotStep, label: "Animate", num: 3 },
+  { key: "animate" as MascotStep, label: "Animate", num: 3, characterOnly: true },
 ];
 
 const DownloadIcon = () => (
@@ -181,6 +181,7 @@ export function MascotCreator() {
     aspectRatio: "1:1",
     imageSize: "1K" as "512px" | "1K" | "2K" | "4K",
     removeBackground: false,
+    subjectType: "Character" as "Character" | "Sticker" | "Logo",
   });
 
   // Story workflow
@@ -309,7 +310,7 @@ export function MascotCreator() {
               <>
                 <div className="mb-5 flex items-center justify-center">
                   <div className="flex items-center gap-1 rounded-2xl bg-white border-2 border-border p-1 shadow-sm">
-                    {MASCOT_STEPS.map((step) => {
+                    {MASCOT_STEPS.filter(s => !s.characterOnly || createOptions.subjectType === "Character").map((step, idx) => {
                       const isActive = mascotStep === step.key;
                       const isAccessible = canGoToStep(step.key);
                       return (
@@ -319,7 +320,7 @@ export function MascotCreator() {
                             ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md"
                             : isAccessible ? "text-muted-foreground hover:bg-muted" : "text-muted-foreground/30 cursor-not-allowed"}`}>
                           <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${isActive ? "bg-white/20" : "bg-muted"}`}>
-                            {step.num}
+                            {idx + 1}
                           </span>
                           {step.label}
                         </button>
@@ -336,7 +337,14 @@ export function MascotCreator() {
                     aspectRatio={createOptions.aspectRatio} imageSize={createOptions.imageSize}
                     removeBackground={createOptions.removeBackground}
                     onMascotUpdate={handleMascotUpdate} onLoadingChange={setMascotLoading}
-                    onDone={() => setMascotStep("animate")} {...sharedProps} />
+                    onDone={() => {
+                      if (createOptions.subjectType === "Character") {
+                        setMascotStep("animate");
+                      } else {
+                        // For non-characters, maybe stay on refine or just show success
+                        // Users can still download from refine.
+                      }
+                    }} {...sharedProps} />
                 )}
 
                 {mascotStep === "animate" && mascotBase64 && (

@@ -31,17 +31,14 @@ export async function POST(req: Request) {
     let basePrompt = "";
 
     if (subjectType === "Sticker") {
-      basePrompt = `Create a single sticker in the distinct ${characterStyle} style for: ${prompt}.
-      Bold, thick black outlines. Flat color palette.
-      Clean white border around the subject. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.`;
+      basePrompt = `Create a single high-quality die-cut sticker: ${prompt}. ${characterStyle}. Bold, thick black outlines. Clean, wide white border around the entire subject. Vibrant colors. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. NO shadows, NO gradients on the background.`;
     } else if (subjectType === "Character") {
       basePrompt = `Create a ${characterStyle} of: ${prompt}.
       IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.
       Show the COMPLETE full body from head to feet — do NOT crop or cut off any part.
       Expressive face, clean outlines.`;
     } else if (subjectType === "Logo") {
-      basePrompt = `Create a professional mascot logo icon in ${characterStyle} for: ${prompt}.
-      Isolated on a SOLID, uniform Dark Charcoal Grey (#404040).`;
+      basePrompt = `Create a professional branding logo in a ${characterStyle} style: ${prompt}. Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. Isolated on a SOLID background. NO mascot characters or complex cartoons unless specifically requested — focus on symbolic representation.`;
     } else {
       basePrompt = `Create a richly detailed ${characterStyle} scene: ${prompt}.
       Cinematic composition, beautiful lighting.`;

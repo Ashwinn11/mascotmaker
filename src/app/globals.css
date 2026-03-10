@@ -59,6 +59,9 @@
 
 :root {
   --radius: 1rem;
+  --font-heading: "Arial Black", "Arial Rounded MT Bold", "Trebuchet MS", sans-serif;
+  --font-body-text: "Trebuchet MS", "Avenir Next", "Segoe UI", sans-serif;
+  --font-geist-mono: "SFMono-Regular", "Consolas", "Liberation Mono", monospace;
   --background: #fef9f0;
   --foreground: #2d2420;
   --card: #ffffff;

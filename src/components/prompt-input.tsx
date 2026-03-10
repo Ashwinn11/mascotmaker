@@ -38,7 +38,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
     { id: "game", label: "Game", desc: "Isometric 3D", icon: "classical-building" as const, prompt: "isometric 3D game asset, high-quality game art, detailed isometric perspective" },
     { id: "retro", label: "Retro", desc: "80s Film", icon: "camera" as const, prompt: "mascot character as an 80s photograph, Kodak film grain, retro vibes, slightly faded colors" },
     { id: "pop", label: "Pop Art", desc: "Bold Comic", icon: "magic-wand" as const, prompt: "Pop Art style mascot, thick black outlines, vibrant primary colors, Ben-Day dots" },
-    { id: "logo", label: "Logo", desc: "Minimalist", icon: "pencil" as const, prompt: "minimalist vector logo, clean lines, professional branding style, simplistic design" },
+    { id: "minimalist", label: "Minimalist", desc: "Flat & Clean", icon: "pencil" as const, prompt: "minimalist vector art, clean lines, professional flat design, simplistic shapes" },
     { id: "clay", label: "Clay", desc: "Claymation", icon: "relieved-face" as const, prompt: "mascot character made of clay, claymation style, tactile texture, fingerprints visible, Aardman style" },
   ];
 

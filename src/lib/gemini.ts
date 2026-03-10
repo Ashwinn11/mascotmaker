@@ -136,10 +136,10 @@ export async function stylizeImage(
   if (options.subjectType === "Character") {
     fullPrompt = `Transform this image into a ${characterStyle}. ${analysisContext} ${prompt}. Keep the subject recognizable. IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
   } else if (options.subjectType === "Sticker") {
-    fullPrompt = `Transform this image into a single sticker in the distinct ${characterStyle} style: ${prompt}. ${analysisContext} Bold, thick black outlines. Flat color palette. Clean white border around the subject. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.`;
+    fullPrompt = `Transform this image into a single high-quality die-cut sticker: ${prompt}. ${analysisContext} ${characterStyle}. Bold, thick black outlines. Clean, wide white border around the entire subject. Vibrant colors. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. NO shadows, NO gradients on the background.`;
   } else {
-    // Logo or default
-    fullPrompt = `Transform this image into a ${characterStyle} logo: ${prompt}. ${analysisContext} Minimalist vector style, clean lines, isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.`;
+    // Logo
+    fullPrompt = `Transform this image into a professional branding logo in a ${characterStyle} style: ${prompt}. ${analysisContext} Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. Isolated on a SOLID background. NO mascot characters or complex cartoons unless specifically requested — focus on symbolic representation.`;
   }
 
   return editImage(fullPrompt, imageBase64, options);

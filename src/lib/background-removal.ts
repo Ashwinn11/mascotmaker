@@ -18,7 +18,7 @@ export async function removeBackground(buffer: Buffer): Promise<Buffer> {
         const start = Date.now();
 
         // Standardize image before sending
-        const standardizedBuffer = await sharp(buffer)
+        const requestBody = await sharp(buffer)
             .toFormat("png", { quality: 100 })
             .toBuffer();
 
@@ -27,7 +27,7 @@ export async function removeBackground(buffer: Buffer): Promise<Buffer> {
             headers: {
                 "Content-Type": "image/png",
             },
-            body: standardizedBuffer,
+            body: requestBody as any,
         });
 
         if (!response.ok) {

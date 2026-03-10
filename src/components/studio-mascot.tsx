@@ -13,7 +13,7 @@ const STYLES = [
     { id: "game", label: "Game", desc: "Isometric 3D", icon: "classical-building" as const, prompt: "isometric 3D game asset, high-quality game art, detailed isometric perspective" },
     { id: "retro", label: "Retro", desc: "80s Film", icon: "camera" as const, prompt: "mascot character as an 80s photograph, Kodak film grain, retro vibes, slightly faded colors" },
     { id: "pop", label: "Pop Art", desc: "Bold Comic", icon: "magic-wand" as const, prompt: "Pop Art style mascot, thick black outlines, vibrant primary colors, Ben-Day dots" },
-    { id: "logo", label: "Logo", desc: "Minimalist", icon: "pencil" as const, prompt: "minimalist vector logo, clean lines, professional branding style, simplistic design" },
+    { id: "minimalist", label: "Minimalist", desc: "Flat & Clean", icon: "pencil" as const, prompt: "minimalist vector art, clean lines, professional flat design, simplistic shapes" },
     { id: "clay", label: "Clay", desc: "Claymation", icon: "relieved-face" as const, prompt: "mascot character made of clay, claymation style, tactile texture, fingerprints visible, Aardman style" },
 ];
 
@@ -75,7 +75,7 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                     style: currentStyle.prompt,
                     subjectType,
                     studioMode: "Single",
-                    removeBackground: subjectType === "Sticker" ? true : removeBackground,
+                    removeBackground: subjectType === "Sticker" ? true : (subjectType === "Logo" ? false : removeBackground),
                     aspectRatio: "1:1",
                     imageSize: "1K"
                 }),
@@ -89,7 +89,8 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                 onGenerated(images, data.analysis, {
                     aspectRatio: "1:1",
                     imageSize: "1K",
-                    removeBackground: subjectType === "Sticker" ? true : removeBackground
+                    removeBackground: subjectType === "Sticker" ? true : (subjectType === "Logo" ? false : removeBackground),
+                    subjectType
                 });
             }
         } catch { toast.error("Failed to generate. Please try again."); }
@@ -105,7 +106,7 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             const formData = new FormData();
             formData.append("image", file);
             formData.append("prompt", prompt);
-            formData.append("removeBackground", (subjectType === "Sticker" ? true : removeBackground).toString());
+            formData.append("removeBackground", (subjectType === "Sticker" ? true : (subjectType === "Logo" ? false : removeBackground)).toString());
             formData.append("style", currentStyle.prompt);
             formData.append("subjectType", subjectType);
             formData.append("aspectRatio", "1:1");
@@ -119,7 +120,8 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                 onGenerated([data.imageBase64], data.analysis, {
                     aspectRatio: "1:1",
                     imageSize: "1K",
-                    removeBackground: subjectType === "Sticker" ? true : removeBackground
+                    removeBackground: subjectType === "Sticker" ? true : (subjectType === "Logo" ? false : removeBackground),
+                    subjectType
                 });
             }
         } catch { toast.error("Failed to stylize. Please try again."); }
@@ -208,23 +210,25 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             </div>
 
             {/* Quality & Options */}
-            <div className="rounded-2xl border-2 border-border overflow-hidden bg-white px-4 py-3">
-                <div className="flex items-center justify-between">
-                    <SectionLabel>Transparent Background</SectionLabel>
-                    <div onClick={() => subjectType !== "Sticker" && setRemoveBackground(!removeBackground)}
-                        className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${removeBackground || subjectType === "Sticker" ? "border-candy-green/40 bg-candy-green/5" : "border-border bg-white hover:bg-muted/30"} ${subjectType === "Sticker" ? "opacity-100 cursor-not-allowed" : ""}`}>
-                        <span className="text-[9px] font-black uppercase text-foreground mr-3">
-                            {subjectType === "Sticker" ? "Required" : "Free"}
-                        </span>
-                        <div className={`h-4 w-7 rounded-full p-0.5 transition-all ${removeBackground || subjectType === "Sticker" ? "bg-candy-green" : "bg-muted-foreground/30"}`}>
-                            <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${removeBackground || subjectType === "Sticker" ? "translate-x-3" : "translate-x-0"}`} />
+            {subjectType !== "Logo" && (
+                <div className="rounded-2xl border-2 border-border overflow-hidden bg-white px-4 py-3">
+                    <div className="flex items-center justify-between">
+                        <SectionLabel>Transparent Background</SectionLabel>
+                        <div onClick={() => subjectType !== "Sticker" && setRemoveBackground(!removeBackground)}
+                            className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${removeBackground || subjectType === "Sticker" ? "border-candy-green/40 bg-candy-green/5" : "border-border bg-white hover:bg-muted/30"} ${subjectType === "Sticker" ? "opacity-100 cursor-not-allowed" : ""}`}>
+                            <span className="text-[9px] font-black uppercase text-foreground mr-3">
+                                {subjectType === "Sticker" ? "Required" : "Free"}
+                            </span>
+                            <div className={`h-4 w-7 rounded-full p-0.5 transition-all ${removeBackground || subjectType === "Sticker" ? "bg-candy-green" : "bg-muted-foreground/30"}`}>
+                                <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${removeBackground || subjectType === "Sticker" ? "translate-x-3" : "translate-x-0"}`} />
+                            </div>
                         </div>
                     </div>
+                    {subjectType === "Sticker" && (
+                        <p className="text-[9px] text-muted-foreground mt-1.5 font-semibold">Stickers automatically include transparent backgrounds.</p>
+                    )}
                 </div>
-                {subjectType === "Sticker" && (
-                    <p className="text-[9px] text-muted-foreground mt-1.5 font-semibold">Stickers automatically include transparent backgrounds.</p>
-                )}
-            </div>
+            )}
 
             {/* Generate Button */}
             <Button onClick={inputMode === "upload" && file ? handleStylize : handleGenerate}
