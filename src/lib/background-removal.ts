@@ -1,52 +1,46 @@
-import { removeBackground as removeBg } from "@imgly/background-removal-node";
 import sharp from "sharp";
-import fs from "fs";
-import path from "path";
-import os from "os";
 
 /**
- * Removes background using a neural network-based approach (AI segmentation).
- * Uses a temporary file to ensure the internal loader recognizes the format correctly.
+ * Removes background using a remote microservice on Google Cloud Run.
+ * This avoids Vercel's 300MB function size limit and allows for higher quality AI models.
  */
 export async function removeBackground(buffer: Buffer): Promise<Buffer> {
-    const tempDir = os.tmpdir();
-    const inputPath = path.join(tempDir, `input-${Date.now()}.png`);
+    const SERVICE_URL = process.env.BG_REMOVAL_SERVICE_URL;
+
+    if (!SERVICE_URL) {
+        console.warn("BG_REMOVAL_SERVICE_URL not set. Falling back to local background removal if possible.");
+        // Fallback or error
+        return buffer;
+    }
 
     try {
-        // Pre-process: Optimize contrast for Charcoal Grey (#404040) background.
-        // This ensures white edges "pop" clearly for the AI.
-        const standardizedBuffer = await sharp(buffer)
-            .toFormat("png", { quality: 100 })
-            .linear(1.1, -10) // Subtle boost to ensure white stays white and grey stays grey
-            .toBuffer();
-
-        await fs.promises.writeFile(inputPath, standardizedBuffer);
-
-        console.log("Starting AI Background Removal (Neural) via file...");
+        console.log("Calling Remote AI Background Removal (Cloud Run)...");
         const start = Date.now();
 
-        // Use the medium model (default) with maximum quality settings
-        const result = await removeBg(inputPath, {
-            model: "medium",
-            output: {
-                quality: 1.0,
-                format: "image/png"
-            }
+        // Standardize image before sending
+        const standardizedBuffer = await sharp(buffer)
+            .toFormat("png", { quality: 100 })
+            .toBuffer();
+
+        const response = await fetch(`${SERVICE_URL}/remove-background`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "image/png",
+            },
+            body: standardizedBuffer,
         });
 
-        const arrayBuffer = await result.arrayBuffer();
-        console.log(`AI Background Removal finished in ${Date.now() - start}ms`);
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Cloud Run service failed: ${errorText}`);
+        }
 
-        const finalBuffer = Buffer.from(arrayBuffer);
+        const arrayBuffer = await response.arrayBuffer();
+        console.log(`Cloud Run Background Removal finished in ${Date.now() - start}ms`);
 
-        // Clean up
-        try { await fs.promises.unlink(inputPath); } catch (e) { }
-
-        return finalBuffer;
+        return Buffer.from(arrayBuffer);
     } catch (error) {
-        console.error("AI Background Removal failed:", error);
-        // Clean up on error
-        try { if (fs.existsSync(inputPath)) await fs.promises.unlink(inputPath); } catch (e) { }
+        console.error("Remote AI Background Removal failed:", error);
         return buffer;
     }
 }
