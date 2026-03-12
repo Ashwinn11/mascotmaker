@@ -7,18 +7,19 @@ import { AuthButton } from "@/components/auth-button";
 import { CreditsDisplay } from "@/components/credits-display";
 import { MobileNav } from "@/components/mobile-nav";
 import { Providers } from "@/components/providers";
-import { Outfit, Fredoka } from "next/font/google";
+import { Lilita_One, Nunito } from "next/font/google";
 import "./globals.css";
 
-const outfit = Outfit({
+const heading = Lilita_One({
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-heading",
+  weight: "400",
   display: "swap",
 });
 
-const fredoka = Fredoka({
+const body = Nunito({
   subsets: ["latin"],
-  variable: "--font-fredoka",
+  variable: "--font-body-text",
   display: "swap",
 });
 
@@ -75,7 +76,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${outfit.variable} ${fredoka.variable} antialiased`}>
+      <body className={`${heading.variable} ${body.variable} antialiased`}>
         <Providers>
           <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
             <div className="mx-auto flex h-16 md:h-20 max-w-6xl items-center justify-between px-4 md:px-6">
