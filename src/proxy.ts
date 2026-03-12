@@ -3,12 +3,13 @@ import type { NextRequest } from "next/server";
 
 const SKIP_PREFIXES = ["/_next", "/favicon", "/icon", "/apple-touch-icon", "/manifest", "/opengraph-image", "/twitter-image", "/robots", "/sitemap", "/api"];
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
     const { pathname, host } = request.nextUrl;
     const protocol = request.headers.get("x-forwarded-proto") || "http";
 
-    // Enforce non-www and https
-    if (host.startsWith("www.") || protocol === "http") {
+    // Enforce non-www and https (production only — skip on localhost)
+    const isLocalhost = host.startsWith("localhost") || host.startsWith("127.0.0.1");
+    if (!isLocalhost && (host.startsWith("www.") || protocol === "http")) {
         const url = request.nextUrl.clone();
         url.host = host.replace(/^www\./, "");
         url.protocol = "https";

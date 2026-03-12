@@ -7,7 +7,20 @@ import { AuthButton } from "@/components/auth-button";
 import { CreditsDisplay } from "@/components/credits-display";
 import { MobileNav } from "@/components/mobile-nav";
 import { Providers } from "@/components/providers";
+import { Outfit, Fredoka } from "next/font/google";
 import "./globals.css";
+
+const outfit = Outfit({
+  subsets: ["latin"],
+  variable: "--font-outfit",
+  display: "swap",
+});
+
+const fredoka = Fredoka({
+  subsets: ["latin"],
+  variable: "--font-fredoka",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://mascotmaker.io"),
@@ -62,7 +75,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className={`${outfit.variable} ${fredoka.variable} antialiased`}>
         <Providers>
           <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
             <div className="mx-auto flex h-16 md:h-20 max-w-6xl items-center justify-between px-4 md:px-6">
