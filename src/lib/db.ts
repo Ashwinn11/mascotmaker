@@ -31,6 +31,10 @@ export async function initDb(): Promise<void> {
       subject_type TEXT DEFAULT 'Character'
     )
   `;
+  // Ensure recent schema additions exist for existing tables
+  await sql`ALTER TABLE gallery ADD COLUMN IF NOT EXISTS sticker_url TEXT`;
+  await sql`ALTER TABLE gallery ADD COLUMN IF NOT EXISTS subject_type TEXT DEFAULT 'Character'`;
+  
   await sql`
     CREATE TABLE IF NOT EXISTS users (
       id TEXT PRIMARY KEY,
