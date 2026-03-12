@@ -27,7 +27,8 @@ export async function initDb(): Promise<void> {
       sticker_url TEXT,
       user_id TEXT,
       created_at TIMESTAMPTZ DEFAULT NOW(),
-      published INTEGER DEFAULT 1
+      published INTEGER DEFAULT 1,
+      subject_type TEXT DEFAULT 'Character'
     )
   `;
   await sql`
@@ -37,7 +38,7 @@ export async function initDb(): Promise<void> {
       email TEXT NOT NULL,
       name TEXT,
       avatar_url TEXT,
-      credits INTEGER DEFAULT 25,
+      credits INTEGER DEFAULT 5,
       created_at TIMESTAMPTZ DEFAULT NOW()
     )
   `;
@@ -116,6 +117,7 @@ export interface GalleryItem {
   image_url: string;
   gif_url: string | null;
   sticker_url: string | null;
+  subject_type: string;
   user_id: string | null;
   created_at: string;
 }
@@ -142,12 +144,13 @@ export async function addToGallery(item: {
   imageUrl: string;
   gifUrl?: string;
   stickerUrl?: string;
+  subjectType?: string;
   userId?: string;
 }): Promise<GalleryItem> {
   await ensureDb();
   const rows = await sql`
-    INSERT INTO gallery (name, description, image_url, gif_url, sticker_url, user_id)
-    VALUES (${item.name}, ${item.description || null}, ${item.imageUrl}, ${item.gifUrl || null}, ${item.stickerUrl || null}, ${item.userId || null})
+    INSERT INTO gallery (name, description, image_url, gif_url, sticker_url, subject_type, user_id)
+    VALUES (${item.name}, ${item.description || null}, ${item.imageUrl}, ${item.gifUrl || null}, ${item.stickerUrl || null}, ${item.subjectType || 'Character'}, ${item.userId || null})
     RETURNING *
   `;
   return rows[0] as GalleryItem;
@@ -187,7 +190,7 @@ export async function findOrCreateUser(params: {
   const id = uuidv4();
   const rows = await sql`
     INSERT INTO users (id, google_id, email, name, avatar_url, credits)
-    VALUES (${id}, ${params.googleId}, ${params.email}, ${params.name}, ${params.avatarUrl}, 25)
+    VALUES (${id}, ${params.googleId}, ${params.email}, ${params.name}, ${params.avatarUrl}, 5)
     RETURNING *
   `;
   return rows[0] as User;

@@ -41,8 +41,8 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
     const currentStyle = STYLES.find(s => s.id === selectedStyleId) || STYLES[0];
 
     const calculateCost = () => {
-        let baseCost = 5;
-        return baseCost;
+        if (subjectType === "Sticker") return 15;
+        return 5;
     };
 
     const handleGenerate = async () => {
@@ -61,7 +61,7 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                     studioMode: "Single",
                     removeBackground: subjectType === "Sticker" ? true : (subjectType === "Logo" ? false : removeBackground),
                     aspectRatio: "1:1",
-                    imageSize: "1K"
+                    imageSize: "2K"
                 }),
             });
             const data = await res.json();
@@ -72,7 +72,7 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                 setResult(images[0]);
                 onGenerated(images, data.analysis, {
                     aspectRatio: "1:1",
-                    imageSize: "1K",
+                    imageSize: "2K",
                     removeBackground: subjectType === "Sticker" ? true : (subjectType === "Logo" ? false : removeBackground),
                     subjectType
                 });
@@ -94,7 +94,7 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             formData.append("style", currentStyle.prompt);
             formData.append("subjectType", subjectType);
             formData.append("aspectRatio", "1:1");
-            formData.append("imageSize", "1K");
+            formData.append("imageSize", "2K");
             const res = await fetch("/api/stylize", { method: "POST", body: formData });
             const data = await res.json();
             if (!res.ok) { if (!onApiError(res, data)) return; toast.error(data.error || "Failed"); return; }
@@ -103,7 +103,7 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                 setResult(data.imageBase64);
                 onGenerated([data.imageBase64], data.analysis, {
                     aspectRatio: "1:1",
-                    imageSize: "1K",
+                    imageSize: "2K",
                     removeBackground: subjectType === "Sticker" ? true : (subjectType === "Logo" ? false : removeBackground),
                     subjectType
                 });
@@ -194,23 +194,20 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             </div>
 
             {/* Quality & Options */}
-            {subjectType !== "Logo" && (
+            {subjectType === "Character" && (
                 <div className="rounded-2xl border-2 border-border overflow-hidden bg-white px-4 py-3">
                     <div className="flex items-center justify-between">
                         <SectionLabel>Transparent Background</SectionLabel>
-                        <div onClick={() => subjectType !== "Sticker" && setRemoveBackground(!removeBackground)}
-                            className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${removeBackground || subjectType === "Sticker" ? "border-candy-green/40 bg-candy-green/5" : "border-border bg-white hover:bg-muted/30"} ${subjectType === "Sticker" ? "opacity-100 cursor-not-allowed" : ""}`}>
+                        <div onClick={() => setRemoveBackground(!removeBackground)}
+                            className={`flex cursor-pointer items-center justify-between rounded-xl border-2 px-3 py-1.5 transition-all ${removeBackground ? "border-candy-green/40 bg-candy-green/5" : "border-border bg-white hover:bg-muted/30"}`}>
                             <span className="text-[9px] font-black uppercase text-foreground mr-3">
-                                {subjectType === "Sticker" ? "Required" : "Free"}
+                                Free
                             </span>
-                            <div className={`h-4 w-7 rounded-full p-0.5 transition-all ${removeBackground || subjectType === "Sticker" ? "bg-candy-green" : "bg-muted-foreground/30"}`}>
-                                <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${removeBackground || subjectType === "Sticker" ? "translate-x-3" : "translate-x-0"}`} />
+                            <div className={`h-4 w-7 rounded-full p-0.5 transition-all ${removeBackground ? "bg-candy-green" : "bg-muted-foreground/30"}`}>
+                                <div className={`h-3 w-3 rounded-full bg-white shadow-sm transition-all ${removeBackground ? "translate-x-3" : "translate-x-0"}`} />
                             </div>
                         </div>
                     </div>
-                    {subjectType === "Sticker" && (
-                        <p className="text-[9px] text-muted-foreground mt-1.5 font-semibold">Stickers automatically include transparent backgrounds.</p>
-                    )}
                 </div>
             )}
 

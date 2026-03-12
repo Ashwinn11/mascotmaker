@@ -35,14 +35,17 @@ export function buildPrompt(
     const transformPrefix = isStylize ? `Transform this image into a ` : `Create a `;
 
     if (subjectType === "Sticker") {
-        prompt = `${transformPrefix}single high-quality die-cut sticker: ${userPrompt}. ${context}${baseStyle}. Bold, thick black outlines. Clean, wide white border around the entire subject. Vibrant colors. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. NO shadows, NO gradients on the background.`;
+        prompt = `${transformPrefix}a 9-frame 3x3 ultra-high-quality sticker sheet (8k resolution, sharp focus): ${userPrompt}. ${context}${baseStyle}. 
+        CRITICAL: Create 9 distinct frames of the SAME subject with different expressions and poses. Each sticker MUST be perfectly detailed with no blurring.
+        STYLE: Clean, wide white die-cut border around the entire subject in EVERY frame. Ultra-clear boundaries. Bold, thick black outlines. Professional studio lighting, vibrant colors. 
+        BACKGROUND: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. NO grid lines, NO shadows, NO gradients on the background.`;
     } else if (subjectType === "Character") {
-        prompt = `${transformPrefix}${baseStyle} of: ${userPrompt}. ${context}IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet — do NOT crop or cut off any part. Expressive face, clean outlines.`;
-        if (isStylize) prompt += " Keep the subject recognizable.";
+        prompt = `${transformPrefix}an ultra-high-resolution (8k, sharp focus) ${baseStyle} of: ${userPrompt}. ${context}Professional studio lighting, cinematic detail. IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet — do NOT crop or cut off any part. Expressive face, clean outlines.`;
+        if (isStylize) prompt += " Keep the subject recognizable and high-fidelity.";
     } else if (subjectType === "Logo") {
         prompt = `${transformPrefix}professional branding logo in a ${baseStyle} style: ${userPrompt}. ${context}Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. NO mascot characters or complex cartoons unless specifically requested — focus on symbolic representation.`;
     } else {
-        // Fallback/Legacy (Mix mode scenes or composite requests)
+        // Fallback/Legacy
         prompt = `${transformPrefix}richly detailed ${baseStyle} scene: ${userPrompt}. ${context}Cinematic composition, beautiful lighting.`;
     }
 

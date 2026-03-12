@@ -17,7 +17,7 @@ export const CREDIT_COSTS: Record<string, number> = {
 
 export type ImageOptions = {
     aspectRatio?: string;
-    imageSize?: "1K";
+    imageSize?: "512px" | "1K" | "2K" | "4K";
     subjectType?: string;
     studioMode?: string;
 };
@@ -27,10 +27,10 @@ export type ImageOptions = {
  */
 export function calculateCost(route: string, options?: ImageOptions): number {
     let baseCost = CREDIT_COSTS[route] || 5;
-    if (options?.studioMode === "Story") baseCost = 40;
-    else if (options?.studioMode === "Composite") baseCost = 15;
-
-    if (!options) return baseCost;
+    
+    // Fixed costs per Subject Type
+    if (options?.subjectType === "Sticker") baseCost = 15;
+    else if (options?.subjectType === "Logo") baseCost = 5;
 
     return Math.max(1, baseCost);
 }

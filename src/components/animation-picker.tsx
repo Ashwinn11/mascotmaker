@@ -14,15 +14,25 @@ interface AnimationPickerProps {
   onApiError: (res: Response, data: Record<string, unknown>) => boolean;
   onCreditsUpdate: (creditsRemaining?: number) => void;
   removeBackground?: boolean;
+  subjectType?: "Character" | "Sticker" | "Logo";
 }
 
-const PRESET_ACTIONS: { label: string; icon: FluentIcon3D; color: string }[] = [
+const ANIMATION_PRESETS: { label: string; icon: FluentIcon3D; color: string }[] = [
   { label: "Wave", icon: "waving-hand", color: "from-candy-pink to-candy-orange" },
   { label: "Jump", icon: "kangaroo", color: "from-candy-orange to-candy-yellow" },
   { label: "Dance", icon: "woman-dancing", color: "from-candy-yellow to-candy-green" },
   { label: "Idle", icon: "relieved-face", color: "from-candy-green to-candy-blue" },
   { label: "Walk", icon: "person-walking", color: "from-candy-blue to-candy-purple" },
-  { label: "Thumbs Up", icon: "thumbs-up", color: "from-candy-purple to-candy-pink" },
+  { label: "Victory", icon: "thumbs-up", color: "from-candy-purple to-candy-pink" },
+];
+
+const STICKER_PRESETS: { label: string; icon: FluentIcon3D; color: string }[] = [
+  { label: "Emotions", icon: "artist-palette", color: "from-candy-pink to-candy-orange" },
+  { label: "Happy", icon: "relieved-face", color: "from-candy-orange to-candy-yellow" },
+  { label: "Dizzy", icon: "dizzy-face", color: "from-candy-yellow to-candy-green" },
+  { label: "Cool", icon: "sparkles", color: "from-candy-green to-candy-blue" },
+  { label: "Action", icon: "high-voltage", color: "from-candy-blue to-candy-purple" },
+  { label: "Thinking", icon: "magnifying-glass", color: "from-candy-purple to-candy-pink" },
 ];
 
 export function AnimationPicker({
@@ -33,9 +43,13 @@ export function AnimationPicker({
   onApiError,
   onCreditsUpdate,
   removeBackground = false,
+  subjectType = "Character",
 }: AnimationPickerProps) {
   const [customAction, setCustomAction] = useState("");
   const [activeAction, setActiveAction] = useState<string | null>(null);
+
+  const presets = subjectType === "Sticker" ? STICKER_PRESETS : ANIMATION_PRESETS;
+  const isSticker = subjectType === "Sticker";
 
   const handleAnimate = async (action: string) => {
     setActiveAction(action);
@@ -44,7 +58,7 @@ export function AnimationPicker({
       const res = await fetch("/api/animate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ mascotBase64, action, description, removeBackground }),
+        body: JSON.stringify({ mascotBase64, action, description, removeBackground, subjectType }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -71,13 +85,17 @@ export function AnimationPicker({
   return (
     <div className="space-y-5">
       <div>
-        <h3 className="font-display text-lg text-foreground mb-1">Animate Your Mascot</h3>
-        <p className="text-sm text-muted-foreground">Pick an action or describe your own</p>
+        <h3 className="font-display text-lg text-foreground mb-1">
+          {isSticker ? "Generate Sticker Set" : "Animate Your Mascot"}
+        </h3>
+        <p className="text-sm text-muted-foreground">
+          {isSticker ? "Create 9 different expressions" : "Pick an action or describe your own"}
+        </p>
       </div>
 
       {/* Preset Actions Grid */}
       <div className="grid grid-cols-2 xs:grid-cols-3 gap-2 md:gap-2.5">
-        {PRESET_ACTIONS.map((action) => (
+        {presets.map((action) => (
           <button
             key={action.label}
             onClick={() => handleAnimate(action.label.toLowerCase())}
@@ -127,7 +145,7 @@ export function AnimationPicker({
           disabled={!customAction.trim() || activeAction !== null}
           className="rounded-2xl bg-gradient-to-r from-candy-purple to-candy-pink px-5 text-white shadow-md hover:brightness-105 active:scale-95"
         >
-          Animate
+          {isSticker ? "Generate" : "Animate"}
         </Button>
       </div>
     </div>

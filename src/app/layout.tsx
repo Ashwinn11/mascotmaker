@@ -41,7 +41,6 @@ export const metadata: Metadata = {
     "mascot animation tool",
     "AI Character Generator",
     "Mascot Maker",
-    "Storyboard Creator",
     "AI Icon Maker",
     "Character Consistency",
     "Professional AI Design",

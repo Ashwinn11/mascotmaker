@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { name, description, imageBase64, animationBase64, spriteBase64 } = await req.json();
+    const { name, description, imageBase64, animationBase64, spriteBase64, subjectType } = await req.json();
     if (!name || typeof name !== "string" || !imageBase64) {
       return NextResponse.json(
         { error: "Name and imageBase64 are required" },
@@ -61,7 +61,7 @@ export async function POST(req: Request) {
       stickerUrl = await saveBuffer(stickerBuffer, "png");
     }
 
-    const item = await addToGallery({ name, description, imageUrl, gifUrl, stickerUrl, userId: session.user.id });
+    const item = await addToGallery({ name, description, imageUrl, gifUrl, stickerUrl, userId: session.user.id, subjectType });
     return NextResponse.json({ item });
   } catch (error) {
     console.error("Gallery POST error:", error);

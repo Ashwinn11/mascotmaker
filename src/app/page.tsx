@@ -10,8 +10,6 @@ const EXAMPLES = [
   "Flat Minimalist Logo",
   "3D Pixar Character",
   "Isometric Game Asset",
-  "8-Frame Storyboard",
-  "Character-Product Mix",
   "Retro 80s Vibe",
   "Claymation Robot",
   "Cyberpunk Scene",
@@ -21,38 +19,14 @@ const ENGINES = [
   {
     title: "Mascot Engine",
     subtitle: "Identity Consistency",
-    desc: "Create professional 3D, 2D, or retro characters with full DNA preservation across every action.",
+    desc: "Create professional 3D, 2D, or retro characters with full DNA preservation across every action and expression.",
     icon: Palette,
     color: "bg-candy-pink",
     shadow: "shadow-[12px_12px_0_#ff6b9d]",
     border: "border-candy-pink",
     image: "/demo/hero-shiba.webp",
-    link: "/create?tab=mascot",
-    badge: "Most Popular"
-  },
-  {
-    title: "Story Studio",
-    subtitle: "Narrative Flow",
-    desc: "Design seamless 8-frame narratives. Perfect for storyboards, social content, and brand storytelling.",
-    icon: Clapperboard,
-    color: "bg-candy-blue",
-    shadow: "shadow-[12px_12px_0_#4ea8de]",
-    border: "border-candy-blue",
-    image: "/demo/landing-story-v2.webp",
-    link: "/create?tab=story",
-    badge: "New Feature"
-  },
-  {
-    title: "Mix Studio",
-    subtitle: "Product Integration",
-    desc: "Seamlessly composite characters with real-world products or complex environments for high-end ads.",
-    icon: Layers,
-    color: "bg-candy-green",
-    shadow: "shadow-[12px_12px_0_#5cd85c]",
-    border: "border-candy-green",
-    image: "/demo/landing-mix-v2.webp",
-    link: "/create?tab=mix",
-    badge: "Pro Engine"
+    link: "/create",
+    badge: "Core Engine"
   }
 ];
 
@@ -63,7 +37,7 @@ export default function Home() {
     "name": "Mascot Maker Studio",
     "url": "https://mascotmaker.io",
     "logo": "https://mascotmaker.io/app-icon.png",
-    "description": "The world's most powerful AI design hub for characters, storyboards, and product ads.",
+    "description": "The world's most powerful AI design hub for characters, stickers, and professional mascot assets.",
     "sameAs": [
       "https://twitter.com/mascotmaker",
       "https://discord.gg/mascotmaker"
@@ -116,7 +90,7 @@ export default function Home() {
               </h1>
 
               <p className="text-2xl sm:text-3xl text-muted-foreground/90 max-w-xl mb-16 font-semibold leading-[1.1] -tracking-wide animate-slide-up stagger-2">
-                Unified design engines for characters, cinematically consistent stories, and professional product compositing.
+                The world's most powerful design engine for characters, asset packs, and consistent mascot sets. No prompt engineering needed.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 animate-slide-up stagger-3">
@@ -209,7 +183,7 @@ export default function Home() {
                 ZERO LIMITS.
               </h2>
               <p className="text-2xl text-muted-foreground font-bold leading-relaxed mb-12">
-                From Pixar-grade 3D renders to retro pixel art and high-fidelity isometric game assets. Our engines learn your brand&apos;s style and keep it consistent across every frame.
+                From Pixar-grade 3D renders to retro pixel art and high-fidelity isometric game assets. Generate consistent mascot sets across every action and expression.
               </p>
 
               <div className="flex flex-wrap gap-4">
@@ -220,56 +194,6 @@ export default function Home() {
                 ))}
               </div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Unified Engines (Grid) ─── */}
-      <section className="py-40 bg-white relative overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 relative z-10">
-          <div className="max-w-4xl mb-24 text-center lg:text-left mx-auto lg:ml-0">
-            <h2 className="font-display text-8xl md:text-[8.5rem] text-foreground leading-[0.85] uppercase -tracking-[0.05em] mb-10 stagger-1">
-              THE STUDIO <br />
-              <span className="text-gradient">WORKFLOW.</span>
-            </h2>
-            <p className="text-3xl text-muted-foreground font-bold leading-tight max-w-2xl stagger-2">
-              Three specialized engines designed to handle every stage of your creative production.
-            </p>
-          </div>
-
-          <div className="grid lg:grid-cols-3 gap-12 items-stretch">
-            {ENGINES.map((engine, i) => (
-              <Link key={i} href={engine.link} rel="nofollow" className={`group flex flex-col rounded-[3.5rem] border-4 border-foreground bg-white overflow-hidden transition-all duration-500 hover:-translate-y-3 ${engine.shadow}`}>
-                <div className="relative aspect-square overflow-hidden border-b-4 border-foreground">
-                  <div className="absolute inset-0 bg-dotted opacity-[0.05]" />
-                  <Image
-                    src={engine.image}
-                    alt={engine.title}
-                    fill
-                    className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                  />
-                  {/* Badge */}
-                  <div className="absolute top-6 left-6">
-                    <div className="glass-card px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest shadow-lg border-2 border-foreground/5">{engine.badge}</div>
-                  </div>
-                  {/* Lucide Icon in solid box */}
-                  <div className="absolute bottom-6 right-6">
-                    <div className={`w-14 h-14 rounded-2xl border-4 border-foreground ${engine.color} flex items-center justify-center text-white shadow-[4px_4px_0_#2d2420] group-hover:rotate-12 transition-transform`}>
-                      <engine.icon size={28} />
-                    </div>
-                  </div>
-                </div>
-                <div className="p-10 flex-1 flex flex-col">
-                  <span className={`text-xs font-black uppercase tracking-[0.2em] mb-2 ${engine.color.replace('bg-', 'text-')}`}>{engine.subtitle}</span>
-                  <h3 className="font-display text-4xl mb-4 leading-none uppercase -tracking-tighter">{engine.title}</h3>
-                  <p className="text-muted-foreground font-bold leading-relaxed text-sm">{engine.desc}</p>
-
-                  <div className="mt-auto pt-8 flex items-center gap-2 font-black text-xs uppercase tracking-widest text-foreground group-hover:gap-4 transition-all">
-                    Open Engine <Play size={14} className="fill-candy-green text-candy-green" />
-                  </div>
-                </div>
-              </Link>
-            ))}
           </div>
         </div>
       </section>
@@ -339,7 +263,7 @@ export default function Home() {
               </div>
 
               <div className="flex flex-wrap gap-4">
-                {["/demo/hero-animation.webp", "/demo/landing-story-v2.webp", "/demo/landing-mix-v2.webp", "/demo/hero-shiba.webp"].map((img, i) => (
+                {["/demo/hero-animation.webp", "/demo/hero-stickers.webp", "/demo/hero-shiba.webp", "/demo/style-showcase.webp"].map((img, i) => (
                   <div key={i} className="group relative w-24 aspect-square rounded-[2rem] border-3 border-foreground bg-white overflow-hidden shadow-[6px_6px_0_#e8ddd4] rotate-[-5deg] hover:rotate-0 transition-all">
                     <Image src={img} alt="example" fill className="object-cover p-2" />
                   </div>

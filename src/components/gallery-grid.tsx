@@ -15,7 +15,50 @@ interface GalleryItem {
   image_url: string;
   gif_url: string | null;
   sticker_url: string | null;
+  subject_type: string;
   created_at: string;
+}
+
+function downloadBase64(base64: string, filename: string, mimeType: string = "image/png") {
+  const byteCharacters = atob(base64.includes(",") ? base64.split(",")[1] : base64);
+  const byteNumbers = new Array(byteCharacters.length);
+  for (let i = 0; i < byteCharacters.length; i++) {
+    byteNumbers[i] = byteCharacters.charCodeAt(i);
+  }
+  const byteArray = new Uint8Array(byteNumbers);
+  const blob = new Blob([byteArray], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+
+async function cropSticker(spriteUrl: string, index: number): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.crossOrigin = "anonymous";
+    img.onload = () => {
+      const canvas = document.createElement("canvas");
+      const size = img.width / 3;
+      canvas.width = size;
+      canvas.height = size;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        reject(new Error("Could not get canvas context"));
+        return;
+      }
+      const x = (index % 3) * size;
+      const y = Math.floor(index / 3) * size;
+      ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
+      resolve(canvas.toDataURL("image/png"));
+    };
+    img.onerror = reject;
+    img.src = spriteUrl;
+  });
 }
 
 export function GalleryGrid() {
@@ -147,7 +190,10 @@ function GalleryCard({
   onDelete: (item: GalleryItem) => void;
 }) {
   const [previewMode, setPreviewMode] = useState<"image" | "gif" | "sticker">("image");
+  const [downloading, setDownloading] = useState(false);
 
+  const isSticker = item.subject_type === "Sticker";
+  const isLogo = item.subject_type === "Logo";
   const downloadName = `${item.name.replace(/\s+/g, "-").toLowerCase()}`;
 
   return (
@@ -183,16 +229,18 @@ function GalleryCard({
           <p className="mt-0.5 text-[10px] md:text-xs text-muted-foreground line-clamp-2">{item.description}</p>
         )}
         <div className="flex flex-wrap gap-1 mt-2.5">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              downloadFile(item.image_url, `${downloadName}.png`);
-            }}
-            className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-[9px] font-bold text-warm-gray transition-colors hover:bg-border"
-          >
-            Mascot
-          </button>
-          {item.gif_url && (
+          {!isSticker && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                downloadFile(item.image_url, `${downloadName}.png`);
+              }}
+              className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-[9px] font-bold text-warm-gray transition-colors hover:bg-border"
+            >
+              {isLogo ? "Logo" : "Mascot"}
+            </button>
+          )}
+          {item.gif_url && !isSticker && (
             <button
               onMouseEnter={() => setPreviewMode("gif")}
               onMouseLeave={() => setPreviewMode("image")}
@@ -205,17 +253,32 @@ function GalleryCard({
               Animated
             </button>
           )}
-          {item.sticker_url && (
+          {isSticker && item.sticker_url && (
             <button
               onMouseEnter={() => setPreviewMode("sticker")}
               onMouseLeave={() => setPreviewMode("image")}
-              onClick={(e) => {
+              disabled={downloading}
+              onClick={async (e) => {
                 e.stopPropagation();
-                downloadFile(item.sticker_url!, `${downloadName}-pack.png`);
+                setDownloading(true);
+                const toastId = toast.loading("Preparing stickers...");
+                try {
+                  for (let i = 0; i < 9; i++) {
+                    const cropped = await cropSticker(item.sticker_url!, i);
+                    downloadBase64(cropped, `${downloadName}-${i + 1}.png`);
+                    await new Promise(r => setTimeout(r, 150));
+                  }
+                  toast.success("Downloaded!", { id: toastId });
+                } catch (err) {
+                  toast.error("Failed to extract stickers", { id: toastId });
+                  console.error(err);
+                } finally {
+                  setDownloading(false);
+                }
               }}
-              className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-candy-blue/80 to-candy-purple/80 py-1.5 text-[9px] font-bold text-white transition-all hover:brightness-105"
+              className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-candy-blue/80 to-candy-purple/80 py-1.5 text-[9px] font-bold text-white transition-all hover:brightness-105 disabled:opacity-50"
             >
-              Stickers
+              <span className="truncate">{downloading ? "Working..." : "Download Individual Stickers"}</span>
             </button>
           )}
           <button

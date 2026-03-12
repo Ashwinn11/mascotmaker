@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const check = await requireCredits("animate");
     if (check instanceof Response) return check;
 
-    const { mascotBase64, action, description, removeBackground: shouldRemoveBackground = false } = await req.json();
+    const { mascotBase64, action, description, removeBackground: shouldRemoveBackground = false, subjectType = "Character" } = await req.json();
     if (!mascotBase64 || !action || typeof action !== "string") {
       return NextResponse.json(
         { error: "mascotBase64 and action are required" },
@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = await generateSpriteSheet(mascotBase64, action, description);
+    const result = await generateSpriteSheet(mascotBase64, action, description, subjectType);
     const spriteDataData = result.data;
     const spriteBuffer = Buffer.from(spriteDataData, "base64");
 
@@ -45,8 +45,11 @@ export async function POST(req: Request) {
       animationBase64,
       creditsRemaining,
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Animate error:", error);
+    if (error.message?.includes("SAFETY_BLOCK")) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     return NextResponse.json(
       { error: "Failed to generate animation" },
       { status: 500 }

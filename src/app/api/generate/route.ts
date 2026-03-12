@@ -56,8 +56,11 @@ export async function POST(req: Request) {
       analysis,
       creditsRemaining
     });
-  } catch (error) {
+  } catch (error: any) {
     console.error("Generate error:", error);
+    if (error.message?.includes("SAFETY_BLOCK")) {
+      return NextResponse.json({ error: error.message }, { status: 400 });
+    }
     return NextResponse.json(
       { error: "Failed to generate mascot" },
       { status: 500 }

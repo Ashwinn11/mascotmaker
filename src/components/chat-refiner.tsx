@@ -30,7 +30,7 @@ export function ChatRefiner({
   mascotBase64,
   analysis,
   aspectRatio = "1:1",
-  imageSize = "1K",
+  imageSize = "2K",
   removeBackground = false,
   subjectType = "Character",
   onMascotUpdate,
@@ -111,7 +111,7 @@ export function ChatRefiner({
 
   // Show current settings inherited from Create step as a subtle info bar
   const settingsLabel = [
-    imageSize !== "1K" ? imageSize : null,
+    imageSize !== "2K" ? imageSize : null,
     removeBackground ? "Transp." : null,
   ].filter(Boolean).join(" · ");
 
@@ -196,7 +196,7 @@ export function ChatRefiner({
         <div className="flex items-center justify-center gap-2 mb-3">
           <div className="flex-1 h-[1px] bg-border/50" />
           <div className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
-            <span>Cost: {5 + (imageSize === "2K" ? 5 : imageSize === "4K" ? 15 : imageSize === "512px" ? -2 : 0)} Cr</span>
+            <span>Cost: {subjectType === "Sticker" ? 15 : 5} Credits</span>
           </div>
           <div className="flex-1 h-[1px] bg-border/50" />
         </div>
