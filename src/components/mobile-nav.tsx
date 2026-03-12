@@ -23,6 +23,7 @@ export function MobileNav() {
                             <Link
                                 key={link.href}
                                 href={link.href}
+                                rel="nofollow"
                                 className={`flex flex-col items-center gap-1 rounded-xl px-4 py-2 transition-all ${isActive
                                     ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-lg scale-110"
                                     : "text-warm-gray hover:bg-white"

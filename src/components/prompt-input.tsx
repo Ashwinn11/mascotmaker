@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Icon3DInline } from "@/components/ui/icon-3d";
+import { STYLES } from "@/lib/prompts";
 
 interface PromptInputProps {
   onGenerated: (images: string[], analysis?: string) => void;
@@ -32,15 +33,7 @@ export function PromptInput({ onGenerated, onLoadingChange, requireAuth, onApiEr
 
   const [selectedStyleId, setSelectedStyleId] = useState("chibi");
 
-  const STYLES = [
-    { id: "chibi", label: "Chibi", desc: "Cute & Cartoon", icon: "artist-palette" as const, prompt: "cute expressive mascot character in a cartoon/chibi style, vibrant colors" },
-    { id: "pixar", label: "Pixar", desc: "3D Cinematic", icon: "sparkles" as const, prompt: "3D modeled cinematic mascot character, Disney Pixar style, soft studio lighting, high detail" },
-    { id: "game", label: "Game", desc: "Isometric 3D", icon: "classical-building" as const, prompt: "isometric 3D game asset, high-quality game art, detailed isometric perspective" },
-    { id: "retro", label: "Retro", desc: "80s Film", icon: "camera" as const, prompt: "mascot character as an 80s photograph, Kodak film grain, retro vibes, slightly faded colors" },
-    { id: "pop", label: "Pop Art", desc: "Bold Comic", icon: "magic-wand" as const, prompt: "Pop Art style mascot, thick black outlines, vibrant primary colors, Ben-Day dots" },
-    { id: "minimalist", label: "Minimalist", desc: "Flat & Clean", icon: "pencil" as const, prompt: "minimalist vector art, clean lines, professional flat design, simplistic shapes" },
-    { id: "clay", label: "Clay", desc: "Claymation", icon: "relieved-face" as const, prompt: "mascot character made of clay, claymation style, tactile texture, fingerprints visible, Aardman style" },
-  ];
+
 
   const currentStyle = STYLES.find(s => s.id === selectedStyleId) || STYLES[0];
 

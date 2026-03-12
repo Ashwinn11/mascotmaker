@@ -264,39 +264,83 @@ export function getSEOContent(category?: string, location?: string) {
     const definition = `${displayName} is a professional-grade AI design studio specialized in creating high-fidelity visual assets with absolute identity consistency. Using advanced latent-space locking, it allows creators to generate ${catText} that maintain the same character DNA across different poses, environments, and storyboards.`;
 
     const tips: string[] = [];
-    if (category?.includes("Mascot") || category?.includes("Character")) {
+    
+    // Category-specific tips (Styles & Engines)
+    if (category?.includes("Mascot") || category?.includes("Character") || category?.includes("Pixar") || category?.includes("Ghibli") || category?.includes("Claymation")) {
         tips.push("Anatomy consistency: Use our 'Identity Lock' feature to ensure facial features and proportions remain identical across all 2D and 3D renders.");
         tips.push("Emotional Range: For brand mascots, generate a 'Sheet of Expressions' including joy, surprise, and determination to ensure versatility.");
         tips.push("Texture Preservation: When moving between styles like Pixar and Claymation, maintain key color Hex codes for brand recognition.");
-    } else if (category?.includes("Icon") || category?.includes("Logo")) {
+    } 
+    
+    if (category?.includes("Icon") || category?.includes("Logo") || category?.includes("Minimalist") || category?.includes("Vector") || category?.includes("Flat")) {
         tips.push("Geometric Simplicity: AI icons perform best when using bold primary shapes that remain legible at 16px favicon sizes.");
         tips.push("Vector Readiness: Always export with high contrast to ensure easy tracing into SVG formats for infinitely scalable branding.");
         tips.push("Negative Space: Leverage AI to test how your logo looks on both dark mode and light mode backgrounds instantly.");
-    } else if (category?.includes("Story")) {
-        tips.push("Narrative Continuity: Maintain the same background elements across all 8 frames to create a professional cinematic flow.");
-        tips.push("Lighting Consistency: Set a global light source direction in the studio to prevent jarring transitions between storyboard panels.");
-    } else if (category?.includes("Mix")) {
-        tips.push("Perspective Matching: Upload your real product photo first; the AI will automatically calculate the horizon line for realistic character placement.");
-        tips.push("Shadow Integrity: Use the 'Contact Shadow' tool to ground your AI character onto physical product surfaces for a studio-quality look.");
     }
 
-    if (tips.length === 0) {
+    if (category?.includes("Neumorphism") || category?.includes("Glassmorphism")) {
+        tips.push("Soft Aesthetics: For Neumorphism, use light shadows and subtle gradients to create the signature 'soft UI' look that feels tactile.");
+        tips.push("Contrast Accessibility: Ensure your foreground elements have enough contrast to remain legible while maintaining the frosted glass or soft shadow aesthetic.");
+    }
+
+    if (category?.includes("Isometric") || category?.includes("Low Poly")) {
+        tips.push("Camera Angle: Set a consistent 45-degree isometric perspective in your prompt to ensure all assets can be tiled or grouped in your UI design.");
+        tips.push("Lighting Depth: Use harsh directional lighting to emphasize the geometric facets of low-poly and isometric assets.");
+    }
+
+    // Industry-specific tips
+    if (category?.includes("Travel") || category?.includes("Hospitality")) {
+        tips.push("Evoke Adventure: Use bright, sun-drenched lighting and saturated colors to make travel-related characters feel welcoming and adventurous.");
+        tips.push("Cultural Context: Incorporate regional clothing or accessory cues into your AI character to better resonate with local travel markets.");
+    }
+
+    if (category?.includes("Fintech") || category?.includes("Blockchain") || category?.includes("SaaS")) {
+        tips.push("Establishing Trust: Use clean, modernist art styles like Flat Design or Minimalist to convey reliability and technical sophistication.");
+        tips.push("Brand Cohesion: Match your AI assets' color palette exactly to your software's primary accent colors for a professional, integrated UI feel.");
+    }
+
+    if (category?.includes("Gaming") || category?.includes("Discord") || category?.includes("Twitch")) {
+        tips.push("Character Personality: Give your mascot unique 'gaming' traits—like headsets or glowing energy elements—to stand out in streaming communities.");
+        tips.push("Action Poses: Generate characters in high-energy poses (celebrating, attacking, or gaming) to provide content for various stream alerts.");
+    }
+
+    if (category?.includes("E-commerce") || category?.includes("Marketplace")) {
+        tips.push("Product Synergy: When creating mascots for stores, ensure they are shown interacting with your products to create a stronger brand connection.");
+    }
+
+    if (tips.length < 3) {
         tips.push("Rapid Prototyping: Generate 4 unique style variations in under 30 seconds to find the perfect visual direction for your project.");
         tips.push("Commercial Licensing: All outputs from the Mascot Maker Studio come with full commercial rights for use in advertising and merchandise.");
+        tips.push("Higher Resolution: For professional print, use our 4K Upscale engine to preserve fine textures and sharp lines.");
+    }
+
+    // Regional/City Context for local SEO value
+    let localContext = "";
+    if (location) {
+        const usCities = LOCATIONS.filter(l => l.country === "USA").map(l => l.name);
+        const euCities = LOCATIONS.filter(l => ["UK", "Germany", "France", "Spain", "Italy", "Austria", "Sweden", "Finland", "Norway", "Denmark", "Ireland", "Netherlands", "Poland", "Czech Republic", "Portugal"].includes(l.country)).map(l => l.name);
+
+        if (usCities.includes(location)) {
+            localContext = `Our studio is optimized for the fast-paced North American market, providing the bold, high-contrast visual standards expected in ${location}.`;
+        } else if (euCities.includes(location)) {
+            localContext = `Tailored for the European design aesthetic, our AI respects the sophisticated, minimalist, and historically-rich styles found across brands in ${location}.`;
+        } else {
+            localContext = `Providing world-class AI design capabilities with localized support for high-growth creative markets in ${location}.`;
+        }
     }
 
     // Expert Statistics & Trust Signals
     const stats = [
-        "Identical character consistency across 100+ poses.",
-        "Studio-grade 4K resolution exports available instantly.",
+        `Identical character consistency across ${category ? `${category}-specific` : "100+"} poses.`,
+        `Studio-grade 4K resolution exports ${location ? `for the ${location} market` : "available instantly"}.`,
         "98% accuracy in maintaining brand colors across artistic styles.",
-        "Integrated with 15+ specialized AI design engines."
+        `Integrated with 15+ specialized AI design engines ${location ? `supporting ${location} teams` : "for professionals"}.`
     ];
 
     return {
         definition,
         intro: `Empower your brand with world-class ${catText}. Mascot Maker is the only AI design hub designed for professionals who refuse to compromise on character consistency and cinematic output quality${location ? `—now available with localized support in ${location}` : ""}.`,
-        benefit1: `For ${location || "scaling startups"}, our proprietary Identity-Lock technology eliminates the 'AI Drift' common in generic generators. Every ${catText} you create for your ${category?.toLowerCase() || 'brand'} workflow remains 100% faithful to your original design.`,
+        benefit1: localContext || `For ${location || "scaling startups"}, our proprietary Identity-Lock technology eliminates the 'AI Drift' common in generic generators. Every ${catText} you create for your ${category?.toLowerCase() || 'brand'} workflow remains 100% faithful to your original design.`,
         benefit2: `Achieve high-end agency results at 100x the speed. Whether you're building a global sub-brand or a ${location ? `${location}-specific campaign` : "targeted marketing push"}, our studio provides the photoreal textures and material accuracy required for modern commercial standards.`,
         tips,
         stats

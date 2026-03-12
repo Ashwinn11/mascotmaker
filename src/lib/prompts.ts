@@ -1,0 +1,50 @@
+export const STYLES = [
+    { id: "chibi", label: "Chibi", desc: "Cute & Cartoon", icon: "artist-palette" as const, prompt: "cute expressive cartoon/chibi style, vibrant colors" },
+    { id: "pixar", label: "Pixar", desc: "3D Cinematic", icon: "sparkles" as const, prompt: "3D modeled cinematic Disney Pixar style, soft studio lighting, high detail" },
+    { id: "game", label: "Game", desc: "Isometric 3D", icon: "classical-building" as const, prompt: "isometric 3D game asset, high-quality game art, detailed isometric perspective" },
+    { id: "retro", label: "Retro", desc: "80s Film", icon: "camera" as const, prompt: "80s photograph, Kodak film grain, retro vibes, slightly faded colors" },
+    { id: "pop", label: "Pop Art", desc: "Bold Comic", icon: "magic-wand" as const, prompt: "Pop Art style, thick black outlines, vibrant primary colors, Ben-Day dots" },
+    { id: "minimalist", label: "Minimalist", desc: "Flat & Clean", icon: "pencil" as const, prompt: "minimalist vector art, clean lines, professional flat design, simplistic shapes" },
+    { id: "clay", label: "Clay", desc: "Claymation", icon: "relieved-face" as const, prompt: "made of clay, claymation style, tactile texture, fingerprints visible, Aardman style" },
+];
+
+export const SUBJECT_TYPES = [
+    { value: "Character", label: "Character", desc: "Full body mascot, head to feet" },
+    { value: "Sticker", label: "Sticker", desc: "Die-cut Pop Art sticker" },
+    { value: "Logo", label: "Logo", desc: "Minimalist vector icon" },
+] as const;
+
+export type SubjectType = typeof SUBJECT_TYPES[number]["value"];
+
+/**
+ * Centralized prompt builder for generating consistently across the app.
+ * @param isStylize True if we are morphing an existing image, false if generating from scratch.
+ */
+export function buildPrompt(
+    subjectType: string,
+    stylePrompt: string,
+    userPrompt: string,
+    isStylize: boolean = false,
+    analysisContext?: string
+): string {
+    const baseStyle = stylePrompt || "cute expressive cartoon/chibi style, vibrant colors";
+    let prompt = "";
+
+    // Conditionally add analysis info if we are stylizing an existing image
+    const context = analysisContext ? `The image contains: ${analysisContext}. Use these details to preserve the subject's identity. ` : "";
+    const transformPrefix = isStylize ? `Transform this image into a ` : `Create a `;
+
+    if (subjectType === "Sticker") {
+        prompt = `${transformPrefix}single high-quality die-cut sticker: ${userPrompt}. ${context}${baseStyle}. Bold, thick black outlines. Clean, wide white border around the entire subject. Vibrant colors. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. NO shadows, NO gradients on the background.`;
+    } else if (subjectType === "Character") {
+        prompt = `${transformPrefix}${baseStyle} of: ${userPrompt}. ${context}IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet — do NOT crop or cut off any part. Expressive face, clean outlines.`;
+        if (isStylize) prompt += " Keep the subject recognizable.";
+    } else if (subjectType === "Logo") {
+        prompt = `${transformPrefix}professional branding logo in a ${baseStyle} style: ${userPrompt}. ${context}Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. NO mascot characters or complex cartoons unless specifically requested — focus on symbolic representation.`;
+    } else {
+        // Fallback/Legacy (Mix mode scenes or composite requests)
+        prompt = `${transformPrefix}richly detailed ${baseStyle} scene: ${userPrompt}. ${context}Cinematic composition, beautiful lighting.`;
+    }
+
+    return prompt;
+}

@@ -51,7 +51,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url,
       lastModified: new Date(),
       changeFrequency: "monthly" as const,
-      priority: 0.6,
+      priority: 0.7,
       languages: {
         [locale]: url,
         'x-default': url,

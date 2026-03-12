@@ -336,6 +336,7 @@ export function MascotCreator() {
                   <ChatRefiner mascotBase64={mascotBase64} analysis={analysis}
                     aspectRatio={createOptions.aspectRatio} imageSize={createOptions.imageSize}
                     removeBackground={createOptions.removeBackground}
+                    subjectType={createOptions.subjectType}
                     onMascotUpdate={handleMascotUpdate} onLoadingChange={setMascotLoading}
                     onDone={() => {
                       if (createOptions.subjectType === "Character") {

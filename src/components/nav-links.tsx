@@ -21,6 +21,7 @@ export function NavLinks() {
           <Link
             key={link.href}
             href={link.href}
+            rel="nofollow"
             className={`flex items-center gap-2 rounded-xl px-3 py-2 md:px-4 text-sm font-bold transition-all ${isActive
               ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md scale-105"
               : "text-warm-gray hover:bg-white hover:text-foreground hover:shadow-sm"

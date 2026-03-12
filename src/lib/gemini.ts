@@ -1,6 +1,7 @@
 import { GoogleGenAI, type GenerateContentResponse } from "@google/genai";
 import fs from "fs";
 import path from "path";
+import { buildPrompt } from "@/lib/prompts";
 
 const MODEL_ID = "gemini-3.1-flash-image-preview";
 let _ai: GoogleGenAI | null = null;
@@ -127,21 +128,7 @@ export async function stylizeImage(
   analysis?: string,
   options: ImageOptions = {}
 ): Promise<GeminiResult<string>> {
-  const analysisContext = analysis
-    ? `The image contains: ${analysis}. Use these details to preserve the subject's identity.`
-    : "";
-  const characterStyle = options.style || "cute mascot character in a cartoon/chibi style, vibrant colors";
-  let fullPrompt = "";
-
-  if (options.subjectType === "Character") {
-    fullPrompt = `Transform this image into a ${characterStyle}. ${analysisContext} ${prompt}. Keep the subject recognizable. IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet/bottom — do NOT crop or cut off any part of the character.`;
-  } else if (options.subjectType === "Sticker") {
-    fullPrompt = `Transform this image into a single high-quality die-cut sticker: ${prompt}. ${analysisContext} ${characterStyle}. Bold, thick black outlines. Clean, wide white border around the entire subject. Vibrant colors. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. NO shadows, NO gradients on the background.`;
-  } else {
-    // Logo
-    fullPrompt = `Transform this image into a professional branding logo in a ${characterStyle} style: ${prompt}. ${analysisContext} Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. Isolated on a SOLID background. NO mascot characters or complex cartoons unless specifically requested — focus on symbolic representation.`;
-  }
-
+  const fullPrompt = buildPrompt(options.subjectType || "Character", options.style || "", prompt, true, analysis);
   return editImage(fullPrompt, imageBase64, options);
 }
 

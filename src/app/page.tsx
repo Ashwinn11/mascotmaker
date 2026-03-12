@@ -122,6 +122,7 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row gap-6 animate-slide-up stagger-3">
                 <Link
                   href="/create"
+                  rel="nofollow"
                   className="group relative inline-flex items-center justify-center gap-5 rounded-[2.5rem] bg-foreground px-14 py-7 text-2xl font-black text-white shadow-[8px_8px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-[0.95]"
                 >
                   <Sparkles size={28} className="text-candy-yellow" />
@@ -129,6 +130,7 @@ export default function Home() {
                 </Link>
                 <Link
                   href="/gallery"
+                  rel="nofollow"
                   className="inline-flex items-center justify-center gap-5 rounded-[2.5rem] border-4 border-foreground bg-white px-14 py-7 text-2xl font-black text-foreground shadow-[8px_8px_0_#e8ddd4] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-[0.95]"
                 >
                   EXPLORE
@@ -237,7 +239,7 @@ export default function Home() {
 
           <div className="grid lg:grid-cols-3 gap-12 items-stretch">
             {ENGINES.map((engine, i) => (
-              <Link key={i} href={engine.link} className={`group flex flex-col rounded-[3.5rem] border-4 border-foreground bg-white overflow-hidden transition-all duration-500 hover:-translate-y-3 ${engine.shadow}`}>
+              <Link key={i} href={engine.link} rel="nofollow" className={`group flex flex-col rounded-[3.5rem] border-4 border-foreground bg-white overflow-hidden transition-all duration-500 hover:-translate-y-3 ${engine.shadow}`}>
                 <div className="relative aspect-square overflow-hidden border-b-4 border-foreground">
                   <div className="absolute inset-0 bg-dotted opacity-[0.05]" />
                   <Image
@@ -346,6 +348,7 @@ export default function Home() {
 
               <Link
                 href="/create"
+                rel="nofollow"
                 className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-10 py-5 text-xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
               >
                 START CREATING NOW

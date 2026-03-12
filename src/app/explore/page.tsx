@@ -67,11 +67,26 @@ export default function ExplorePage() {
 
                     <div>
                         <h2 className="font-display text-4xl uppercase mb-8 border-b-4 border-candy-yellow pb-2">Global Studios</h2>
-                        <div className="grid grid-cols-2 gap-x-8 gap-y-3 h-[800px] overflow-y-auto pr-4 custom-scrollbar">
+                        <div className="grid grid-cols-2 gap-x-8 gap-y-3 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar mb-12">
                             {LOCATIONS.map((l) => (
                                 <Link key={l.slug} href={`/mascot-maker/near/${l.slug}`} className="text-sm font-bold text-muted-foreground hover:text-candy-yellow transition-colors">
                                     Studio in {l.name}
                                 </Link>
+                            ))}
+                        </div>
+
+                        <h2 className="font-display text-4xl uppercase mb-8 border-b-4 border-foreground pb-2">Top Sets</h2>
+                        <div className="grid gap-3">
+                            {STYLES.slice(0, 5).map((s) => (
+                                INDUSTRIES.slice(0, 3).map((i) => (
+                                    <Link 
+                                        key={`${s.slug}-${i.slug}`} 
+                                        href={`/mascot-maker/${s.slug}/${i.slug}`} 
+                                        className="text-xs font-black uppercase tracking-tight text-muted-foreground hover:text-candy-pink transition-colors"
+                                    >
+                                        • {s.title} for {i.title}
+                                    </Link>
+                                ))
                             ))}
                         </div>
                     </div>

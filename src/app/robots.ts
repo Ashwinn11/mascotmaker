@@ -6,11 +6,12 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        disallow: "/api/",
+        disallow: ["/api/", "/create", "/gallery", "/profile", "/create/", "/gallery/", "/profile/", "/*?*modal="],
       },
       {
         userAgent: ["GPTBot", "ClaudeBot", "PerplexityBot"],
         allow: "/",
+        disallow: ["/create", "/gallery", "/profile", "/create/", "/gallery/", "/profile/", "/*?*modal="],
       }
     ],
     sitemap: "https://mascotmaker.io/sitemap.xml",

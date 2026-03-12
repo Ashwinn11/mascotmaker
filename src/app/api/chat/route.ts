@@ -11,9 +11,10 @@ export async function POST(req: Request) {
       analysis: previousAnalysis,
       aspectRatio,
       imageSize,
+      subjectType = "Character",
       removeBackground: shouldRemoveBackground = false,
     } = body;
-    const options = { aspectRatio, imageSize };
+    const options = { aspectRatio, imageSize, subjectType };
 
     // Auth + credit check
     const check = await requireCredits("chat", options);
@@ -38,10 +39,13 @@ export async function POST(req: Request) {
       ? `This character is: ${previousAnalysis}. Preserve all these traits.`
       : "";
 
+    const bgRequirement = subjectType === "Logo"
+      ? "\n    Beautiful background."
+      : "\n    Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet — do NOT crop any part of the character.";
+
     const prompt = `Apply this change to the mascot: "${message}".
     ${characterContext}
-    CRITICAL: Keep the same art style, color palette, and character identity — only apply the requested change.
-    Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet — do NOT crop any part of the character.`;
+    CRITICAL: Keep the same art style, color palette, and character identity — only apply the requested change.${bgRequirement}`;
     const result = await editImage(prompt, mascotBase64, options);
     let imageBase64 = result.data;
 

@@ -7,23 +7,7 @@ import { toast } from "sonner";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 import { downloadFile } from "@/lib/download";
 
-const STYLES = [
-    { id: "chibi", label: "Chibi", desc: "Cute & Cartoon", icon: "artist-palette" as const, prompt: "cute expressive mascot character in a cartoon/chibi style, vibrant colors" },
-    { id: "pixar", label: "Pixar", desc: "3D Cinematic", icon: "sparkles" as const, prompt: "3D modeled cinematic mascot character, Disney Pixar style, soft studio lighting, high detail" },
-    { id: "game", label: "Game", desc: "Isometric 3D", icon: "classical-building" as const, prompt: "isometric 3D game asset, high-quality game art, detailed isometric perspective" },
-    { id: "retro", label: "Retro", desc: "80s Film", icon: "camera" as const, prompt: "mascot character as an 80s photograph, Kodak film grain, retro vibes, slightly faded colors" },
-    { id: "pop", label: "Pop Art", desc: "Bold Comic", icon: "magic-wand" as const, prompt: "Pop Art style mascot, thick black outlines, vibrant primary colors, Ben-Day dots" },
-    { id: "minimalist", label: "Minimalist", desc: "Flat & Clean", icon: "pencil" as const, prompt: "minimalist vector art, clean lines, professional flat design, simplistic shapes" },
-    { id: "clay", label: "Clay", desc: "Claymation", icon: "relieved-face" as const, prompt: "mascot character made of clay, claymation style, tactile texture, fingerprints visible, Aardman style" },
-];
-
-const SUBJECT_TYPES = [
-    { value: "Character", label: "Character", desc: "Full body mascot, head to feet" },
-    { value: "Sticker", label: "Sticker", desc: "Die-cut Pop Art sticker" },
-    { value: "Logo", label: "Logo", desc: "Minimalist vector icon" },
-] as const;
-
-type SubjectType = typeof SUBJECT_TYPES[number]["value"];
+import { STYLES, SUBJECT_TYPES, SubjectType } from "@/lib/prompts";
 
 interface StudioMascotProps {
     onGenerated: (images: string[], analysis?: string, options?: any) => void;

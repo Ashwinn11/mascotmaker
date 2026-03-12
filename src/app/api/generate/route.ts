@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { generateImage, analyzeImage } from "@/lib/gemini";
 import { requireCredits, deductCredits } from "@/lib/credits";
+import { buildPrompt } from "@/lib/prompts";
 
 export async function POST(req: Request) {
   try {
@@ -27,23 +28,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt must be under 2000 characters" }, { status: 400 });
     }
 
-    const characterStyle = style || "cute mascot character in a cartoon/chibi style, vibrant colors";
-    let basePrompt = "";
-
-    if (subjectType === "Sticker") {
-      basePrompt = `Create a single high-quality die-cut sticker: ${prompt}. ${characterStyle}. Bold, thick black outlines. Clean, wide white border around the entire subject. Vibrant colors. Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. NO shadows, NO gradients on the background.`;
-    } else if (subjectType === "Character") {
-      basePrompt = `Create a ${characterStyle} of: ${prompt}.
-      IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture.
-      Show the COMPLETE full body from head to feet — do NOT crop or cut off any part.
-      Expressive face, clean outlines.`;
-    } else if (subjectType === "Logo") {
-      basePrompt = `Create a professional branding logo in a ${characterStyle} style: ${prompt}. Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. Isolated on a SOLID background. NO mascot characters or complex cartoons unless specifically requested — focus on symbolic representation.`;
-    } else {
-      basePrompt = `Create a richly detailed ${characterStyle} scene: ${prompt}.
-      Cinematic composition, beautiful lighting.`;
-    }
-
+    const basePrompt = buildPrompt(subjectType, style, prompt, false);
     const result = await generateImage(basePrompt, options);
     let images = result.data;
 

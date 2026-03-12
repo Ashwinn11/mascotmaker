@@ -18,6 +18,7 @@ interface ChatRefinerProps {
   aspectRatio?: string;
   imageSize?: string;
   removeBackground?: boolean;
+  subjectType?: string;
   onMascotUpdate: (imageBase64: string, mascotAnalysis?: string) => void;
   onLoadingChange: (loading: boolean) => void;
   onDone: () => void;
@@ -31,6 +32,7 @@ export function ChatRefiner({
   aspectRatio = "1:1",
   imageSize = "1K",
   removeBackground = false,
+  subjectType = "Character",
   onMascotUpdate,
   onLoadingChange,
   onDone,
@@ -124,14 +126,16 @@ export function ChatRefiner({
             </p>
           )}
         </div>
-        <Button
-          onClick={onDone}
-          variant="outline"
-          className="rounded-xl border-2 border-candy-green text-candy-green hover:bg-candy-green/10 font-bold whitespace-nowrap"
-          size="sm"
-        >
-          Animate →
-        </Button>
+        {subjectType === "Character" && (
+          <Button
+            onClick={onDone}
+            variant="outline"
+            className="rounded-xl border-2 border-candy-green text-candy-green hover:bg-candy-green/10 font-bold whitespace-nowrap"
+            size="sm"
+          >
+            Animate →
+          </Button>
+        )}
       </div>
 
       {/* Messages area */}

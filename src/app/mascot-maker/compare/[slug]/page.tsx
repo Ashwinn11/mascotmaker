@@ -94,6 +94,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                     <div className="flex justify-center gap-4">
                         <Link
                             href="/create"
+                            rel="nofollow"
                             className="inline-flex items-center justify-center gap-3 rounded-full bg-foreground px-10 py-5 text-xl font-black text-white shadow-[6px_6px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-95"
                         >
                             <Sparkles size={24} className="text-candy-yellow" />
@@ -202,6 +203,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                 <h2 className="font-display text-6xl md:text-9xl mb-12 uppercase leading-none">READY FOR <br /><span className="text-gradient">THE UPGRADE?</span></h2>
                 <Link
                     href="/create"
+                    rel="nofollow"
                     className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-12 py-6 text-2xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
                 >
                     GET STARTED FREE <ArrowRight size={28} />
