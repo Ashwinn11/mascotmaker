@@ -34,7 +34,7 @@ export interface GeminiResult<T> {
 
 export interface ImageOptions {
   aspectRatio?: string;
-  imageSize?: "1K";
+  imageSize?: "1K" | "2K" | "4K";
   style?: string;
   subjectType?: "Character" | "Sticker" | "Logo";
 }
@@ -149,13 +149,13 @@ export async function generateSpriteSheet(
   const gridImagePath = path.join(process.cwd(), "public", "grid_3x3_1024_grey.png");
   const gridImageBase64 = fs.readFileSync(gridImagePath).toString("base64");
 
-  const characterContext = description
+  const subjectContext = description
     ? `The subject is: ${description}. `
     : "";
   
   const isSticker = subjectType === "Sticker";
   const stickerStyle = isSticker 
-    ? "Clean, wide white die-cut border around the subject in EVERY frame. Bold black outlines. " 
+    ? "Clean, wide white die-cut border around every sticker in EVERY frame. Bold black outlines. " 
     : "";
 
   const prompt = `REFERENCE IMAGES: (1) Target subject, (2) Dark Charcoal Grey template (#404040).
@@ -163,12 +163,12 @@ export async function generateSpriteSheet(
 PROMPT: Using the EXACT subject from (1), create a 9-frame 3x3 asset sheet on the SOLID, uniform Dark Charcoal Grey (#404040) background shown in (2). 
 
 CRITICAL INSTRUCTIONS:
-- PRESERVE IDENTITY: Reference (1) is the EXCLUSIVE and ONLY source for the design. Every pixel of the subject's design, face, and clothing must match (1).
+- PRESERVE IDENTITY: Reference (1) is the EXCLUSIVE and ONLY source for the design. Every detail of the subject's design and colors must match (1).
 - ACTION/EXPRESSION: Create 9 distinct frames showing the subject with ${action}. Each frame should be a unique variation.
 - STYLE MATCH: Use the identical art style and color palette as (1). ${stickerStyle}
 - ROWS/COLS: Exactly 3 rows and 3 columns. Each frame must show the full subject.
 - BACKGROUND: Background MUST remain the continuous Dark Charcoal Grey from (2) with NO grid lines, borders, shadows, or texture between frames.
-${characterContext} Subject is ${action}.`;
+${subjectContext} Subject is ${action}.`;
 
   const response = await getAI().models.generateContent({
     model: MODEL_ID,

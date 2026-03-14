@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const file = formData.get("image") as File;
     const prompt = (formData.get("prompt") as string) || "";
     const aspectRatio = (formData.get("aspectRatio") as string) || "1:1";
-    const imageSize = (formData.get("imageSize") as "1K") || "1K";
+    const imageSize = (formData.get("imageSize") as "1K" | "2K" | "4K") || "1K";
     const style = (formData.get("style") as string) || "";
     const subjectType = (formData.get("subjectType") as "Character" | "Sticker" | "Logo") || "Character";
     const removeBackgroundFlag = formData.get("removeBackground") === "true";

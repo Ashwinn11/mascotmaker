@@ -68,6 +68,7 @@ export function ChatRefiner({
           aspectRatio,
           imageSize,
           removeBackground,
+          subjectType,
         }),
       });
       const data = await res.json();
@@ -133,7 +134,7 @@ export function ChatRefiner({
             className="rounded-xl border-2 border-candy-green text-candy-green hover:bg-candy-green/10 font-bold whitespace-nowrap"
             size="sm"
           >
-            Animate →
+            {subjectType === "Character" ? "Animate →" : "Studio →"}
           </Button>
         )}
       </div>

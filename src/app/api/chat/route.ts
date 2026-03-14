@@ -35,17 +35,19 @@ export async function POST(req: Request) {
 
     // nano-banana best practice: when editing iteratively, always remind the model of
     // the character's key traits AND the original art style to prevent drift.
-    const characterContext = previousAnalysis
-      ? `This character is: ${previousAnalysis}. Preserve all these traits.`
+    const subjectContext = previousAnalysis
+      ? `The subject is: ${previousAnalysis}. Preserve all these traits.`
       : "";
 
     const bgRequirement = subjectType === "Logo"
       ? "\n    Beautiful background."
+      : subjectType === "Sticker"
+      ? "\n    Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. Maintain the 9-frame sticker sheet layout. Keep the wide white die-cut borders around every subject."
       : "\n    Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet — do NOT crop any part of the character.";
 
-    const prompt = `Apply this change to the mascot: "${message}".
-    ${characterContext}
-    CRITICAL: Keep the same art style, color palette, and character identity — only apply the requested change.${bgRequirement}`;
+    const prompt = `Apply this change to the ${subjectType}: "${message}".
+    ${subjectContext}
+    CRITICAL: Keep the same art style, color palette, and ${subjectType} identity — only apply the requested change.${bgRequirement}`;
     const result = await editImage(prompt, mascotBase64, options);
     let imageBase64 = result.data;
 

@@ -216,7 +216,7 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                 disabled={!canSubmit}
                 className="w-full rounded-[2rem] bg-foreground py-6 md:py-7 text-sm md:text-lg font-black text-white shadow-xl hover:bg-candy-pink transition-all active:scale-[0.98] disabled:opacity-40">
                 <Icon3DInline name="sparkles" size={20} className="mr-1.5 md:mr-2" />
-                Generate Mascot · {calculateCost()} Credits
+                Generate {subjectType === "Character" ? "Mascot" : (subjectType === "Sticker" ? "Stickers" : "Logo")} · {calculateCost()} Credits
             </Button>
 
             {/* Result preview */}
