@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Prompt must be under 2000 characters" }, { status: 400 });
     }
 
-    const basePrompt = buildPrompt(subjectType, style, prompt, false);
+    const basePrompt = buildPrompt(subjectType, style, prompt, false, undefined, shouldRemoveBackground);
     const result = await generateImage(basePrompt, options);
     let images = result.data;
 

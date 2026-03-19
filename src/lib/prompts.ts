@@ -25,7 +25,8 @@ export function buildPrompt(
     stylePrompt: string,
     userPrompt: string,
     isStylize: boolean = false,
-    analysisContext?: string
+    analysisContext?: string,
+    removeBackground: boolean = true
 ): string {
     const baseStyle = stylePrompt || "vibrant cartoon style, playful colors";
     let prompt = "";
@@ -33,22 +34,31 @@ export function buildPrompt(
     // Conditionally add analysis info if we are stylizing an existing image
     const context = analysisContext ? `The subject is: ${analysisContext}. Use these details to preserve identity. ` : "";
     const transformPrefix = isStylize ? `Transform this image into a ` : `Create a `;
+    
+    const textProhibition = "CRITICAL: NO text, NO letters, NO words, NO typography, NO watermarks, NO signatures unless explicitly requested in the prompt.";
+    const charcoalBg = "SOLID, uniform Dark Charcoal Grey (#404040) background. NO grid lines, NO shadows, NO gradients";
+    const whiteBg = "Solid Pure White (#FFFFFF) background";
+    const antiBleed = "CRITICAL: The subject MUST NOT contain any shades of Dark Charcoal Grey or similar dark grays, to prevent the background removal tool from eating into the image.";
 
     if (subjectType === "Sticker") {
         prompt = `${transformPrefix}a 9-frame 3x3 ultra-high-quality sticker set (8k resolution, sharp focus): ${userPrompt}. ${context}${baseStyle}. 
-        CRITICAL: Create 9 distinct variations of the same subject. focus purely on the ${userPrompt} itself.
-        STYLE: Clean, wide white die-cut border around every sticker. Ultra-clear boundaries. Bold, thick black outlines. Professional studio lighting. 
-        BACKGROUND: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background. NO grid lines, NO shadows, NO gradients on the background.`;
+        CRITICAL: Create 9 distinct variations of the same subject. NO mascot characters unless explicitly asked — focus on the ${userPrompt} itself as stickers.
+        STYLE: Clean, wide white die-cut border around every sticker. Ultra-clear boundaries. Bold, thick black outlines. Professional studio lighting, vibrant colors. 
+        BACKGROUND: Isolated on a ${charcoalBg}. ${antiBleed}
+        ${textProhibition}`;
     } else if (subjectType === "Character") {
-        prompt = `${transformPrefix}an ultra-high-resolution (8k, sharp focus) ${baseStyle} Mascot of: ${userPrompt}. ${context}Professional studio lighting, cinematic detail. 
-        MASCOT TRAITS: Give the subject an expressive face, cute personality, and professional mascot character features. 
-        IMPORTANT: Isolated on a SOLID, uniform Dark Charcoal Grey (#404040) background with no shadows or texture. Show the COMPLETE full body from head to feet — do NOT crop or cut off any part. High-quality character design.`;
+        const bgInstruction = removeBackground ? `Isolated on a ${charcoalBg}. ${antiBleed}` : `Isolated on a ${whiteBg}.`;
+        prompt = `${transformPrefix}an ultra-high-resolution (8k, sharp focus) ${baseStyle} Mascot of: ${userPrompt}. ${context}Professional studio lighting, cinematic detail. IMPORTANT: ${bgInstruction} Show the COMPLETE full body from head to feet — do NOT crop or cut off any part. Expressive face, clean outlines.
+        ${textProhibition}`;
         if (isStylize) prompt += " Keep the mascot recognizable and high-fidelity.";
     } else if (subjectType === "Logo") {
-        prompt = `${transformPrefix}professional branding logo in a ${baseStyle} style: ${userPrompt}. ${context}Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. focus on symbolic representation of the ${userPrompt}.`;
+        // Logos inherently should support beautiful backgrounds, not forced solids unless specific.
+        prompt = `${transformPrefix}professional branding logo in a ${baseStyle} style: ${userPrompt}. ${context}Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. NO mascot characters or complex cartoons unless specifically requested — focus on symbolic representation. Beautiful, complementary background.
+        ${textProhibition}`;
     } else {
         // Fallback/Legacy
-        prompt = `${transformPrefix}richly detailed ${baseStyle} scene: ${userPrompt}. ${context}Cinematic composition, beautiful lighting.`;
+        prompt = `${transformPrefix}richly detailed ${baseStyle} scene: ${userPrompt}. ${context}Cinematic composition, beautiful lighting.
+        ${textProhibition}`;
     }
 
     return prompt;
