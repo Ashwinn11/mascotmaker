@@ -16,12 +16,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!competitor) return {};
 
-    const title = `Mascot Maker vs ${competitor.name}: The Best ${competitor.type} Alternative (${new Date().getFullYear()})`;
-    const description = `Comparing Mascot Maker with ${competitor.name}. Discover why Mascot Maker is the top choice for brand consistency, 3D character generation, and cinematic storyboarding.`;
+    const title = `${competitor.name} Alternative: Mascot Maker`;
+    const description = `Compare Mascot Maker with ${competitor.name}. Discover why Mascot Maker is the top choice for brand consistency and 3D character generation.`;
 
     return {
         title,
-        description,
+        description: description + " Professional AI design alternative.",
         alternates: {
             canonical: `https://mascotmaker.io/mascot-maker/compare/${slug}`,
             languages: {
@@ -32,8 +32,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         openGraph: {
             title,
             description,
-            images: [`/api/og?title=${encodeURIComponent(`Mascot Maker vs ${competitor.name}`)}`],
+            type: "website",
+            images: [`/og-image.png`],
         },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: [`/og-image.png`],
+        }
     };
 }
 

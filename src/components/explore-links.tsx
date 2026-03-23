@@ -76,6 +76,16 @@ export function ExploreLinks() {
                                 </li>
                             ))}
                             <li>
+                                <a href="https://dribbble.com" target="_blank" rel="noopener noreferrer" className="hover:text-candy-pink flex items-center gap-2">
+                                    Inspiration Hub <span className="text-[10px]">↗</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="https://behance.net" target="_blank" rel="noopener noreferrer" className="hover:text-candy-blue flex items-center gap-2">
+                                    Creative Portfolio <span className="text-[10px]">↗</span>
+                                </a>
+                            </li>
+                            <li>
                                 <Link href="/explore" className="text-candy-pink hover:underline uppercase text-[10px] font-black tracking-tighter">
                                     View Full Index →
                                 </Link>

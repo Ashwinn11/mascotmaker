@@ -31,42 +31,8 @@ const ENGINES = [
 ];
 
 export default function Home() {
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Organization",
-    "name": "Mascot Maker Studio",
-    "url": "https://mascotmaker.io",
-    "logo": "https://mascotmaker.io/app-icon.png",
-    "description": "The world's most powerful AI design hub for characters, stickers, and professional mascot assets.",
-    "sameAs": [
-      "https://twitter.com/mascotmaker",
-      "https://discord.gg/mascotmaker"
-    ]
-  };
-
-  const websiteJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "Mascot Maker",
-    "url": "https://mascotmaker.io",
-    "potentialAction": {
-      "@type": "SearchAction",
-      "target": "https://mascotmaker.io/gallery?q={search_term_string}",
-      "query-input": "required name=search_term_string"
-    }
-  };
-
   return (
     <div className="bg-cream selection:bg-candy-pink/30 pb-20">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
-      />
-
       {/* ─── Hero Section ─── */}
       <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-white bg-grain flex items-center border-b-4 border-foreground selection:bg-candy-yellow/30">
 
@@ -84,9 +50,9 @@ export default function Home() {
                 Studio V2.5 • The Asset Engine
               </div>
 
-              <h1 className="font-display text-7xl sm:text-8xl lg:text-[11.5rem] text-foreground leading-[0.82] mb-12 -tracking-[0.06em] animate-slide-up stagger-1">
-                CREATE <br />
-                <span className="text-gradient drop-shadow-sm">WORLDS.</span>
+              <h1 className="font-display text-7xl sm:text-8xl lg:text-[10rem] text-foreground leading-[0.82] mb-12 -tracking-[0.06em] animate-slide-up stagger-1 capitalize">
+                The Ultimate AI <br />
+                <span className="text-gradient drop-shadow-sm">Mascot Maker</span>
               </h1>
 
               <p className="text-2xl sm:text-3xl text-muted-foreground/90 max-w-xl mb-16 font-semibold leading-[1.1] -tracking-wide animate-slide-up stagger-2">

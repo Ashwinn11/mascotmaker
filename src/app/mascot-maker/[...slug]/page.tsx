@@ -32,16 +32,16 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     let description = "";
 
     if (primaryItem && secondaryItem) {
-        title = `${primaryItem.title} for ${secondaryItem.title} | mascotmaker.io`;
-        description = `Create professional ${primaryItem.title} assets tailored for ${secondaryItem.title} with Mascot Maker. Consistent, studio-quality AI generation.`;
+        title = `${primaryItem.title} for ${secondaryItem.title}`;
+        description = `Create professional ${primaryItem.title} assets for ${secondaryItem.title} with Mascot Maker. Consistent, studio-quality AI design.`;
     } else if (engine1) {
-        title = `${primaryItem.title} | The World's Most Powerful AI Design Hub`;
+        title = `${primaryItem.title} | AI Design Hub`;
         description = primaryItem.description;
     } else if (industry1) {
-        title = `Best AI Creative Tools for ${primaryItem.title} | mascotmaker.io`;
+        title = `AI Tools for ${primaryItem.title}`;
         description = primaryItem.description;
     } else {
-        title = `${primaryItem.title} AI Generator | Create Professional Visual Assets`;
+        title = `${primaryItem.title} AI Generator`;
         description = primaryItem.description;
     }
 
@@ -49,15 +49,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     return {
         title,
-        description: description + " Generate professional, consistent AI assets in seconds.",
+        description: description + " Professional, consistent AI assets in seconds.",
         alternates: {
             canonical: `https://mascotmaker.io/mascot-maker/${canonicalPath}`,
         },
         openGraph: {
             title,
             description,
-            images: [`/api/og?title=${encodeURIComponent(title)}`],
+            type: "website",
+            images: [`/og-image.png`], // Use the global og-image for consistency or dynamic one
         },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: [`/og-image.png`],
+        }
     };
 }
 

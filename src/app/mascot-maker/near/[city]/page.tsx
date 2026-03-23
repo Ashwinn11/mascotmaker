@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     return {
         title,
-        description: `Professional AI Creative Studio in ${location.name}. mascotmaker.io provides world-class AI character and storyboard tools for local businesses.`,
+        description: `AI Creative Studio in ${location.name}. mascotmaker.io provides character tools for local brands.`,
         alternates: {
             canonical: `https://mascotmaker.io/mascot-maker/near/${city}`,
             languages: {
@@ -33,8 +33,15 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         openGraph: {
             title,
             description: `Visit our AI Design Hub in ${location.name}, ${location.country}.`,
-            images: [`/api/og?title=${encodeURIComponent(`Studio ${location.name}`)}`],
+            type: "website",
+            images: [`/og-image.png`],
         },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description: `AI Creative Studio in ${location.name}.`,
+            images: [`/og-image.png`],
+        }
     };
 }
 

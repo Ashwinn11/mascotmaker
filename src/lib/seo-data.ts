@@ -8,13 +8,13 @@ export const ENGINES = [
     {
         slug: "story-studio",
         title: "AI Storyboard Generator",
-        description: "Design seamless 8-frame narratives for storyboards, social content, and brand storytelling.",
+        description: "Design seamless 8-frame narratives for storyboards and brand social content.",
         keywords: ["storyboard creator", "comic generator", "narrative ai", "visual storytelling"]
     },
     {
         slug: "mix-studio",
         title: "AI Product Ad Generator",
-        description: "Composite characters with real-world products for high-end professional advertisements.",
+        description: "Composite mascots with real products for professional advertisements and branding.",
         keywords: ["product mockup", "ai advertising", "product placement", "brand ads"]
     },
     {
@@ -261,7 +261,7 @@ export function getSEOContent(category?: string, location?: string) {
     const displayName = category || "Mascot Maker";
 
     // AI-SEO Definition Block (40-60 words for extraction)
-    const definition = `${displayName} is a professional-grade AI design studio specialized in creating high-fidelity visual assets with absolute identity consistency. Using advanced latent-space locking, it allows creators to generate ${catText} that maintain the same character DNA across different poses, environments, and storyboards.`;
+    const definition = `${displayName} is an AI design studio for professional assets. We create high-quality characters with absolute identity consistency. Our studio lets creators maintain the same character look across every pose and scene. We use advanced locking technology to stop 'AI drift' and ensure your brand stays consistent.`;
 
     const tips: string[] = [];
     

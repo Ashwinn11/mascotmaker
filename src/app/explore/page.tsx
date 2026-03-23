@@ -1,5 +1,14 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { LOCATIONS, INDUSTRIES, STYLES, ENGINES, COMPETITORS, slugify } from "@/lib/seo-data";
+
+export const metadata: Metadata = {
+    title: "Mascot Maker Studio Index",
+    description: "Directory of our specialized AI design studio models, industry-specific assets, and comparison guides.",
+    alternates: {
+        canonical: "https://mascotmaker.io/explore",
+    },
+};
 
 export default function ExplorePage() {
     return (
