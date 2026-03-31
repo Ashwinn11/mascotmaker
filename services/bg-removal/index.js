@@ -30,8 +30,8 @@ app.post('/remove-background', async (req, res) => {
         console.log('Starting AI processing...');
         
         const result = await removeBackground(inputPath, {
-            model: "large",
-            publicPath: "https://storage.googleapis.com/mascot-models-5e9d3f5e/",
+            model: "medium",
+            publicPath: process.env.BG_REMOVAL_PUBLIC_PATH || "https://storage.googleapis.com/mascot-models-5e9d3f5e/dist/",
             output: {
                 quality: 1.0,
                 format: "image/png"
