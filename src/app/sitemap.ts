@@ -1,109 +1,76 @@
 import type { MetadataRoute } from "next";
 import { ENGINES, INDUSTRIES, STYLES, LOCATIONS, COMPETITORS } from "@/lib/seo-data";
 
-const baseUrl = "https://mascotmaker.io";
-const lastModified = new Date('2026-03-31');
+export default function sitemap(): MetadataRoute.Sitemap {
+  const baseUrl = "https://mascotmaker.io";
+  const lastModified = new Date("2026-03-31");
 
-// This function tells Next.js to generate multiple sitemaps
-export async function generateSitemaps() {
-  return [
-    { id: 0 }, // Main & Static
-    { id: 1 }, // Engines, Industries, Styles (Base)
-    { id: 2 }, // Combinations (Engine + Industry)
-    { id: 3 }, // Combinations (Style + Industry)
-    { id: 4 }, // Locations
-    { id: 5 }, // Comparisons
-    { id: 6 }, // Blog
+  // --- Static Pages ---
+  const staticRoutes: MetadataRoute.Sitemap = [
+    { url: baseUrl, lastModified, changeFrequency: "weekly", priority: 1 },
+    { url: `${baseUrl}/background-remover`, lastModified, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/create`, lastModified, changeFrequency: "weekly", priority: 0.9 },
+    { url: `${baseUrl}/gallery`, lastModified, changeFrequency: "daily", priority: 0.8 },
+    { url: `${baseUrl}/explore`, lastModified, changeFrequency: "weekly", priority: 0.7 },
+    { url: `${baseUrl}/blog`, lastModified, changeFrequency: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/privacy`, lastModified, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${baseUrl}/terms`, lastModified, changeFrequency: "yearly", priority: 0.2 },
   ];
-}
 
-export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
-  const routes: MetadataRoute.Sitemap = [];
+  // --- Base Category Pages (/mascot-maker/[slug]) ---
+  const baseRoutes: MetadataRoute.Sitemap = [
+    ...ENGINES,
+    ...INDUSTRIES,
+    ...STYLES,
+  ].map((item) => ({
+    url: `${baseUrl}/mascot-maker/${item.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
 
-  switch (id) {
-    case 0: // Main & Static
-      return [
-        { url: baseUrl, lastModified, changeFrequency: "weekly", priority: 1 },
-        { url: `${baseUrl}/create`, lastModified, changeFrequency: "weekly", priority: 0.9 },
-        { url: `${baseUrl}/gallery`, lastModified, changeFrequency: "daily", priority: 0.8 },
-        { url: `${baseUrl}/explore`, lastModified, changeFrequency: "weekly", priority: 0.7 },
-        { url: `${baseUrl}/background-remover`, lastModified, changeFrequency: "weekly", priority: 0.9 },
-        { url: `${baseUrl}/privacy`, lastModified, changeFrequency: "yearly", priority: 0.2 },
-        { url: `${baseUrl}/terms`, lastModified, changeFrequency: "yearly", priority: 0.2 },
-      ];
+  // --- Combination Pages: Engine + Industry ---
+  const engineIndustryRoutes: MetadataRoute.Sitemap = ENGINES.flatMap((e) =>
+    INDUSTRIES.map((i) => ({
+      url: `${baseUrl}/mascot-maker/${e.slug}/${i.slug}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }))
+  );
 
-    case 1: // Base level (1 part: /mascot-maker/[slug])
-      [...ENGINES, ...INDUSTRIES, ...STYLES].forEach((i) => {
-        routes.push({
-          url: `${baseUrl}/mascot-maker/${i.slug}`,
-          lastModified,
-          changeFrequency: "monthly",
-          priority: 0.7,
-        });
-      });
-      break;
+  // --- Combination Pages: Style + Industry ---
+  const styleIndustryRoutes: MetadataRoute.Sitemap = STYLES.flatMap((s) =>
+    INDUSTRIES.map((i) => ({
+      url: `${baseUrl}/mascot-maker/${s.slug}/${i.slug}`,
+      lastModified,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }))
+  );
 
-    case 2: // Combinations: Engine + Industry
-      ENGINES.forEach((e) => {
-        INDUSTRIES.forEach((i) => {
-          routes.push({
-            url: `${baseUrl}/mascot-maker/${e.slug}/${i.slug}`,
-            lastModified,
-            changeFrequency: "monthly",
-            priority: 0.6,
-          });
-        });
-      });
-      break;
+  // --- Location Pages ---
+  const locationRoutes: MetadataRoute.Sitemap = LOCATIONS.map((l) => ({
+    url: `${baseUrl}/mascot-maker/near/${l.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
 
-    case 3: // Combinations: Style + Industry
-      STYLES.forEach((s) => {
-        INDUSTRIES.forEach((i) => {
-          routes.push({
-            url: `${baseUrl}/mascot-maker/${s.slug}/${i.slug}`,
-            lastModified,
-            changeFrequency: "monthly",
-            priority: 0.6,
-          });
-        });
-      });
-      break;
+  // --- Comparison Pages ---
+  const competitorRoutes: MetadataRoute.Sitemap = COMPETITORS.map((c) => ({
+    url: `${baseUrl}/mascot-maker/compare/${c.slug}`,
+    lastModified,
+    changeFrequency: "monthly" as const,
+    priority: 0.8,
+  }));
 
-    case 4: // Locations
-      LOCATIONS.forEach((l) => {
-        const locale = l.country === "USA" ? "en-US" : l.country === "UK" ? "en-GB" : "en";
-        routes.push({
-          url: `${baseUrl}/mascot-maker/near/${l.slug}`,
-          lastModified,
-          changeFrequency: "monthly",
-          priority: 0.7,
-        });
-      });
-      break;
-
-    case 5: // Comparisons
-      COMPETITORS.forEach((c) => {
-        routes.push({
-          url: `${baseUrl}/mascot-maker/compare/${c.slug}`,
-          lastModified,
-          changeFrequency: "monthly",
-          priority: 0.8,
-        });
-      });
-      break;
-
-    case 6: // Blog
-      routes.push({ url: `${baseUrl}/blog`, lastModified, changeFrequency: "weekly", priority: 0.8 });
-      ["what-is-a-brand-mascot", "ai-mascot-vs-illustrator", "character-consistency-ai"].forEach(slug => {
-        routes.push({
-          url: `${baseUrl}/blog/${slug}`,
-          lastModified,
-          changeFrequency: "monthly",
-          priority: 0.7,
-        });
-      });
-      break;
-  }
-
-  return routes;
+  return [
+    ...staticRoutes,
+    ...baseRoutes,
+    ...engineIndustryRoutes,
+    ...styleIndustryRoutes,
+    ...locationRoutes,
+    ...competitorRoutes,
+  ];
 }
