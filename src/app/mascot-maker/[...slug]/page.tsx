@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, Palette, Check, ArrowRight } from "lucide-react";
 import { ExploreLinks } from "@/components/explore-links";
+import { Breadcrumb } from "@/components/breadcrumb";
 
 interface PageProps {
     params: Promise<{ slug: string[] }>;
@@ -134,20 +135,22 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
         }
     };
 
-    const faqSchema = {
+    const howToSchema = {
         "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": content.tips.map((tip: string, i: number) => ({
-            "@type": "Question",
-            "name": `Pro Tip #${i + 1} for ${combinedTitle}`,
-            "acceptedAnswer": { "@type": "Answer", "text": tip }
+        "@type": "HowTo",
+        "name": `How to Create ${combinedTitle} with AI`,
+        "description": `Step-by-step guide to creating professional ${combinedTitle?.toLowerCase()} using Mascot Maker's AI design studio.`,
+        "step": content.tips.map((tip: string, i: number) => ({
+            "@type": "HowToStep",
+            "position": i + 1,
+            "text": tip
         }))
     };
 
     return (
         <div className="bg-cream min-h-screen">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
 
             {/* Hero Section */}
             <section className="relative pt-32 pb-20 overflow-hidden bg-white border-b-4 border-foreground">
@@ -156,6 +159,12 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                 <div className="mx-auto max-w-7xl px-6 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <div>
+                            <Breadcrumb items={[
+                                { label: "Home", href: "/" },
+                                { label: "Mascot Maker", href: "/explore" },
+                                ...(secondaryItem ? [{ label: primaryItem?.title || "", href: `/mascot-maker/${slug[0]}` }] : []),
+                                { label: secondaryItem?.title || primaryItem?.title || "" }
+                            ]} />
                             <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
                                 Advanced Specialized Model
                             </div>
@@ -171,7 +180,6 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link
                                     href="/create"
-                                    rel="nofollow"
                                     className="inline-flex items-center justify-center gap-3 rounded-full bg-foreground px-10 py-5 text-xl font-black text-white shadow-[6px_6px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-95"
                                 >
                                     <Sparkles size={24} className="text-candy-yellow" />
@@ -208,10 +216,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 {content.benefit1} <span className="italic underline decoration-candy-yellow">{content.benefit2}</span>
                             </p>
 
-                            {/* AI-SEO Definition Block for Search Engines/LLMs */}
-                            <div className="sr-only" aria-hidden="true">
-                                {content.definition}
-                            </div>
+
 
                             <div className="mt-12 space-y-6">
                                 <h3 className="text-candy-pink uppercase tracking-widest text-xs font-black">Expert Creation Tips</h3>
@@ -260,7 +265,6 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                     </h2>
                     <Link
                         href="/create"
-                        rel="nofollow"
                         className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-12 py-6 text-2xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
                     >
                         LAUNCH STUDIO <ArrowRight size={28} />

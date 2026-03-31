@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Check, X, Sparkles, ArrowRight, ShieldCheck, Zap, Layers } from "lucide-react";
 import { ExploreLinks } from "@/components/explore-links";
+import { Breadcrumb } from "@/components/breadcrumb";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -16,12 +17,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     if (!competitor) return {};
 
-    const title = `${competitor.name} Alternative: Mascot Maker`;
-    const description = `Compare Mascot Maker with ${competitor.name}. Discover why Mascot Maker is the top choice for brand consistency and 3D character generation.`;
+    const title = `Mascot Maker vs ${competitor.name} (2026) — Honest Feature Comparison`;
+    const description = `Compare Mascot Maker with ${competitor.name}. See how identity consistency, storyboard workflows, and 3D product ads stack up. Honest side-by-side feature breakdown.`;
 
     return {
         title,
-        description: description + " Professional AI design alternative.",
+        description,
         alternates: {
             canonical: `https://mascotmaker.io/mascot-maker/compare/${slug}`,
             languages: {
@@ -68,7 +69,7 @@ export default async function ComparisonPage({ params }: PageProps) {
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "SoftwareApplication",
-        "name": "Mascot Maker Studio",
+        "name": "Mascot Maker",
         "applicationCategory": "DesignApplication",
         "operatingSystem": "Web",
         "description": `The professional alternative to ${competitor.name} for AI character generation and brand design.`,
@@ -85,10 +86,48 @@ export default async function ComparisonPage({ params }: PageProps) {
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
             />
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                    "@context": "https://schema.org",
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                        {
+                            "@type": "Question",
+                            "name": `Is Mascot Maker better than ${competitor.name}?`,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": `It depends on your needs. For general artistic exploration, ${competitor.name} is excellent. However, for professional branding, character consistency, and production-ready visual assets, Mascot Maker provides a more specialized and reliable workflow.`
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": `Can I import my ${competitor.name} designs into Mascot Maker?`,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Yes! You can upload your existing characters to Mascot Maker and use our Image-to-Character engine to recreate them with full identity lock parameters."
+                            }
+                        },
+                        {
+                            "@type": "Question",
+                            "name": `Is Mascot Maker free to use?`,
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": "Yes, Mascot Maker offers a free tier that includes access to the Character Generator and basic export options. Premium features like 4K upscaling, GIF animation, and batch exports are available with an upgrade."
+                            }
+                        }
+                    ]
+                }) }}
+            />
 
             {/* Hero */}
             <section className="relative pt-32 pb-20 bg-white border-b-4 border-foreground">
                 <div className="mx-auto max-w-7xl px-6 text-center">
+                    <Breadcrumb items={[
+                        { label: "Home", href: "/" },
+                        { label: "Comparisons", href: "/explore" },
+                        { label: `vs ${competitor.name}` }
+                    ]} />
                     <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
                         Comparison Guide
                     </div>
@@ -101,7 +140,6 @@ export default async function ComparisonPage({ params }: PageProps) {
                     <div className="flex justify-center gap-4">
                         <Link
                             href="/create"
-                            rel="nofollow"
                             className="inline-flex items-center justify-center gap-3 rounded-full bg-foreground px-10 py-5 text-xl font-black text-white shadow-[6px_6px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-95"
                         >
                             <Sparkles size={24} className="text-candy-yellow" />
@@ -174,17 +212,34 @@ export default async function ComparisonPage({ params }: PageProps) {
                             </div>
                         </div>
                         <div className="relative rounded-[3rem] border-4 border-foreground overflow-hidden shadow-[12px_12px_0_#4ea8de]">
-                            <Image src="/demo/landing-story-v2.webp" alt="Mascot Maker Production" width={800} height={800} className="w-full h-auto" />
+                            <Image src="/demo/landing-story-v2.webp" alt={`Mascot Maker AI storyboard production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto" />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Testimonials */}
+            {/* Choose Section */}
             <section className="py-32 bg-foreground text-white">
                 <div className="mx-auto max-w-4xl px-6 text-center">
-                    <h3 className="font-display text-4xl md:text-6xl mb-12 uppercase italic">"I switched from {competitor.name} because I needed consistent marketing assets. Mascot Maker is 10x faster for my workflow."</h3>
-                    <p className="text-xl font-black text-candy-pink uppercase tracking-widest">— Sarah J., Creative Director @ TechFlow</p>
+                    <h3 className="font-display text-4xl md:text-6xl mb-12 uppercase">When to Choose <span className="text-candy-pink">{competitor.name}</span> vs <span className="text-candy-yellow">Mascot Maker</span></h3>
+                    <div className="grid md:grid-cols-2 gap-8 text-left">
+                        <div className="p-8 rounded-3xl border-2 border-white/20">
+                            <h4 className="text-xl font-black uppercase mb-4 text-candy-blue">Choose {competitor.name} if:</h4>
+                            <ul className="space-y-3 font-bold text-white/80">
+                                <li>• You need {competitor.strength.toLowerCase()}</li>
+                                <li>• You&apos;re creating one-off artistic images</li>
+                                <li>• Character consistency isn&apos;t critical</li>
+                            </ul>
+                        </div>
+                        <div className="p-8 rounded-3xl border-2 border-candy-pink/40 bg-candy-pink/10">
+                            <h4 className="text-xl font-black uppercase mb-4 text-candy-pink">Choose Mascot Maker if:</h4>
+                            <ul className="space-y-3 font-bold text-white/80">
+                                <li>• You need the same character in every image</li>
+                                <li>• You&apos;re building brand assets at scale</li>
+                                <li>• You need storyboards and product ads</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </section>
 
@@ -210,11 +265,26 @@ export default async function ComparisonPage({ params }: PageProps) {
                 <h2 className="font-display text-6xl md:text-9xl mb-12 uppercase leading-none">READY FOR <br /><span className="text-gradient">THE UPGRADE?</span></h2>
                 <Link
                     href="/create"
-                    rel="nofollow"
                     className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-12 py-6 text-2xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
                 >
                     GET STARTED FREE <ArrowRight size={28} />
                 </Link>
+
+                {/* Cross-links to other comparisons */}
+                <div className="mt-20 mx-auto max-w-2xl">
+                    <h3 className="font-black uppercase tracking-widest text-xs text-muted-foreground mb-6">Other Comparisons</h3>
+                    <div className="flex flex-wrap justify-center gap-3">
+                        {COMPETITORS.filter(c => c.slug !== slug).map(c => (
+                            <Link
+                                key={c.slug}
+                                href={`/mascot-maker/compare/${c.slug}`}
+                                className="px-6 py-3 rounded-full border-2 border-foreground/10 text-sm font-black hover:border-candy-pink hover:text-candy-pink transition-colors"
+                            >
+                                vs {c.name}
+                            </Link>
+                        ))}
+                    </div>
+                </div>
             </section>
 
             <ExploreLinks />

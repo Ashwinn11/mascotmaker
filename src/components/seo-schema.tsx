@@ -1,17 +1,44 @@
-"use client";
-
 export function SEOSchema() {
-  const jsonLd = {
+  const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    "name": "Mascot Maker Studio",
+    "name": "Mascot Maker",
     "url": "https://mascotmaker.io",
     "logo": "https://mascotmaker.io/app-icon.png",
-    "description": "The world's most powerful AI design hub for characters, stickers, and professional mascot assets.",
+    "description": "AI-powered mascot and character generator. Create consistent 3D, 2D, and animated characters for brands, games, and content creators.",
+    "foundingDate": "2025",
     "sameAs": [
-      "https://twitter.com/mascotmaker",
-      "https://discord.gg/mascotmaker"
+      "https://www.crunchbase.com/organization/mascot-maker"
     ]
+  };
+
+  const softwareJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Mascot Maker",
+    "url": "https://mascotmaker.io",
+    "applicationCategory": "DesignApplication",
+    "applicationSubCategory": "AI Image Generator",
+    "operatingSystem": "Web",
+    "browserRequirements": "Requires a modern web browser",
+    "description": "Create professional AI mascots and characters with identity consistency. 12+ art styles, 8-frame storyboards, and product ad compositing.",
+    "featureList": [
+      "AI Character Generation",
+      "Identity Lock Technology",
+      "8-Frame Storyboard Creator",
+      "Product Ad Compositing",
+      "GIF Animation Export",
+      "4K Resolution Upscaling",
+      "12+ Art Styles",
+      "Commercial Usage Rights"
+    ],
+    "screenshot": "https://mascotmaker.io/og-image.png",
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD",
+      "description": "Free tier available with premium upgrades"
+    }
   };
 
   const websiteJsonLd = {
@@ -30,7 +57,11 @@ export function SEOSchema() {
     <>
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
       />
       <script
         type="application/ld+json"

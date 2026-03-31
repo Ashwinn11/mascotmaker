@@ -11,6 +11,16 @@ export const metadata: Metadata = {
 };
 
 export default function ExplorePage() {
+    const sortedIndustries = [
+        ...INDUSTRIES.filter(i => i.slug === "ai-startups"),
+        ...INDUSTRIES.filter(i => i.slug !== "ai-startups")
+    ];
+
+    const sortedLocations = [
+        ...LOCATIONS.filter(l => l.slug === "mumbai"),
+        ...LOCATIONS.filter(l => l.slug !== "mumbai")
+    ];
+
     return (
         <main className="min-h-screen bg-cream selection:bg-candy-pink/20">
             <header className="py-20 bg-white border-b-4 border-foreground overflow-hidden">
@@ -41,8 +51,8 @@ export default function ExplorePage() {
                         <div>
                             <h2 className="font-display text-4xl uppercase mb-8 border-b-4 border-candy-blue pb-2">Industries</h2>
                             <div className="grid grid-cols-2 gap-x-8 gap-y-3">
-                                {INDUSTRIES.map((i) => (
-                                    <Link key={i.slug} href={`/mascot-maker/${i.slug}`} className="text-sm font-bold text-muted-foreground hover:text-candy-blue transition-colors">
+                                {sortedIndustries.map((i) => (
+                                    <Link key={i.slug} href={`/mascot-maker/${i.slug}`} className={`text-sm font-bold hover:text-candy-blue transition-colors ${i.slug === "ai-startups" ? "text-candy-blue underline decoration-2 offset-4" : "text-muted-foreground"}`}>
                                         {i.title} Assets
                                     </Link>
                                 ))}
@@ -77,8 +87,8 @@ export default function ExplorePage() {
                     <div>
                         <h2 className="font-display text-4xl uppercase mb-8 border-b-4 border-candy-yellow pb-2">Global Studios</h2>
                         <div className="grid grid-cols-2 gap-x-8 gap-y-3 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar mb-12">
-                            {LOCATIONS.map((l) => (
-                                <Link key={l.slug} href={`/mascot-maker/near/${l.slug}`} className="text-sm font-bold text-muted-foreground hover:text-candy-yellow transition-colors">
+                            {sortedLocations.map((l) => (
+                                <Link key={l.slug} href={`/mascot-maker/near/${l.slug}`} className={`text-sm font-bold hover:text-candy-yellow transition-colors ${l.slug === "mumbai" ? "text-candy-yellow underline decoration-2 offset-4" : "text-muted-foreground"}`}>
                                     Studio in {l.name}
                                 </Link>
                             ))}

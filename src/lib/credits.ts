@@ -13,6 +13,7 @@ export const CREDIT_COSTS: Record<string, number> = {
     chat: 5,
     stylize: 5,
     animate: 10,
+    remove_bg: 1,
 };
 
 export type ImageOptions = {

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, MapPin, Check, Camera, Monitor, Zap } from "lucide-react";
 import { ExploreLinks } from "@/components/explore-links";
+import { Breadcrumb } from "@/components/breadcrumb";
 
 interface PageProps {
     params: Promise<{ city: string }>;
@@ -20,9 +21,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const countryLocale = location.country === "USA" ? "en-US" : location.country === "UK" ? "en-GB" : "en";
 
+    const description = `Create AI mascots and characters in ${location.name}. Free online mascot generator with 3D Pixar, pixel art, claymation & 12+ art styles. No design skills needed.`;
+
     return {
         title,
-        description: `AI Creative Studio in ${location.name}. mascotmaker.io provides character tools for local brands.`,
+        description,
         alternates: {
             canonical: `https://mascotmaker.io/mascot-maker/near/${city}`,
             languages: {
@@ -32,14 +35,14 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         },
         openGraph: {
             title,
-            description: `Visit our AI Design Hub in ${location.name}, ${location.country}.`,
+            description,
             type: "website",
             images: [`/og-image.png`],
         },
         twitter: {
             card: "summary_large_image",
             title,
-            description: `AI Creative Studio in ${location.name}.`,
+            description,
             images: [`/og-image.png`],
         }
     };
@@ -61,17 +64,25 @@ export default async function LocationPage({ params }: PageProps) {
 
     const jsonLd = {
         "@context": "https://schema.org",
-        "@type": "LocalBusiness",
-        "name": `Mascot Maker Creative Studio ${location.name}`,
-        "description": `All-in-one AI design studio for characters, icons, and storyboards in ${location.name}.`,
+        "@type": "WebApplication",
+        "name": "Mascot Maker",
+        "description": `AI mascot and character generator available for creators and businesses in ${location.name}, ${location.country}. Create consistent 3D, 2D, and animated characters.`,
         "url": `https://mascotmaker.io/mascot-maker/near/${city}`,
-        "address": {
-            "@type": "PostalAddress",
-            "addressLocality": location.name,
-            "addressCountry": location.country
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Web",
+        "areaServed": {
+            "@type": "City",
+            "name": location.name,
+            "containedInPlace": {
+                "@type": "Country",
+                "name": location.country
+            }
         },
-        "telephone": "+1-800-MASCOT", // Added telephone
-        "priceRange": "$$"
+        "offers": {
+            "@type": "Offer",
+            "price": "0.00",
+            "priceCurrency": "USD"
+        }
     };
 
     const breadcrumbJsonLd = {
@@ -115,22 +126,19 @@ export default async function LocationPage({ params }: PageProps) {
                 <div className="mx-auto max-w-7xl px-6 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
                         <div>
+                            <Breadcrumb items={[
+                                { label: "Home", href: "/" },
+                                { label: "Global Studios", href: "/explore" },
+                                { label: location.name }
+                            ]} />
                             <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-blue/10 border-2 border-candy-blue/20 text-xs font-black uppercase tracking-widest text-candy-blue">
-                                <Zap size={14} className="fill-candy-blue" /> Local Design Hub: {location.name}
+                                <Zap size={14} className="fill-candy-blue" /> AI Design Studio: {location.name}
                             </div>
                             <h1 className="font-display text-6xl md:text-8xl text-foreground leading-[0.9] uppercase -tracking-[0.04em] mb-8">
                                 AI Creative <br /><span className="text-gradient">Studio {location.name}.</span>
                             </h1>
 
-                            {/* E-E-A-T Signals */}
-                            <div className="flex items-center gap-4 mb-8 text-sm font-bold text-muted-foreground">
-                                <div className="flex items-center gap-2">
-                                    <div className="w-6 h-6 rounded-full bg-candy-blue flex items-center justify-center text-[10px] text-white">AM</div>
-                                    <span>Verified by Ashwinn M. (Creative Hub)</span>
-                                </div>
-                                <span className="opacity-30">•</span>
-                                <span>Last Verified {new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}</span>
-                            </div>
+
 
                             <p className="text-2xl text-muted-foreground font-bold leading-relaxed mb-10 max-w-xl">
                                 Empower your {location.name} brand with high-end AI characters, storyboards, and product advertisements. mascotmaker.io is the global standard for professional AI design, <span className="text-candy-blue">deployed locally for {location.name} businesses.</span>
@@ -139,7 +147,6 @@ export default async function LocationPage({ params }: PageProps) {
                             <div className="flex flex-col sm:flex-row gap-4">
                                 <Link
                                     href="/create"
-                                    rel="nofollow"
                                     className="inline-flex items-center justify-center gap-3 rounded-full bg-foreground px-10 py-5 text-xl font-black text-white shadow-[6px_6px_0_#4ea8de] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-95"
                                 >
                                     <Sparkles size={24} className="text-candy-yellow" />
@@ -147,7 +154,6 @@ export default async function LocationPage({ params }: PageProps) {
                                 </Link>
                                 <Link
                                     href="/gallery"
-                                    rel="nofollow"
                                     className="inline-flex items-center justify-center gap-3 rounded-full border-4 border-foreground bg-white px-10 py-5 text-xl font-black text-foreground shadow-[6px_6px_0_#e8ddd4] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-95"
                                 >
                                     PORTFOLIO
@@ -160,7 +166,7 @@ export default async function LocationPage({ params }: PageProps) {
                                 <div className="aspect-square relative rounded-2xl overflow-hidden border-4 border-foreground shadow-xl">
                                     <Image
                                         src="/demo/landing-story-v2.webp"
-                                        alt="Creative Workflow"
+                                        alt={`AI mascot design storyboard workflow for ${location.name} businesses and creators`}
                                         fill
                                         priority={true}
                                         className="object-cover"
@@ -168,9 +174,9 @@ export default async function LocationPage({ params }: PageProps) {
                                 </div>
                                 <div className="mt-8 flex items-center justify-between">
                                     <div className="flex items-center gap-3 text-sm font-black uppercase tracking-widest">
-                                        <MapPin className="text-candy-pink" /> {location.name} Local Access
+                                        <MapPin className="text-candy-pink" /> Available in {location.name}
                                     </div>
-                                    <div className="px-4 py-1.5 rounded-full bg-white border-2 border-foreground text-[10px] font-black uppercase tracking-widest text-candy-green">Verified Studio</div>
+                                    <div className="px-4 py-1.5 rounded-full bg-white border-2 border-foreground text-[10px] font-black uppercase tracking-widest text-candy-green">Online Studio</div>
                                 </div>
                             </div>
                         </div>
@@ -216,7 +222,6 @@ export default async function LocationPage({ params }: PageProps) {
                     </h2>
                     <Link
                         href="/create"
-                        rel="nofollow"
                         className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-12 py-6 text-2xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
                     >
                         LAUNCH GENERATOR

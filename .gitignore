@@ -31,6 +31,8 @@ mascot-dance.svg
 .DS_Store
 *.pem
 
+tmp/
+
 # debug
 npm-debug.log*
 yarn-debug.log*

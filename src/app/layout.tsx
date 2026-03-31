@@ -31,16 +31,20 @@ export const metadata: Metadata = {
     default: "Mascot Maker — AI Character & Mascot Generator",
   },
   description:
-    "Create custom AI mascots and characters. Refine via AI chat, generate asset packs, and animate with one click. Professional mascot creation.",
+    "Free AI mascot generator — create 3D Pixar, pixel art, claymation, and vector characters in seconds. Identity Lock keeps your character consistent across every pose. 12+ art styles, GIF animation, 4K export. No design skills needed.",
   keywords: [
+    "mascot builder",
     "mascot maker",
     "AI mascot generator",
+    "free mascot creator",
+    "AI character generator",
+    "mascot design tool",
+    "create mascot online",
+    "3D character creator",
+    "AI avatar maker",
+    "pixel art character generator",
+    "brand mascot creator",
     "mascotmaker.io",
-    "character generator",
-    "animated mascot creator",
-    "AI cartoon avatar",
-    "mascot animation tool",
-    "AI Character Generator",
   ],
   authors: [{ name: "mascotmaker.io" }],
   creator: "mascotmaker.io",
@@ -76,7 +80,7 @@ export const metadata: Metadata = {
         url: "/og-image.png",
         width: 1200,
         height: 630,
-        alt: "Mascot Maker Studio",
+        alt: "Mascot Maker — AI character and mascot generator with 12+ art styles",
       },
     ],
     locale: "en_US",
@@ -86,7 +90,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Mascot Maker — Powered by mascotmaker.io",
     description:
-      "The all-in-one platform for creating and animating custom AI mascot characters.",
+      "Free AI mascot generator with Identity Lock technology. Create consistent 3D, 2D, and animated characters for your brand.",
     images: ["/og-image.png"],
     creator: "@mascotmaker",
   },
@@ -158,7 +162,9 @@ export default function RootLayout({
                 </div>
 
                 <div className="flex flex-col md:items-end gap-2">
-                  <div className="flex gap-6">
+                  <div className="flex flex-wrap gap-6">
+                    <Link href="/blog" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Blog</Link>
+                    <Link href="/explore" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Explore</Link>
                     <Link href="/privacy" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Privacy Policy</Link>
                     <Link href="/terms" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Terms of Service</Link>
                   </div>
