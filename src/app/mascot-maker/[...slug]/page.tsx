@@ -156,7 +156,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             {/* ─── Hero Section: Compact & Sharp ─── */}
             <section className="relative flex items-center overflow-hidden bg-mesh-candy bg-grain pt-24 pb-16">
                 <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-candy-pink/5 to-transparent pointer-events-none" />
-                
+
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="grid lg:grid-cols-12 gap-12 items-start">
 
@@ -218,8 +218,8 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 </div>
                                 <div className="absolute top-1/2 -left-6 z-30 hidden md:block">
                                     <div className="px-4 py-3 bg-foreground text-cream rounded-xl shadow-premium">
-                                      <p className="text-[8px] font-black uppercase tracking-[0.2em] text-candy-pink mb-0.5 leading-none">Identity Lock™</p>
-                                      <p className="text-[10px] font-bold text-cream/50 leading-none">Same character engine</p>
+                                        <p className="text-[8px] font-black uppercase tracking-[0.2em] text-candy-pink mb-0.5 leading-none">Identity Lock™</p>
+                                        <p className="text-[10px] font-bold text-cream/50 leading-none">Same character engine</p>
                                     </div>
                                 </div>
                             </div>
@@ -250,7 +250,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                             </div>
                         </div>
                         <div className="relative rounded-[2.5rem] overflow-hidden shadow-premium border border-foreground/5 rotate-[1.5deg]">
-                            <Image src="/demo/landing-mix-v2.webp" alt="Process" width={500} height={500} className="w-full h-auto" />
+                            <Image src="/demo/before-after.webp" alt="Process" width={500} height={500} className="w-full h-auto" />
                         </div>
                     </div>
                 </div>
@@ -293,7 +293,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
 
             <section className="py-16 border-t border-foreground/5">
                 <div className="container mx-auto px-6">
-                  <ExploreLinks />
+                    <ExploreLinks />
                 </div>
             </section>
 
@@ -301,18 +301,18 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             <section className="py-24 bg-foreground relative overflow-hidden">
                 <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
                 <div className="container mx-auto px-6 relative z-10 text-center space-y-8">
-                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-cream/20">Studio Professional Mode · Free to try</p>
-                  <h2 className="font-display text-4xl md:text-6xl text-cream leading-tight tracking-tight uppercase">
-                    Your {primaryItem?.title}<br />
-                    <span className="text-candy-pink">Starts here.</span>
-                  </h2>
-                  <Link
-                    href="/create"
-                    className="inline-flex items-center gap-3 px-10 py-5 bg-candy-pink text-cream rounded-2xl font-black text-lg tracking-wide shadow-glow-pink hover:brightness-110 hover:scale-[1.02] transition-all group"
-                  >
-                    <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
-                    CREATE FOR FREE
-                  </Link>
+                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-cream/20">Studio Professional Mode · Free to try</p>
+                    <h2 className="font-display text-4xl md:text-6xl text-cream leading-tight tracking-tight uppercase">
+                        Your {primaryItem?.title}<br />
+                        <span className="text-candy-pink">Starts here.</span>
+                    </h2>
+                    <Link
+                        href="/create"
+                        className="inline-flex items-center gap-3 px-10 py-5 bg-candy-pink text-cream rounded-2xl font-black text-lg tracking-wide shadow-glow-pink hover:brightness-110 hover:scale-[1.02] transition-all group"
+                    >
+                        <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
+                        CREATE FOR FREE
+                    </Link>
                 </div>
             </section>
         </div>
