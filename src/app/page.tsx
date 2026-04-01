@@ -51,90 +51,87 @@ export default function Home() {
     <div className="bg-cream selection:bg-candy-pink/30 relative font-sans overflow-x-hidden">
       <JSONLD data={faqSchema} />
 
-      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-          HERO — Clean & High Impact
+      {/* ─── Hero Section: Compact & Studio-Grade ─── 
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-mesh-candy bg-grain pt-32 pb-20">
+      <section className="relative min-h-[70vh] flex items-center overflow-hidden bg-mesh-candy bg-grain pt-24 pb-12">
         <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-candy-pink/5 to-transparent pointer-events-none" />
-        
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="grid lg:grid-cols-12 gap-12 items-start">
 
-            {/* Left: Copy (Cols 1-7) */}
-            <div className="lg:col-span-7 space-y-12">
-              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-foreground/5 bg-cream/50 backdrop-blur-sm animate-pop-in">
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-12 gap-10 items-start">
+
+            {/* Left Column: Core Copy */}
+            <div className="lg:col-span-7 space-y-8">
+              <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full border border-foreground/5 bg-cream/50 backdrop-blur-sm animate-pop-in">
                 <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-candy-pink opacity-75"></span>
                   <span className="relative inline-flex rounded-full h-2 w-2 bg-candy-pink"></span>
                 </span>
-                <span className="text-[10px] font-black tracking-widest uppercase text-foreground/40">Identity Lock™ v2.5 — Now Live</span>
+                <span className="text-[10px] font-black tracking-widest uppercase text-foreground/40 leading-none">Identity Lock™ v2.5 — Professional Studio</span>
               </div>
 
-              <div className="space-y-6">
-                <h1 className="font-display text-7xl md:text-[9rem] leading-[0.82] tracking-tighter text-foreground uppercase">
-                  Your Brand,<br />
-                  <span className="text-candy-pink italic">Always</span><br />
-                  Consistent.
+              <div className="space-y-4">
+                <h1 className="font-display text-5xl md:text-7xl leading-[0.85] tracking-tighter text-foreground uppercase">
+                  Consistent AI<br />
+                  <span className="text-candy-pink italic">Mascots.</span>
                 </h1>
-                <p className="text-xl md:text-2xl font-medium text-foreground/50 max-w-xl leading-relaxed">
-                  The world&apos;s first AI mascot engine with Identity Lock™. Stay consistent across every style, pose, and expression.
+                <p className="text-lg md:text-xl font-medium text-foreground/50 max-w-xl leading-relaxed animate-slide-up stagger-1">
+                  The only AI character engine that locks your face DNA, ensuring 100% identity consistency across every pose, scene, and style.
                 </p>
               </div>
 
-              <div className="flex flex-wrap gap-6 pt-4">
+              <div className="flex flex-wrap gap-6 pt-4 animate-slide-up stagger-2">
                 <Link
                   href="/create"
-                  className="group inline-flex items-center gap-4 px-12 py-6 bg-foreground text-cream rounded-3xl font-black text-xl shadow-premium hover:bg-candy-pink transition-all duration-500 hover:scale-[1.02] hover:shadow-glow-pink"
+                  className="group inline-flex items-center gap-4 px-10 py-5 bg-foreground text-cream rounded-2xl font-black text-lg shadow-premium hover:bg-candy-pink transition-all duration-500 hover:scale-[1.02] hover:shadow-glow-pink"
                 >
                   <Sparkles size={24} className="group-hover:rotate-12 transition-transform" />
-                  START CREATING
+                  START GENERATING
                 </Link>
                 <Link
-                  href="/gallery"
-                  className="inline-flex items-center gap-4 px-12 py-6 border border-foreground/10 text-foreground rounded-3xl font-black text-xl hover:border-candy-pink hover:text-candy-pink transition-all duration-300"
+                  href="/showcase"
+                  className="inline-flex items-center gap-4 px-10 py-5 border border-foreground/10 text-foreground rounded-2xl font-black text-lg hover:border-candy-pink hover:text-candy-pink transition-all duration-500"
                 >
-                  SHOWCASE
+                  VIEW SHOWCASE
                 </Link>
               </div>
 
-              <div className="flex items-center gap-8 pt-8">
-                <div className="flex -space-x-4">
-                  {["/demo/hero-shiba.png", "/demo/hero-animation.webp", "/demo/hero-stickers.webp"].map((src, i) => (
-                    <div key={i} className="w-12 h-12 rounded-2xl border-4 border-cream overflow-hidden shadow-lg rotate-[5deg] even:rotate-[-5deg]">
-                      <Image src={src} alt="Mascot" width={48} height={48} className="object-cover" />
+              <div className="flex items-center gap-8 pt-4">
+                <div className="flex -space-x-3">
+                  {["/demo/hero-dragon-barista.png", "/demo/hero-animation.webp", "/demo/hero-stickers.webp"].map((src, i) => (
+                    <div key={i} className="w-10 h-10 rounded-xl border-4 border-cream overflow-hidden shadow-lg rotate-[5deg] even:rotate-[-5deg]">
+                      <Image src={src} alt="Mascot" width={40} height={40} className="object-cover" />
                     </div>
                   ))}
                 </div>
-                <div className="space-y-1">
-                  <p className="text-sm font-black uppercase tracking-widest text-foreground">10,000+ CREATORS</p>
-                  <p className="text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em]">Join the professional standard</p>
+                <div className="space-y-0.5">
+                  <p className="text-[10px] font-black tracking-widest text-foreground/40 uppercase">10,000+ characters generated</p>
+                  <div className="flex gap-0.5 text-candy-yellow opacity-50">
+                    {[...Array(5)].map((_, i) => <div key={i} className="w-2 h-2 rounded-full bg-current" />)}
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Right: Modern Collage (Cols 8-12) */}
-            <div className="lg:col-span-5 relative mt-20 lg:mt-0">
-              <div className="relative aspect-[4/5] w-full">
+            {/* Right Column: Hero Visuals */}
+            <div className="lg:col-span-5 relative mt-12 lg:mt-0 lg:pl-10">
+              <div className="relative aspect-[4/5] w-full max-w-[400px] mx-auto">
                 {/* Primary mascot render — Bottom Layer */}
-                <div className="absolute top-10 right-0 w-[85%] aspect-square rounded-[3rem] overflow-hidden shadow-premium border border-foreground/5 bg-cream z-10 animate-float opacity-80 lg:opacity-100">
-                  <Image src="/demo/hero-shiba.png" alt="3D AI Mascot" fill className="object-cover" />
+                <div className="absolute top-8 right-0 w-[85%] aspect-square rounded-[2.5rem] overflow-hidden shadow-premium border border-foreground/5 bg-cream z-10 animate-float opacity-80 lg:opacity-100">
+                  <Image src="/demo/hero-dragon-barista.png" alt="3D AI Mascot" fill className="object-cover" />
                 </div>
-                
+
                 {/* Secondary character sheet — Top Layer */}
-                <div className="absolute top-[60%] left-0 w-[60%] aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl border border-foreground/10 bg-cream z-20 rotate-[-12deg] hover:rotate-0 transition-transform duration-700 animate-float-delayed">
+                <div className="absolute top-[55%] left-0 w-[60%] aspect-square rounded-[2rem] overflow-hidden shadow-2xl border border-foreground/10 bg-cream z-20 rotate-[-12deg] hover:rotate-0 transition-transform duration-700 animate-float-delayed">
                   <Image src="/demo/hero-animation.webp" alt="Character sheet" fill className="object-cover" />
                 </div>
 
                 {/* Identity Tag */}
-                <div className="absolute top-1/2 -left-8 z-30 animate-pop-in">
-                  <div className="px-6 py-4 bg-foreground text-cream rounded-2xl shadow-premium">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-candy-pink mb-1">Identity Lock™</p>
-                    <p className="text-xs font-bold text-cream/50">Same character, every render</p>
+                <div className="absolute top-1/2 -left-8 z-30 animate-pop-in hidden md:block">
+                  <div className="px-5 py-3 bg-foreground text-cream rounded-xl shadow-premium">
+                    <p className="text-[8px] font-black uppercase tracking-[0.2em] text-candy-pink mb-0.5">Identity Lock™</p>
+                    <p className="text-[10px] font-bold text-cream/30">Same character engine</p>
                   </div>
                 </div>
-
-                {/* Decorative dots */}
-                <div className="absolute -bottom-4 right-12 w-24 h-24 bg-dotted opacity-20" />
               </div>
             </div>
 
@@ -250,7 +247,7 @@ export default function Home() {
               </div>
               {/* Small decorative accent */}
               <div className="absolute -top-6 -left-6 w-24 h-24 rounded-[1.5rem] overflow-hidden shadow-xl border border-foreground/5 rotate-[-8deg]">
-                <Image src="/demo/hero-shiba.png" alt="" width={96} height={96} className="object-cover w-full h-full" />
+                <Image src="/demo/style-flat.png" alt="" width={96} height={96} className="object-cover w-full h-full" />
               </div>
             </div>
 
@@ -268,7 +265,7 @@ export default function Home() {
             {/* Image — left, bleeds to edge */}
             <div className="lg:w-1/2 relative min-h-[360px]">
               <Image
-                src="/demo/landing-mix-v2.webp"
+                src="/demo/before-after.webp"
                 alt="AI Background Remover"
                 fill
                 className="object-cover"
@@ -303,11 +300,11 @@ export default function Home() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           COMMERCIAL RIGHTS — High-Energy Editorial Layout
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section className="py-32 bg-cream relative overflow-hidden">
+      <section className="py-16 bg-cream relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
         <div className="container mx-auto px-6">
           <div className="grid lg:grid-cols-2 gap-20 items-center">
-            
+
             {/* Left: Interactive Rights Matrix */}
             <div className="space-y-12">
               <div className="space-y-6">
@@ -347,7 +344,7 @@ export default function Home() {
               <div className="relative grid grid-cols-2 gap-4">
                 <div className="space-y-4">
                   <div className="rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-premium rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
-                    <Image src="/demo/hero-shiba.png" alt="Proof" width={300} height={300} className="w-full h-auto" />
+                    <Image src="/demo/style-vector.png" alt="Proof" width={300} height={300} className="w-full h-auto" />
                   </div>
                   <div className="p-8 rounded-[2.5rem] bg-foreground text-cream space-y-4 shadow-2xl">
                     <div className="text-5xl font-display text-candy-pink">100%</div>
@@ -373,7 +370,7 @@ export default function Home() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           STYLES — Premium Bento Grid
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section className="py-32 bg-cream border-t border-foreground/5 relative">
+      <section className="py-16 bg-cream border-t border-foreground/5 relative">
         <div className="container mx-auto px-6">
           <div className="mb-20 space-y-4 max-w-2xl">
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 border border-foreground/10 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
@@ -385,75 +382,54 @@ export default function Home() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {TOP_STYLES.map((style, i) => {
               const demoImages = [
-                "/demo/hero-shiba.png",
-                "/demo/hero-animation.webp",
-                "/demo/hero-stickers.webp",
-                "/demo/landing-mix-v2.webp",
-                "/demo/landing-story-v2.webp",
-                "/demo/style-showcase.webp",
-                "/demo/hero-shiba.png",
-                "/demo/hero-animation.webp"
+                "/demo/style-pixar.png",
+                "/demo/style-clay.png",
+                "/demo/style-minimal.png",
+                "/demo/style-vector.png",
+                "/demo/style-retro.png",
+                "/demo/style-cyber.png",
+                "/demo/style-iso.png",
+                "/demo/style-flat.png"
               ];
-              const gradients = [
-                "bg-candy-pink/10",
-                "bg-candy-blue/10",
-                "bg-candy-yellow/10",
-                "bg-candy-green/10",
-                "bg-purple-100/50",
-                "bg-orange-100/50",
-                "bg-blue-100/50",
-                "bg-pink-100/50"
-              ];
-              const isLarge = i === 0 || i === 3 || i === 4;
 
               return (
                 <Link
                   key={style.slug}
                   href={`/mascot-maker/${style.slug}`}
-                  className={`group relative overflow-hidden rounded-[2.5rem] border border-foreground/5 transition-all duration-700 hover:-translate-y-2 hover:shadow-premium min-h-[240px] flex flex-col justify-end
-                    ${isLarge ? "md:col-span-2" : "md:col-span-1"}
-                    ${gradients[i % gradients.length]}
-                  `}
+                  className="group flex flex-col bg-cream border border-foreground/5 rounded-2xl overflow-hidden hover:shadow-premium transition-all duration-500 hover:-translate-y-1"
                 >
-                  {/* Visual Asset Overlay */}
-                  <div className="absolute inset-x-0 top-0 h-[60%] p-5 opacity-30 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105">
-                    <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden grayscale group-hover:grayscale-0 transition-all shadow-sm">
-                      <Image 
-                        src={demoImages[i % demoImages.length]} 
-                        alt={style.title} 
-                        fill 
-                        className="object-cover"
-                      />
-                    </div>
+                  {/* Visual: Clean, Square Image */}
+                  <div className="aspect-square relative w-full bg-secondary/5 overflow-hidden">
+                    <Image
+                      src={demoImages[i % demoImages.length]}
+                      alt={style.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    />
                   </div>
 
-                  {/* Gradient overlay for text legibility */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/90 to-transparent pointer-events-none" />
-
-                  {/* Content */}
-                  <div className="p-6 relative z-10 space-y-2">
-                    <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-foreground/5 border border-foreground/5">
-                      <div className="w-1 h-1 rounded-full bg-candy-pink" />
-                      <span className="text-[9px] font-black uppercase tracking-widest text-foreground/40 leading-none">V2.0</span>
-                    </div>
-                    <div className="flex items-center justify-between gap-4">
-                      <h3 className="font-display text-2xl md:text-3xl leading-[0.9] text-foreground uppercase tracking-tighter">
-                        {style.title.split(' ')[0]}<br />
-                        <span className={i % 2 === 0 ? "text-candy-pink" : "text-candy-blue"}>{style.title.split(' ')[1] || "Style"}</span>
+                  {/* Content: Minimal & High-Contrast */}
+                  <div className="p-4 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-[10px] font-black uppercase tracking-widest text-foreground group-hover:text-candy-pink transition-colors truncate">
+                        {style.title}
                       </h3>
-                      <div className="w-10 h-10 rounded-xl bg-foreground text-cream flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 flex-shrink-0">
-                        <ArrowUpRight size={16} />
-                      </div>
+                      <ArrowUpRight size={12} className="text-foreground/20 group-hover:text-candy-pink transition-colors flex-shrink-0" />
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-[8px] font-bold text-foreground/25 uppercase tracking-widest leading-none">V2.0</span>
+                      <div className="w-1 h-1 rounded-full bg-foreground/10" />
+                      <span className="text-[8px] font-bold text-candy-pink/50 uppercase tracking-widest leading-none">Identity Lock</span>
                     </div>
                   </div>
                 </Link>
               );
             })}
           </div>
-          
+
           <div className="mt-16 text-center">
             <Link href="/explore" className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/30 hover:text-candy-pink transition-colors">
               VIEW ALL 1,200+ CATEGORIES
@@ -495,7 +471,7 @@ export default function Home() {
       {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
           FINAL CTA — Giant, unmissable, singular focus
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-      <section className="py-32 bg-foreground relative overflow-hidden">
+      <section className="py-24 bg-foreground relative overflow-hidden">
         <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
         {/* Big background word */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">

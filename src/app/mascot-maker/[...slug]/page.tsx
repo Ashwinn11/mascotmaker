@@ -153,11 +153,15 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
 
-            {/* Hero Section: Sophisticated & Dynamic */}
-            <section className="relative pt-40 pb-24 overflow-hidden bg-mesh-candy bg-grain">
+            {/* ─── Hero Section: Compact & Sharp ─── */}
+            <section className="relative flex items-center overflow-hidden bg-mesh-candy bg-grain pt-24 pb-16">
+                <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-candy-pink/5 to-transparent pointer-events-none" />
+                
                 <div className="container mx-auto px-6 relative z-10">
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
-                        <div className="space-y-10">
+                    <div className="grid lg:grid-cols-12 gap-12 items-start">
+
+                        {/* Left: Copy */}
+                        <div className="lg:col-span-7 space-y-8">
                             <Breadcrumb items={[
                                 { label: "Home", href: "/" },
                                 { label: "Mascot Maker", href: "/explore" },
@@ -165,45 +169,58 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 { label: secondaryItem?.title || primaryItem?.title || "" }
                             ]} />
 
-                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-foreground/5 text-[10px] font-black uppercase tracking-widest text-foreground/50">
-                                Specialized AI Mode
+                            <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full border border-foreground/5 bg-cream/50 backdrop-blur-sm">
+                                <span className="relative flex h-2 w-2">
+                                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-candy-pink opacity-75"></span>
+                                    <span className="relative inline-flex rounded-full h-2 w-2 bg-candy-pink"></span>
+                                </span>
+                                <span className="text-[9px] font-black tracking-widest uppercase text-foreground/40 leading-none">Identity Lock™ v2.5 — Optimized Engine</span>
                             </div>
 
-                            <h1 className="font-display text-6xl md:text-[8rem] text-foreground leading-[0.85] uppercase -tracking-tight">
-                                {combinedTitle} <br /><span className="text-gradient">Generator.</span>
-                            </h1>
+                            <div className="space-y-4">
+                                <h1 className="font-display text-5xl md:text-6xl leading-[0.9] tracking-tighter text-foreground uppercase">
+                                    {combinedTitle}<br />
+                                    <span className="text-candy-pink italic">Generator.</span>
+                                </h1>
+                                <p className="text-lg md:text-xl font-medium text-foreground/50 max-w-xl leading-relaxed">
+                                    {(primaryItem?.description || "")} {secondaryItem ? `Optimized for ${secondaryItem.title} branding.` : ""} {content.intro}
+                                </p>
+                            </div>
 
-                            <p className="text-xl md:text-2xl text-muted-foreground font-semibold leading-relaxed max-w-xl">
-                                {(primaryItem?.description || "")} {secondaryItem ? `Specially trained to output high-fidelity assets optimized for ${secondaryItem.title}. ` : ""}
-                                {content.intro}
-                            </p>
-
-                            <div>
+                            <div className="flex flex-wrap gap-4 pt-2">
                                 <Link
                                     href="/create"
-                                    className="inline-flex items-center justify-center gap-4 rounded-2xl bg-foreground px-12 py-6 text-xl font-black text-white shadow-premium hover:shadow-glow-pink hover:scale-[1.02] transition-all group"
+                                    className="group inline-flex items-center gap-4 px-10 py-5 bg-foreground text-cream rounded-2xl font-black text-lg shadow-premium hover:bg-candy-pink transition-all duration-500 hover:scale-[1.02]"
                                 >
-                                    <Sparkles size={24} className="text-candy-yellow group-hover:rotate-12 transition-all" />
+                                    <Sparkles size={24} className="group-hover:rotate-12 transition-transform" />
                                     OPEN STUDIO
+                                </Link>
+                                <Link
+                                    href="/gallery"
+                                    className="inline-flex items-center gap-4 px-10 py-5 border border-foreground/10 text-foreground rounded-2xl font-black text-lg hover:border-candy-pink hover:text-candy-pink transition-all duration-500"
+                                >
+                                    EXAMPLES
                                 </Link>
                             </div>
                         </div>
 
-                        <div className="relative">
-                            <div className={`relative z-10 rounded-[3rem] border border-foreground/5 overflow-hidden shadow-premium bg-white p-4`}>
-                                <Image
-                                    src={isMix ? "/demo/landing-mix-v2.webp" : isStory ? "/demo/landing-story-v2.webp" : "/demo/hero-shiba.png"}
-                                    alt={combinedTitle || "Mascot Maker Preview"}
-                                    width={600}
-                                    height={600}
-                                    priority={true}
-                                    className="w-full h-auto rounded-[2rem] object-cover"
-                                />
-                            </div>
-                            {/* Visual Flair Elements */}
-                            <div className="absolute -top-6 -right-6 animate-float">
-                                <div className="p-4 glass-card rounded-2xl shadow-xl">
-                                    <Palette size={32} className="text-candy-pink" />
+                        {/* Right: Asset Showcase */}
+                        <div className="lg:col-span-5 relative mt-12 lg:mt-0">
+                            <div className="relative aspect-square w-full rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-2xl bg-white p-3">
+                                <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
+                                    <Image
+                                        src={(primaryItem as any)?.image || (isMix ? "/demo/before-after.webp" : isStory ? "/demo/landing-story-v2.webp" : "/demo/hero-dragon-barista.png")}
+                                        alt={combinedTitle || "Mascot Maker Preview"}
+                                        fill
+                                        priority={true}
+                                        className="object-cover"
+                                    />
+                                </div>
+                                <div className="absolute top-1/2 -left-6 z-30 hidden md:block">
+                                    <div className="px-4 py-3 bg-foreground text-cream rounded-xl shadow-premium">
+                                      <p className="text-[8px] font-black uppercase tracking-[0.2em] text-candy-pink mb-0.5 leading-none">Identity Lock™</p>
+                                      <p className="text-[10px] font-bold text-cream/50 leading-none">Same character engine</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -211,84 +228,93 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                 </div>
             </section>
 
-            {/* Workflow Section: Clean Content Deep-Dive */}
-            <section className="py-24 bg-cream">
+            {/* ─── Consistency Section ─── */}
+            <section className="py-20 bg-cream border-t border-foreground/5">
                 <div className="container mx-auto px-6">
-                    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-24">
-                        <div className="lg:w-3/5 space-y-10">
-                            <h2 className="font-display text-5xl md:text-7xl uppercase">
-                                Redefining <br /><span className="text-candy-pink">The Workflow.</span>
+                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                        <div className="space-y-6">
+                            <h2 className="font-display text-4xl md:text-5xl leading-[0.9] tracking-tight uppercase">
+                                Same character.<br />
+                                <span className="text-candy-pink">Zero AI drift.</span>
                             </h2>
-                            <p className="text-2xl text-foreground font-bold leading-relaxed">
-                                {content.benefit1} <span className="italic underline decoration-candy-yellow decoration-4 underline-offset-4">{content.benefit2}</span>
+                            <p className="text-foreground/50 text-lg font-medium leading-relaxed max-w-lg">
+                                Whether you're generating {combinedTitle?.toLowerCase()} or complex brand narratives, Identity Lock™ pins your character's exact features so they remain consistent across every scene.
                             </p>
-
-                            <div className="grid sm:grid-cols-2 gap-8 pt-6">
-                                {content.tips.map((tip: string, i: number) => (
-                                    <div key={i} className="flex gap-4 p-6 rounded-2xl bg-cream border border-foreground/10 shadow-sm group hover:shadow-md transition-all">
-                                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-sm border border-foreground/10 group-hover:bg-candy-pink/10 transition-colors">
-                                            <div className="w-2 h-2 rounded-full bg-candy-pink" />
-                                        </div>
-                                        <p className="text-base font-semibold text-foreground italic leading-relaxed">{tip}</p>
+                            <div className="grid grid-cols-1 gap-3">
+                                {content.stats.map((stat: string, i: number) => (
+                                    <div key={i} className="flex items-center gap-3 p-3.5 rounded-xl bg-secondary/10 border border-foreground/5">
+                                        <Check size={14} className="text-candy-pink" />
+                                        <span className="text-[11px] font-bold text-foreground/70 uppercase tracking-wide">{stat}</span>
                                     </div>
                                 ))}
                             </div>
                         </div>
-
-                        <div className="lg:w-2/5 p-12 rounded-[3.5rem] bg-secondary/20 border border-foreground/10 shadow-md">
-                            <h3 className="font-display text-2xl uppercase mb-10 text-center">Studio Standard</h3>
-                            <ul className="space-y-6">
-                                {["Identity Consistency", "Cinematic Quality", "Commercial Rights", "Studio-Tested Prompts"].map((check, i) => (
-                                    <li key={i} className="flex items-center gap-5 text-lg font-black uppercase tracking-tight text-foreground/70">
-                                        <div className="w-8 h-8 rounded-full bg-white border border-foreground/5 flex items-center justify-center shrink-0">
-                                            <Check size={16} className="text-candy-green stroke-[4]" />
-                                        </div>
-                                        {check}
-                                    </li>
-                                ))}
-                            </ul>
+                        <div className="relative rounded-[2.5rem] overflow-hidden shadow-premium border border-foreground/5 rotate-[1.5deg]">
+                            <Image src="/demo/landing-mix-v2.webp" alt="Process" width={500} height={500} className="w-full h-auto" />
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* CTA: Final Conversion */}
-            <section className="py-32 bg-mesh-dark text-white relative overflow-hidden">
-                <div className="container mx-auto px-6 text-center space-y-12 relative z-10">
-                    <h2 className="font-display text-6xl md:text-9xl mb-8 uppercase tracking-tighter leading-none">
-                        START YOUR <br /><span className="text-gradient">NEXT PROJECT.</span>
-                    </h2>
-                    <Link
-                        href="/create"
-                        className="inline-flex items-center gap-5 rounded-full bg-white px-14 py-7 text-2xl font-black text-foreground hover:bg-candy-pink hover:text-white transition-all shadow-glow-pink hover:scale-105"
-                    >
-                        LAUNCH STUDIO <ArrowRight size={32} />
-                    </Link>
+            {/* ─── Editorial Content ─── */}
+            <section className="py-20 bg-cream border-t border-foreground/5">
+                <div className="container mx-auto px-6">
+                    <div className="max-w-4xl mx-auto space-y-12">
+                        <div className="prose prose-lg max-w-none prose-headings:font-display prose-headings:uppercase prose-headings:tracking-tighter prose-p:text-foreground/60">
+                            <h2 className="text-4xl mb-6">What is the {combinedTitle} Designer?</h2>
+                            <p className="text-xl leading-relaxed mb-8">{content.definition}</p>
+                            <p className="text-lg leading-relaxed">{content.benefit1}</p>
+                        </div>
 
-                    {/* Related Links: Replaced with Modern Grid */}
-                    <div className="max-w-5xl mx-auto mt-32 pt-20 border-t border-white/5 text-left">
-                        <h3 className="font-display text-2xl uppercase mb-8 opacity-40">Related specialized studios</h3>
-                        <div className="flex flex-wrap gap-x-10 gap-y-4">
-                            {(engine1 ? INDUSTRIES : engine1 ? STYLES : INDUSTRIES).slice(0, 12).map((item) => (
-                                <Link
-                                    key={item.slug}
-                                    href={`/mascot-maker/${part1}/${item.slug}`}
-                                    className="text-xs font-black uppercase tracking-widest text-white hover:text-candy-pink transition-colors"
-                                >
-                                    {primaryItem?.title} for {item.title}
+                        <div className="grid md:grid-cols-2 gap-8">
+                            <div className="space-y-4">
+                                <h3 className="font-display text-2xl uppercase">Best Practices</h3>
+                                <ul className="space-y-3">
+                                    {content.tips.map((tip: string, i: number) => (
+                                        <li key={i} className="flex items-start gap-3 p-4 rounded-xl bg-white border border-foreground/5 shadow-sm">
+                                            <Sparkles size={14} className="text-candy-pink mt-1 flex-shrink-0" />
+                                            <p className="text-[12px] font-medium text-foreground/70">{tip}</p>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+                            <div className="bg-foreground rounded-[2rem] p-8 text-cream flex flex-col justify-center space-y-4 relative overflow-hidden">
+                                <div className="absolute inset-0 bg-mesh-candy opacity-10 pointer-events-none" />
+                                <h3 className="font-display text-3xl uppercase relative z-10 leading-none">Production Ready.</h3>
+                                <p className="text-cream/40 text-sm font-medium relative z-10">Outputs include full commercial rights. Generate once, use everywhere.</p>
+                                <Link href="/create" className="bg-candy-pink text-cream px-6 py-3.5 rounded-lg font-black text-center text-sm relative z-10 hover:brightness-110 transition-all">
+                                    START CREATING
                                 </Link>
-                            ))}
+                            </div>
                         </div>
                     </div>
                 </div>
-
-                {/* Background Noise/Effect */}
-                <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none" />
             </section>
 
-            <div className="py-20 bg-cream">
-                <ExploreLinks />
-            </div>
-        </div >
+            <section className="py-16 border-t border-foreground/5">
+                <div className="container mx-auto px-6">
+                  <ExploreLinks />
+                </div>
+            </section>
+
+            {/* ─── Final CTA ─── */}
+            <section className="py-24 bg-foreground relative overflow-hidden">
+                <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
+                <div className="container mx-auto px-6 relative z-10 text-center space-y-8">
+                  <p className="text-[9px] font-black uppercase tracking-[0.3em] text-cream/20">Studio Professional Mode · Free to try</p>
+                  <h2 className="font-display text-4xl md:text-6xl text-cream leading-tight tracking-tight uppercase">
+                    Your {primaryItem?.title}<br />
+                    <span className="text-candy-pink">Starts here.</span>
+                  </h2>
+                  <Link
+                    href="/create"
+                    className="inline-flex items-center gap-3 px-10 py-5 bg-candy-pink text-cream rounded-2xl font-black text-lg tracking-wide shadow-glow-pink hover:brightness-110 hover:scale-[1.02] transition-all group"
+                  >
+                    <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
+                    CREATE FOR FREE
+                  </Link>
+                </div>
+            </section>
+        </div>
     );
 }

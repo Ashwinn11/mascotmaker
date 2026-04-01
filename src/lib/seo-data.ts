@@ -3,25 +3,29 @@ export const ENGINES = [
         slug: "character-generator",
         title: "AI Character Generator",
         description: "Create professional 3D, 2D, or retro characters with full DNA preservation.",
-        keywords: ["character creator", "avatar maker", "pixar style characters", "game assets"]
+        keywords: ["character creator", "avatar maker", "pixar style characters", "game assets"],
+        image: "/demo/hero-dragon-barista.png"
     },
     {
         slug: "story-studio",
         title: "AI Storyboard Generator",
         description: "Design seamless 8-frame narratives for storyboards and brand social content.",
-        keywords: ["storyboard creator", "comic generator", "narrative ai", "visual storytelling"]
+        keywords: ["storyboard creator", "comic generator", "narrative ai", "visual storytelling"],
+        image: "/demo/landing-story-v2.webp"
     },
     {
         slug: "mix-studio",
         title: "AI Product Ad Generator",
         description: "Composite mascots with real products for professional advertisements and branding.",
-        keywords: ["product mockup", "ai advertising", "product placement", "brand ads"]
+        keywords: ["product mockup", "ai advertising", "product placement", "brand ads"],
+        image: "/demo/before-after.webp"
     },
     {
         slug: "icon-generator",
         title: "AI Icon & Logo Maker",
         description: "Generate minimalist, 3D, or vector icons and logos for apps and websites.",
-        keywords: ["icon maker", "logo generator", "app icon creator", "vector graphics"]
+        keywords: ["icon maker", "logo generator", "app icon creator", "vector graphics"],
+        image: "/demo/style-minimal.png"
     }
 ];
 
@@ -55,14 +59,14 @@ export const INDUSTRIES = [
 ];
 
 export const STYLES = [
-    { slug: "3d-pixar", title: "3D Pixar Style", description: "High-end 3D cinematic characters and icons with Pixar-grade quality." },
-    { slug: "claymation", title: "Claymation", description: "Charming stop-motion style clay assets with rich textures." },
-    { slug: "minimalist", title: "Minimalist", description: "Clean, simple, and modern designs for modern brands." },
-    { slug: "vector", title: "Vector Art", description: "Scalable and clean vector-style graphics for logos and print." },
-    { slug: "retro-80s", title: "Retro 80s", description: "Vibrant neon and synthwave-inspired 80s designs." },
-    { slug: "cyberpunk", title: "Cyberpunk", description: "Futuristic and edgy visual styles for the digital frontier." },
-    { slug: "isometric", title: "Isometric", description: "Perfectly angled isometric assets for apps and websites." },
-    { slug: "flat-design", title: "Flat Design", description: "Timeless flat illustration style for versatile brand use." },
+    { slug: "3d-pixar", title: "3D Pixar Style", description: "High-end 3D cinematic characters and icons with Pixar-grade quality.", image: "/demo/style-pixar.png" },
+    { slug: "claymation", title: "Claymation", description: "Charming stop-motion style clay assets with rich textures.", image: "/demo/style-clay.png" },
+    { slug: "minimalist", title: "Minimalist", description: "Clean, simple, and modern designs for modern brands.", image: "/demo/style-minimal.png" },
+    { slug: "vector", title: "Vector Art", description: "Scalable and clean vector-style graphics for logos and print.", image: "/demo/style-vector.png" },
+    { slug: "retro-80s", title: "Retro 80s", description: "Vibrant neon and synthwave-inspired 80s designs.", image: "/demo/style-retro.png" },
+    { slug: "cyberpunk", title: "Cyberpunk", description: "Futuristic and edgy visual styles for the digital frontier.", image: "/demo/style-cyber.png" },
+    { slug: "isometric", title: "Isometric", description: "Perfectly angled isometric assets for apps and websites.", image: "/demo/style-iso.png" },
+    { slug: "flat-design", title: "Flat Design", description: "Timeless flat illustration style for versatile brand use.", image: "/demo/style-flat.png" },
     { slug: "ghibli", title: "Ghibli Inspired", description: "Dreamy, hand-painted aesthetic inspired by legendary Japanese animation." },
     { slug: "ukiyo-e", title: "Ukiyo-e Modern", description: "Traditional Japanese woodblock style reimagined for modern brands." },
     { slug: "pixel-art", title: "Pixel Art", description: "Nostalgic 16-bit and 32-bit assets for games and apps." },
@@ -264,14 +268,14 @@ export function getSEOContent(category?: string, location?: string) {
     const definition = `${displayName} is an AI design studio for professional assets. We create high-quality characters with absolute identity consistency. Our studio lets creators maintain the same character look across every pose and scene. We use advanced locking technology to stop 'AI drift' and ensure your brand stays consistent.`;
 
     const tips: string[] = [];
-    
+
     // Category-specific tips (Styles & Engines)
     if (category?.includes("Mascot") || category?.includes("Character") || category?.includes("Pixar") || category?.includes("Ghibli") || category?.includes("Claymation")) {
         tips.push("Anatomy consistency: Use our 'Identity Lock' feature to ensure facial features and proportions remain identical across all 2D and 3D renders.");
         tips.push("Emotional Range: For brand mascots, generate a 'Sheet of Expressions' including joy, surprise, and determination to ensure versatility.");
         tips.push("Texture Preservation: When moving between styles like Pixar and Claymation, maintain key color Hex codes for brand recognition.");
-    } 
-    
+    }
+
     if (category?.includes("Icon") || category?.includes("Logo") || category?.includes("Minimalist") || category?.includes("Vector") || category?.includes("Flat")) {
         tips.push("Geometric Simplicity: AI icons perform best when using bold primary shapes that remain legible at 16px favicon sizes.");
         tips.push("Vector Readiness: Always export with high contrast to ensure easy tracing into SVG formats for infinitely scalable branding.");
