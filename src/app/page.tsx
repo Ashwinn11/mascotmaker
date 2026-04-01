@@ -1,40 +1,11 @@
 import Link from "next/link";
-import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
 import Image from "next/image";
-import { Sparkles, Palette, Clapperboard, Check, Zap, Play, Layers, ArrowRight, HelpCircle, ShoppingCart, WandSparkles, Trash } from "lucide-react";
+import { Sparkles, Check, ArrowRight, HelpCircle, Shield, Zap, ArrowUpRight, Palette } from "lucide-react";
 import { ExploreLinks } from "@/components/explore-links";
 import { JSONLD } from "@/components/json-ld";
-import { STYLES, INDUSTRIES } from "@/lib/seo-data";
+import { STYLES } from "@/lib/seo-data";
 
-const EXAMPLES = [
-  "Flat Minimalist Logo",
-  "3D Pixar Character",
-  "Isometric Game Asset",
-  "Retro 80s Vibe",
-  "Claymation Robot",
-  "Cyberpunk Scene",
-];
-
-const ENGINES = [
-  {
-    title: "Mascot Engine",
-    subtitle: "Identity Consistency",
-    desc: "Create professional 3D, 2D, or retro characters with full DNA preservation across every action and expression.",
-    icon: Palette,
-    color: "bg-candy-pink",
-    shadow: "shadow-[12px_12px_0_#ff6b9d]",
-    border: "border-candy-pink",
-    image: "/demo/hero-shiba.webp",
-    link: "/create",
-    badge: "Core Engine"
-  }
-];
-
-const TOP_STYLES = STYLES.slice(0, 6);
-const TOP_INDUSTRIES = [
-  ...INDUSTRIES.filter(i => i.slug === "ai-startups"),
-  ...INDUSTRIES.filter(i => i.slug !== "ai-startups").slice(0, 7)
-];
+const TOP_STYLES = STYLES.slice(0, 8);
 
 export default function Home() {
   const faqSchema = {
@@ -77,411 +48,476 @@ export default function Home() {
   };
 
   return (
-    <div className="bg-cream selection:bg-candy-pink/30 pb-20">
+    <div className="bg-cream selection:bg-candy-pink/30 relative font-sans overflow-x-hidden">
       <JSONLD data={faqSchema} />
-      {/* ─── Hero Section ─── */}
-      <section className="relative min-h-[90vh] lg:min-h-screen overflow-hidden bg-white bg-grain flex items-center border-b-4 border-foreground selection:bg-candy-yellow/30">
 
-        {/* Background Decorative Blobs */}
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] aspect-square bg-candy-pink/5 blur-[120px] rounded-full animate-float-delayed" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] aspect-square bg-candy-blue/5 blur-[120px] rounded-full animate-float" />
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          HERO — Clean & High Impact
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden bg-mesh-candy bg-grain pt-32 pb-20">
+        <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-candy-pink/5 to-transparent pointer-events-none" />
+        
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="grid lg:grid-cols-12 gap-12 items-start">
 
-        <div className="relative z-10 mx-auto max-w-7xl px-6 py-24 w-full">
-          <div className="grid lg:grid-cols-12 gap-16 items-center">
-
-            {/* Left Column: Massive Typography */}
-            <div className="lg:col-span-12 xl:col-span-7 text-left">
-              <div className="mb-10 inline-flex items-center gap-3 rounded-full border-3 border-foreground bg-white px-6 py-2.5 text-xs font-black uppercase tracking-[0.2em] text-foreground shadow-[4px_4px_0_#2d2420] animate-slide-up">
-                <Image src="/app-icon.png" alt="Mascot Maker AI character generator icon" width={24} height={24} className="rounded-md" />
-                Studio V2.5 • The Asset Engine
+            {/* Left: Copy (Cols 1-7) */}
+            <div className="lg:col-span-7 space-y-12">
+              <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-foreground/5 bg-cream/50 backdrop-blur-sm animate-pop-in">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-candy-pink opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-candy-pink"></span>
+                </span>
+                <span className="text-[10px] font-black tracking-widest uppercase text-foreground/40">Identity Lock™ v2.5 — Now Live</span>
               </div>
 
-              <h1 className="font-display text-7xl sm:text-8xl lg:text-[10rem] text-foreground leading-[0.82] mb-12 -tracking-[0.06em] animate-slide-up stagger-1 capitalize">
-                The Ultimate AI <br />
-                <span className="text-gradient drop-shadow-sm">Mascot Maker</span>
-              </h1>
+              <div className="space-y-6">
+                <h1 className="font-display text-7xl md:text-[9rem] leading-[0.82] tracking-tighter text-foreground uppercase">
+                  Your Brand,<br />
+                  <span className="text-candy-pink italic">Always</span><br />
+                  Consistent.
+                </h1>
+                <p className="text-xl md:text-2xl font-medium text-foreground/50 max-w-xl leading-relaxed">
+                  The world&apos;s first AI mascot engine with Identity Lock™. Stay consistent across every style, pose, and expression.
+                </p>
+              </div>
 
-              <p className="text-2xl sm:text-3xl text-muted-foreground/90 max-w-xl mb-16 font-semibold leading-[1.1] -tracking-wide animate-slide-up stagger-2">
-                The world&apos;s most powerful AI mascot maker & builder for consistent character sets, 3D assets, and marketing storyboards.
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-6 animate-slide-up stagger-3">
+              <div className="flex flex-wrap gap-6 pt-4">
                 <Link
                   href="/create"
-                  className="group relative inline-flex items-center justify-center gap-5 rounded-[2.5rem] bg-foreground px-14 py-7 text-2xl font-black text-white shadow-[8px_8px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-[0.95]"
+                  className="group inline-flex items-center gap-4 px-12 py-6 bg-foreground text-cream rounded-3xl font-black text-xl shadow-premium hover:bg-candy-pink transition-all duration-500 hover:scale-[1.02] hover:shadow-glow-pink"
                 >
-                  <Sparkles size={28} className="text-candy-yellow" />
-                  LAUNCH STUDIO
+                  <Sparkles size={24} className="group-hover:rotate-12 transition-transform" />
+                  START CREATING
                 </Link>
                 <Link
                   href="/gallery"
-                  className="inline-flex items-center justify-center gap-5 rounded-[2.5rem] border-4 border-foreground bg-white px-14 py-7 text-2xl font-black text-foreground shadow-[8px_8px_0_#e8ddd4] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-[0.95]"
+                  className="inline-flex items-center gap-4 px-12 py-6 border border-foreground/10 text-foreground rounded-3xl font-black text-xl hover:border-candy-pink hover:text-candy-pink transition-all duration-300"
                 >
-                  EXPLORE
+                  SHOWCASE
                 </Link>
               </div>
-            </div>
 
-            {/* Right Column: Visual Stack - SPREAD OUT FOR FULL VISIBILITY */}
-            <div className="lg:col-span-12 xl:col-span-5 relative hidden lg:block animate-pop-in stagger-4">
-              <div className="relative w-full h-[650px] max-w-[600px] ml-auto">
-
-                {/* Animation Card - Top Right */}
-                <div className="absolute top-0 right-[-5%] w-[75%] aspect-square rounded-[4rem] border-4 border-foreground bg-white p-6 shadow-[24px_24px_0_#4ea8de] rotate-6 hover:rotate-2 transition-all duration-700 overflow-hidden group z-20">
-                  <div className="relative w-full h-full rounded-[3.5rem] overflow-hidden bg-dotted/20">
-                    <Image
-                      src="/demo/hero-animation.webp"
-                      alt="AI-generated animated mascot character with motion keyframes showing walk cycle"
-                      fill
-                      priority={true}
-                      className="object-contain p-8 group-hover:scale-110 transition-transform duration-1000"
-                    />
-                  </div>
-                  <div className="absolute top-10 right-10 glass-card px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">Motion Engine</div>
-                </div>
-
-                {/* Stickers Card - Bottom Left, Moved further for visibility */}
-                <div className="absolute bottom-0 left-[-15%] w-[70%] aspect-square rounded-[4rem] border-4 border-foreground bg-candy-yellow p-6 shadow-[20px_20px_0_#2d2420] -rotate-12 hover:-rotate-6 transition-all duration-700 overflow-hidden group z-10">
-                  <div className="relative w-full h-full rounded-[3.5rem] overflow-hidden bg-white/40">
-                    <Image src="/demo/hero-stickers.webp" alt="AI-generated sticker pack with multiple character expressions and poses" fill className="object-cover p-6 group-hover:scale-110 transition-transform duration-1000" />
-                  </div>
-                  <div className="absolute bottom-10 left-10 glass-card px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] shadow-xl">Asset Packs</div>
-                </div>
-
-                {/* Floating Props - Kept as 3D for Flair */}
-                <div className="absolute top-[40%] right-[-10%] animate-float z-30">
-                  <Icon3D name="party-popper" size="2xl" />
-                </div>
-                <div className="absolute top-[-5%] left-[10%] animate-float-delayed z-30 opacity-80 rotate-12">
-                  <Icon3D name="high-voltage" size="xl" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* --- Stats Bar --- */}
-        <div className="absolute bottom-0 left-0 right-0 bg-foreground border-y-4 border-foreground py-6 overflow-hidden hidden md:block">
-            <div className="mx-auto max-w-7xl px-6 flex justify-around items-center">
-                {[
-                    { label: "Mascots Generated", val: "1,000+" },
-                    { label: "Premium Styles", val: "12+" },
-                    { label: "Free Credits", val: "5" },
-                    { label: "Countries Served", val: "90+" }
-                ].map((stat, i) => (
-                    <div key={i} className="flex flex-col items-center">
-                        <span className="text-candy-pink text-4xl font-display">{stat.val}</span>
-                        <span className="text-white/60 text-xs font-black uppercase tracking-widest">{stat.label}</span>
-                    </div>
-                ))}
-            </div>
-        </div>
-
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-40">
-          <div className="w-1 h-12 rounded-full bg-foreground/20 relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1/2 bg-foreground animate-[shimmer_2s_infinite]" />
-          </div>
-        </div>
-      </section>
-
-      {/* ─── How It Works ─── */}
-      <section className="py-32 bg-cream border-b-4 border-foreground">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-24 text-center">
-             <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-yellow/10 border-2 border-candy-yellow/20 text-xs font-black uppercase tracking-widest text-candy-yellow">
-              The Process
-            </div>
-            <h2 className="font-display text-5xl md:text-8xl uppercase leading-none mb-6">
-              How To <br /> <span className="text-gradient">Make A Mascot</span>
-            </h2>
-            <p className="text-xl text-muted-foreground font-bold max-w-2xl mx-auto italic">
-              Crafting your brand's unique identity in 3 simple steps with our advanced AI mascot builder.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-12 relative">
-             <div className="absolute top-1/2 left-0 w-full h-1 border-t-4 border-dashed border-foreground/5 hidden lg:block -z-10" />
-             {[
-                { 
-                    icon: <Palette size={40} className="text-candy-pink" />, 
-                    title: "Brand DNA", 
-                    text: "Pick an industry, style, and describe your character. Our AI understands artistic context." 
-                },
-                { 
-                    icon: <Zap size={40} className="text-candy-yellow" />, 
-                    title: "AI Generation", 
-                    text: "Identity Lock technology creates a consistent set of poses and expressions in seconds." 
-                },
-                { 
-                    icon: <ShoppingCart size={32} className="text-candy-green" />, 
-                    title: "Full Ownership", 
-                    text: "Download crisp, high-res files with full commercial rights for your business or game." 
-                }
-             ].map((item, i) => (
-                <div key={i} className="flex flex-col items-center text-center p-10 rounded-[3rem] border-3 border-foreground bg-white shadow-[8px_8px_0_#2d2420] transition-transform hover:scale-[1.02]">
-                    <div className="w-20 h-20 rounded-full border-4 border-foreground bg-white flex items-center justify-center mb-8 shadow-[4px_4px_0_#2d2420]">
-                        {item.icon}
-                    </div>
-                    <h3 className="font-display text-3xl uppercase mb-4 tracking-tight">{item.title}</h3>
-                    <p className="text-sm font-bold text-muted-foreground leading-relaxed italic">{item.text}</p>
-                </div>
-             ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Choose Your Style ─── */}
-      <section className="py-32 bg-white border-b-4 border-foreground">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-16 text-center">
-            <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-green/10 border-2 border-candy-green/20 text-xs font-black uppercase tracking-widest text-candy-green">
-              Art Styles
-            </div>
-            <h2 className="font-display text-5xl md:text-8xl uppercase leading-none mb-6">
-              Choose Your <span className="text-gradient">Style</span>
-            </h2>
-            <p className="text-xl text-muted-foreground font-bold max-w-2xl mx-auto">
-              Every style is a specialized AI model. Pick the one that matches your brand DNA.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {TOP_STYLES.map((style) => (
-              <Link
-                key={style.slug}
-                href={`/mascot-maker/${style.slug}`}
-                className="group relative p-6 rounded-3xl border-3 border-foreground bg-cream hover:bg-candy-pink/10 transition-all shadow-[6px_6px_0_#2d2420] hover:shadow-[3px_3px_0_#2d2420] hover:translate-x-[3px] hover:translate-y-[3px]"
-              >
-                <h3 className="font-black text-sm uppercase tracking-tight text-foreground group-hover:text-candy-pink transition-colors">{style.title}</h3>
-                <p className="text-[11px] text-muted-foreground font-bold mt-1 leading-tight">{style.description.slice(0, 60)}...</p>
-                <ArrowRight size={16} className="mt-3 text-foreground/30 group-hover:text-candy-pink group-hover:translate-x-1 transition-all" />
-              </Link>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Link href="/explore" className="text-sm font-black uppercase tracking-widest text-candy-pink hover:underline">
-              View all {STYLES.length} styles →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Style Showcase ─── */}
-      <section className="py-40 bg-white border-b-4 border-foreground overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
-            <div className="relative group">
-              <div className="relative z-10 rounded-[4rem] border-4 border-foreground overflow-hidden shadow-[30px_30px_0_#ffc857] transition-transform duration-700 group-hover:scale-[1.02]">
-                <Image src="/demo/style-showcase.webp" alt="AI mascot generator showing multiple art styles including 3D Pixar, claymation, pixel art, and vector designs" width={800} height={800} className="w-full h-auto object-cover" />
-                <div className="absolute inset-0 bg-gradient-to-tr from-black/20 to-transparent pointer-events-none" />
-              </div>
-              <div className="absolute -bottom-10 -right-10 animate-float z-20">
-                <div className="w-32 h-32 rounded-3xl border-4 border-foreground bg-candy-green flex items-center justify-center shadow-[10px_10px_0_#2d2420] rotate-12">
-                  <Palette size={64} className="text-white" />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <div className="mb-8 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
-                Visual DNA
-              </div>
-              <h2 className="font-display text-7xl md:text-9xl text-foreground leading-[0.85] uppercase -tracking-[0.05em] mb-10">
-                ANY <span className="text-gradient">STYLE.</span> <br />
-                ZERO LIMITS.
-              </h2>
-              <p className="text-2xl text-muted-foreground font-bold leading-relaxed mb-12">
-                From Pixar-grade 3D renders to retro pixel art and high-fidelity isometric game assets. Generate consistent mascot sets across every action and expression.
-              </p>
-
-              <div className="flex flex-wrap gap-4">
-                {["3D Pixar", "Claymation", "Isometric", "Aureepunk", "8-Bit Retro", "Minimalist"].map((style, i) => (
-                  <span key={i} className="px-6 py-2.5 rounded-2xl border-2 border-foreground bg-cream text-xs font-black uppercase tracking-widest shadow-[4px_4px_0_#2d2420]">
-                    {style}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Free AI Tools ─── */}
-      <section className="py-24 bg-foreground border-b-4 border-foreground overflow-hidden">
-        <div className="mx-auto max-w-7xl px-6 flex flex-col md:flex-row items-center gap-12">
-            <div className="flex-1 text-left">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border-2 border-white/20 text-xs font-black uppercase tracking-widest text-white/50 mb-6">
-                    Free Ecosystem
-                </div>
-                <h2 className="font-display text-5xl md:text-8xl text-white uppercase leading-none mb-6">
-                    FREE <span className="text-candy-pink">AI TOOLS</span>
-                </h2>
-                <p className="text-xl text-white/40 font-bold max-w-xl mb-12">
-                    Beyond generation. Use our free background remover to make your AI mascots ready for print, web, and social media instantly.
-                </p>
-                <Link 
-                    href="/background-remover"
-                    className="inline-flex items-center gap-4 rounded-full border-4 border-white bg-white px-10 py-5 text-xl font-black text-foreground hover:bg-candy-pink hover:text-white transition-all active:scale-95 shadow-[8px_8px_0_#4ea8de]"
-                >
-                    <WandSparkles size={24} />
-                    USE BG REMOVER
-                </Link>
-            </div>
-            <div className="flex-1 relative">
-                <div className="w-full aspect-video rounded-[3rem] border-4 border-white overflow-hidden bg-white/5 p-4 flex items-center justify-center">
-                    <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-white/20 checkers-dark">
-                        <Image src="/demo/hero-shiba.webp" alt="Background removal demonstration" fill className="object-contain p-10 drop-shadow-2xl brightness-110" />
-                    </div>
-                </div>
-                <div className="absolute -top-6 -right-6 animate-float">
-                    <div className="w-20 h-20 rounded-2xl bg-candy-pink border-4 border-white flex items-center justify-center rotate-12 shadow-xl">
-                        <Trash size={32} className="text-white" />
-                    </div>
-                </div>
-            </div>
-        </div>
-      </section>
-
-      {/* ─── Popular Use Cases ─── */}
-      <section className="py-32 bg-cream border-b-4 border-foreground">
-        <div className="mx-auto max-w-7xl px-6">
-          <div className="mb-16 text-center">
-            <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-blue/10 border-2 border-candy-blue/20 text-xs font-black uppercase tracking-widest text-candy-blue">
-              Industries
-            </div>
-            <h2 className="font-display text-5xl md:text-8xl uppercase leading-none mb-6">
-              Built For <span className="text-candy-blue">Your Industry</span>
-            </h2>
-            <p className="text-xl text-muted-foreground font-bold max-w-2xl mx-auto">
-              Specialized AI models fine-tuned for your niche. From Discord bots to SaaS products.
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {TOP_INDUSTRIES.map((industry) => (
-              <Link
-                key={industry.slug}
-                href={`/mascot-maker/${industry.slug}`}
-                className="group p-6 rounded-3xl border-3 border-foreground bg-white hover:bg-candy-blue/5 transition-all shadow-[6px_6px_0_#2d2420] hover:shadow-[3px_3px_0_#2d2420] hover:translate-x-[3px] hover:translate-y-[3px]"
-              >
-                <h3 className="font-black text-lg uppercase tracking-tight text-foreground group-hover:text-candy-blue transition-colors">{industry.title}</h3>
-                <p className="text-sm text-muted-foreground font-bold mt-2 leading-snug">{industry.description}</p>
-                <ArrowRight size={16} className="mt-4 text-foreground/30 group-hover:text-candy-blue group-hover:translate-x-1 transition-all" />
-              </Link>
-            ))}
-          </div>
-          <div className="mt-8 text-center">
-            <Link href="/explore" className="text-sm font-black uppercase tracking-widest text-candy-blue hover:underline">
-              View all {INDUSTRIES.length} industries →
-            </Link>
-          </div>
-        </div>
-      </section>
-
-      {/* ─── Marquee Section ─── */}
-      <section className="bg-foreground py-10 overflow-hidden border-b-4 border-foreground">
-        <div className="flex animate-marquee gap-12 whitespace-nowrap">
-          {[...EXAMPLES, ...EXAMPLES, ...EXAMPLES].map((ex, i) => (
-            <span
-              key={i}
-              className="inline-flex items-center gap-5 text-4xl font-display font-black text-white/30 uppercase tracking-tighter"
-            >
-              <span className="text-candy-pink text-5xl">★</span>
-              {ex}
-            </span>
-          ))}
-        </div>
-      </section>
-
-      {/* ─── Rights Section (High Energy) ─── */}
-      <section className="py-40 bg-cream relative border-b-4 border-foreground overflow-hidden text-left">
-        <div className="mx-auto max-w-7xl px-6 relative z-10">
-          <div className="grid lg:grid-cols-2 gap-24 items-center">
-
-            <div className="relative">
-              <div className="relative z-10 rounded-[4rem] border-4 border-foreground bg-white p-16 shadow-[24px_24px_0_#ff6b9d] group overflow-hidden">
-                <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-candy-pink/5 to-transparent -z-10" />
-
-                <h3 className="font-display text-7xl md:text-[9rem] mb-10 leading-[0.8] uppercase -tracking-[0.05em]">
-                  OWN THE <br />
-                  <span className="text-candy-pink">OUTPUT.</span>
-                </h3>
-
-                <div className="grid gap-6">
-                  {[
-                    { label: "Full Commercial Freedom", color: "text-candy-green" },
-                    { label: "Zero Attribution Required", color: "text-candy-blue" },
-                    { label: "High-Resolution Masters", color: "text-candy-purple" },
-                    { label: "Direct Layered Exports", color: "text-candy-orange" },
-                  ].map((item, i) => (
-                    <div key={i} className="flex items-center gap-5 text-2xl font-black text-foreground uppercase tracking-tight group/item">
-                      <div className="h-8 w-8 rounded-xl border-3 border-foreground bg-white flex items-center justify-center group-hover/item:rotate-12 transition-transform">
-                        <Check size={18} className="text-candy-green stroke-[4px]" />
-                      </div>
-                      {item.label}
+              <div className="flex items-center gap-8 pt-8">
+                <div className="flex -space-x-4">
+                  {["/demo/hero-shiba.png", "/demo/hero-animation.webp", "/demo/hero-stickers.webp"].map((src, i) => (
+                    <div key={i} className="w-12 h-12 rounded-2xl border-4 border-cream overflow-hidden shadow-lg rotate-[5deg] even:rotate-[-5deg]">
+                      <Image src={src} alt="Mascot" width={48} height={48} className="object-cover" />
                     </div>
                   ))}
                 </div>
-              </div>
-
-              {/* Massive Floating Prop */}
-              <div className="absolute -top-16 -right-16 animate-float-delayed z-20">
-                <div className="w-32 h-32 rounded-[2.5rem] border-4 border-foreground bg-candy-yellow flex items-center justify-center shadow-[8px_8px_0_#2d2420] rotate-12">
-                  <Icon3D name="party-popper" size="2xl" />
+                <div className="space-y-1">
+                  <p className="text-sm font-black uppercase tracking-widest text-foreground">10,000+ CREATORS</p>
+                  <p className="text-[10px] font-bold text-foreground/30 uppercase tracking-[0.2em]">Join the professional standard</p>
                 </div>
               </div>
             </div>
 
-            <div className="space-y-12">
-              <div>
-                <h4 className="font-display text-5xl mb-6 leading-[0.9] uppercase -tracking-tighter">
-                  DESIGNED FOR <br />CREATIVE TEAMS.
-                </h4>
-                <p className="text-2xl text-muted-foreground leading-relaxed font-bold italic">
-                  &ldquo;Mascot Maker provides the consistency of a custom photoshoot with the speed of pure thought.&rdquo;
-                </p>
-              </div>
+            {/* Right: Modern Collage (Cols 8-12) */}
+            <div className="lg:col-span-5 relative mt-20 lg:mt-0">
+              <div className="relative aspect-[4/5] w-full">
+                {/* Primary mascot render — Bottom Layer */}
+                <div className="absolute top-10 right-0 w-[85%] aspect-square rounded-[3rem] overflow-hidden shadow-premium border border-foreground/5 bg-cream z-10 animate-float opacity-80 lg:opacity-100">
+                  <Image src="/demo/hero-shiba.png" alt="3D AI Mascot" fill className="object-cover" />
+                </div>
+                
+                {/* Secondary character sheet — Top Layer */}
+                <div className="absolute top-[60%] left-0 w-[60%] aspect-square rounded-[2.5rem] overflow-hidden shadow-2xl border border-foreground/10 bg-cream z-20 rotate-[-12deg] hover:rotate-0 transition-transform duration-700 animate-float-delayed">
+                  <Image src="/demo/hero-animation.webp" alt="Character sheet" fill className="object-cover" />
+                </div>
 
-              <div className="flex flex-wrap gap-4">
-                {["/demo/hero-animation.webp", "/demo/hero-stickers.webp", "/demo/hero-shiba.webp", "/demo/style-showcase.webp"].map((img, i) => (
-                  <div key={i} className="group relative w-24 aspect-square rounded-[2rem] border-3 border-foreground bg-white overflow-hidden shadow-[6px_6px_0_#e8ddd4] rotate-[-5deg] hover:rotate-0 transition-all">
-                    <Image src={img} alt={`AI mascot design example ${i + 1} showing character consistency across styles`} fill className="object-cover p-2" />
+                {/* Identity Tag */}
+                <div className="absolute top-1/2 -left-8 z-30 animate-pop-in">
+                  <div className="px-6 py-4 bg-foreground text-cream rounded-2xl shadow-premium">
+                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-candy-pink mb-1">Identity Lock™</p>
+                    <p className="text-xs font-bold text-cream/50">Same character, every render</p>
+                  </div>
+                </div>
+
+                {/* Decorative dots */}
+                <div className="absolute -bottom-4 right-12 w-24 h-24 bg-dotted opacity-20" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          MARQUEE — Scrolling style strip, full-bleed dark
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <div className="bg-foreground py-4 overflow-hidden border-y border-foreground/10">
+        <div className="flex items-center gap-12 animate-marquee whitespace-nowrap">
+          {["3D Pixar", "Claymation", "Pixel Art", "Flat Vector", "Isometric", "Anime", "Retro 80s", "Watercolor", "Chibi", "Cyberpunk", "3D Pixar", "Claymation", "Pixel Art", "Flat Vector", "Isometric", "Anime", "Retro 80s", "Watercolor", "Chibi", "Cyberpunk"].map((style, i) => (
+            <span key={i} className={`text-sm font-black uppercase tracking-widest ${i % 3 === 0 ? "text-candy-pink" : "text-cream/25"}`}>
+              {style} <span className="text-cream/10 mx-4">✦</span>
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          PROOF — Full-bleed image showcase, dark section
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="bg-foreground text-cream py-24 relative overflow-hidden">
+        <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
+        <div className="container mx-auto px-6 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+
+            {/* Image — left */}
+            <div className="lg:w-[55%] relative">
+              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl">
+                <Image src="/demo/style-showcase.webp" alt="AI Mascot Style Gallery" width={900} height={700} className="w-full h-auto" priority />
+                <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent" />
+              </div>
+              {/* Floating stat */}
+              <div className="absolute -bottom-6 -right-6 px-6 py-4 bg-candy-pink rounded-3xl shadow-glow-pink">
+                <p className="text-[10px] font-black uppercase tracking-widest text-pink-100">12+ Art Styles</p>
+                <p className="text-2xl font-black text-cream mt-0.5">One Click</p>
+              </div>
+            </div>
+
+            {/* Copy — right */}
+            <div className="lg:w-[45%] space-y-8">
+              <p className="text-[10px] font-black uppercase tracking-widest text-candy-pink">Visual Excellence</p>
+              <h2 className="font-display text-5xl md:text-6xl leading-[0.9] tracking-tight">
+                Any style.<br />
+                <span className="text-candy-pink">One engine.</span>
+              </h2>
+              <p className="text-cream/50 text-lg font-medium leading-relaxed">
+                From Pixar-grade 3D renders to retro pixel art — generate complete character sets with every emotion and pose, all perfectly consistent.
+              </p>
+              <div className="grid grid-cols-2 gap-3 pt-2">
+                {["3D Pixar Quality", "Claymation", "8-Bit Sprites", "Flat Vector", "Anime Style", "Isometric Art"].map((s, i) => (
+                  <div key={i} className="flex items-center gap-3 text-xs font-black uppercase tracking-wider text-cream/40">
+                    <div className="w-1.5 h-1.5 rounded-full bg-candy-pink flex-shrink-0" />
+                    {s}
                   </div>
                 ))}
               </div>
+              <Link href="/gallery" className="inline-flex items-center gap-3 text-sm font-black uppercase tracking-widest text-candy-pink hover:gap-5 transition-all">
+                BROWSE ALL STYLES <ArrowRight size={18} />
+              </Link>
+            </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          IDENTITY LOCK — Feature callout, cream bg, image RIGHT
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="py-28 bg-cream">
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col lg:flex-row gap-16 lg:gap-24 items-center">
+
+            {/* Copy — left */}
+            <div className="lg:w-[45%] space-y-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-candy-pink/10 border border-candy-pink/20">
+                <Shield size={12} className="text-candy-pink" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-candy-pink">Core Technology</span>
+              </div>
+              <h2 className="font-display text-5xl md:text-6xl leading-[0.9] tracking-tight text-foreground">
+                Same character.<br />
+                <span className="text-candy-pink">Every. Single. Time.</span>
+              </h2>
+              <p className="text-foreground/50 text-lg font-medium leading-relaxed">
+                Other AI tools give you a different face every generation. Identity Lock™ pins your mascot's exact features — face structure, color, personality — so your brand stays consistent at scale.
+              </p>
+              <ul className="space-y-4">
+                {[
+                  "Consistent across 100+ generations",
+                  "Works across all 12+ art styles",
+                  "Save and re-use any character"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-4">
+                    <div className="w-5 h-5 rounded-full bg-candy-pink/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check size={12} className="text-candy-pink stroke-[3]" />
+                    </div>
+                    <span className="text-sm font-semibold text-foreground/70">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/create" className="inline-flex items-center gap-3 px-7 py-4 bg-foreground text-cream rounded-2xl font-black text-sm tracking-wide hover:bg-candy-pink transition-all duration-300 group">
+                TRY IDENTITY LOCK
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Image — right */}
+            <div className="lg:w-[55%] relative">
+              <div className="relative rounded-[3rem] overflow-hidden shadow-premium border border-foreground/5">
+                <Image src="/demo/landing-story-v2.webp" alt="Mascot Identity Lock" width={800} height={600} className="w-full h-auto" />
+              </div>
+              {/* Small decorative accent */}
+              <div className="absolute -top-6 -left-6 w-24 h-24 rounded-[1.5rem] overflow-hidden shadow-xl border border-foreground/5 rotate-[-8deg]">
+                <Image src="/demo/hero-shiba.png" alt="" width={96} height={96} className="object-cover w-full h-full" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          BACKGROUND REMOVER — Full-width card, distinct layout
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="py-6 bg-cream px-6">
+        <div className="max-w-7xl mx-auto rounded-[3rem] bg-foreground overflow-hidden relative">
+          <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none" />
+          <div className="flex flex-col lg:flex-row items-stretch">
+            {/* Image — left, bleeds to edge */}
+            <div className="lg:w-1/2 relative min-h-[360px]">
+              <Image
+                src="/demo/landing-mix-v2.webp"
+                alt="AI Background Remover"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-foreground/40 hidden lg:block" />
+            </div>
+            {/* Copy — right */}
+            <div className="lg:w-1/2 p-12 lg:p-16 relative z-10 space-y-7 flex flex-col justify-center">
+              <div className="inline-flex items-center gap-2 self-start px-3 py-1.5 rounded-full bg-candy-pink/20 border border-candy-pink/30">
+                <Zap size={12} className="text-candy-pink" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-candy-pink">Free Utility Tool</span>
+              </div>
+              <h2 className="font-display text-4xl md:text-5xl text-cream leading-[0.9] tracking-tight">
+                Perfect cutouts.<br />
+                <span className="text-candy-pink">In seconds.</span>
+              </h2>
+              <p className="text-cream/40 text-base font-medium leading-relaxed">
+                Remove backgrounds from any mascot or logo instantly. Tuned specifically for characters — crisp edges, no halos, production-ready.
+              </p>
               <Link
-                href="/create"
-                className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-10 py-5 text-xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
+                href="/background-remover"
+                className="self-start inline-flex items-center gap-3 px-7 py-4 bg-candy-pink text-cream rounded-2xl font-black text-sm tracking-wide hover:brightness-110 transition-all group shadow-glow-pink"
               >
-                START CREATING NOW
+                USE BACKGROUND REMOVER
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </Link>
             </div>
           </div>
         </div>
-
-        {/* Decorative Lines */}
-        <div className="absolute top-0 right-0 w-1/3 h-full border-l-4 border-foreground/5 skew-x-[-15deg] pointer-events-none" />
       </section>
 
-      {/* ─── FAQ Section ─── */}
-      <section className="py-24 bg-white border-b-4 border-foreground">
-        <div className="mx-auto max-w-4xl px-6">
-            <h2 className="font-display text-5xl md:text-8xl uppercase text-center mb-16">Mascot Maker <span className="text-candy-pink">FAQ</span></h2>
-            <div className="grid gap-6">
-                {faqSchema.mainEntity.map((faq, i) => (
-                    <div key={i} className="p-10 rounded-[3rem] border-3 border-foreground bg-white shadow-[8px_8px_0_#2d2420] hover:translate-x-1 hover:translate-y-1 hover:shadow-none transition-all">
-                        <h4 className="flex items-center gap-4 text-2xl font-black uppercase mb-4">
-                            <HelpCircle size={28} className="text-candy-blue stroke-[3]" />
-                            {faq.name}
-                        </h4>
-                        <p className="text-lg font-bold text-muted-foreground leading-relaxed italic">{faq.acceptedAnswer.text}</p>
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          COMMERCIAL RIGHTS — High-Energy Editorial Layout
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="py-32 bg-cream relative overflow-hidden">
+        <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-foreground/10 to-transparent" />
+        <div className="container mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
+            
+            {/* Left: Interactive Rights Matrix */}
+            <div className="space-y-12">
+              <div className="space-y-6">
+                <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-candy-pink/10 border border-candy-pink/20 text-[10px] font-black uppercase tracking-[0.2em] text-candy-pink">
+                  Legal Freedom
+                </div>
+                <h2 className="font-display text-6xl md:text-8xl leading-[0.85] tracking-tighter">
+                  You own it.<br />
+                  <span className="text-candy-pink italic">Every pixel.</span>
+                </h2>
+                <p className="text-xl text-foreground/50 font-medium leading-relaxed max-w-lg">
+                  No complex licensing. No attribution. Every mascot you generate comes with a full, perpetual commercial license.
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-2 gap-6">
+                {[
+                  { title: "IP OWNERSHIP", desc: "You hold the copyright" },
+                  { title: "UNLIMITED USAGE", desc: "Print, Web, TV, Gaming" },
+                  { title: "ZERO ROYALTIES", desc: "No hidden recurring fees" },
+                  { title: "HIGH RES 4K", desc: "Production-ready exports" }
+                ].map((item, i) => (
+                  <div key={i} className="group p-6 rounded-[2rem] bg-secondary/10 border border-foreground/5 hover:border-candy-pink/30 transition-all duration-500">
+                    <div className="w-8 h-8 rounded-xl bg-cream flex items-center justify-center mb-4 shadow-sm group-hover:scale-110 transition-transform">
+                      <Check size={16} className="text-candy-pink" />
                     </div>
+                    <p className="text-xs font-black uppercase tracking-widest text-foreground">{item.title}</p>
+                    <p className="text-[10px] font-bold text-foreground/30 mt-1">{item.desc}</p>
+                  </div>
                 ))}
+              </div>
             </div>
+
+            {/* Right: Immersive Asset Collage */}
+            <div className="relative">
+              <div className="absolute inset-0 bg-mesh-candy opacity-20 blur-[100px] rounded-full scale-150 animate-pulse" />
+              <div className="relative grid grid-cols-2 gap-4">
+                <div className="space-y-4">
+                  <div className="rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-premium rotate-[-2deg] hover:rotate-0 transition-transform duration-500">
+                    <Image src="/demo/hero-shiba.png" alt="Proof" width={300} height={300} className="w-full h-auto" />
+                  </div>
+                  <div className="p-8 rounded-[2.5rem] bg-foreground text-cream space-y-4 shadow-2xl">
+                    <div className="text-5xl font-display text-candy-pink">100%</div>
+                    <p className="text-[10px] font-black uppercase tracking-widest text-cream/40 leading-relaxed">
+                      Your IP. Your Terms. Forever.
+                    </p>
+                  </div>
+                </div>
+                <div className="space-y-4 pt-12">
+                  <div className="aspect-square rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-premium bg-cream flex items-center justify-center p-8 group">
+                    <Image src="/demo/hero-stickers.webp" alt="Proof" width={200} height={200} className="w-full h-auto group-hover:scale-110 transition-transform" />
+                  </div>
+                  <div className="aspect-[3/4] rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-premium rotate-[2deg] hover:rotate-0 transition-transform duration-500">
+                    <Image src="/demo/landing-story-v2.webp" alt="Proof" width={300} height={400} className="w-full h-auto object-cover" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ─── Footer SEO Links ─── */}
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          STYLES — Premium Bento Grid
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="py-32 bg-cream border-t border-foreground/5 relative">
+        <div className="container mx-auto px-6">
+          <div className="mb-20 space-y-4 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-foreground/5 border border-foreground/10 text-[10px] font-black uppercase tracking-[0.2em] text-foreground/40">
+              Infinite Possibilities
+            </div>
+            <h2 className="font-display text-5xl md:text-7xl leading-[0.9] tracking-tighter uppercase">
+              Models for every<br />
+              <span className="text-candy-pink">Industry.</span>
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            {TOP_STYLES.map((style, i) => {
+              const demoImages = [
+                "/demo/hero-shiba.png",
+                "/demo/hero-animation.webp",
+                "/demo/hero-stickers.webp",
+                "/demo/landing-mix-v2.webp",
+                "/demo/landing-story-v2.webp",
+                "/demo/style-showcase.webp",
+                "/demo/hero-shiba.png",
+                "/demo/hero-animation.webp"
+              ];
+              const gradients = [
+                "bg-candy-pink/10",
+                "bg-candy-blue/10",
+                "bg-candy-yellow/10",
+                "bg-candy-green/10",
+                "bg-purple-100/50",
+                "bg-orange-100/50",
+                "bg-blue-100/50",
+                "bg-pink-100/50"
+              ];
+              const isLarge = i === 0 || i === 3 || i === 4;
+
+              return (
+                <Link
+                  key={style.slug}
+                  href={`/mascot-maker/${style.slug}`}
+                  className={`group relative overflow-hidden rounded-[2.5rem] border border-foreground/5 transition-all duration-700 hover:-translate-y-2 hover:shadow-premium min-h-[240px] flex flex-col justify-end
+                    ${isLarge ? "md:col-span-2" : "md:col-span-1"}
+                    ${gradients[i % gradients.length]}
+                  `}
+                >
+                  {/* Visual Asset Overlay */}
+                  <div className="absolute inset-x-0 top-0 h-[60%] p-5 opacity-30 group-hover:opacity-100 transition-all duration-700 group-hover:scale-105">
+                    <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden grayscale group-hover:grayscale-0 transition-all shadow-sm">
+                      <Image 
+                        src={demoImages[i % demoImages.length]} 
+                        alt={style.title} 
+                        fill 
+                        className="object-cover"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Gradient overlay for text legibility */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-cream via-cream/90 to-transparent pointer-events-none" />
+
+                  {/* Content */}
+                  <div className="p-6 relative z-10 space-y-2">
+                    <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-foreground/5 border border-foreground/5">
+                      <div className="w-1 h-1 rounded-full bg-candy-pink" />
+                      <span className="text-[9px] font-black uppercase tracking-widest text-foreground/40 leading-none">V2.0</span>
+                    </div>
+                    <div className="flex items-center justify-between gap-4">
+                      <h3 className="font-display text-2xl md:text-3xl leading-[0.9] text-foreground uppercase tracking-tighter">
+                        {style.title.split(' ')[0]}<br />
+                        <span className={i % 2 === 0 ? "text-candy-pink" : "text-candy-blue"}>{style.title.split(' ')[1] || "Style"}</span>
+                      </h3>
+                      <div className="w-10 h-10 rounded-xl bg-foreground text-cream flex items-center justify-center opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500 flex-shrink-0">
+                        <ArrowUpRight size={16} />
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+          
+          <div className="mt-16 text-center">
+            <Link href="/explore" className="text-[10px] font-black uppercase tracking-[0.4em] text-foreground/30 hover:text-candy-pink transition-colors">
+              VIEW ALL 1,200+ CATEGORIES
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          FAQ — Minimal accordion-list, no visual noise
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="py-20 bg-cream border-t border-foreground/5">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <div className="flex flex-col md:flex-row gap-12 md:gap-20">
+            <div className="md:w-1/3 space-y-3">
+              <h2 className="font-display text-4xl leading-tight tracking-tight">Questions?</h2>
+              <p className="text-foreground/40 text-sm font-medium">Everything you need to know before you start.</p>
+              <Link href="/create" className="inline-flex items-center gap-2 text-xs font-black uppercase tracking-widest text-candy-pink hover:gap-4 transition-all">
+                START NOW <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="md:w-2/3 divide-y divide-foreground/6">
+              {faqSchema.mainEntity.map((faq, i) => (
+                <div key={i} className="py-6">
+                  <div className="flex items-start gap-4">
+                    <HelpCircle size={16} className="text-candy-pink flex-shrink-0 mt-0.5" />
+                    <div className="space-y-2">
+                      <h4 className="text-sm font-black uppercase tracking-wide text-foreground">{faq.name}</h4>
+                      <p className="text-sm font-medium text-foreground/45 leading-relaxed">{faq.acceptedAnswer.text}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          FINAL CTA — Giant, unmissable, singular focus
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="py-32 bg-foreground relative overflow-hidden">
+        <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
+        {/* Big background word */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
+          <span className="font-display text-[25vw] text-cream/[0.02] leading-none tracking-tighter">CREATE</span>
+        </div>
+        <div className="container mx-auto px-6 relative z-10 text-center space-y-10">
+          <p className="text-[10px] font-black uppercase tracking-[0.4em] text-cream/20">5 free credits · No credit card required</p>
+          <h2 className="font-display text-[clamp(3rem,10vw,8rem)] text-cream leading-[0.88] tracking-tight">
+            Your mascot<br />
+            <span className="text-candy-pink">is waiting.</span>
+          </h2>
+          <Link
+            href="/create"
+            className="inline-flex items-center gap-4 px-10 py-5 bg-candy-pink text-cream rounded-2xl font-black text-lg tracking-wide shadow-glow-pink hover:brightness-110 hover:scale-[1.02] transition-all group"
+          >
+            <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
+            CREATE YOUR MASCOT — FREE
+          </Link>
+          <p className="text-xs font-medium text-cream/20">Join 10,000+ brands on Discord · Twitch · TikTok · Reddit</p>
+        </div>
+      </section>
+
       <ExploreLinks />
     </div>
   );

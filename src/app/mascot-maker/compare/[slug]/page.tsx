@@ -3,7 +3,7 @@ import { COMPETITORS } from "@/lib/seo-data";
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, X, Sparkles, ArrowRight, ShieldCheck, Zap, Layers } from "lucide-react";
+import { Sparkles, MapPin, Check, Camera, Monitor, Zap, ArrowRight, X, ShieldCheck, Layers } from "lucide-react";
 import { ExploreLinks } from "@/components/explore-links";
 import { Breadcrumb } from "@/components/breadcrumb";
 
@@ -81,7 +81,7 @@ export default async function ComparisonPage({ params }: PageProps) {
     };
 
     return (
-        <div className="bg-cream min-h-screen">
+        <div className="bg-cream min-h-screen selection:bg-candy-blue/30">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -120,60 +120,60 @@ export default async function ComparisonPage({ params }: PageProps) {
                 }) }}
             />
 
-            {/* Hero */}
-            <section className="relative pt-32 pb-20 bg-white border-b-4 border-foreground">
-                <div className="mx-auto max-w-7xl px-6 text-center">
+            {/* Hero Section: Comparison Context */}
+            <section className="relative pt-40 pb-24 overflow-hidden bg-mesh-candy bg-grain border-b border-foreground/5">
+                <div className="container mx-auto px-6 text-center space-y-10 relative z-10">
                     <Breadcrumb items={[
                         { label: "Home", href: "/" },
                         { label: "Comparisons", href: "/explore" },
                         { label: `vs ${competitor.name}` }
                     ]} />
-                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
-                        Comparison Guide
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-foreground/5 text-[10px] font-black uppercase tracking-widest text-foreground/50 animate-slide-up">
+                        PLATFORM HEAD-TO-HEAD
                     </div>
-                    <h1 className="font-display text-5xl md:text-8xl text-foreground leading-[0.9] uppercase -tracking-[0.04em] mb-8">
-                        Mascot Maker <br /><span className="text-candy-blue">vs</span> {competitor.name}
+                    <h1 className="font-display text-7xl md:text-[10rem] text-foreground leading-[0.85] uppercase -tracking-tight animate-slide-up stagger-1">
+                        Mascot Maker <br /><span className="text-candy-blue">vs</span> {competitor.name}.
                     </h1>
-                    <p className="text-2xl text-muted-foreground font-bold leading-relaxed mb-12 max-w-3xl mx-auto">
-                        Looking for a better alternative to {competitor.name}? While {competitor.name} is known for {competitor.strength.toLowerCase()}, Mascot Maker is built specifically for global brands requiring perfect character consistency and high-end 3D visual production.
+                    <p className="text-xl md:text-2xl text-muted-foreground font-semibold leading-relaxed max-w-3xl mx-auto animate-slide-up stagger-2">
+                        Looking for a better alternative to {competitor.name}? While they are known for {competitor.strength.toLowerCase()}, Mascot Maker is built specifically for global brands requiring perfect character consistency.
                     </p>
-                    <div className="flex justify-center gap-4">
+                    <div className="flex justify-center pt-6 animate-slide-up stagger-3">
                         <Link
                             href="/create"
-                            className="inline-flex items-center justify-center gap-3 rounded-full bg-foreground px-10 py-5 text-xl font-black text-white shadow-[6px_6px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-95"
+                            className="inline-flex items-center justify-center gap-4 rounded-2xl bg-foreground px-12 py-6 text-xl font-black text-white shadow-premium hover:shadow-glow-pink hover:scale-[1.02] transition-all group"
                         >
-                            <Sparkles size={24} className="text-candy-yellow" />
+                            <Sparkles size={24} className="text-candy-yellow group-hover:rotate-12 transition-all" />
                             TRY MASCOT MAKER
                         </Link>
                     </div>
                 </div>
             </section>
 
-            {/* Feature Table */}
-            <section className="py-32 bg-cream">
-                <div className="mx-auto max-w-5xl px-6">
-                    <h2 className="font-display text-4xl md:text-6xl text-center mb-20 uppercase">Feature Head-to-Head</h2>
-                    <div className="overflow-x-auto rounded-[2rem] border-4 border-foreground bg-white shadow-[12px_12px_0_#2d2420]">
+            {/* Feature Table: Refined & Clean */}
+            <section className="py-24 bg-cream">
+                <div className="container mx-auto max-w-5xl px-6">
+                    <h2 className="font-display text-5xl md:text-7xl text-center mb-24 uppercase italic">Feature Check</h2>
+                    <div className="overflow-x-auto rounded-[3.5rem] border border-foreground/5 bg-cream/40 shadow-premium">
                         <table className="w-full text-left">
-                            <thead className="bg-foreground text-white">
-                                <tr>
-                                    <th className="p-8 font-black uppercase tracking-tight text-xl">Core Feature</th>
-                                    <th className="p-8 font-black uppercase tracking-tight text-xl text-center bg-candy-pink">Mascot Maker</th>
-                                    <th className="p-8 font-black uppercase tracking-tight text-xl text-center">{competitor.name}</th>
+                            <thead>
+                                <tr className="bg-foreground text-white">
+                                    <th className="p-10 font-display text-2xl uppercase tracking-tight">Capabilities</th>
+                                    <th className="p-10 font-display text-2xl uppercase tracking-tight text-center bg-candy-pink">Mascot Maker</th>
+                                    <th className="p-10 font-display text-2xl uppercase tracking-tight text-center">{competitor.name}</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y-2 divide-foreground/10 text-lg font-bold">
+                            <tbody className="divide-y border-t border-foreground/5 text-lg font-semibold">
                                 {features.map((f, i) => (
-                                    <tr key={i} className="hover:bg-cream/30 transition-colors">
-                                        <td className="p-8 border-r-2 border-foreground/5">
-                                            {f.name}
-                                            <div className="text-sm text-muted-foreground font-medium mt-1 uppercase tracking-wider">{f.notes}</div>
+                                    <tr key={i} className="hover:bg-white/50 transition-colors">
+                                        <td className="p-10 border-r border-foreground/5">
+                                            <div className="text-foreground/80">{f.name}</div>
+                                            <div className="text-[10px] text-muted-foreground font-black uppercase tracking-widest mt-2">{f.notes}</div>
                                         </td>
-                                        <td className="p-8 text-center border-r-2 border-foreground/5 bg-candy-pink/5">
-                                            {f.mm ? <Check className="mx-auto text-candy-green stroke-[4px]" size={32} /> : <X className="mx-auto text-red-500 stroke-[4px]" size={32} />}
+                                        <td className="p-10 text-center border-r border-foreground/5 bg-candy-pink/[0.02]">
+                                            {f.mm ? <Check className="mx-auto text-candy-green stroke-[4]" size={28} /> : <X className="mx-auto text-red-400 stroke-[4]" size={28} />}
                                         </td>
-                                        <td className="p-8 text-center">
-                                            {f.comp ? <Check className="mx-auto text-candy-green stroke-[4px]" size={32} /> : <X className="mx-auto text-red-500 stroke-[4px]" size={32} />}
+                                        <td className="p-10 text-center">
+                                            {f.comp ? <Check className="mx-auto text-candy-green stroke-[4]" size={28} /> : <X className="mx-auto text-red-500 stroke-[4]" size={28} />}
                                         </td>
                                     </tr>
                                 ))}
@@ -183,111 +183,119 @@ export default async function ComparisonPage({ params }: PageProps) {
                 </div>
             </section>
 
-            {/* Why section */}
-            <section className="py-32 bg-white border-y-4 border-foreground">
-                <div className="mx-auto max-w-7xl px-6">
-                    <div className="grid md:grid-cols-2 gap-20 items-center">
-                        <div className="space-y-8">
-                            <h2 className="font-display text-5xl md:text-7xl uppercase leading-none">
+            {/* Why section: Deep Dive */}
+            <section className="py-24 bg-cream overflow-hidden">
+                <div className="container mx-auto max-w-7xl px-6">
+                    <div className="flex flex-col lg:flex-row items-center gap-24">
+                        <div className="lg:w-1/2 space-y-12">
+                            <h2 className="font-display text-6xl md:text-8xl uppercase leading-[0.9]">
                                 THE SMART <br /><span className="text-candy-pink">PROFESSIONAL</span> CHOICE.
                             </h2>
-                            <p className="text-2xl text-muted-foreground font-bold">
+                            <p className="text-2xl text-muted-foreground font-semibold italic opacity-80 leading-relaxed">
                                 {competitor.name} is a powerful tool, but it often fails at {competitor.weakness.toLowerCase()}. Mascot Maker was engineered to solve the most difficult problems in AI design.
                             </p>
-                            <div className="grid gap-6">
-                                <div className="flex gap-4 p-6 rounded-3xl bg-cream border-4 border-foreground shadow-[6px_6px_0_#2d2420]">
-                                    <ShieldCheck className="text-candy-blue shrink-0" size={32} />
-                                    <div>
-                                        <h4 className="text-xl font-black uppercase">Identity Locking</h4>
-                                        <p className="font-bold text-muted-foreground">Keep the same character across hundreds of generations. Never lose your brand DNA again.</p>
+                            <div className="grid gap-6 pt-6">
+                                {[
+                                    { icon: ShieldCheck, title: "Identity Locking", desc: "Keep the same character across hundreds of generations. Never lose your brand DNA again.", color: "text-candy-blue", bg: "bg-candy-blue/5" },
+                                    { icon: Zap, title: "Cinematic Workflows", desc: "Go beyond single images. Build full ad sets and storyboards in a single session.", color: "text-candy-yellow", bg: "bg-candy-yellow/5" }
+                                ].map((item, i) => (
+                                    <div key={i} className="flex gap-6 p-10 rounded-[3rem] bg-white border border-foreground/10 shadow-sm hover:shadow-md transition-all">
+                                        <div className={`w-14 h-14 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center shrink-0`}>
+                                            <item.icon size={28} />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <h4 className="text-xl font-black uppercase tracking-tight">{item.title}</h4>
+                                            <p className="text-base font-semibold text-foreground italic leading-relaxed">{item.desc}</p>
+                                        </div>
                                     </div>
-                                </div>
-                                <div className="flex gap-4 p-6 rounded-3xl bg-cream border-4 border-foreground shadow-[6px_6px_0_#2d2420]">
-                                    <Zap className="text-candy-yellow shrink-0" size={32} />
-                                    <div>
-                                        <h4 className="text-xl font-black uppercase">Cinematic Workflows</h4>
-                                        <p className="font-bold text-muted-foreground">Go beyond single images. Build full ad sets and storyboards in a single session.</p>
-                                    </div>
-                                </div>
+                                ))}
                             </div>
                         </div>
-                        <div className="relative rounded-[3rem] border-4 border-foreground overflow-hidden shadow-[12px_12px_0_#4ea8de]">
-                            <Image src="/demo/landing-story-v2.webp" alt={`Mascot Maker AI storyboard production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto" />
+                        <div className="lg:w-1/2 relative">
+                            <div className="relative z-10 rounded-[4rem] border border-foreground/10 overflow-hidden shadow-premium p-4 bg-white">
+                                <Image src="/demo/landing-story-v2.webp" alt={`Mascot Maker AI storyboard production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto rounded-[3rem]" />
+                            </div>
+                            {/* Decorative Flair */}
+                            <div className="absolute -bottom-10 -left-10 animate-float">
+                                <Camera size={60} className="text-candy-blue" />
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Choose Section */}
-            <section className="py-32 bg-foreground text-white">
-                <div className="mx-auto max-w-4xl px-6 text-center">
-                    <h3 className="font-display text-4xl md:text-6xl mb-12 uppercase">When to Choose <span className="text-candy-pink">{competitor.name}</span> vs <span className="text-candy-yellow">Mascot Maker</span></h3>
-                    <div className="grid md:grid-cols-2 gap-8 text-left">
-                        <div className="p-8 rounded-3xl border-2 border-white/20">
-                            <h4 className="text-xl font-black uppercase mb-4 text-candy-blue">Choose {competitor.name} if:</h4>
-                            <ul className="space-y-3 font-bold text-white/80">
-                                <li>• You need {competitor.strength.toLowerCase()}</li>
-                                <li>• You&apos;re creating one-off artistic images</li>
-                                <li>• Character consistency isn&apos;t critical</li>
+            {/* Choose Section: Dual Cards */}
+            <section className="py-24 bg-secondary/5">
+                <div className="container mx-auto px-6 max-w-5xl">
+                    <h3 className="font-display text-4xl md:text-5xl mb-16 uppercase text-center tracking-tight leading-none italic">Decision Guide.</h3>
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="p-8 rounded-[3rem] border border-foreground/5 bg-cream/80 space-y-6">
+                            <h4 className="text-xl font-display uppercase tracking-tight text-candy-blue">Choose {competitor.name} if:</h4>
+                            <ul className="space-y-4">
+                                {[
+                                    `You need ${competitor.strength.toLowerCase()}`,
+                                    "You're creating one-off artistic images",
+                                    "Character consistency isn't critical"
+                                ].map((li, i) => (
+                                    <li key={i} className="flex items-center gap-4 text-sm font-black uppercase tracking-tight text-foreground/60">
+                                        <div className="w-2 h-2 rounded-full bg-candy-blue" />
+                                        {li}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
-                        <div className="p-8 rounded-3xl border-2 border-candy-pink/40 bg-candy-pink/10">
-                            <h4 className="text-xl font-black uppercase mb-4 text-candy-pink">Choose Mascot Maker if:</h4>
-                            <ul className="space-y-3 font-bold text-white/80">
-                                <li>• You need the same character in every image</li>
-                                <li>• You&apos;re building brand assets at scale</li>
-                                <li>• You need storyboards and product ads</li>
+                        <div className="p-8 rounded-[3rem] border border-candy-pink/10 bg-candy-pink/[0.02] shadow-premium space-y-6">
+                            <h4 className="text-xl font-display uppercase tracking-tight text-candy-pink">Choose Mascot Maker if:</h4>
+                            <ul className="space-y-4">
+                                {[
+                                    "You need the same character in every image",
+                                    "You're building brand assets at scale",
+                                    "You need storyboards and product ads"
+                                ].map((li, i) => (
+                                    <li key={i} className="flex items-center gap-4 text-sm font-black uppercase tracking-tight text-foreground/80">
+                                        <div className="w-2 h-2 rounded-full bg-candy-pink" />
+                                        {li}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* FAQ */}
-            <section className="py-32 bg-white border-b-4 border-foreground">
-                <div className="mx-auto max-w-4xl px-6">
-                    <h2 className="font-display text-4xl md:text-6xl text-center mb-16 uppercase">Common Questions</h2>
-                    <div className="space-y-8">
-                        <div className="p-8 rounded-3xl border-4 border-foreground hover:bg-cream transition-colors">
-                            <h4 className="text-xl font-black uppercase mb-4">Is Mascot Maker better than {competitor.name}?</h4>
-                            <p className="font-bold text-muted-foreground leading-relaxed">It depends on your needs. For general artistic exploration, {competitor.name} is excellent. However, for professional branding, character consistency, and production-ready visual assets, Mascot Maker provides a more specialized and reliable workflow.</p>
-                        </div>
-                        <div className="p-8 rounded-3xl border-4 border-foreground hover:bg-cream transition-colors">
-                            <h4 className="text-xl font-black uppercase mb-4">Can I import my {competitor.name} designs?</h4>
-                            <p className="font-bold text-muted-foreground leading-relaxed">Yes! You can upload your existing characters to Mascot Maker and use our Image-to-Character engine to recreate them with full identity lock parameters.</p>
+            {/* Footer CTA: Premium Upgrade */}
+            <section className="py-32 bg-mesh-dark text-white relative overflow-hidden text-center">
+                <div className="container mx-auto px-6 relative z-10 space-y-12">
+                    <h2 className="font-display text-6xl md:text-[10rem] mb-12 uppercase leading-[0.85] tracking-tighter">READY FOR <br /><span className="text-gradient">THE UPGRADE?</span></h2>
+                    <Link
+                        href="/create"
+                        className="inline-flex items-center gap-5 rounded-full bg-white px-14 py-7 text-2xl font-black text-foreground hover:bg-candy-pink hover:text-white transition-all shadow-glow-pink hover:scale-105"
+                    >
+                        GET STARTED FREE <ArrowRight size={32} />
+                    </Link>
+
+                    {/* Cross-links: Clean Grid */}
+                    <div className="max-w-3xl mx-auto mt-32 pt-20 border-t border-white/5 space-y-8">
+                        <h3 className="font-black uppercase tracking-widest text-[10px] text-white/30">Other Comparison Guides</h3>
+                        <div className="flex flex-wrap justify-center gap-4">
+                            {COMPETITORS.filter(c => c.slug !== slug).map(c => (
+                                <Link
+                                    key={c.slug}
+                                    href={`/mascot-maker/compare/${c.slug}`}
+                                    className="px-6 py-3 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest hover:border-candy-pink hover:text-candy-pink transition-colors"
+                                >
+                                    vs {c.name}
+                                </Link>
+                            ))}
                         </div>
                     </div>
                 </div>
+                <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none" />
             </section>
-
-            {/* Footer CTA */}
-            <section className="py-32 bg-cream text-center">
-                <h2 className="font-display text-6xl md:text-9xl mb-12 uppercase leading-none">READY FOR <br /><span className="text-gradient">THE UPGRADE?</span></h2>
-                <Link
-                    href="/create"
-                    className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-12 py-6 text-2xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
-                >
-                    GET STARTED FREE <ArrowRight size={28} />
-                </Link>
-
-                {/* Cross-links to other comparisons */}
-                <div className="mt-20 mx-auto max-w-2xl">
-                    <h3 className="font-black uppercase tracking-widest text-xs text-muted-foreground mb-6">Other Comparisons</h3>
-                    <div className="flex flex-wrap justify-center gap-3">
-                        {COMPETITORS.filter(c => c.slug !== slug).map(c => (
-                            <Link
-                                key={c.slug}
-                                href={`/mascot-maker/compare/${c.slug}`}
-                                className="px-6 py-3 rounded-full border-2 border-foreground/10 text-sm font-black hover:border-candy-pink hover:text-candy-pink transition-colors"
-                            >
-                                vs {c.name}
-                            </Link>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            <ExploreLinks />
+            
+            <div className="py-20 bg-cream">
+                <ExploreLinks />
+            </div>
         </div>
     );
 }

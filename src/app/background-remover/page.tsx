@@ -72,78 +72,54 @@ export default function BackgroundRemoverPage() {
   };
 
   return (
-    <div className="bg-cream min-h-screen">
+    <div className="bg-cream min-h-screen selection:bg-candy-blue/30">
       <JSONLD data={howToSchema} />
       <JSONLD data={faqSchema} />
       
-      {/* ─── Hero Section ─── */}
-      <section className="py-20 border-b-4 border-foreground bg-white overflow-hidden relative">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-candy-pink/5 rounded-full blur-3xl -mr-32 -mt-32" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-candy-blue/5 rounded-full blur-3xl -ml-32 -mb-32" />
-
-        <div className="mx-auto max-w-5xl px-6 relative z-10 text-center">
-            <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
-                AI Powered Tool
+      {/* ─── Hero Section: Focused & Clean ─── */}
+      <section className="relative pt-32 pb-20 overflow-hidden bg-mesh-candy bg-grain">
+        <div className="container mx-auto px-6 relative z-10 text-center space-y-10">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-card border border-foreground/5 text-[10px] font-black uppercase tracking-widest text-foreground/50">
+                PRO AI UTILITY
             </div>
-          <h1 className="font-display text-5xl md:text-8xl uppercase leading-none mb-6">
-            Free AI <br />
-            <span className="text-gradient">BG Remover</span>
+          <h1 className="font-display text-6xl md:text-[9rem] uppercase leading-[0.85] tracking-tight">
+            Clear <br /><span className="text-gradient">Backgrounds.</span>
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground font-bold max-w-2xl mx-auto mb-12">
+          <p className="text-xl md:text-2xl text-muted-foreground font-semibold max-w-2xl mx-auto leading-relaxed">
             Perfect for mascots, stickers, and logos. Get high-resolution transparent PNGs in seconds.
           </p>
 
-          <div className="max-w-2xl mx-auto mb-20">
-            <BackgroundRemoverTool />
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left max-w-4xl mx-auto border-t-4 border-foreground/5 pt-12">
-             <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-candy-green/10 border-2 border-candy-green/20 flex items-center justify-center text-candy-green">
-                    <ShieldCheck size={20} className="stroke-[3]" />
+          {/* Main Tool Container */}
+          <div className="max-w-3xl mx-auto mt-20 relative px-4">
+            <div className="glass-card p-4 md:p-8 rounded-[3rem] shadow-premium border border-white/50">
+              <BackgroundRemoverTool />
+            </div>
+            {/* Visual Flair */}
+            <div className="absolute -top-10 -right-10 hidden md:block animate-float">
+                <div className="p-4 glass-card rounded-2xl shadow-xl rotate-[12deg]">
+                    <ShieldCheck size={40} className="text-candy-green" />
                 </div>
-                <div>
-                   <h3 className="font-black uppercase text-sm mb-1">Commercial Use</h3>
-                   <p className="text-xs text-muted-foreground font-bold">Use in games, ads, or social media.</p>
-                </div>
-             </div>
-             <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-candy-blue/10 border-2 border-candy-blue/20 flex items-center justify-center text-candy-blue">
-                    <Zap size={20} className="stroke-[3]" />
-                </div>
-                <div>
-                   <h3 className="font-black uppercase text-sm mb-1">Instant Results</h3>
-                   <p className="text-xs text-muted-foreground font-bold">Automated AI background removal.</p>
-                </div>
-             </div>
-             <div className="flex gap-4">
-                <div className="flex-shrink-0 w-10 h-10 rounded-xl bg-candy-orange/10 border-2 border-candy-orange/20 flex items-center justify-center text-candy-orange">
-                    <Download size={20} className="stroke-[3]" />
-                </div>
-                <div>
-                   <h3 className="font-black uppercase text-sm mb-1">Hibase PNG</h3>
-                   <p className="text-xs text-muted-foreground font-bold">Download clean, lossless transparent images.</p>
-                </div>
-             </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* ─── How it Works ─── */}
-      <section className="py-24 bg-white border-b-4 border-foreground">
-        <div className="mx-auto max-w-4xl px-6">
-            <h2 className="font-display text-4xl md:text-6xl uppercase text-center mb-16">How to Make <span className="text-candy-pink">Transparent</span> Mascots</h2>
-            <div className="grid md:grid-cols-3 gap-12 relative">
+      {/* ─── Benefit Bar ─── */}
+      <section className="py-20 bg-cream">
+        <div className="container mx-auto px-6">
+            <div className="grid md:grid-cols-3 gap-8">
                 {[
-                    { step: "01", title: "Upload", text: "Drag & drop your JPG or PNG. The larger the better." },
-                    { step: "02", title: "Process", text: "Our AI identifies the subject and removes the background." },
-                    { step: "03", title: "Download", text: "Get your high-resolution file ready to use anywhere." }
-                ].map((item, idx) => (
-                    <div key={idx} className="relative group">
-                        <span className="absolute -top-6 -left-4 text-7xl font-display text-foreground/5 group-hover:text-candy-pink/10 transition-colors">{item.step}</span>
-                        <div className="relative p-8 rounded-3xl border-3 border-foreground bg-white shadow-[6px_6px_0_#2d2420] group-hover:translate-x-1 group-hover:translate-y-1 group-hover:shadow-none transition-all">
-                            <h3 className="text-xl font-black uppercase mb-3">{item.title}</h3>
-                            <p className="text-sm font-bold text-muted-foreground leading-relaxed">{item.text}</p>
+                    { icon: Zap, label: "Instant Speed", desc: "AI removes background in < 2s" },
+                    { icon: Download, label: "High Precision", desc: "Crisp edges for your mascots" },
+                    { icon: ShieldCheck, label: "Commercial Rights", desc: "Full ownership of output" }
+                ].map((item, i) => (
+                    <div key={i} className="flex items-center gap-6 p-8 rounded-3xl bg-secondary/10 border border-foreground/5 hover:shadow-md transition-all">
+                        <div className="w-14 h-14 rounded-2xl bg-cream shadow-sm flex items-center justify-center text-foreground shrink-0 border border-foreground/5">
+                            <item.icon size={24} />
+                        </div>
+                        <div>
+                            <h3 className="font-black uppercase text-xs tracking-widest text-foreground mb-1">{item.label}</h3>
+                            <p className="text-sm font-semibold text-muted-foreground">{item.desc}</p>
                         </div>
                     </div>
                 ))}
@@ -151,29 +127,49 @@ export default function BackgroundRemoverPage() {
         </div>
       </section>
 
-      {/* ─── FAQ Section ─── */}
-      <section className="py-24 bg-cream border-b-4 border-foreground">
-        <div className="mx-auto max-w-3xl px-6">
-            <h2 className="font-display text-4xl uppercase text-center mb-16 underline decoration-candy-blue">Frequently Asked Questions</h2>
-            <div className="space-y-6">
+      {/* ─── How it Works ─── */}
+      <section className="py-24 bg-cream">
+        <div className="container mx-auto px-6 text-center">
+            <h2 className="font-display text-4xl md:text-5xl uppercase mb-16 italic tracking-tight underline decoration-candy-pink decoration-[6px]">Simple. Efficient.</h2>
+            <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
                 {[
-                    { q: "Is it free for everyone?", a: "Every new user gets 5 free credits. Each background removal costs just 1 credit, making it effectively free for your first 5 removals!" },
-                    { q: "Does it work for logos?", a: "Absolutely. Our AI is optimized for mascots, logo marks, and stickers." },
-                    { q: "What's the best file type to upload?", a: "We support PNG, JPG, JPEG, and WebP. For best results, use high-contrast images." }
-                ].map((faq, i) => (
-                    <div key={i} className="p-8 rounded-3xl border-3 border-foreground bg-white shadow-[6px_6px_0_#2d2420]">
-                        <h4 className="flex items-center gap-3 text-lg font-black uppercase mb-3">
-                            <Info size={18} className="text-candy-blue" />
-                            {faq.q}
-                        </h4>
-                        <p className="text-sm font-bold text-muted-foreground leading-relaxed">{faq.a}</p>
+                    { title: "Upload", text: "Drag & drop your JPG or PNG. The larger the better." },
+                    { title: "Process", text: "Our AI identifies the subject and removes the background." },
+                    { title: "Download", text: "Get your high-resolution file ready to use anywhere." }
+                ].map((item, idx) => (
+                    <div key={idx} className="space-y-4">
+                        <div className="text-4xl font-display text-foreground/10 tracking-tighter">0{idx+1}</div>
+                        <h3 className="text-lg font-black uppercase tracking-widest text-foreground">{item.title}</h3>
+                        <p className="text-sm font-semibold text-muted-foreground italic leading-relaxed">{item.text}</p>
                     </div>
                 ))}
             </div>
         </div>
       </section>
 
-      <div className="pt-10">
+      {/* ─── FAQ Section: Compact ─── */}
+      <section className="py-24 bg-secondary/5 border-y border-foreground/5">
+        <div className="container mx-auto px-6 max-w-4xl">
+            <h2 className="font-display text-4xl uppercase text-center mb-16 underline decoration-candy-blue decoration-[8px] underline-offset-[12px]">FAQ</h2>
+            <div className="grid md:grid-cols-2 gap-4">
+                {[
+                    { q: "Is it free for everyone?", a: "Every new user gets 5 free credits. Each background removal costs just 1 credit, making it effectively free for your first 5 removals!" },
+                    { q: "Does it work for logos?", a: "Absolutely. Our AI is optimized for mascots, logo marks, and stickers." },
+                    { q: "What's the best file type to upload?", a: "We support PNG, JPG, JPEG, and WebP. For best results, use high-contrast images." }
+                ].map((faq, i) => (
+                    <div key={i} className="p-8 rounded-[2.5rem] bg-cream/80 border border-foreground/5 hover:bg-cream transition-all">
+                        <h4 className="flex items-center gap-4 text-sm font-black uppercase text-foreground/80 mb-3">
+                            <Info size={16} className="text-candy-blue shrink-0" />
+                            {faq.q}
+                        </h4>
+                        <p className="text-sm font-semibold text-muted-foreground leading-relaxed italic">{faq.a}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+      </section>
+
+      <div className="py-20 bg-cream">
         <ExploreLinks />
       </div>
     </div>

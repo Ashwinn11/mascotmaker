@@ -25,7 +25,7 @@ export const BLOG_POSTS: BlogPost[] = [
         readTime: "8 min",
         author: "Mascot Maker Team",
         category: "Brand Strategy",
-        image: "/demo/hero-shiba.webp",
+        image: "/demo/hero-shiba.png",
         imageAlt: "AI-generated 3D brand mascot character examples showing identity consistency"
     },
     {
@@ -68,58 +68,63 @@ export const metadata: Metadata = {
 
 export default function BlogIndex() {
     return (
-        <div className="bg-cream min-h-screen">
-            {/* Hero */}
-            <section className="relative pt-32 pb-20 bg-white border-b-4 border-foreground">
-                <div className="mx-auto max-w-7xl px-6">
+        <div className="bg-cream min-h-screen selection:bg-candy-pink/30">
+            {/* Hero: Modern & Elegant */}
+            <section className="relative pt-40 pb-24 bg-mesh-candy bg-grain border-b border-foreground/5 overflow-hidden">
+                <div className="container mx-auto px-6 max-w-7xl relative z-10">
                     <Breadcrumb items={[
                         { label: "Home", href: "/" },
                         { label: "Blog" }
                     ]} />
-                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
-                        Insights & Guides
+                    <div className="mt-8 mb-8 inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-foreground/5 text-[10px] font-black uppercase tracking-widest text-foreground/50 animate-slide-up">
+                        INSIGHTS & GUIDES
                     </div>
-                    <h1 className="font-display text-6xl md:text-9xl text-foreground leading-[0.85] uppercase -tracking-[0.04em] mb-8">
-                        The Mascot <br /><span className="text-gradient">Maker Blog</span>
+                    <h1 className="font-display text-7xl md:text-[10rem] text-foreground leading-[0.85] uppercase -tracking-tight mb-8 animate-slide-up stagger-1">
+                        The Mascot <br /><span className="text-gradient">Maker Blog.</span>
                     </h1>
-                    <p className="text-2xl text-muted-foreground font-bold max-w-2xl">
+                    <p className="text-2xl text-muted-foreground font-semibold max-w-2xl leading-relaxed animate-slide-up stagger-2">
                         Actionable guides on brand mascots, AI character design, and building visual identity at scale.
                     </p>
                 </div>
             </section>
 
-            {/* Posts Grid */}
-            <section className="py-20">
-                <div className="mx-auto max-w-7xl px-6">
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Posts Grid: Premium Layout */}
+            <section className="py-32">
+                <div className="container mx-auto max-w-7xl px-6">
+                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
                         {BLOG_POSTS.map((post) => (
                             <Link
                                 key={post.slug}
                                 href={`/blog/${post.slug}`}
-                                className="group rounded-[2rem] border-4 border-foreground bg-white overflow-hidden shadow-[8px_8px_0_#2d2420] hover:shadow-[4px_4px_0_#2d2420] hover:translate-x-[4px] hover:translate-y-[4px] transition-all"
+                                className="group flex flex-col rounded-[3rem] bg-white border border-foreground/5 overflow-hidden shadow-sm hover:shadow-premium hover:-translate-y-2 transition-all duration-500"
                             >
-                                <div className="relative aspect-[16/10] overflow-hidden">
+                                <div className="relative aspect-[16/11] overflow-hidden m-2 rounded-[2.5rem]">
                                     <Image
                                         src={post.image}
                                         alt={post.imageAlt}
                                         fill
-                                        className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                        className="object-cover group-hover:scale-105 transition-transform duration-1000"
                                     />
-                                    <div className="absolute top-4 left-4 px-3 py-1 rounded-full bg-foreground text-white text-[10px] font-black uppercase tracking-widest">
+                                    <div className="absolute top-4 left-4 px-4 py-1.5 rounded-full glass-card border border-white/20 text-[10px] font-black uppercase tracking-widest text-white shadow-lg backdrop-blur-md">
                                         {post.category}
                                     </div>
                                 </div>
-                                <div className="p-8">
-                                    <h2 className="font-black text-xl uppercase tracking-tight text-foreground group-hover:text-candy-pink transition-colors leading-tight mb-3">
-                                        {post.title}
-                                    </h2>
-                                    <p className="text-sm text-muted-foreground font-bold leading-relaxed mb-6">
-                                        {post.description}
-                                    </p>
-                                    <div className="flex items-center gap-4 text-xs font-black uppercase tracking-widest text-muted-foreground/60">
-                                        <span className="flex items-center gap-1"><Clock size={12} /> {post.readTime}</span>
+                                <div className="p-10 space-y-4 flex-grow">
+                                    <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-widest text-muted-foreground/40">
+                                        <span className="flex items-center gap-1.5"><Clock size={12} /> {post.readTime}</span>
                                         <span>{post.date}</span>
                                     </div>
+                                    <h2 className="font-display text-3xl uppercase tracking-tight text-foreground leading-[1.1] group-hover:text-candy-pink transition-colors">
+                                        {post.title}
+                                    </h2>
+                                    <p className="text-base text-muted-foreground font-semibold leading-relaxed line-clamp-3 italic opacity-80">
+                                        {post.description}
+                                    </p>
+                                </div>
+                                <div className="px-10 pb-10">
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-candy-pink inline-flex items-center gap-2 group-hover:gap-4 transition-all">
+                                        READ ARTICLE <ArrowRight size={14} />
+                                    </span>
                                 </div>
                             </Link>
                         ))}
@@ -127,20 +132,23 @@ export default function BlogIndex() {
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="py-20 bg-foreground text-white text-center border-t-4 border-foreground">
-                <div className="mx-auto max-w-3xl px-6">
-                    <h2 className="font-display text-5xl md:text-7xl uppercase mb-8">Ready to <span className="text-candy-yellow">Create?</span></h2>
-                    <p className="text-xl font-bold text-white/70 mb-12">
-                        Stop reading about mascots and start making them. Free to try, no credit card required.
+            {/* CTA: Refined Conversion */}
+            <section className="py-32 bg-mesh-dark text-white relative overflow-hidden">
+                <div className="container mx-auto px-6 text-center space-y-12 relative z-10">
+                    <h2 className="font-display text-6xl md:text-9xl uppercase tracking-tighter leading-none mb-4">
+                        Ready to <span className="text-candy-yellow">Create?</span>
+                    </h2>
+                    <p className="text-2xl font-semibold text-white/50 max-w-xl mx-auto italic leading-relaxed">
+                        &ldquo;Stop reading about mascots and start making them. Free to try, no credit card required.&rdquo;
                     </p>
                     <Link
                         href="/create"
-                        className="inline-flex items-center gap-4 rounded-full border-4 border-white bg-white px-12 py-6 text-2xl font-black text-foreground hover:bg-candy-pink hover:text-white hover:border-candy-pink transition-all active:scale-95"
+                        className="inline-flex items-center gap-5 rounded-full bg-white px-14 py-7 text-2xl font-black text-foreground hover:bg-candy-pink hover:text-white transition-all shadow-glow-pink hover:scale-105"
                     >
-                        LAUNCH STUDIO <ArrowRight size={28} />
+                        LAUNCH STUDIO <ArrowRight size={32} />
                     </Link>
                 </div>
+                <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none" />
             </section>
         </div>
     );

@@ -1,3 +1,4 @@
+
 import type { Metadata } from "next";
 import { INDUSTRIES, STYLES, ENGINES, getSEOContent } from "@/lib/seo-data";
 import { notFound } from "next/navigation";
@@ -148,148 +149,146 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
     };
 
     return (
-        <div className="bg-cream min-h-screen">
+        <div className="bg-cream min-h-screen selection:bg-candy-pink/30">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
 
-            {/* Hero Section */}
-            <section className="relative pt-32 pb-20 overflow-hidden bg-white border-b-4 border-foreground">
-                <div className="absolute top-0 right-0 w-1/2 h-full bg-candy-pink/5 -skew-x-12 translate-x-20 pointer-events-none" />
-
-                <div className="mx-auto max-w-7xl px-6 relative z-10">
+            {/* Hero Section: Sophisticated & Dynamic */}
+            <section className="relative pt-40 pb-24 overflow-hidden bg-mesh-candy bg-grain">
+                <div className="container mx-auto px-6 relative z-10">
                     <div className="grid lg:grid-cols-2 gap-16 items-center">
-                        <div>
+                        <div className="space-y-10">
                             <Breadcrumb items={[
                                 { label: "Home", href: "/" },
                                 { label: "Mascot Maker", href: "/explore" },
                                 ...(secondaryItem ? [{ label: primaryItem?.title || "", href: `/mascot-maker/${slug[0]}` }] : []),
                                 { label: secondaryItem?.title || primaryItem?.title || "" }
                             ]} />
-                            <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
-                                Advanced Specialized Model
+
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-foreground/5 text-[10px] font-black uppercase tracking-widest text-foreground/50">
+                                Specialized AI Mode
                             </div>
-                            <h1 className="font-display text-5xl md:text-8xl text-foreground leading-[0.9] uppercase -tracking-[0.04em] mb-8">
-                                {combinedTitle} <br /><span className="text-gradient">for Professionals.</span>
+
+                            <h1 className="font-display text-6xl md:text-[8rem] text-foreground leading-[0.85] uppercase -tracking-tight">
+                                {combinedTitle} <br /><span className="text-gradient">Generator.</span>
                             </h1>
 
-                            <p className="text-2xl text-muted-foreground font-bold leading-relaxed mb-10 max-w-xl">
+                            <p className="text-xl md:text-2xl text-muted-foreground font-semibold leading-relaxed max-w-xl">
                                 {(primaryItem?.description || "")} {secondaryItem ? `Specially trained to output high-fidelity assets optimized for ${secondaryItem.title}. ` : ""}
                                 {content.intro}
                             </p>
 
-                            <div className="flex flex-col sm:flex-row gap-4">
+                            <div>
                                 <Link
                                     href="/create"
-                                    className="inline-flex items-center justify-center gap-3 rounded-full bg-foreground px-10 py-5 text-xl font-black text-white shadow-[6px_6px_0_#ff6b9d] transition-all hover:translate-x-1 hover:translate-y-1 hover:shadow-none active:scale-95"
+                                    className="inline-flex items-center justify-center gap-4 rounded-2xl bg-foreground px-12 py-6 text-xl font-black text-white shadow-premium hover:shadow-glow-pink hover:scale-[1.02] transition-all group"
                                 >
-                                    <Sparkles size={24} className="text-candy-yellow" />
+                                    <Sparkles size={24} className="text-candy-yellow group-hover:rotate-12 transition-all" />
                                     OPEN STUDIO
                                 </Link>
                             </div>
                         </div>
 
                         <div className="relative">
-                            <div className={`relative z-10 rounded-[3rem] border-4 border-foreground overflow-hidden shadow-[20px_20px_0_#4ea8de] ${isMix ? 'bg-candy-green/10' : isStory ? 'bg-candy-blue/10' : ''}`}>
+                            <div className={`relative z-10 rounded-[3rem] border border-foreground/5 overflow-hidden shadow-premium bg-white p-4`}>
                                 <Image
-                                    src={isMix ? "/demo/landing-mix-v2.webp" : isStory ? "/demo/landing-story-v2.webp" : "/demo/hero-shiba.webp"}
+                                    src={isMix ? "/demo/landing-mix-v2.webp" : isStory ? "/demo/landing-story-v2.webp" : "/demo/hero-shiba.png"}
                                     alt={combinedTitle || "Mascot Maker Preview"}
                                     width={600}
                                     height={600}
                                     priority={true}
-                                    className="w-full h-auto object-cover p-4 bg-white/50"
+                                    className="w-full h-auto rounded-[2rem] object-cover"
                                 />
                             </div>
+                            {/* Visual Flair Elements */}
+                            <div className="absolute -top-6 -right-6 animate-float">
+                                <div className="p-4 glass-card rounded-2xl shadow-xl">
+                                    <Palette size={32} className="text-candy-pink" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* Content Deep-Dive */}
-            <section className="py-32 bg-cream">
-                <div className="mx-auto max-w-7xl px-6">
-                    <div className="grid md:grid-cols-2 gap-20 items-center">
-                        <div className="space-y-8">
-                            <h2 className="font-display text-5xl md:text-7xl uppercase leading-none">
-                                UNLOCK THE <br /><span className="text-candy-pink">FULL WORKFLOW.</span>
+            {/* Workflow Section: Clean Content Deep-Dive */}
+            <section className="py-24 bg-cream">
+                <div className="container mx-auto px-6">
+                    <div className="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-24">
+                        <div className="lg:w-3/5 space-y-10">
+                            <h2 className="font-display text-5xl md:text-7xl uppercase">
+                                Redefining <br /><span className="text-candy-pink">The Workflow.</span>
                             </h2>
-                            <p className="text-2xl text-muted-foreground font-bold">
-                                {content.benefit1} <span className="italic underline decoration-candy-yellow">{content.benefit2}</span>
+                            <p className="text-2xl text-foreground font-bold leading-relaxed">
+                                {content.benefit1} <span className="italic underline decoration-candy-yellow decoration-4 underline-offset-4">{content.benefit2}</span>
                             </p>
 
-
-
-                            <div className="mt-12 space-y-6">
-                                <h3 className="text-candy-pink uppercase tracking-widest text-xs font-black">Expert Creation Tips</h3>
+                            <div className="grid sm:grid-cols-2 gap-8 pt-6">
                                 {content.tips.map((tip: string, i: number) => (
-                                    <div key={i} className="flex gap-4 items-start">
-                                        <div className="w-6 h-6 rounded-full border-2 border-candy-pink/30 flex items-center justify-center shrink-0 mt-1">
-                                            <div className="w-1.5 h-1.5 rounded-full bg-candy-pink" />
+                                    <div key={i} className="flex gap-4 p-6 rounded-2xl bg-cream border border-foreground/10 shadow-sm group hover:shadow-md transition-all">
+                                        <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-sm border border-foreground/10 group-hover:bg-candy-pink/10 transition-colors">
+                                            <div className="w-2 h-2 rounded-full bg-candy-pink" />
                                         </div>
-                                        <p className="text-foreground font-bold italic">{tip}</p>
-                                    </div>
-                                ))}
-                            </div>
-
-                            <div className="mt-12 pt-8 border-t-2 border-foreground/5 grid grid-cols-2 gap-6">
-                                {content.stats?.map((stat: string, i: number) => (
-                                    <div key={i} className="space-y-1">
-                                        <div className="text-candy-pink">
-                                            <Check size={16} className="stroke-[4px]" />
-                                        </div>
-                                        <p className="text-sm font-black uppercase tracking-tight leading-tight">
-                                            {stat}
-                                        </p>
+                                        <p className="text-base font-semibold text-foreground italic leading-relaxed">{tip}</p>
                                     </div>
                                 ))}
                             </div>
                         </div>
-                        <ul className="space-y-4">
-                            {["Identity Consistency", "Cinematic Quality", "Commercial Rights", "Studio-Tested Prompts"].map((check, i) => (
-                                <li key={i} className="flex items-center gap-4 text-xl font-black uppercase tracking-tight">
-                                    <div className="w-8 h-8 rounded-lg bg-white border-3 border-foreground flex items-center justify-center">
-                                        <Check size={18} className="text-candy-green stroke-[4px]" />
-                                    </div>
-                                    {check}
-                                </li>
-                            ))}
-                        </ul>
+
+                        <div className="lg:w-2/5 p-12 rounded-[3.5rem] bg-secondary/20 border border-foreground/10 shadow-md">
+                            <h3 className="font-display text-2xl uppercase mb-10 text-center">Studio Standard</h3>
+                            <ul className="space-y-6">
+                                {["Identity Consistency", "Cinematic Quality", "Commercial Rights", "Studio-Tested Prompts"].map((check, i) => (
+                                    <li key={i} className="flex items-center gap-5 text-lg font-black uppercase tracking-tight text-foreground/70">
+                                        <div className="w-8 h-8 rounded-full bg-white border border-foreground/5 flex items-center justify-center shrink-0">
+                                            <Check size={16} className="text-candy-green stroke-[4]" />
+                                        </div>
+                                        {check}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="py-32 bg-white border-y-4 border-foreground overflow-hidden relative">
-                <div className="mx-auto max-w-4xl px-6 text-center">
-                    <h2 className="font-display text-6xl md:text-8xl mb-8 uppercase leading-none">
+            {/* CTA: Final Conversion */}
+            <section className="py-32 bg-mesh-dark text-white relative overflow-hidden">
+                <div className="container mx-auto px-6 text-center space-y-12 relative z-10">
+                    <h2 className="font-display text-6xl md:text-9xl mb-8 uppercase tracking-tighter leading-none">
                         START YOUR <br /><span className="text-gradient">NEXT PROJECT.</span>
                     </h2>
                     <Link
                         href="/create"
-                        className="inline-flex items-center gap-4 rounded-full border-4 border-foreground bg-foreground px-12 py-6 text-2xl font-black text-white hover:bg-candy-pink transition-all active:scale-95 shadow-[8px_8px_0_#ffc857]"
+                        className="inline-flex items-center gap-5 rounded-full bg-white px-14 py-7 text-2xl font-black text-foreground hover:bg-candy-pink hover:text-white transition-all shadow-glow-pink hover:scale-105"
                     >
-                        LAUNCH STUDIO <ArrowRight size={28} />
+                        LAUNCH STUDIO <ArrowRight size={32} />
                     </Link>
 
-                    <div className="mt-20 pt-12 border-t-2 border-foreground/5 text-left">
-                        <h3 className="font-display text-2xl uppercase mb-8">Related {primaryItem?.title} Studios</h3>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    {/* Related Links: Replaced with Modern Grid */}
+                    <div className="max-w-5xl mx-auto mt-32 pt-20 border-t border-white/5 text-left">
+                        <h3 className="font-display text-2xl uppercase mb-8 opacity-40">Related specialized studios</h3>
+                        <div className="flex flex-wrap gap-x-10 gap-y-4">
                             {(engine1 ? INDUSTRIES : engine1 ? STYLES : INDUSTRIES).slice(0, 12).map((item) => (
                                 <Link
                                     key={item.slug}
                                     href={`/mascot-maker/${part1}/${item.slug}`}
-                                    className="text-sm font-bold text-muted-foreground hover:text-candy-pink transition-colors"
+                                    className="text-xs font-black uppercase tracking-widest text-white hover:text-candy-pink transition-colors"
                                 >
-                                    • {primaryItem?.title} for {item.title}
+                                    {primaryItem?.title} for {item.title}
                                 </Link>
                             ))}
                         </div>
                     </div>
-
-                    <div className="mt-20 pt-12 border-t-2 border-foreground/5">
-                        <ExploreLinks />
-                    </div>
                 </div>
+
+                {/* Background Noise/Effect */}
+                <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none" />
             </section>
+
+            <div className="py-20 bg-cream">
+                <ExploreLinks />
+            </div>
         </div >
     );
 }
