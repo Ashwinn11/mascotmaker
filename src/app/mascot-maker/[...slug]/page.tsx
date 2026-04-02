@@ -178,12 +178,12 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
     };
 
     const comparisonRows = [
-        { feature: "Generation speed", mascotMaker: "~30 seconds", agency: "3–6 weeks", diy: "Hours of prompting" },
-        { feature: "Cost", mascotMaker: "Free (5 credits)", agency: "$2,000–$10,000", diy: "Time-intensive" },
-        { feature: "Character consistency", mascotMaker: "Identity Lock™", agency: "Depends on artist", diy: "Very poor" },
-        { feature: "Commercial rights", mascotMaker: "✓ Included", agency: "✓ (paid)", diy: "✗ Varies" },
-        { feature: "Multiple poses/styles", mascotMaker: "Unlimited", agency: "Extra cost", diy: "Manual reprompting" },
-        { feature: "Design skills needed", mascotMaker: "None", agency: "None", diy: "High" },
+        { feature: "Generation speed", mascotMaker: "~30 seconds", agency: "3–6 weeks", diy: "Hours of manual prompting" },
+        { feature: "Cost per asset", mascotMaker: "$0.00 (Free credits)", agency: "$500 - $2,500/pose", diy: "Opportunity cost" },
+        { feature: "Character consistency", mascotMaker: "Identity Lock™ (PINNED)", agency: "Depends on artist availability", diy: "Near impossible randomly" },
+        { feature: "Visual resolution", mascotMaker: "4K Studio Upscale", agency: "Variable", diy: "Low-res preview shells" },
+        { feature: "Commercial usage", mascotMaker: "Full Rights Included", agency: "Usually extra licensing fee", diy: "Terms often hidden" },
+        { feature: "Design experience", mascotMaker: "Zero (AI powered)", agency: "High (Management cost)", diy: "High (Prompt Engineering)" },
     ];
 
     return (
@@ -314,7 +314,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 {
                                     icon: Zap,
                                     title: "Consistent Across Every Touchpoint",
-                                    body: `From LinkedIn banners to product packaging to Discord avatars — the same character, same personality, same brand. Identity Lock™ guarantees it.`,
+                                    body: `From LinkedIn banners to product packaging to Discord avatars — a ${primaryItem?.title} character ensures your personality stays locked.`,
                                     color: "text-candy-orange"
                                 },
                             ].map(({ icon: Icon, title, body, color }) => (
@@ -324,6 +324,26 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     <p className="text-sm text-foreground/60 leading-relaxed">{body}</p>
                                 </div>
                             ))}
+                        </div>
+
+                        {/* Founder's Take / Expert Insight */}
+                        <div className="bg-candy-pink/5 border border-candy-pink/10 rounded-[2rem] p-8 md:p-12 mb-16 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 p-8 text-candy-pink opacity-10 rotate-12">
+                                <Sparkles size={120} />
+                            </div>
+                            <div className="relative z-10 max-w-2xl">
+                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-candy-pink mb-4">Founder&apos;s Take</p>
+                                <h3 className="font-display text-3xl uppercase mb-6 leading-none tracking-tight">Consistency is your <span className="italic">real</span> moat.</h3>
+                                <div className="space-y-4 text-foreground/70 font-medium leading-relaxed">
+                                    <p>
+                                        When we started Mascot Maker, the biggest design bottleneck wasn&apos;t generating an image—it was generating the <span className="text-foreground font-bold italic underline decoration-candy-pink underline-offset-4">same</span> character twice. 
+                                    </p>
+                                    <p>
+                                        For {combinedTitle?.toLowerCase()} users, this is do-or-die. If your mascot looks different on your homepage than it does in your dashboard, you haven&apos;t built a character—you&apos;ve built a distraction. 
+                                        That&apos;s why we focused everything on <span className="text-foreground font-bold">Identity Lock™</span>. It&apos;s not just AI; it&apos;s brand insurance.
+                                    </p>
+                                </div>
+                            </div>
                         </div>
 
                         {/* Programmatic Visual Gallery */}

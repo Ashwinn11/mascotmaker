@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     default: "Mascot Maker — AI Character & Mascot Generator",
   },
   description:
-    "Free AI mascot, logo, and sticker generator. Create consistent 3D, 2D, and vector characters in seconds. Identity Lock keeps your brand consistent. 8 pro art styles and instant background remover.",
+    "Free AI studio for mascots, logos, and sticker packs. We fixed 'AI drift' so your brand characters stay consistent across every pose. 8 pro styles and a studio-grade background remover.",
   keywords: [
     "mascot builder",
     "mascot maker",

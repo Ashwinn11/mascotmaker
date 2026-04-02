@@ -84,7 +84,7 @@ export default function Home() {
                   <span className="text-candy-pink italic">& Stickers.</span>
                 </h1>
                 <p className="text-lg md:text-xl font-medium text-foreground/50 max-w-xl leading-relaxed animate-slide-up stagger-1">
-                  The only AI design studio that locks your character DNA, ensuring 100% identity consistency across logos, sticker packs, and brand mascots.
+                  We built the only design studio that fixes the "AI consistency" problem. Stop settling for one-off characters that don&apos;t match your brand. Pin your mascot's look across logos, 3D renders, and sticker packs in seconds.
                 </p>
               </div>
 
@@ -106,7 +106,7 @@ export default function Home() {
 
               <div className="flex items-center gap-8 pt-4">
                 <div className="flex -space-x-3">
-                  {["/demo/hero-dragon-barista.png", "/demo/hero-animation.webp", "/demo/hero-stickers.webp"].map((src, i) => (
+                  {["/demo/hero-dragon-barista.png", "/demo/hero-animation.webp", "/demo/cat-stickers.webp"].map((src, i) => (
                     <div key={i} className="w-10 h-10 rounded-xl border-4 border-cream overflow-hidden shadow-lg rotate-[5deg] even:rotate-[-5deg]">
                       <Image src={src} alt="Mascot" width={40} height={40} className="object-cover" />
                     </div>
@@ -190,7 +190,7 @@ export default function Home() {
                 <span className="text-candy-pink">One engine.</span>
               </h2>
               <p className="text-cream/50 text-lg font-medium leading-relaxed">
-                Whether you need a minimalist vector logo, a cohesive sticker pack, or a consistent brand mascot — generate complete assets in 8 pro styles with zero design skills.
+                Whether you&apos;re a founder building a SaaS empire or a streamer looking for a cohesive Twitch identity, we give you the tools to create studio-grade assets without the specialized pro background.
               </p>
               <div className="grid grid-cols-2 gap-3 pt-2">
                 {["3D Pixar", "Claymation", "Pixel Art", "Flat Illustration", "Minimalist", "Vector Art", "Isometric", "Retro 80s"].map((s, i) => (
@@ -227,7 +227,7 @@ export default function Home() {
                 <span className="text-candy-pink">Every. Single. Time.</span>
               </h2>
               <p className="text-foreground/50 text-lg font-medium leading-relaxed">
-                Other AI tools give you a different face every generation. Identity Lock™ pins your mascot's exact features — face structure, color, personality — so your brand stays consistent at scale.
+                Most AI generators give you a different face every time you click generate. That&apos;s a distraction, not a brand. Identity Lock™ is our solution for founders who need their mascot to look identical across every marketing touchpoint.
               </p>
               <ul className="space-y-4">
                 {[
@@ -292,7 +292,7 @@ export default function Home() {
                 <span className="text-candy-pink">In seconds.</span>
               </h2>
               <p className="text-cream/40 text-base font-medium leading-relaxed">
-                Remove backgrounds from any mascot or logo instantly. Tuned specifically for characters — crisp edges, no halos, production-ready.
+                Most background removers struggle with fine character details like hair or fur textures. Our engine is specifically tuned for mascots, delivering production-ready transparency with zero manual cleanup.
               </p>
               <Link
                 href="/background-remover"
@@ -364,7 +364,7 @@ export default function Home() {
                 </div>
                 <div className="space-y-4 pt-12">
                   <div className="aspect-square rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-premium bg-cream flex items-center justify-center p-8 group">
-                    <Image src="/demo/hero-stickers.webp" alt="Proof" width={200} height={200} className="w-full h-auto group-hover:scale-110 transition-transform" />
+                    <Image src="/demo/cat-stickers.webp" alt="Proof" width={200} height={200} className="w-full h-auto group-hover:scale-110 transition-transform" />
                   </div>
                   <div className="aspect-[3/4] rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-premium rotate-[2deg] hover:rotate-0 transition-transform duration-500">
                     <Image src="/demo/character-consistency.webp" alt="Proof" width={300} height={400} className="w-full h-auto object-cover" />

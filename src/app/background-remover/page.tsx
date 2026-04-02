@@ -86,10 +86,10 @@ export default function BackgroundRemoverPage() {
                 PRO AI UTILITY
             </div>
           <h1 className="font-display text-6xl md:text-[9rem] uppercase leading-[0.85] tracking-tight">
-            Clear <br /><span className="text-gradient">Backgrounds.</span>
+            Cutout <br /><span className="text-gradient">Studio.</span>
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground font-semibold max-w-2xl mx-auto leading-relaxed">
-            Perfect for mascots, stickers, and logos. Get high-resolution transparent PNGs in seconds.
+            Standard AI tools give you halos and choppy edges. We tuned our engine specifically to handle character fur and mascot geometry.
           </p>
 
           {/* Main Tool Container */}
@@ -136,9 +136,9 @@ export default function BackgroundRemoverPage() {
             <h2 className="font-display text-4xl md:text-5xl uppercase mb-16 italic tracking-tight underline decoration-candy-pink decoration-[6px]">Simple. Efficient.</h2>
             <div className="grid md:grid-cols-3 gap-12 max-w-5xl mx-auto">
                 {[
-                    { title: "Upload", text: "Drag & drop your JPG or PNG. The larger the better." },
-                    { title: "Process", text: "Our AI identifies the subject and removes the background." },
-                    { title: "Download", text: "Get your high-resolution file ready to use anywhere." }
+                    { title: "Drop & Detect", text: "Drag your file in. Our logic separates the subject from the noise visually." },
+                    { title: "Refine", text: "Our AI traces the edges at 4K resolution to avoid 'pixel bleed' on your site." },
+                    { title: "Ship", text: "Download your high-res PNG. Ready for headers, Discord, or pitch decks." }
                 ].map((item, idx) => (
                     <div key={idx} className="space-y-4">
                         <div className="text-4xl font-display text-foreground/10 tracking-tighter">0{idx+1}</div>

@@ -18,8 +18,8 @@ export const metadata: Metadata = {
 const values = [
     {
         icon: Sparkles,
-        title: "Consistency First",
-        description: "Every character you generate preserves the same DNA — same face, same proportions, same color palette — across every pose and style. We call it Identity Lock.",
+        title: "Same Face. Every. Time.",
+        description: "Consistency is our north star. We focus on 'Identity Lock'—pinning the exact facial geometry and style so your character stays locked between generations.",
     },
     {
         icon: Zap,
@@ -63,13 +63,18 @@ export default function AboutPage() {
                 <div className="mx-auto max-w-2xl prose prose-lg">
                     <h2 className="font-display text-3xl uppercase mb-6">The Problem We Saw</h2>
                     <p className="text-warm-gray leading-relaxed mb-6">
-                        The tools that existed for AI image generation \u2014 Midjourney, Stable Diffusion, DALL-E \u2014 are genuinely impressive. But they have a fatal flaw for anyone building a brand: <strong>they cannot keep a character consistent</strong>.
+                        The tools that existed for AI image generation — Midjourney, Stable Diffusion, DALL-E — are genuinely impressive. But they have a fatal flaw for anyone building a brand: <strong>they cannot keep a character consistent</strong>.
                     </p>
                     <p className="text-warm-gray leading-relaxed mb-6">
-                        Generate a mascot on Monday. Try to generate the same mascot on Tuesday in a different pose. You\u2019ll get a completely different character. Different face. Different proportions. Different vibe. This is called &quot;AI Drift&quot; \u2014 and it makes these tools practically useless for serious brand work.
+                        Generate a mascot on Monday. Try to generate the same mascot on Tuesday in a different pose. You’ll get a completely different character. This is called "AI Drift" — and it’s why most AI outputs fail as serious brand assets. Brands don&apos;t work when the face of the product changes every time it appears in a new context.
                     </p>
                     <p className="text-warm-gray leading-relaxed mb-6">
-                        Meanwhile, hiring a 3D character artist or design agency to build a proper brand mascot costs between $2,000 and $10,000 and takes 4\u20136 weeks. That\u2019s simply not accessible for most indie developers, streamers, SaaS founders, and small businesses.
+                        We saw founders and streamers forced to choose between broken AI tools or $5,000 agency quotes. We didn&apos;t think that trade-off should exist.
+                    </p>
+
+                    <h2 className="font-display text-3xl uppercase mb-6 mt-12">The Human Side of AI</h2>
+                    <p className="text-warm-gray leading-relaxed mb-6 italic border-l-4 border-candy-pink pl-6 py-2 bg-candy-pink/5 rounded-r-xl">
+                        &quot;Mascot Maker isn&apos;t about replacing designers. It&apos;s about giving the person who can&apos;t afford a designer the power to build something consistent, professional, and uniquely theirs. We focus on the fine details—the material textures, the lighting rigs, and the logic that keeps character features locked.&quot;
                     </p>
 
                     <h2 className="font-display text-3xl uppercase mb-6 mt-12">What We Built</h2>

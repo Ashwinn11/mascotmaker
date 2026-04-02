@@ -58,12 +58,12 @@ export default async function ComparisonPage({ params }: PageProps) {
     }
 
     const features = [
-        { name: "Character Consistency", mm: true, comp: false, notes: "Mascot Maker uses Identity Lock technology." },
-        { name: "AI Sticker Pack Generation", mm: true, comp: false, notes: "Create cohesive sets for Discord & apps." },
-        { name: "Professional Logo Design", mm: true, comp: true, notes: "Specialized 3D & Vector logo engines." },
-        { name: "Instant Background Removal", mm: true, comp: competitor.name === "Canva", notes: "Studio-grade cutout precision." },
-        { name: "Commercial Usage Rights", mm: true, comp: true, notes: "Pro plans include full rights." },
-        { name: "Ease of Use", mm: true, comp: competitor.name === "Canva", notes: competitor.name === "Canva" ? "Both are beginner friendly." : "Mascot Maker has a streamlined UI." },
+        { name: "Character Consistency", mm: true, comp: false, notes: "Mascot Maker's Identity Lock™ pins facial DNA. Most general generators drift between poses." },
+        { name: "AI Sticker Pack Sets", mm: true, comp: false, notes: "Generate 12+ cohesive reactions from a single character in one click." },
+        { name: "Vector-Ready Logo Logic", mm: true, comp: true, notes: "Our engine is tuned specifically for minimalist marks, not just 'pretty pictures'." },
+        { name: "Studio Background Removal", mm: true, comp: competitor.name === "Canva", notes: "Precision cutouts at 4K resolution. No manual cleanup needed in Photoshop." },
+        { name: "Full Commercial Rights", mm: true, comp: true, notes: "You own what you generate. No complex enterprise licensing required." },
+        { name: "Simplified Studio UI", mm: true, comp: competitor.name === "Canva", notes: "Zero learning curve. No layering or manual 'masking' skills needed." },
     ];
 
     const jsonLd = {

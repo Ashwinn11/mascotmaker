@@ -1,35 +1,35 @@
 export const ENGINES = [
     {
         slug: "mascot-generator",
-        title: "AI Mascot Generator",
-        description: "Create professional 3D, 2D, or retro brand mascots with full Identity Lock consistency.",
-        keywords: ["mascot creator", "character maker", "brand mascot ai", "avatar generator"],
+        title: "Mascot Generator",
+        description: "Focus on character DNA. Keep your mascot's face and style locked across every pose and expression.",
+        keywords: ["mascot creator", "character maker", "brand mascot", "identity lock"],
         image: "/demo/hero-dragon-barista.png",
         useCases: ["Landing Pages", "Social Media", "Emails", "Presentations"],
         fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-clay.png", "/demo/hero-dragon-barista.png", "/demo/style-minimal.png"]
     },
     {
         slug: "logo-generator",
-        title: "AI Logo Generator",
-        description: "Design minimalist, 3D, or vector logos and brand marks for apps and startups.",
-        keywords: ["logo maker", "brand design ai", "startup logo", "vector logo creator"],
+        title: "Logo Generator",
+        description: "Vector-ready brand marks and 3D logos. Designed for startups that need a face, not just a font.",
+        keywords: ["logo maker", "brand design", "startup logo", "vector brand"],
         image: "/demo/style-minimal.png",
         useCases: ["App Icons", "Website Headers", "Social Proof", "Pitch Decks"],
         fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-clay.png", "/demo/style-vector.png", "/demo/hero-animation.webp"]
     },
     {
         slug: "sticker-pack-generator",
-        title: "AI Sticker Pack Maker",
-        description: "Generate cohesive sticker sets and emoji packs for Discord, Telegram, and apps.",
+        title: "Sticker Pack Studio",
+        description: "One character, dozens of reactions. Export cohesive sticker sets for Discord, Telegram, or your own app.",
         keywords: ["sticker generator", "emoji pack creator", "digital stickers", "discord assets"],
-        image: "/demo/hero-stickers.webp",
+        image: "/demo/cat-stickers.webp",
         useCases: ["Discord Servers", "Telegram Packs", "Marketing SWAG", "Slack Emojis"],
-        fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-pixar.png", "/demo/style-minimal.png", "/demo/hero-stickers.webp"]
+        fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-pixar.png", "/demo/style-minimal.png", "/demo/cat-stickers.webp"]
     },
     {
         slug: "background-remover",
-        title: "AI Background Remover",
-        description: "Instantly remove backgrounds from any image with studio-grade precision.",
+        title: "Background Remover",
+        description: "Cut out your mascots and logos with studio precision. Transparent PNGs in one click.",
         keywords: ["remove bg", "background eraser", "ai cutouts", "transparent background"],
         image: "/demo/before-after.webp",
         useCases: ["Product Photos", "Transparent Logos", "Mascot Extraction", "Clean Assets"],
@@ -38,39 +38,39 @@ export const ENGINES = [
 ];
 
 export const INDUSTRIES = [
-    { slug: "saas", title: "SaaS", description: "Professional visual assets for your software-as-a-service brand.", image: "/demo/hero-stickers.webp", useCases: ["Feature Empty States", "Onboarding Flows", "In-App Tooltips", "Pricing Page Elements"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-clay.png", "/demo/style-pixar.png", "/demo/style-flat.png"] },
-    { slug: "discord", title: "Discord", description: "Design unique characters and icons for your Discord server.", image: "/demo/hero-stickers.webp", useCases: ["Server Emotes", "Rank Badges", "Announcement Graphics", "Bot Avatars"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/hero-animation.webp", "/demo/hero-dragon-barista.png", "/demo/hero-stickers.webp"] },
-    { slug: "twitch", title: "Twitch", description: "Level up your stream with custom AI-generated Twitch assets.", image: "/demo/hero-animation.webp", useCases: ["BRB Screens", "Subscriber Emotes", "Stream Overlays", "Channel Avatars"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-iso.png", "/demo/hero-dragon-barista.png", "/demo/style-minimal.png"] },
-    { slug: "gaming", title: "Gaming", description: "Build legendary characters and game assets for your title.", image: "/demo/style-cyber.png", useCases: ["Loading Screens", "Achievement Icons", "In-Game NPC Avatars", "Marketing Banners"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/character-consistency.webp", "/demo/style-vector.png", "/demo/style-flat.png"] },
-    { slug: "real-estate", title: "Real Estate", description: "Professional branding assets for realtors and agencies.", image: "/demo/style-iso.png", useCases: ["Open House Flyers", "Social Media Graphics", "Website Contact Forms", "Yard Signs"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/hero-animation.webp", "/demo/style-retro.png", "/demo/style-cyber.png"] },
-    { slug: "dentistry", title: "Dentistry", description: "Approachable characters and icons for healthcare brands.", image: "/demo/style-clay.png", useCases: ["Pediatric Rewards", "Appointment Reminders", "Waiting Room Posters", "Website Headers"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-vector.png", "/demo/character-consistency.webp", "/demo/hero-stickers.webp"] },
-    { slug: "coffee-shops", title: "Coffee Shops", description: "Charming branding for cafes and local coffee brands.", image: "/demo/hero-dragon-barista.png", useCases: ["Loyalty Cards", "Menu Boards", "Merchandise (Mugs/Tees)", "Social Media Promos"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-iso.png", "/demo/hero-dragon-barista.png", "/demo/style-retro.png"] },
-    { slug: "gyms", title: "Gyms & Fitness", description: "Energetic and motivating visual assets for fitness centers.", image: "/demo/style-retro.png", useCases: ["Class Schedules", "Apparel & Merch", "Motivational Graphics", "Member App Avatars"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-flat.png", "/demo/hero-animation.webp", "/demo/hero-dragon-barista.png"] },
-    { slug: "e-commerce", title: "E-commerce", description: "Branded mascots and consistent logos for your online store.", image: "/demo/style-showcase.webp", useCases: ["Cart Abandonment Emails", "Packaging Inserts", "Review Requests", "Holiday Promos"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-pixar.png", "/demo/hero-animation.webp", "/demo/character-consistency.webp"] },
-    { slug: "youtube", title: "YouTube", description: "Iconic avatars and thumbnails for your YouTube channel.", image: "/demo/style-pixar.png", useCases: ["Thumbnail Mascots", "Video Intros", "Community Posts", "Channel Banners"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-flat.png", "/demo/style-cyber.png", "/demo/hero-stickers.webp"] },
-    { slug: "ai-startups", title: "AI Startups", description: "Futuristic assets for the next generation of AI platforms.", image: "/demo/style-cyber.png", useCases: ["Product Tutorials", "Blog Headers", "Pitch Decks", "Dashboard Illustrations"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-flat.png", "/demo/style-pixar.png", "/demo/style-clay.png"] },
-    { slug: "indie-games", title: "Indie Game Devs", description: "Affordable, high-quality character sets for independent developers.", image: "/demo/style-showcase.webp", useCases: ["Steam Capsule Art", "Devlog Graphics", "Press Kits", "Discord Community Mascots"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-vector.png", "/demo/hero-stickers.webp", "/demo/hero-dragon-barista.png"] },
-    { slug: "solopreneurs", title: "Solopreneurs", description: "Building an army of one with consistent personal branding.", image: "/demo/character-consistency.webp", useCases: ["Newsletter Headers", "Course Materials", "Lead Magnets", "X/Twitter Avatars"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-retro.png", "/demo/hero-dragon-barista.png", "/demo/character-consistency.webp"] },
-    { slug: "e-learning", title: "E-learning", description: "Engaging educational avatars and consistent instructional icons.", image: "/demo/style-pixar.png", useCases: ["Course Gamification", "Quiz Completion Screens", "Certificate Badges", "Lesson Headers"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-cyber.png", "/demo/style-iso.png", "/demo/style-minimal.png"] },
+    { slug: "saas", title: "SaaS", description: "Dashboard empty states, onboarding flows, and product announcements that feel human.", image: "/demo/cat-stickers.webp", useCases: ["Feature Empty States", "Onboarding Flows", "In-App Tooltips", "Pricing Page Elements"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-clay.png", "/demo/style-pixar.png", "/demo/style-flat.png"] },
+    { slug: "discord", title: "Discord", description: "Design a server identity with custom emotes, bot avatars, and rank badges.", image: "/demo/cat-stickers.webp", useCases: ["Server Emotes", "Rank Badges", "Announcement Graphics", "Bot Avatars"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/hero-animation.webp", "/demo/hero-dragon-barista.png", "/demo/cat-stickers.webp"] },
+    { slug: "twitch", title: "Twitch", description: "From sub emotes to 'Be Right Back' screens, level up your stream's visual identity.", image: "/demo/hero-animation.webp", useCases: ["BRB Screens", "Subscriber Emotes", "Stream Overlays", "Channel Avatars"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-iso.png", "/demo/hero-dragon-barista.png", "/demo/style-minimal.png"] },
+    { slug: "gaming", title: "Gaming", description: "Indie game assets that don't look like generic AI. High-fidelity characters for NPCs and marketing posters.", image: "/demo/style-cyber.png", useCases: ["Loading Screens", "Achievement Icons", "In-Game NPC Avatars", "Marketing Banners"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/character-consistency.webp", "/demo/style-vector.png", "/demo/style-flat.png"] },
+    { slug: "real-estate", title: "Real Estate", description: "Agency assets that actually stand out on Zillow or Instagram with friendly, local mascots.", image: "/demo/style-iso.png", useCases: ["Open House Flyers", "Social Media Graphics", "Website Contact Forms", "Yard Signs"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/hero-animation.webp", "/demo/style-retro.png", "/demo/style-cyber.png"] },
+    { slug: "dentistry", title: "Dentistry", description: "Pediatric rewards and appointment cards that make dental visits less intimidating for kids.", image: "/demo/style-clay.png", useCases: ["Pediatric Rewards", "Appointment Reminders", "Waiting Room Posters", "Website Headers"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-vector.png", "/demo/character-consistency.webp", "/demo/cat-stickers.webp"] },
+    { slug: "coffee-shops", title: "Coffee Shops", description: "Charming barista characters for loyalty cards and cafe storefront branding.", image: "/demo/hero-dragon-barista.png", useCases: ["Loyalty Cards", "Menu Boards", "Merchandise (Mugs/Tees)", "Social Media Promos"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-iso.png", "/demo/hero-dragon-barista.png", "/demo/style-retro.png"] },
+    { slug: "gyms", title: "Gyms & Fitness", description: "Mascots for fitness apparel, workout trackers, and gym member community branding.", image: "/demo/style-retro.png", useCases: ["Class Schedules", "Apparel & Merch", "Motivational Graphics", "Member App Avatars"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-flat.png", "/demo/hero-animation.webp", "/demo/hero-dragon-barista.png"] },
+    { slug: "e-commerce", title: "E-commerce", description: "Use a consistent mascot for cart abandonment emails and physical packaging inserts.", image: "/demo/style-showcase.webp", useCases: ["Cart Abandonment Emails", "Packaging Inserts", "Review Requests", "Holiday Promos"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-pixar.png", "/demo/hero-animation.webp", "/demo/character-consistency.webp"] },
+    { slug: "youtube", title: "YouTube", description: "Thumbnails that people actually click. Keep your character consistent across long-form video series.", image: "/demo/style-pixar.png", useCases: ["Thumbnail Mascots", "Video Intros", "Community Posts", "Channel Banners"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-flat.png", "/demo/style-cyber.png", "/demo/cat-stickers.webp"] },
+    { slug: "ai-startups", title: "AI Startups", description: "Custom assets that prove you use AI as a tool, not a crutch. Unique, stylistic dashboard icons.", image: "/demo/style-cyber.png", useCases: ["Product Tutorials", "Blog Headers", "Pitch Decks", "Dashboard Illustrations"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-flat.png", "/demo/style-pixar.png", "/demo/style-clay.png"] },
+    { slug: "indie-games", title: "Indie Game Devs", description: "Affordable, high-quality character sets for independent developers.", image: "/demo/style-showcase.webp", useCases: ["Steam Capsule Art", "Devlog Graphics", "Press Kits", "Discord Community Mascots"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-vector.png", "/demo/cat-stickers.webp", "/demo/hero-dragon-barista.png"] },
+    { slug: "solopreneurs", title: "Solopreneurs", description: "Newsletter headers and lead magnets that look professionally commissioned. Consistent avatars for X/Twitter.", image: "/demo/character-consistency.webp", useCases: ["Newsletter Headers", "Course Materials", "Lead Magnets", "X/Twitter Avatars"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-retro.png", "/demo/hero-dragon-barista.png", "/demo/character-consistency.webp"] },
+    { slug: "e-learning", title: "E-learning", description: "Interactive tutor mascots for quiz screens, course progress modules, and completion badges.", image: "/demo/style-pixar.png", useCases: ["Course Gamification", "Quiz Completion Screens", "Certificate Badges", "Lesson Headers"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-cyber.png", "/demo/style-iso.png", "/demo/style-minimal.png"] },
     { slug: "cybersecurity", title: "Cybersecurity", description: "Hard-edged, technical icons and characters for security firms.", image: "/demo/style-cyber.png", useCases: ["Threat Warning Notifications", "Compliance Reports", "Product Dashboards", "Marketing Campaigns"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-vector.png", "/demo/style-clay.png", "/demo/style-flat.png"] },
     { slug: "blockchain", title: "Web3 & Blockchain", description: "Abstract and futuristic visuals for the crypto ecosystem.", image: "/demo/style-cyber.png", useCases: ["DApp Interfaces", "Token Launch Graphics", "NFT Community Emotes", "Whitepaper Illustrations"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-vector.png", "/demo/hero-dragon-barista.png", "/demo/style-clay.png"] },
-    { slug: "interior-design", title: "Interior Design", description: "Elegant icons and showcase visuals for design professionals.", image: "/demo/style-cyber.png", useCases: ["Mood Boards", "Client Presentations", "Instagram Highlights", "Portfolio Sites"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-clay.png", "/demo/hero-stickers.webp", "/demo/style-iso.png"] },
+    { slug: "interior-design", title: "Interior Design", description: "Elegant icons and showcase visuals for design professionals.", image: "/demo/style-cyber.png", useCases: ["Mood Boards", "Client Presentations", "Instagram Highlights", "Portfolio Sites"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-clay.png", "/demo/cat-stickers.webp", "/demo/style-iso.png"] },
     { slug: "fashion", title: "Fashion", description: "Stylized characters and high-end logo marks for apparel brands.", image: "/demo/style-pixar.png", useCases: ["Lookbook Graphics", "Tag Designs", "Pop-up Event Flyers", "Brand Packaging"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/character-consistency.webp", "/demo/hero-animation.webp", "/demo/style-clay.png"] },
-    { slug: "pet-care", title: "Pet Care", description: "Friendly and approachable mascots for pet brands.", image: "/demo/style-clay.png", useCases: ["Pet Product Labels", "Vet Appointment Cards", "Grooming Service Menus", "Social Ad Creatives"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-cyber.png", "/demo/style-clay.png", "/demo/style-retro.png"] },
+    { slug: "pet-care", title: "Pet Care", description: "Friendly mascots for pet clinic branding, grooming menus, and organic treat packaging.", image: "/demo/cat-stickers.webp", useCases: ["Pet Product Labels", "Vet Appointment Cards", "Grooming Service Menus", "Social Ad Creatives"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-cyber.png", "/demo/style-clay.png", "/demo/style-retro.png"] },
     { slug: "travel", title: "Travel Agencies", description: "Adventurous themes and icon sets for the travel industry.", image: "/demo/hero-dragon-barista.png", useCases: ["Itinerary Graphics", "Destination Guides", "Email Newsletters", "Booking Confirmation Screens"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/hero-animation.webp", "/demo/character-consistency.webp", "/demo/style-clay.png"] },
     { slug: "music", title: "Music Production", description: "Edgy avatars and assets for artists and labels.", image: "/demo/style-retro.png", useCases: ["Album Covers", "Tour Flyers", "Spotify Canvas Video", "Merch Designs"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-clay.png", "/demo/style-iso.png", "/demo/hero-animation.webp"] },
     { slug: "event-planning", title: "Event Planning", description: "Vibrant and celebratory visual assets for event brands.", image: "/demo/hero-animation.webp", useCases: ["Invitations", "Event Maps", "Photobooth Props", "Email Campaigns"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-cyber.png", "/demo/style-iso.png", "/demo/style-minimal.png"] },
     { slug: "marketing", title: "Marketing Agencies", description: "White-label quality assets for client campaigns.", image: "/demo/style-showcase.webp", useCases: ["Client Pitch Decks", "Landing Page Heroes", "Ad Creatives", "Case Study Graphics"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-iso.png", "/demo/character-consistency.webp", "/demo/style-retro.png"] },
-    { slug: "hr-tech", title: "HR Tech", description: "Human-centric, friendly visuals for modern workplace platforms.", image: "/demo/style-retro.png", useCases: ["Employee Onboarding", "Culture Handbooks", "Benefits Portals", "Slack Announcements"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-flat.png", "/demo/hero-stickers.webp", "/demo/style-vector.png"] },
-    { slug: "fintech", title: "FinTech", description: "Trustworthy and modern financial design assets.", image: "/demo/hero-dragon-barista.png", useCases: ["Investment Dashboards", "Gamified Savings Apps", "Credit Card Designs", "Educational Modules"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-pixar.png", "/demo/hero-stickers.webp", "/demo/hero-animation.webp"] },
+    { slug: "hr-tech", title: "HR Tech", description: "Human-centric, friendly visuals for modern workplace platforms.", image: "/demo/style-retro.png", useCases: ["Employee Onboarding", "Culture Handbooks", "Benefits Portals", "Slack Announcements"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-flat.png", "/demo/cat-stickers.webp", "/demo/style-vector.png"] },
+    { slug: "fintech", title: "FinTech", description: "Trustworthy and modern financial design assets.", image: "/demo/hero-dragon-barista.png", useCases: ["Investment Dashboards", "Gamified Savings Apps", "Credit Card Designs", "Educational Modules"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-pixar.png", "/demo/cat-stickers.webp", "/demo/hero-animation.webp"] },
     { slug: "logistics", title: "Logistics", description: "Industrial and efficiency-focused iconography.", image: "/demo/style-iso.png", useCases: ["Tracking App Empty States", "Driver App Icons", "Customer Status Updates", "Fleet Decals"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-vector.png", "/demo/style-pixar.png", "/demo/style-retro.png"] }
 ];
 
 export const STYLES = [
-    { slug: "3d-pixar", title: "3D Pixar Style", description: "Cinematic 3D characters and icons with Pixar-grade quality.", image: "/demo/style-pixar.png", aesthetics: ["Soft ambient lighting", "Subsurface scattering on skin/fur", "Expressive exaggerated eyes", "Vibrant unified color palettes"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/hero-stickers.webp", "/demo/style-iso.png", "/demo/style-pixar.png"] },
+    { slug: "3d-pixar", title: "3D Pixar Style", description: "Cinematic 3D characters and icons with Pixar-grade quality.", image: "/demo/style-pixar.png", aesthetics: ["Soft ambient lighting", "Subsurface scattering on skin/fur", "Expressive exaggerated eyes", "Vibrant unified color palettes"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/cat-stickers.webp", "/demo/style-iso.png", "/demo/style-pixar.png"] },
     { slug: "claymation", title: "Claymation", description: "Charming stop-motion style clay assets with rich textures.", image: "/demo/style-clay.png", aesthetics: ["Visible tactile fingerprints", "Stop-motion texture", "Matte lighting", "Thick distinct proportions"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-cyber.png", "/demo/style-iso.png", "/demo/style-retro.png"] },
     { slug: "minimalist", title: "Minimalist", description: "Clean, simple, and modern designs for modern brands.", image: "/demo/style-minimal.png", aesthetics: ["Geometric simplicity", "Negative space utilization", "Monochrome or duo-tone palettes", "Clean vector-ready edges"], fallbackGallery: ["/demo/style-minimal.png", "/demo/style-vector.png", "/demo/style-iso.png", "/demo/character-consistency.webp"] },
-    { slug: "vector-art", title: "Vector Art", description: "Scalable and clean vector-style graphics for logos and print.", image: "/demo/style-vector.png", aesthetics: ["Bold solid colors", "Scalable anchor points", "No gradients", "High contrast linework"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/hero-stickers.webp", "/demo/style-retro.png", "/demo/style-minimal.png"] },
+    { slug: "vector-art", title: "Vector Art", description: "Scalable and clean vector-style graphics for logos and print.", image: "/demo/style-vector.png", aesthetics: ["Bold solid colors", "Scalable anchor points", "No gradients", "High contrast linework"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/cat-stickers.webp", "/demo/style-retro.png", "/demo/style-minimal.png"] },
     { slug: "retro-80s", title: "Retro 80s", description: "Vibrant neon and synthwave-inspired 80s designs.", image: "/demo/style-retro.png", aesthetics: ["Neon glows (cyan/magenta)", "Scanline effects", "Synthwave grids", "VHS chromatic aberration"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-pixar.png", "/demo/character-consistency.webp", "/demo/style-clay.png"] },
     { slug: "isometric", title: "Isometric", description: "Perfectly angled isometric assets for apps and websites.", image: "/demo/style-iso.png", aesthetics: ["Strict 45-degree orthographic angle", "Clean drop shadows", "Grid-snapped proportions", "Simulated depth"], fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-retro.png", "/demo/character-consistency.webp", "/demo/style-iso.png"] },
     { slug: "flat-illustration", title: "Flat Illustration", description: "Timeless flat illustration style for versatile brand use.", image: "/demo/style-flat.png", aesthetics: ["No shadows", "Corporate friendly 'Alegria' style", "Playful scale", "Pastel color schemes"], fallbackGallery: ["/demo/style-flat.png", "/demo/style-minimal.png", "/demo/style-vector.png", "/demo/style-clay.png"] },
@@ -94,25 +94,25 @@ export function slugify(text: string) {
 }
 
 export function getSEOContent(category?: string) {
-    const catText = category ? category.toLowerCase() : "professional brand assets";
     const displayName = category || "Mascot Maker";
+    const catLower = category?.toLowerCase() || "assets";
 
-    // AI-SEO Definition Block (40-60 words for extraction)
-    const definition = `${displayName} is an AI design studio for professional assets. We create high-quality characters with absolute identity consistency. Our studio lets creators maintain the same character look across every pose and scene. We use advanced locking technology to stop 'AI drift' and ensure your brand stays consistent.`;
+    // Direct, Experience-Based Definition
+    const definition = `We built Mascot Maker to solve the "AI drift" problem. When you create ${catLower} for a brand, you need the character to stay identical across every pose. Most tools fail at this; our Identity Lock engine keeps facial features and textures consistent, so your ${displayName} characters actually look like the same individual every time.`;
 
     const tips: string[] = [];
 
     // Category-specific tips (Styles & Engines)
     if (category?.includes("Mascot") || category?.includes("Character") || category?.includes("Pixar") || category?.includes("Ghibli") || category?.includes("Claymation")) {
-        tips.push("Anatomy consistency: Use our 'Identity Lock' feature to ensure facial features and proportions remain identical across all 2D and 3D renders.");
-        tips.push("Emotional Range: For brand mascots, generate a 'Sheet of Expressions' including joy, surprise, and determination to ensure versatility.");
-        tips.push("Texture Preservation: When moving between styles like Pixar and Claymation, maintain key color Hex codes for brand recognition.");
+        tips.push("Anatomy consistency: Use 'Identity Lock' to fix facial proportions. This prevents the common AI issue where characters look like siblings rather than the same individual.");
+        tips.push("Emotional Range: We recommend generating a 'Reaction Sheet' (Happy, Sad, Surprised) in one go. This keeps the lighting and material shaders consistent across the set.");
+        tips.push("Prompt Bleeding: If you find your character's colors bleeding into the background, try adding 'simple solid background' to your secondary prompt descriptors.");
     }
 
     if (category?.includes("Icon") || category?.includes("Logo") || category?.includes("Minimalist") || category?.includes("Vector") || category?.includes("Flat")) {
-        tips.push("Geometric Simplicity: AI icons perform best when using bold primary shapes that remain legible at 16px favicon sizes.");
-        tips.push("Vector Readiness: Always export with high contrast to ensure easy tracing into SVG formats for infinitely scalable branding.");
-        tips.push("Negative Space: Leverage AI to test how your logo looks on both dark mode and light mode backgrounds instantly.");
+        tips.push("Silicon Valley aesthetic: For SaaS apps, stick to the Minimalist engine. It's tuned to produce icons that align with modern component libraries like Shadcn or Tailwind UI.");
+        tips.push("Vector Tracing: If you're moving to SVG, use the 'Flat Vector' style. It produces the cleanest edges, which saves you 20+ minutes of manual cleanup in Illustrator.");
+        tips.push("Legibility test: Always zoom out to 10% in the preview. If the logo's silhouette isn't clear at that size, reduce the 'Complexity' slider in our studio.");
     }
 
     if (category?.includes("Neumorphism") || category?.includes("Glassmorphism")) {
@@ -127,18 +127,18 @@ export function getSEOContent(category?: string) {
 
     // Industry-specific tips
     if (category?.includes("Travel") || category?.includes("Hospitality")) {
-        tips.push("Evoke Adventure: Use bright, sun-drenched lighting and saturated colors to make travel-related characters feel welcoming and adventurous.");
-        tips.push("Cultural Context: Incorporate regional clothing or accessory cues into your AI character to better resonate with local travel markets.");
+        tips.push("Vibe check: Use 'Golden Hour' lighting in your generator settings. It makes travel mascots feel more welcoming and premium.");
+        tips.push("Cultural Nuance: Avoid generic 'tourist' looks. Add specific accessories like 'leather camera strap' or 'hiking boots' to give your character more personality.");
     }
 
     if (category?.includes("Fintech") || category?.includes("Blockchain") || category?.includes("SaaS")) {
-        tips.push("Establishing Trust: Use clean, modernist art styles like Flat Design or Minimalist to convey reliability and technical sophistication.");
-        tips.push("Brand Cohesion: Match your AI assets' color palette exactly to your software's primary accent colors for a professional, integrated UI feel.");
+        tips.push("Trust signals: We found that technical brands perform better with slightly cooler color palettes (blues and teals). Match these to your brand's Hex codes in the 'Advanced' tab.");
+        tips.push("App Consistency: If your app uses a specific corner radius (like 12px), try to match your mascot's geometry to that same curvature for a native feel.");
     }
 
     if (category?.includes("Gaming") || category?.includes("Discord") || category?.includes("Twitch")) {
-        tips.push("Character Personality: Give your mascot unique 'gaming' traits—like headsets or glowing energy elements—to stand out in streaming communities.");
-        tips.push("Action Poses: Generate characters in high-energy poses (celebrating, attacking, or gaming) to provide content for various stream alerts.");
+        tips.push("Streamer Pro-tip: Generate a 'Transparent PNG' of your mascot and layer it over your OBS scenes. It creates a much stronger brand than a generic static avatar.");
+        tips.push("Action States: Create specific poses for 'New Follower' or 'Gift Sub' alerts to make your stream interactions feel high-production.");
     }
 
     if (category?.includes("E-commerce") || category?.includes("Marketplace")) {
@@ -162,9 +162,9 @@ export function getSEOContent(category?: string) {
 
     return {
         definition,
-        intro: `Empower your brand with world-class ${catText}. Mascot Maker is the only AI design hub designed for professionals who refuse to compromise on character consistency and cinematic output quality.`,
-        benefit1: `For scaling startups, our proprietary Identity-Lock technology eliminates the 'AI Drift' common in generic generators. Every ${catText} you create for your ${category?.toLowerCase() || 'brand'} workflow remains 100% faithful to your original design.`,
-        benefit2: `Achieve high-end agency results at 100x the speed. Whether you're building a global sub-brand or a targeted marketing push, our studio provides the photoreal textures and material accuracy required for modern commercial standards.`,
+        intro: `Character consistency is the #1 hurdle in AI design. Our ${displayName} studio is built for designers who need more than just a one-off image. We focus on pinning character DNA so your ${catLower} can move across marketing decks, social banners, and product UI without losing brand recognition.`,
+        benefit1: `One of the biggest frustrations we found with generic generators was the lack of control over fine details like lighting and angle. In the ${displayName} engine, we've fine-tuned the logic to ensure that your ${catLower} maintain their material integrity—meaning if you start with claymation, they stay claymation.`,
+        benefit2: `Instead of weeks waiting on an agency, you get studio-grade ${catLower} in seconds. This isn't about skipping the design process; it's about giving your ${category ? `${category} brand` : "project"} a face that resonates with your audience while keeping your production pipeline lean and predictable.`,
         tips,
         stats
     };
