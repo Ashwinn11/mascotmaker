@@ -6,7 +6,7 @@ export function SEOSchema() {
     "url": "https://mascotmaker.io",
     "logo": "https://mascotmaker.io/app-icon.png",
     "description": "AI-powered mascot, logo, and sticker generator. Create consistent 3D, 2D, and vector characters for brands, apps, and content creators.",
-    "foundingDate": "2025",
+    "foundingDate": "2026",
     "sameAs": [
       "https://www.crunchbase.com/organization/mascot-maker"
     ]

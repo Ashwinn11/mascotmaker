@@ -163,7 +163,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                 "name": `Is the ${primaryItem?.title} generator really free?`,
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": `Yes. New accounts start with 25 free credits. Each generation uses 1 credit. Additional credit packs are available for purchase, but the core tool is free to try with no credit card required.`
+                    "text": `Yes. New accounts start with 5 free credits. Each generation uses 1 credit. Additional credit packs are available for purchase, but the core tool is free to try with no credit card required.`
                 }
             },
             {
@@ -248,7 +248,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                             {/* Trust bar */}
                             <div className="flex flex-wrap gap-6 pt-2">
                                 {[
-                                    { icon: Zap, text: "25 free credits" },
+                                    { icon: Zap, text: "5 free credits" },
                                     { icon: Shield, text: "Commercial rights included" },
                                     { icon: Users, text: "No design skills needed" },
                                 ].map(({ icon: Icon, text }) => (
@@ -336,10 +336,10 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 <h3 className="font-display text-3xl uppercase mb-6 leading-none tracking-tight">Consistency is your <span className="italic">real</span> moat.</h3>
                                 <div className="space-y-4 text-foreground/70 font-medium leading-relaxed">
                                     <p>
-                                        When we started Mascot Maker, the biggest design bottleneck wasn&apos;t generating an image—it was generating the <span className="text-foreground font-bold italic underline decoration-candy-pink underline-offset-4">same</span> character twice. 
+                                        When we started Mascot Maker, the biggest design bottleneck wasn&apos;t generating an image—it was generating the <span className="text-foreground font-bold italic underline decoration-candy-pink underline-offset-4">same</span> character twice.
                                     </p>
                                     <p>
-                                        For {combinedTitle?.toLowerCase()} users, this is do-or-die. If your mascot looks different on your homepage than it does in your dashboard, you haven&apos;t built a character—you&apos;ve built a distraction. 
+                                        For {combinedTitle?.toLowerCase()} users, this is do-or-die. If your mascot looks different on your homepage than it does in your dashboard, you haven&apos;t built a character—you&apos;ve built a distraction.
                                         That&apos;s why we focused everything on <span className="text-foreground font-bold">Identity Lock™</span>. It&apos;s not just AI; it&apos;s brand insurance.
                                     </p>
                                 </div>
@@ -533,7 +533,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                             },
                             {
                                 q: `Is the ${primaryItem?.title} generator really free?`,
-                                a: `Yes. New accounts start with 25 free credits. Each generation uses 1 credit. Additional credit packs are available, but the core tool is completely free to try — no credit card required.`
+                                a: `Yes. New accounts start with 5 free credits. Each generation uses 1 credit. Additional credit packs are available, but the core tool is completely free to try — no credit card required.`
                             },
                             {
                                 q: `Can I use generated assets commercially?`,

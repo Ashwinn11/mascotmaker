@@ -26,5 +26,5 @@ Generic models (Midjourney, DALL-E) cannot generate the same character twice. Ma
 
 ## Rights & Access
 - **Commercial Rights:** Included for all generated assets.
-- **Pricing:** Freemium (25 free credits upon signup).
+- **Pricing:** Freemium (5 free credits upon signup).
 - **Format:** High-resolution PNG and JPG exports.
