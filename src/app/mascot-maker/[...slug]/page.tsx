@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     let description = "";
 
     if (primaryItem && secondaryItem) {
-        title = type === "style" 
+        title = type === "style"
             ? `${primaryItem.title} AI Style for ${secondaryItem.title} Logos & Mascots`
             : `${primaryItem.title} for ${secondaryItem.title} Brands — AI Generator`;
         description = type === "style"
@@ -153,7 +153,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                 "name": type === "style" ? `How do I apply the ${primaryItem?.title} style to my mascot?` : `How do I create a ${combinedTitle?.toLowerCase()} with AI?`,
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": type === "style" 
+                    "text": type === "style"
                         ? `Select the ${primaryItem?.title} style from our studio, enter your character description, and Identity Lock will generate a consistent character in that exact aesthetic in seconds.`
                         : `Sign up for a free Mascot Maker account, describe your ${combinedTitle?.toLowerCase()} in plain English, and the AI generates a studio-quality result in under 30 seconds. No design skills or software required.`
                 }
@@ -179,7 +179,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
 
     const comparisonRows = [
         { feature: "Generation speed", mascotMaker: "~30 seconds", agency: "3–6 weeks", diy: "Hours of prompting" },
-        { feature: "Cost", mascotMaker: "Free (25 credits)", agency: "$2,000–$10,000", diy: "Time-intensive" },
+        { feature: "Cost", mascotMaker: "Free (5 credits)", agency: "$2,000–$10,000", diy: "Time-intensive" },
         { feature: "Character consistency", mascotMaker: "Identity Lock™", agency: "Depends on artist", diy: "Very poor" },
         { feature: "Commercial rights", mascotMaker: "✓ Included", agency: "✓ (paid)", diy: "✗ Varies" },
         { feature: "Multiple poses/styles", mascotMaker: "Unlimited", agency: "Extra cost", diy: "Manual reprompting" },
@@ -335,7 +335,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     {((primaryItem as any).fallbackGallery || []).map((imgUrl: string, idx: number) => (
                                         <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden border border-foreground/5 shadow-sm hover:scale-105 transition-transform duration-300">
-                                            <Image src={imgUrl} alt={`Example ${idx+1} for ${primaryItem.title}`} fill className="object-cover" />
+                                            <Image src={imgUrl} alt={`Example ${idx + 1} for ${primaryItem.title}`} fill className="object-cover" />
                                         </div>
                                     ))}
                                 </div>

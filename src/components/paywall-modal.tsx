@@ -78,7 +78,7 @@ export function PaywallModal({
                             Continue with Google
                         </button>
                         <p className="text-xs text-muted-foreground text-center max-w-sm">
-                            Free account includes 25 credits. No card required.
+                            Free account includes 5 credits. No card required.
                         </p>
                     </div>
                 </DialogContent>

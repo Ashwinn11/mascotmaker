@@ -180,7 +180,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                                     </tr>
                                 ))}
                             </tbody>
-        </table>
+                        </table>
                     </div>
                 </div>
             </section>
@@ -224,7 +224,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                                 </li>
                                 <li className="flex flex-col gap-1">
                                     <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Cost barrier</span>
-                                    <span className="text-xl font-semibold flex items-center gap-2"><div className="px-2 py-0.5 rounded text-xs bg-candy-green/20 text-candy-green uppercase tracking-widest font-black">Free</div> 25 credits on signup</span>
+                                    <span className="text-xl font-semibold flex items-center gap-2"><div className="px-2 py-0.5 rounded text-xs bg-candy-green/20 text-candy-green uppercase tracking-widest font-black">Free</div> 5 credits on signup</span>
                                 </li>
                                 <li className="flex flex-col gap-1">
                                     <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Hidden friction</span>
@@ -266,7 +266,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                         </div>
                         <div className="lg:w-1/2 relative">
                             <div className="relative z-10 rounded-[4rem] border border-foreground/10 overflow-hidden shadow-premium p-4 bg-white">
-                                <Image src="/demo/landing-story-v2.webp" alt={`Mascot Maker AI logo and sticker pack production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto rounded-[3rem]" />
+                                <Image src="/demo/character-consistency.webp" alt={`Mascot Maker AI logo and sticker pack production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto rounded-[3rem]" />
                             </div>
                             {/* Decorative Flair */}
                             <div className="absolute -bottom-10 -left-10 animate-float">

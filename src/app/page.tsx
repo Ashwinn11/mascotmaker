@@ -97,10 +97,10 @@ export default function Home() {
                   START GENERATING
                 </Link>
                 <Link
-                  href="/showcase"
+                  href="/gallery"
                   className="inline-flex items-center gap-4 px-10 py-5 border border-foreground/10 text-foreground rounded-2xl font-black text-lg hover:border-candy-pink hover:text-candy-pink transition-all duration-500"
                 >
-                  VIEW SHOWCASE
+                  VIEW GALLERY
                 </Link>
               </div>
 
@@ -252,7 +252,7 @@ export default function Home() {
             {/* Image — right */}
             <div className="lg:w-[55%] relative">
               <div className="relative rounded-[3rem] overflow-hidden shadow-premium border border-foreground/5">
-                <Image src="/demo/landing-story-v2.webp" alt="Mascot Identity Lock" width={800} height={600} className="w-full h-auto" />
+                <Image src="/demo/character-consistency.webp" alt="Mascot Identity Lock" width={800} height={600} className="w-full h-auto" />
               </div>
               {/* Small decorative accent */}
               <div className="absolute -top-6 -left-6 w-24 h-24 rounded-[1.5rem] overflow-hidden shadow-xl border border-foreground/5 rotate-[-8deg]">
@@ -367,7 +367,7 @@ export default function Home() {
                     <Image src="/demo/hero-stickers.webp" alt="Proof" width={200} height={200} className="w-full h-auto group-hover:scale-110 transition-transform" />
                   </div>
                   <div className="aspect-[3/4] rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-premium rotate-[2deg] hover:rotate-0 transition-transform duration-500">
-                    <Image src="/demo/landing-story-v2.webp" alt="Proof" width={300} height={400} className="w-full h-auto object-cover" />
+                    <Image src="/demo/character-consistency.webp" alt="Proof" width={300} height={400} className="w-full h-auto object-cover" />
                   </div>
                 </div>
               </div>
@@ -392,18 +392,7 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-            {TOP_STYLES.map((style, i) => {
-              const demoImages = [
-                "/demo/style-pixar.png",
-                "/demo/style-clay.png",
-                "/demo/style-minimal.png",
-                "/demo/style-vector.png",
-                "/demo/style-retro.png",
-                "/demo/style-cyber.png",
-                "/demo/style-iso.png",
-                "/demo/style-flat.png"
-              ];
-
+            {TOP_STYLES.map((style) => {
               return (
                 <Link
                   key={style.slug}
@@ -413,7 +402,7 @@ export default function Home() {
                   {/* Visual: Clean, Square Image */}
                   <div className="aspect-square relative w-full bg-secondary/5 overflow-hidden">
                     <Image
-                      src={demoImages[i % demoImages.length]}
+                      src={style.image || "/demo/hero-dragon-barista.png"}
                       alt={style.title}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-700"
