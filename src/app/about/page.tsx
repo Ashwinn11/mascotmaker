@@ -29,7 +29,7 @@ const values = [
     {
         icon: Users,
         title: "Built for Creators",
-        description: "Whether you're a solo founder or a streamer, we give you the design power of a AAA agency without the $5k invoice.",
+        description: "Whether you're a solo founder or a streamer, we give you the design power of a pro illustrator without the $200-per-pose invoice.",
     },
 ];
 
@@ -45,7 +45,7 @@ export default function AboutPage() {
                         <span className="text-[10px] font-black uppercase tracking-widest text-candy-pink">Origins</span>
                     </div>
                     <h1 className="font-display text-5xl md:text-7xl uppercase leading-[0.9] tracking-tighter mb-8 italic">
-                        Design Should Not Cost <span className="text-candy-pink">$5,000.</span>
+                        Professional Design <br /> <span className="text-candy-pink">Without the Bottleneck.</span>
                     </h1>
                     <p className="text-xl text-foreground/60 font-medium max-w-xl leading-relaxed">
                         I built Mascot Maker because I was tired of AI tools that couldn&apos;t generate the same character twice. Branding needs consistency, not just random &apos;pretty&apos; images.
@@ -85,7 +85,7 @@ export default function AboutPage() {
                         <div>
                             <h2 className="font-display text-3xl uppercase tracking-tight mb-4 text-foreground/80">Human Intent, AI Speed</h2>
                             <p className="text-foreground/60 text-lg font-medium leading-relaxed">
-                                We aren&apos;t here to replace artists. We&apos;re here for the person who can&apos;t afford a $5,000 design agency quote but still need a professional identity. 
+                                We aren&apos;t here to replace artists. We&apos;re here for the person who can&apos;t afford separate commissions for every single character pose but still needs a professional identity. 
                             </p>
                             <p className="text-foreground/60 text-lg font-medium leading-relaxed mt-6">
                                 We focus on 8 specific art styles \u2014 from 3D Pixar to Minimalist Vector \u2014 and we built a native <strong>AI Background Remover</strong> into the workflow. You get production-ready assets in under 30 seconds.

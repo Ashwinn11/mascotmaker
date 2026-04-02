@@ -25,7 +25,7 @@ const ARTICLE_CONTENT: Record<string, { sections: { heading: string; content: st
             },
             {
                 heading: "The Old Way vs The New Way",
-                content: "Traditionally, creating a brand mascot required hiring an illustrator or design agency. This meant:\n\n• $5,000–$50,000+ for initial character design\n• 4–12 weeks for the design process\n• Additional costs for every new pose, expression, or scene\n• Inconsistency when different artists work on the character\n\nAI mascot generators like Mascot Maker have fundamentally changed this equation. You can now create a professional mascot in minutes, iterate on it infinitely, and maintain perfect character consistency across every piece of content you produce.\n\nThe key technology that makes this possible is called Identity Lock — the ability to generate the same character in completely different poses, angles, and scenarios while maintaining its visual DNA."
+                content: "Traditionally, creating a brand mascot required hiring an illustrator or design agency. This meant:\n\n• $500–$2,500 for initial character design\n• 4–8 weeks for the design process\n• Additional costs for every new pose, expression, or scene\n• Inconsistency when different artists work on the character\n\nAI mascot generators like Mascot Maker have fundamentally changed this equation. You can now create a professional mascot in minutes, iterate on it infinitely, and maintain perfect character consistency across every piece of content you produce.\n\nThe key technology that makes this possible is called Identity Lock — the ability to generate the same character in completely different poses, angles, and scenarios while maintaining its visual DNA."
             },
             {
                 heading: "How to Create Your Brand Mascot",
@@ -41,11 +41,11 @@ const ARTICLE_CONTENT: Record<string, { sections: { heading: string; content: st
         sections: [
             {
                 heading: "The Honest Comparison",
-                content: "Let's cut through the marketing spin from both sides. AI mascot generators and human illustrators each have genuine strengths. Here's the truth about when to use each option.\n\nWe're not going to pretend AI replaces human creativity. But we're also not going to pretend that spending $15,000 on a mascot makes sense for every business."
+                content: "Let's cut through the marketing spin from both sides. AI mascot generators and human illustrators each have genuine strengths. Here's the truth about when to use each option.\n\nWe're not going to pretend AI replaces human creativity. But we're also not going to pretend that spending $2,500 on a mascot makes sense for every startup."
             },
             {
                 heading: "Cost Breakdown",
-                content: "Human Illustrator:\n• Initial character design: $3,000–$15,000\n• Character sheet (8 poses): $1,500–$5,000\n• Each new scene or marketing asset: $200–$800\n• Annual maintenance (new assets): $2,000–$10,000\n\nAI Mascot Generator (Mascot Maker):\n• Free tier: 5 generations/day\n• Pro tier: $19/month for unlimited generations\n• Each new scene or pose: included\n• Annual cost: $0–$228\n\nThe cost difference is dramatic but cost isn't everything."
+                content: "Human Illustrator:\n• Initial mascot design: $300–$1,200\n• Character sheet (8 poses): $200–$800\n• Each new scene or pose: $30–$150\n• Annual maintenance (new assets): $500–$2,000\n\nAI Mascot Generator (Mascot Maker):\n• Free tier: 5 generations/day\n• Pro tier: $19/month for unlimited generations\n• Each new scene or pose: included\n• Annual cost: $0–$228\n\nThe cost difference is dramatic but cost isn't everything."
             },
             {
                 heading: "Speed and Iteration",
@@ -61,7 +61,7 @@ const ARTICLE_CONTENT: Record<string, { sections: { heading: string; content: st
             },
             {
                 heading: "Our Recommendation",
-                content: "• Budget under $500: Use AI exclusively. Mascot Maker's free and pro tiers will cover all your needs.\n\n• Budget $500–$5,000: Start with AI to prototype, then hire an illustrator on Fiverr or Upwork for a polished character sheet. Use AI for ongoing content.\n\n• Budget $5,000+: Hire a professional studio for your primary character design. Use AI for high-volume content production.\n\nThe smartest teams use both tools. AI for speed and volume, humans for originality and soul."
+                content: "• Budget under $300: Use AI exclusively. Mascot Maker's free and pro tiers will cover all your needs.\n\n• Budget $300–$1,500: Start with AI to prototype, then hire a freelancer for a polished character sheet. Use AI for high-volume content.\n\n• Budget $1,500+: Hire a professional freelance artist for your primary character design. Use AI for consistency and speed in production.\n\nThe smartest teams use both tools. AI for speed and volume, humans for originality and soul."
             }
         ]
     },

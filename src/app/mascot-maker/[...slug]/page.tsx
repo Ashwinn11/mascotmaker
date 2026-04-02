@@ -178,12 +178,12 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
     };
 
     const comparisonRows = [
-        { feature: "Generation speed", mascotMaker: "~30 seconds", agency: "3–6 weeks", diy: "Hours of manual prompting" },
-        { feature: "Cost per asset", mascotMaker: "$0.00 (Free credits)", agency: "$500 - $2,500/pose", diy: "Opportunity cost" },
-        { feature: "Character consistency", mascotMaker: "Identity Lock™ (PINNED)", agency: "Depends on artist availability", diy: "Near impossible randomly" },
-        { feature: "Visual resolution", mascotMaker: "4K Studio Upscale", agency: "Variable", diy: "Low-res preview shells" },
-        { feature: "Commercial usage", mascotMaker: "Full Rights Included", agency: "Usually extra licensing fee", diy: "Terms often hidden" },
-        { feature: "Design experience", mascotMaker: "Zero (AI powered)", agency: "High (Management cost)", diy: "High (Prompt Engineering)" },
+        { feature: "Generation speed", mascotMaker: "~30 seconds", freelancer: "3–7 days", diy: "Hours of manual prompting" },
+        { feature: "Cost per asset", mascotMaker: "$0.00 (Free credits)", freelancer: "$150–$500", diy: "Opportunity cost" },
+        { feature: "Character consistency", mascotMaker: "Identity Lock™ (PINNED)", freelancer: "Manual drawing", diy: "Near impossible randomly" },
+        { feature: "Visual resolution", mascotMaker: "4K Studio Upscale", freelancer: "Variable", diy: "Low-res previews" },
+        { feature: "Commercial usage", mascotMaker: "Full Rights Included", freelancer: "✓ Included", diy: "Terms often hidden" },
+        { feature: "Design experience", mascotMaker: "Zero (AI powered)", freelancer: "None", diy: "High (Prompt Skill)" },
     ];
 
     return (
@@ -372,7 +372,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     <p>{content.benefit2}</p>
                                     <h2 className="text-3xl mb-4 mt-10">Building Brand Equity in {primaryItem?.title}</h2>
                                     <p>
-                                        In the competitive {primaryItem?.title?.toLowerCase()} space, characters create instant recognition. Mascot Maker allows you to generate {secondaryItem ? secondaryItem.title : "high-quality"} design assets without the $5,000+ agency price tag.
+                                        In the competitive {primaryItem?.title?.toLowerCase()} space, characters create instant recognition. Mascot Maker allows you to generate {secondaryItem ? secondaryItem.title : "high-quality"} design assets without the custom-illustrator bottleneck.
                                     </p>
                                     {((primaryItem as any).useCases?.length > 0) && (
                                         <>
@@ -489,18 +489,18 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                     <p className="text-foreground/50 font-medium mb-10">
                         Why use a dedicated {combinedTitle?.toLowerCase()} tool instead of a design agency, Midjourney, or Canva?
                     </p>
-                    <div className="rounded-2xl border-2 border-foreground/10 overflow-hidden">
+                        <div className="rounded-2xl border-2 border-foreground/10 overflow-hidden">
                         <div className="grid grid-cols-4 bg-foreground text-cream text-xs font-black uppercase tracking-widest">
                             <div className="p-4 col-span-1">Feature</div>
                             <div className="p-4 text-candy-pink">Mascot Maker</div>
-                            <div className="p-4 text-foreground/40">Design Agency</div>
+                            <div className="p-4 text-foreground/40">Freelancer</div>
                             <div className="p-4 text-foreground/40">Midjourney / DIY</div>
                         </div>
                         {comparisonRows.map((row, i) => (
                             <div key={i} className={`grid grid-cols-4 text-sm border-t border-foreground/5 ${i % 2 === 0 ? "bg-cream" : "bg-white"}`}>
                                 <div className="p-4 font-bold text-foreground/70 col-span-1">{row.feature}</div>
                                 <div className="p-4 font-bold text-candy-pink">{row.mascotMaker}</div>
-                                <div className="p-4 text-foreground/40">{row.agency}</div>
+                                <div className="p-4 text-foreground/40">{row.freelancer}</div>
                                 <div className="p-4 text-foreground/40">{row.diy}</div>
                             </div>
                         ))}
