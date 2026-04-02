@@ -3,109 +3,111 @@ import Link from "next/link";
 import { Sparkles, Shield, Zap, Users } from "lucide-react";
 
 export const metadata: Metadata = {
-    title: "About Mascot Maker — The Story Behind the AI Design Studio",
-    description: "Learn the story of how Mascot Maker was built to give every creator access to studio-quality AI character design \u2014 without the $5,000 agency fee.",
+    title: "Why we built Mascot Maker — The 'Identity Lock' Story",
+    description: "Most AI generators can't make the same character twice. We built Mascot Maker to fix the consistency problem for real brands.",
     alternates: {
         canonical: "https://mascotmaker.io/about",
-    },
-    openGraph: {
-        title: "About Mascot Maker",
-        description: "Studio-quality AI mascot generation. Built for creators, not agencies.",
-        type: "website",
     },
 };
 
 const values = [
     {
         icon: Sparkles,
-        title: "Same Face. Every. Time.",
-        description: "Consistency is our north star. We focus on 'Identity Lock'—pinning the exact facial geometry and style so your character stays locked between generations.",
+        title: "Exact Consistency",
+        description: "We don't do 'vibe' matches. Identity Lock pins character geometry so your mascot stays the same across every pose and style.",
     },
     {
         icon: Zap,
-        title: "Instant, Not Iterative",
-        description: "Agencies take 3 weeks. We take 30 seconds. No briefs, no revisions, no invoices. Just describe it and generate.",
+        title: "30 Seconds, Not 3 Weeks",
+        description: "Graphic designers are slow and expensive for simple mascot iterations. We deliver studio-grade renders in under 30 seconds. No briefs, just results.",
     },
     {
         icon: Shield,
-        title: "Commercially Safe",
-        description: "Every asset generated comes with full commercial use rights. Use it in ads, merchandise, apps, or pitch decks.",
+        title: "Total Ownership",
+        description: "What you generate is yours. Full commercial rights for ads, merchandise, and app assets, with no hidden royalties.",
     },
     {
         icon: Users,
-        title: "Built for Every Creator",
-        description: "Whether you\u2019re a Twitch streamer, indie game dev, SaaS founder, or marketing agency \u2014 we made this for you.",
+        title: "Built for Creators",
+        description: "Whether you're a solo founder or a streamer, we give you the design power of a AAA agency without the $5k invoice.",
     },
 ];
 
 export default function AboutPage() {
     return (
-        <main className="min-h-screen bg-gradient-to-b from-cream to-white">
-            {/* Hero */}
-            <section className="relative py-24 md:py-32 px-6 text-center border-b-4 border-foreground">
-                <div className="mx-auto max-w-3xl">
-                    <div className="inline-flex items-center gap-2 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 px-4 py-2 mb-6">
-                        <Sparkles size={14} className="text-candy-pink" />
-                        <span className="text-xs font-black uppercase tracking-widest text-candy-pink">Our Story</span>
+        <main className="min-h-screen bg-cream selection:bg-candy-pink/20">
+            {/* Simple Hero */}
+            <section className="relative py-24 md:py-32 px-6 border-b-4 border-foreground overflow-hidden">
+                <div className="absolute top-0 right-0 w-[40%] h-full bg-gradient-to-l from-candy-pink/5 to-transparent pointer-events-none" />
+                <div className="mx-auto max-w-3xl relative z-10">
+                    <div className="inline-flex items-center gap-2 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 px-4 py-2 mb-8">
+                        <span className="relative inline-flex rounded-full h-2 w-2 bg-candy-pink"></span>
+                        <span className="text-[10px] font-black uppercase tracking-widest text-candy-pink">Origins</span>
                     </div>
-                    <h1 className="font-display text-5xl md:text-7xl uppercase leading-none mb-6">
-                        Design Should Not Cost{" "}
-                        <span className="text-gradient">$5,000</span>
+                    <h1 className="font-display text-5xl md:text-7xl uppercase leading-[0.9] tracking-tighter mb-8 italic">
+                        Design Should Not Cost <span className="text-candy-pink">$5,000.</span>
                     </h1>
-                    <p className="text-xl text-warm-gray font-bold max-w-2xl mx-auto leading-relaxed">
-                        Mascot Maker was built out of frustration. Not the dramatic kind \u2014 just the quiet, expensive kind that every founder, creator, and solopreneur feels when they get a design agency quote.
+                    <p className="text-xl text-foreground/60 font-medium max-w-xl leading-relaxed">
+                        I built Mascot Maker because I was tired of AI tools that couldn&apos;t generate the same character twice. Branding needs consistency, not just random &apos;pretty&apos; images.
                     </p>
                 </div>
             </section>
 
-            {/* Story */}
+            {/* Story Section — No Fluff */}
             <section className="py-20 px-6">
-                <div className="mx-auto max-w-2xl prose prose-lg">
-                    <h2 className="font-display text-3xl uppercase mb-6">The Problem We Saw</h2>
-                    <p className="text-warm-gray leading-relaxed mb-6">
-                        The tools that existed for AI image generation — Midjourney, Stable Diffusion, DALL-E — are genuinely impressive. But they have a fatal flaw for anyone building a brand: <strong>they cannot keep a character consistent</strong>.
-                    </p>
-                    <p className="text-warm-gray leading-relaxed mb-6">
-                        Generate a mascot on Monday. Try to generate the same mascot on Tuesday in a different pose. You’ll get a completely different character. This is called "AI Drift" — and it’s why most AI outputs fail as serious brand assets. Brands don&apos;t work when the face of the product changes every time it appears in a new context.
-                    </p>
-                    <p className="text-warm-gray leading-relaxed mb-6">
-                        We saw founders and streamers forced to choose between broken AI tools or $5,000 agency quotes. We didn&apos;t think that trade-off should exist.
-                    </p>
+                <div className="mx-auto max-w-2xl">
+                    <div className="space-y-12">
+                        <div>
+                            <h2 className="font-display text-3xl uppercase tracking-tight mb-4 text-foreground/80">The Consistency Problem</h2>
+                            <p className="text-foreground/60 text-lg font-medium leading-relaxed">
+                                Most AI image generators (Midjourney, DALL-E) are fun, but they have a fatal flaw for businesses: they can&apos;t keep a face consistent. If you generate a character on Monday and try to get the same one in a different pose on Tuesday, you get a stranger. 
+                            </p>
+                            <p className="text-foreground/60 text-lg font-medium leading-relaxed mt-6">
+                                We call this &ldquo;AI Drift.&rdquo; It makes traditional AI tools useless for professional brand assets. Brands don&apos;t work when the mascot&apos;s face changes every time it appears on a new landing page or sticker pack.
+                            </p>
+                        </div>
 
-                    <h2 className="font-display text-3xl uppercase mb-6 mt-12">The Human Side of AI</h2>
-                    <p className="text-warm-gray leading-relaxed mb-6 italic border-l-4 border-candy-pink pl-6 py-2 bg-candy-pink/5 rounded-r-xl">
-                        &quot;Mascot Maker isn&apos;t about replacing designers. It&apos;s about giving the person who can&apos;t afford a designer the power to build something consistent, professional, and uniquely theirs. We focus on the fine details—the material textures, the lighting rigs, and the logic that keeps character features locked.&quot;
-                    </p>
+                        <div className="p-8 rounded-[2.5rem] border-2 border-foreground/5 bg-white shadow-premium">
+                            <h3 className="font-display text-2xl uppercase mb-4 text-candy-pink italic">Our Fix</h3>
+                            <p className="text-foreground/60 font-bold leading-relaxed">
+                                Mascot Maker is a specialized studio that fixes the consistency problem. Our <strong>Identity Lock</strong> engine encodes character DNA \u2014 facial structure, proportions, and material signatures \u2014 and preserves them across every prompt. 
+                            </p>
+                            <div className="grid grid-cols-2 gap-4 mt-8">
+                                {["Logo Engines", "Sticker Packs", "Character Mascots", "Commercial Rights"].map((item) => (
+                                    <div key={item} className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-foreground/30">
+                                        <div className="w-1.5 h-1.5 rounded-full bg-candy-pink" />
+                                        {item}
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
 
-                    <h2 className="font-display text-3xl uppercase mb-6 mt-12">What We Built</h2>
-                    <p className="text-warm-gray leading-relaxed mb-6">
-                        Mascot Maker is an AI design studio specifically engineered to solve the consistency problem. Our <strong>Identity Lock</strong> system encodes your character’s core traits \u2014 facial structure, color palette, body proportions, style signature \u2014 and preserves them across every generation.
-                    </p>
-                    <p className="text-warm-gray leading-relaxed mb-6">
-                        We specialize in three core areas: <strong>Logo Generation</strong>, <strong>Sticker Packs</strong>, and consistent <strong>Brand Mascots</strong>.
-                    </p>
-                    <p className="text-warm-gray leading-relaxed mb-6">
-                        We support <strong>8 distinct, high-end art styles</strong> \u2014 from 3D Pixar and Claymation to Minimalist Vector and Pixel Art. Whether you need a single app icon or a full character set for Discord, we deliver studio-grade results in seconds.
-                    </p>
-                    <p className="text-warm-gray leading-relaxed mb-6">
-                        We also include a professional-grade <strong>AI Background Remover</strong>, allowing you to instantly turn any generation into a transparent asset ready for your website or app.
-                    </p>
+                        <div>
+                            <h2 className="font-display text-3xl uppercase tracking-tight mb-4 text-foreground/80">Human Intent, AI Speed</h2>
+                            <p className="text-foreground/60 text-lg font-medium leading-relaxed">
+                                We aren&apos;t here to replace artists. We&apos;re here for the person who can&apos;t afford a $5,000 design agency quote but still need a professional identity. 
+                            </p>
+                            <p className="text-foreground/60 text-lg font-medium leading-relaxed mt-6">
+                                We focus on 8 specific art styles \u2014 from 3D Pixar to Minimalist Vector \u2014 and we built a native <strong>AI Background Remover</strong> into the workflow. You get production-ready assets in under 30 seconds.
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* Values */}
-            <section className="py-20 px-6 bg-white border-t-4 border-foreground">
+            {/* Core Values */}
+            <section className="py-24 px-6 bg-white border-y-4 border-foreground">
                 <div className="mx-auto max-w-5xl">
-                    <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-16">What We Stand For</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <h2 className="font-display text-4xl md:text-5xl uppercase text-center mb-16 tracking-tight">The Standards</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         {values.map((v) => (
-                            <div key={v.title} className="flex gap-5 p-6 rounded-2xl border-2 border-foreground/10 bg-cream hover:border-candy-pink/30 transition-all group">
+                            <div key={v.title} className="flex gap-6 p-8 rounded-[2rem] border-2 border-foreground/5 bg-cream hover:border-candy-pink/20 transition-all group">
                                 <div className="shrink-0 w-12 h-12 rounded-xl bg-candy-pink/10 flex items-center justify-center group-hover:bg-candy-pink/20 transition-colors">
                                     <v.icon size={22} className="text-candy-pink" />
                                 </div>
                                 <div>
-                                    <h3 className="font-black text-lg mb-2">{v.title}</h3>
-                                    <p className="text-warm-gray text-sm leading-relaxed">{v.description}</p>
+                                    <h3 className="font-black text-lg mb-2 uppercase tracking-tight text-foreground/80">{v.title}</h3>
+                                    <p className="text-foreground/50 text-sm font-medium leading-relaxed">{v.description}</p>
                                 </div>
                             </div>
                         ))}
@@ -113,21 +115,20 @@ export default function AboutPage() {
                 </div>
             </section>
 
-            {/* CTA */}
-            <section className="py-24 px-6 text-center border-t-4 border-foreground bg-foreground">
-                <div className="mx-auto max-w-2xl">
-                    <h2 className="font-display text-4xl md:text-5xl uppercase text-white mb-6">
-                        Try It For Free
+            {/* Final Call to Action */}
+            <section className="py-24 px-6 text-center bg-foreground">
+                <div className="mx-auto max-w-2xl space-y-10">
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-cream/20">Free Trial · No Card · Commercial Rights</p>
+                    <h2 className="font-display text-5xl md:text-7xl uppercase text-white leading-none tracking-tighter">
+                        Build your<br />
+                        <span className="text-candy-pink italic">Mascot.</span>
                     </h2>
-                    <p className="text-white/70 font-bold mb-10 text-lg">
-                        No credit card. No design experience. Just describe your character and generate.
-                    </p>
                     <Link
                         href="/create"
-                        className="inline-flex items-center gap-3 rounded-full bg-candy-pink text-white px-10 py-5 text-lg font-black hover:bg-candy-pink/90 transition-all active:scale-95 shadow-[6px_6px_0_#ffffff30]"
+                        className="inline-flex items-center gap-3 rounded-full bg-candy-pink text-white px-10 py-5 text-xl font-black hover:bg-candy-pink/90 transition-all active:scale-95 shadow-[6px_6px_0_#ffffff30] uppercase tracking-tighter"
                     >
                         <Sparkles size={20} />
-                        Start Creating Free
+                        Get Started
                     </Link>
                 </div>
             </section>

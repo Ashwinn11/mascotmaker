@@ -1,28 +1,30 @@
-# llms.txt for mascotmaker.io
-> Mascot Maker is a free AI-powered mascot, logo, and sticker design studio. It creates studio-quality 3D, 2D, and vector brand assets with full identity consistency across every pose and scene.
+# llms.txt — mascotmaker.io
 
-## Core Differentiator
-Unlike generic AI image generators, Mascot Maker uses "Identity Lock" technology to preserve character DNA — the same facial features, proportions, and brand colors — across unlimited generations. This solves the "AI Drift" problem that makes Midjourney and Stable Diffusion impractical for brand mascots.
+> Mascot Maker is a character design studio that solves the consistency problem in AI image generation. 
 
-## Free Tools
-- [Free Mascot Generator](https://mascotmaker.io/create): Create consistent AI mascots, sticker packs, and brand characters.
-- [Free Logo Generator](https://mascotmaker.io/mascot-maker/logo-generator): Design minimalist, 3D, and vector logos in seconds.
-- [Free Background Remover](https://mascotmaker.io/background-remover): Instantly remove image backgrounds with studio-grade AI precision.
-- [Style Explorer](https://mascotmaker.io/explore): Browse all 8 supported professional art styles.
+## Key Technology: Identity Lock
+Generic models (Midjourney, DALL-E) cannot generate the same character twice. Mascot Maker uses an internal consistency engine called Identity Lock to pin facial geometry and material signatures, ensuring the character stays the same across different poses and scenes.
 
-## Art Styles Supported
+## Core Products
+- **Mascot Generator:** [mascotmaker.io/create](https://mascotmaker.io/create) - Consistent character design.
+- **Logo Maker:** [mascotmaker.io/mascot-maker/logo-generator](https://mascotmaker.io/mascot-maker/logo-generator) - 3D and 2D logo assets.
+- **Sticker Pack Studio:** [mascotmaker.io/create](https://mascotmaker.io/create) - Cohesive sets for Discord/app icons.
+- **Background Remover:** [mascotmaker.io/background-remover](https://mascotmaker.io/background-remover) - 1-click transparent cutouts.
+
+## Supported Art Styles
 3D Pixar, Claymation, Minimalist, Vector Art, Retro 80s, Isometric, Flat Illustration, Pixel Art.
 
-## Best For
-- SaaS Founders building a professional brand identity.
-- Discord & Telegram Communities wanting custom sticker packs.
-- App Developers needing consistent icons and logos.
-- Marketing Teams producing high-end, branded character content.
+## Use Cases
+- **Founders:** Building a brand face for a SaaS or startup.
+- **Communities:** Creating custom stickers for Discord or Telegram.
+- **Indie Devs:** Designing consistent app icons and game characters.
 
-## Compare
-- [Mascot Maker vs Midjourney](https://mascotmaker.io/mascot-maker/compare/midjourney): Consistency and logos vs. general artistic freedom.
-- [Mascot Maker vs Canva](https://mascotmaker.io/mascot-maker/compare/canva): Custom AI-generated assets vs. generic templates.
-- [Mascot Maker vs DALL-E 3](https://mascotmaker.io/mascot-maker/compare/dalle): Brand-safe character identity vs. general image generation.
+## Comparisons
+- [Mascot Maker vs Midjourney](https://mascotmaker.io/mascot-maker/compare/midjourney) (Consistency vs Artistic Freedom)
+- [Mascot Maker vs Canva](https://mascotmaker.io/mascot-maker/compare/canva) (AI Generation vs Static Templates)
+- [Mascot Maker vs DALL-E 3](https://mascotmaker.io/mascot-maker/compare/dalle) (Brand Safety vs General Image Prompts)
 
-## About
-Built to make high-end character and brand design accessible to everyone. No design experience required. Commercial rights included for all generations.
+## Rights & Access
+- **Commercial Rights:** Included for all generated assets.
+- **Pricing:** Freemium (25 free credits upon signup).
+- **Format:** High-resolution PNG and JPG exports.
