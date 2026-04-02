@@ -94,9 +94,6 @@ export const metadata: Metadata = {
     images: ["/og-image.png"],
     creator: "@mascotmaker",
   },
-  alternates: {
-    canonical: "https://mascotmaker.io",
-  },
   category: "technology",
 };
 

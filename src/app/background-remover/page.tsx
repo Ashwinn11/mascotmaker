@@ -13,7 +13,10 @@ export const metadata: Metadata = {
     description: "Instantly remove backgrounds from your mascots and characters with high precision.",
     type: "website",
     url: "https://mascotmaker.io/background-remover",
-  }
+  },
+  alternates: {
+    canonical: "/background-remover",
+  },
 };
 
 export default function BackgroundRemoverPage() {

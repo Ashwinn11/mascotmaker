@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
 import { Sparkles, Check, ArrowRight, HelpCircle, Shield, Zap, ArrowUpRight, Palette } from "lucide-react";
@@ -6,6 +7,14 @@ import { JSONLD } from "@/components/json-ld";
 import { STYLES } from "@/lib/seo-data";
 
 const TOP_STYLES = STYLES.slice(0, 8);
+
+export const metadata: Metadata = {
+  title: "Mascot Maker — #1 AI Mascot & Character Generator",
+  description: "Create professional 3D, 2D, or retro characters with absolute identity consistency. 1,000+ mascots generated globally. No design skills needed.",
+  alternates: {
+    canonical: "/",
+  },
+};
 
 export default function Home() {
   const faqSchema = {
