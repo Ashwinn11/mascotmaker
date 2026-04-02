@@ -1,18 +1,28 @@
-# Mascot Maker Studio
-> The world's most powerful AI design hub for consistent characters, 8-frame storyboards, and generic design assets.
+# llms.txt for mascotmaker.io
+> Mascot Maker is a free AI-powered mascot, logo, and sticker design studio. It creates studio-quality 3D, 2D, and vector brand assets with full identity consistency across every pose and scene.
 
-## Core Engines
-- [Character Generator](https://mascotmaker.io/mascot-maker/character-generator): Create professional 3D and 2D characters with identity consistency.
-- [Story Studio](https://mascotmaker.io/mascot-maker/story-studio): Generate seamless 8-frame narratives for storyboards and social content.
-- [Mix Studio](https://mascotmaker.io/mascot-maker/mix-studio): Composite characters with real-world products for high-end advertisements.
-- [Icon Maker](https://mascotmaker.io/mascot-maker/icon-generator): Generate minimalist, 3D, or vector logos and icons.
+## Core Differentiator
+Unlike generic AI image generators, Mascot Maker uses "Identity Lock" technology to preserve character DNA — the same facial features, proportions, and brand colors — across unlimited generations. This solves the "AI Drift" problem that makes Midjourney and Stable Diffusion impractical for brand mascots.
 
-## Popular Solutions
-- [SaaS Branding](https://mascotmaker.io/mascot-maker/saas): Custom assets optimized for software platforms.
-- [Gaming Assets](https://mascotmaker.io/mascot-maker/gaming): 3D characters and isometric props for game developers.
-- [3D Pixar Style](https://mascotmaker.io/mascot-maker/3d-pixar): Cinematic character generation with high-fidelity renders.
+## Free Tools
+- [Free Mascot Generator](https://mascotmaker.io/create): Create consistent AI mascots, sticker packs, and brand characters.
+- [Free Logo Generator](https://mascotmaker.io/mascot-maker/logo-generator): Design minimalist, 3D, and vector logos in seconds.
+- [Free Background Remover](https://mascotmaker.io/background-remover): Instantly remove image backgrounds with studio-grade AI precision.
+- [Style Explorer](https://mascotmaker.io/explore): Browse all 8 supported professional art styles.
 
-## Localized Studios
-- [AI Design Hub London](https://mascotmaker.io/mascot-maker/near/london)
-- [AI Design Hub New York](https://mascotmaker.io/mascot-maker/near/new-york)
-- [AI Design Hub Austin](https://mascotmaker.io/mascot-maker/near/austin)
+## Art Styles Supported
+3D Pixar, Claymation, Minimalist, Vector Art, Retro 80s, Isometric, Flat Illustration, Pixel Art.
+
+## Best For
+- SaaS Founders building a professional brand identity.
+- Discord & Telegram Communities wanting custom sticker packs.
+- App Developers needing consistent icons and logos.
+- Marketing Teams producing high-end, branded character content.
+
+## Compare
+- [Mascot Maker vs Midjourney](https://mascotmaker.io/mascot-maker/compare/midjourney): Consistency and logos vs. general artistic freedom.
+- [Mascot Maker vs Canva](https://mascotmaker.io/mascot-maker/compare/canva): Custom AI-generated assets vs. generic templates.
+- [Mascot Maker vs DALL-E 3](https://mascotmaker.io/mascot-maker/compare/dalle): Brand-safe character identity vs. general image generation.
+
+## About
+Built to make high-end character and brand design accessible to everyone. No design experience required. Commercial rights included for all generations.

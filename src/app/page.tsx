@@ -9,8 +9,8 @@ import { STYLES } from "@/lib/seo-data";
 const TOP_STYLES = STYLES.slice(0, 8);
 
 export const metadata: Metadata = {
-  title: "Mascot Maker — #1 AI Mascot & Character Generator",
-  description: "Create professional 3D, 2D, or retro characters with absolute identity consistency. 1,000+ mascots generated globally. No design skills needed.",
+  title: "Mascot Maker — AI Mascot, Logo & Sticker Generator",
+  description: "Create professional 3D, 2D, or retro characters with absolute identity consistency. Generate logos, sticker packs, and mascots in 8 styles. Instant AI background remover.",
   alternates: {
     canonical: "/",
   },
@@ -23,10 +23,10 @@ export default function Home() {
     "mainEntity": [
       {
         "@type": "Question",
-        "name": "What is the best AI mascot maker?",
+        "name": "What can I create with Mascot Maker?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Mascot Maker is the world's most advanced AI mascot generator, designed for consistency across 3D, 2D, and animated character sets."
+          "text": "Mascot Maker is a specialized AI design studio for creating consistent brand mascots, professional logos, and cohesive sticker packs across 8 distinct art styles."
         }
       },
       {
@@ -42,7 +42,7 @@ export default function Home() {
         "name": "Is there a free version of Mascot Maker?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes, we offer 5 free credits to all new users so you can try our AI mascot maker and background remover at no cost."
+          "text": "Yes, new users get free credits to try our AI sticker pack maker, logo generator, and background remover with no credit card required."
         }
       },
       {
@@ -80,11 +80,11 @@ export default function Home() {
 
               <div className="space-y-4">
                 <h1 className="font-display text-5xl md:text-7xl leading-[0.85] tracking-tighter text-foreground uppercase">
-                  Consistent AI<br />
-                  <span className="text-candy-pink italic">Mascots.</span>
+                  Mascots, Logos<br />
+                  <span className="text-candy-pink italic">& Stickers.</span>
                 </h1>
                 <p className="text-lg md:text-xl font-medium text-foreground/50 max-w-xl leading-relaxed animate-slide-up stagger-1">
-                  The only AI character engine that locks your face DNA, ensuring 100% identity consistency across every pose, scene, and style.
+                  The only AI design studio that locks your character DNA, ensuring 100% identity consistency across logos, sticker packs, and brand mascots.
                 </p>
               </div>
 
@@ -153,7 +153,7 @@ export default function Home() {
       ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
       <div className="bg-foreground py-4 overflow-hidden border-y border-foreground/10">
         <div className="flex items-center gap-12 animate-marquee whitespace-nowrap">
-          {["3D Pixar", "Claymation", "Pixel Art", "Flat Vector", "Isometric", "Anime", "Retro 80s", "Watercolor", "Chibi", "Cyberpunk", "3D Pixar", "Claymation", "Pixel Art", "Flat Vector", "Isometric", "Anime", "Retro 80s", "Watercolor", "Chibi", "Cyberpunk"].map((style, i) => (
+          {["3D Pixar", "Claymation", "Pixel Art", "Flat Vector", "Isometric", "Minimalist", "Retro 80s", "Vector Art", "3D Pixar", "Claymation", "Pixel Art", "Flat Vector", "Isometric", "Minimalist", "Retro 80s", "Vector Art"].map((style, i) => (
             <span key={i} className={`text-sm font-black uppercase tracking-widest ${i % 3 === 0 ? "text-candy-pink" : "text-cream/25"}`}>
               {style} <span className="text-cream/10 mx-4">✦</span>
             </span>
@@ -177,8 +177,8 @@ export default function Home() {
               </div>
               {/* Floating stat */}
               <div className="absolute -bottom-6 -right-6 px-6 py-4 bg-candy-pink rounded-3xl shadow-glow-pink">
-                <p className="text-[10px] font-black uppercase tracking-widest text-pink-100">12+ Art Styles</p>
-                <p className="text-2xl font-black text-cream mt-0.5">One Click</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-pink-100">8 Studio Styles</p>
+                <p className="text-2xl font-black text-cream mt-0.5">One Engine</p>
               </div>
             </div>
 
@@ -190,11 +190,11 @@ export default function Home() {
                 <span className="text-candy-pink">One engine.</span>
               </h2>
               <p className="text-cream/50 text-lg font-medium leading-relaxed">
-                From Pixar-grade 3D renders to retro pixel art — generate complete character sets with every emotion and pose, all perfectly consistent.
+                Whether you need a minimalist vector logo, a cohesive sticker pack, or a consistent brand mascot — generate complete assets in 8 pro styles with zero design skills.
               </p>
               <div className="grid grid-cols-2 gap-3 pt-2">
-                {["3D Pixar Quality", "Claymation", "8-Bit Sprites", "Flat Vector", "Anime Style", "Isometric Art"].map((s, i) => (
-                  <div key={i} className="flex items-center gap-3 text-xs font-black uppercase tracking-wider text-cream/40">
+                {["3D Pixar", "Claymation", "Pixel Art", "Flat Illustration", "Minimalist", "Vector Art", "Isometric", "Retro 80s"].map((s, i) => (
+                  <div key={i} className="flex items-center gap-3 text-xs font-black uppercase tracking-wider text-white/40">
                     <div className="w-1.5 h-1.5 rounded-full bg-candy-pink flex-shrink-0" />
                     {s}
                   </div>
@@ -231,9 +231,9 @@ export default function Home() {
               </p>
               <ul className="space-y-4">
                 {[
-                  "Consistent across 100+ generations",
-                  "Works across all 12+ art styles",
-                  "Save and re-use any character"
+                  "Consistent across every generation",
+                  "Works across all 8 pro styles",
+                  "Background Remover included"
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-4">
                     <div className="w-5 h-5 rounded-full bg-candy-pink/10 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -407,7 +407,7 @@ export default function Home() {
               return (
                 <Link
                   key={style.slug}
-                  href={`/mascot-maker/${style.slug}`}
+                  href={`/mascot-maker/style/${style.slug}`}
                   className="group flex flex-col bg-cream border border-foreground/5 rounded-2xl overflow-hidden hover:shadow-premium transition-all duration-500 hover:-translate-y-1"
                 >
                   {/* Visual: Clean, Square Image */}

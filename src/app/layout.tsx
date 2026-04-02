@@ -31,7 +31,7 @@ export const metadata: Metadata = {
     default: "Mascot Maker — AI Character & Mascot Generator",
   },
   description:
-    "Free AI mascot generator — create 3D Pixar, pixel art, claymation, and vector characters in seconds. Identity Lock keeps your character consistent across every pose. 12+ art styles, GIF animation, 4K export. No design skills needed.",
+    "Free AI mascot, logo, and sticker generator. Create consistent 3D, 2D, and vector characters in seconds. Identity Lock keeps your brand consistent. 8 pro art styles and instant background remover.",
   keywords: [
     "mascot builder",
     "mascot maker",
@@ -72,15 +72,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Mascot Maker — AI Character & Mascot Generator",
     description:
-      "Transform any idea into a professional mascot. Custom AI generation, chat-based refiner, and GIF animation. Explore mascotmaker.io today.",
+      "Transform any idea into a professional mascot, logo, or sticker pack. Custom AI generation with Identity Lock consistency. Explore mascotmaker.io today.",
     url: "https://mascotmaker.io",
     siteName: "Mascot Maker",
     images: [
       {
-        url: "/og-image.png",
+        url: "/app-icon.png",
         width: 1200,
         height: 630,
-        alt: "Mascot Maker — AI character and mascot generator with 12+ art styles",
+        alt: "Mascot Maker — AI mascot, logo, and sticker generator with 8 pro art styles",
       },
     ],
     locale: "en_US",
@@ -90,8 +90,8 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Mascot Maker — Powered by mascotmaker.io",
     description:
-      "Free AI mascot generator with Identity Lock technology. Create consistent 3D, 2D, and animated characters for your brand.",
-    images: ["/og-image.png"],
+      "Free AI mascot, logo, and sticker generator with Identity Lock technology. Create consistent 3D, 2D, and vector characters for your brand.",
+    images: ["/app-icon.png"],
     creator: "@mascotmaker",
   },
   category: "technology",
@@ -148,7 +148,7 @@ export default function RootLayout({
                     <p className="text-sm text-muted-foreground font-semibold">mascotmaker.io</p>
                   </div>
                 </div>
-                
+
                 <div className="flex flex-col gap-2">
                   <span className="text-xs font-black uppercase tracking-widest text-foreground/50">External Resources</span>
                   <div className="flex flex-col gap-1">

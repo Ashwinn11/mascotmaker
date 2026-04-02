@@ -18,7 +18,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     if (!competitor) return {};
 
     const title = `Mascot Maker vs ${competitor.name} (2026) — Honest Feature Comparison`;
-    const description = `Compare Mascot Maker with ${competitor.name}. See how identity consistency, storyboard workflows, and 3D product ads stack up. Honest side-by-side feature breakdown.`;
+    const description = `Compare Mascot Maker with ${competitor.name}. See how identity consistency, logo creation, and sticker pack generation stack up. Honest side-by-side feature breakdown.`;
 
     return {
         title,
@@ -34,13 +34,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title,
             description,
             type: "website",
-            images: [`/og-image.png`],
+            images: [`/app-icon.png`],
         },
         twitter: {
             card: "summary_large_image",
             title,
             description,
-            images: [`/og-image.png`],
+            images: [`/app-icon.png`],
         }
     };
 }
@@ -59,9 +59,9 @@ export default async function ComparisonPage({ params }: PageProps) {
 
     const features = [
         { name: "Character Consistency", mm: true, comp: false, notes: "Mascot Maker uses Identity Lock technology." },
-        { name: "8-Frame Storyboarding", mm: true, comp: false, notes: "Native workflow in Story Studio." },
-        { name: "3D Product Ad Compositing", mm: true, comp: false, notes: "Mix Studio specialized features." },
-        { name: "General Art Generation", mm: true, comp: true, notes: "Both produce high-quality visuals." },
+        { name: "AI Sticker Pack Generation", mm: true, comp: false, notes: "Create cohesive sets for Discord & apps." },
+        { name: "Professional Logo Design", mm: true, comp: true, notes: "Specialized 3D & Vector logo engines." },
+        { name: "Instant Background Removal", mm: true, comp: competitor.name === "Canva", notes: "Studio-grade cutout precision." },
         { name: "Commercial Usage Rights", mm: true, comp: true, notes: "Pro plans include full rights." },
         { name: "Ease of Use", mm: true, comp: competitor.name === "Canva", notes: competitor.name === "Canva" ? "Both are beginner friendly." : "Mascot Maker has a streamlined UI." },
     ];
@@ -88,36 +88,38 @@ export default async function ComparisonPage({ params }: PageProps) {
             />
             <script
                 type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify({
-                    "@context": "https://schema.org",
-                    "@type": "FAQPage",
-                    "mainEntity": [
-                        {
-                            "@type": "Question",
-                            "name": `Is Mascot Maker better than ${competitor.name}?`,
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": `It depends on your needs. For general artistic exploration, ${competitor.name} is excellent. However, for professional branding, character consistency, and production-ready visual assets, Mascot Maker provides a more specialized and reliable workflow.`
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify({
+                        "@context": "https://schema.org",
+                        "@type": "FAQPage",
+                        "mainEntity": [
+                            {
+                                "@type": "Question",
+                                "name": `Is Mascot Maker better than ${competitor.name}?`,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": `It depends on your needs. For general artistic exploration, ${competitor.name} is excellent. However, for professional branding, character consistency, and production-ready visual assets, Mascot Maker provides a more specialized and reliable workflow.`
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": `Can I import my ${competitor.name} designs into Mascot Maker?`,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Yes! You can upload your existing characters to Mascot Maker and use our Image-to-Character engine to recreate them with full identity lock parameters."
+                                }
+                            },
+                            {
+                                "@type": "Question",
+                                "name": `Is Mascot Maker free to use?`,
+                                "acceptedAnswer": {
+                                    "@type": "Answer",
+                                    "text": "Yes, Mascot Maker offers a free tier that includes access to the Mascot Generator, Logo Maker, and Sticker Pack Studio. Premium features like 4K upscaling, transparent PNG exports, and batch processing are available with an upgrade."
+                                }
                             }
-                        },
-                        {
-                            "@type": "Question",
-                            "name": `Can I import my ${competitor.name} designs into Mascot Maker?`,
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "Yes! You can upload your existing characters to Mascot Maker and use our Image-to-Character engine to recreate them with full identity lock parameters."
-                            }
-                        },
-                        {
-                            "@type": "Question",
-                            "name": `Is Mascot Maker free to use?`,
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": "Yes, Mascot Maker offers a free tier that includes access to the Character Generator and basic export options. Premium features like 4K upscaling, GIF animation, and batch exports are available with an upgrade."
-                            }
-                        }
-                    ]
-                }) }}
+                        ]
+                    })
+                }}
             />
 
             {/* Hero Section: Comparison Context */}
@@ -178,7 +180,58 @@ export default async function ComparisonPage({ params }: PageProps) {
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
+        </table>
+                    </div>
+                </div>
+            </section>
+
+            {/* Time & Cost ROI */}
+            <section className="py-24 bg-white border-t border-foreground/5">
+                <div className="container mx-auto max-w-5xl px-6">
+                    <div className="text-center mb-16">
+                        <h2 className="font-display text-4xl md:text-5xl uppercase tracking-tight">Time & Cost Advantage</h2>
+                        <p className="text-foreground/50 font-medium text-lg mt-4 max-w-2xl mx-auto">
+                            See how Mascot Maker compares to {competitor.name} when it comes to speed of execution and budget.
+                        </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-8">
+                        <div className="p-10 rounded-[3rem] border border-foreground/10 bg-cream/30 space-y-8">
+                            <h3 className="font-display text-3xl uppercase tracking-tight opacity-50">{competitor.name} Reality</h3>
+                            <ul className="space-y-6">
+                                <li className="flex flex-col gap-1">
+                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Time to consistent character</span>
+                                    <span className="text-xl font-semibold text-foreground">Hours of manual reprompting</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Cost barrier</span>
+                                    <span className="text-xl font-semibold text-foreground">Often requires $20-$30/mo subscription just to start</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Hidden friction</span>
+                                    <span className="text-xl font-semibold text-foreground">Steep learning curve for exact seeding & weight control</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div className="p-10 rounded-[3rem] border border-candy-pink/10 bg-candy-pink/[0.02] shadow-premium space-y-8 relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-candy-pink/5 rounded-full blur-3xl" />
+                            <h3 className="font-display text-3xl uppercase tracking-tight text-candy-pink">Mascot Maker ROI</h3>
+                            <ul className="space-y-6 relative z-10">
+                                <li className="flex flex-col gap-1">
+                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Time to consistent character</span>
+                                    <span className="text-xl font-semibold text-foreground">~30 seconds with Identity Lock™</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Cost barrier</span>
+                                    <span className="text-xl font-semibold flex items-center gap-2"><div className="px-2 py-0.5 rounded text-xs bg-candy-green/20 text-candy-green uppercase tracking-widest font-black">Free</div> 25 credits on signup</span>
+                                </li>
+                                <li className="flex flex-col gap-1">
+                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Hidden friction</span>
+                                    <span className="text-xl font-semibold text-foreground">Zero. Click, generate, download.</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -196,8 +249,8 @@ export default async function ComparisonPage({ params }: PageProps) {
                             </p>
                             <div className="grid gap-6 pt-6">
                                 {[
-                                    { icon: ShieldCheck, title: "Identity Locking", desc: "Keep the same character across hundreds of generations. Never lose your brand DNA again.", color: "text-candy-blue", bg: "bg-candy-blue/5" },
-                                    { icon: Zap, title: "Cinematic Workflows", desc: "Go beyond single images. Build full ad sets and storyboards in a single session.", color: "text-candy-yellow", bg: "bg-candy-yellow/5" }
+                                    { icon: ShieldCheck, title: "Identity Locking", desc: "Keep the same character DNA across logos, stickers, and mascots. Never lose your brand consistency.", color: "text-candy-blue", bg: "bg-candy-blue/5" },
+                                    { icon: Zap, title: "Professional Assets", desc: "Go beyond single images. Build full sticker sets and logo variations in a single session.", color: "text-candy-yellow", bg: "bg-candy-yellow/5" }
                                 ].map((item, i) => (
                                     <div key={i} className="flex gap-6 p-10 rounded-[3rem] bg-white border border-foreground/10 shadow-sm hover:shadow-md transition-all">
                                         <div className={`w-14 h-14 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center shrink-0`}>
@@ -213,7 +266,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                         </div>
                         <div className="lg:w-1/2 relative">
                             <div className="relative z-10 rounded-[4rem] border border-foreground/10 overflow-hidden shadow-premium p-4 bg-white">
-                                <Image src="/demo/landing-story-v2.webp" alt={`Mascot Maker AI storyboard production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto rounded-[3rem]" />
+                                <Image src="/demo/landing-story-v2.webp" alt={`Mascot Maker AI logo and sticker pack production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto rounded-[3rem]" />
                             </div>
                             {/* Decorative Flair */}
                             <div className="absolute -bottom-10 -left-10 animate-float">
@@ -250,7 +303,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                                 {[
                                     "You need the same character in every image",
                                     "You're building brand assets at scale",
-                                    "You need storyboards and product ads"
+                                    "You need logos, stickers, and mascots"
                                 ].map((li, i) => (
                                     <li key={i} className="flex items-center gap-4 text-sm font-black uppercase tracking-tight text-foreground/80">
                                         <div className="w-2 h-2 rounded-full bg-candy-pink" />
@@ -292,7 +345,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                 </div>
                 <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none" />
             </section>
-            
+
             <div className="py-20 bg-cream">
                 <ExploreLinks />
             </div>

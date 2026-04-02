@@ -1,250 +1,88 @@
 export const ENGINES = [
     {
-        slug: "character-generator",
-        title: "AI Character Generator",
-        description: "Create professional 3D, 2D, or retro characters with full DNA preservation.",
-        keywords: ["character creator", "avatar maker", "pixar style characters", "game assets"],
-        image: "/demo/hero-dragon-barista.png"
+        slug: "mascot-generator",
+        title: "AI Mascot Generator",
+        description: "Create professional 3D, 2D, or retro brand mascots with full Identity Lock consistency.",
+        keywords: ["mascot creator", "character maker", "brand mascot ai", "avatar generator"],
+        image: "/demo/hero-dragon-barista.png",
+        useCases: ["Landing Pages","Social Media","Emails","Presentations"],
+        fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"]
     },
     {
-        slug: "story-studio",
-        title: "AI Storyboard Generator",
-        description: "Design seamless 8-frame narratives for storyboards and brand social content.",
-        keywords: ["storyboard creator", "comic generator", "narrative ai", "visual storytelling"],
-        image: "/demo/landing-story-v2.webp"
+        slug: "logo-generator",
+        title: "AI Logo Generator",
+        description: "Design minimalist, 3D, or vector logos and brand marks for apps and startups.",
+        keywords: ["logo maker", "brand design ai", "startup logo", "vector logo creator"],
+        image: "/demo/style-minimal.png",
+        useCases: ["Landing Pages","Social Media","Emails","Presentations"],
+        fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"]
     },
     {
-        slug: "mix-studio",
-        title: "AI Product Ad Generator",
-        description: "Composite mascots with real products for professional advertisements and branding.",
-        keywords: ["product mockup", "ai advertising", "product placement", "brand ads"],
-        image: "/demo/before-after.webp"
+        slug: "sticker-pack-generator",
+        title: "AI Sticker Pack Maker",
+        description: "Generate cohesive sticker sets and emoji packs for Discord, Telegram, and apps.",
+        keywords: ["sticker generator", "emoji pack creator", "digital stickers", "discord assets"],
+        image: "/demo/landing-story-v2.webp",
+        useCases: ["Landing Pages","Social Media","Emails","Presentations"],
+        fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"]
     },
     {
-        slug: "icon-generator",
-        title: "AI Icon & Logo Maker",
-        description: "Generate minimalist, 3D, or vector icons and logos for apps and websites.",
-        keywords: ["icon maker", "logo generator", "app icon creator", "vector graphics"],
-        image: "/demo/style-minimal.png"
+        slug: "background-remover",
+        title: "AI Background Remover",
+        description: "Instantly remove backgrounds from any image with studio-grade precision.",
+        keywords: ["remove bg", "background eraser", "ai cutouts", "transparent background"],
+        image: "/demo/before-after.webp",
+        useCases: ["Landing Pages","Social Media","Emails","Presentations"], 
+        fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"]
     }
 ];
 
 export const INDUSTRIES = [
-    { slug: "saas", title: "SaaS", description: "Professional visual assets for your software-as-a-service brand." },
-    { slug: "discord", title: "Discord", description: "Design unique characters and icons for your Discord server." },
-    { slug: "twitch", title: "Twitch", description: "Level up your stream with custom AI-generated Twitch assets." },
-    { slug: "gaming", title: "Gaming", description: "Build legendary characters and game assets for your title." },
-    { slug: "real-estate", title: "Real Estate", description: "Professional branding assets for realtors and agencies." },
-    { slug: "dentistry", title: "Dentistry", description: "Approachable characters and icons for healthcare brands." },
-    { slug: "coffee-shops", title: "Coffee Shops", description: "Charming branding for cafes and local coffee brands." },
-    { slug: "gyms", title: "Gyms & Fitness", description: "Energetic and motivating visual assets for fitness centers." },
-    { slug: "e-commerce", title: "E-commerce", description: "Branded characters and product ads for your online store." },
-    { slug: "youtube", title: "YouTube", description: "Iconic avatars and thumbnails for your YouTube channel." },
-    { slug: "ai-startups", title: "AI Startups", description: "Futuristic assets for the next generation of AI platforms." },
-    { slug: "indie-games", title: "Indie Game Devs", description: "Affordable, high-quality character sets for independent developers." },
-    { slug: "solopreneurs", title: "Solopreneurs", description: "Building an army of one with consistent personal branding." },
-    { slug: "e-learning", title: "E-learning", description: "Engaging educational avatars and course storyboards." },
-    { slug: "cybersecurity", title: "Cybersecurity", description: "Hard-edged, technical icons and characters for security firms." },
-    { slug: "blockchain", title: "Web3 & Blockchain", description: "Abstract and futuristic visuals for the crypto ecosystem." },
-    { slug: "interior-design", title: "Interior Design", description: "Elegant icons and showcase visuals for design professionals." },
-    { slug: "fashion", title: "Fashion", description: "Stylized characters and high-end ad mockups for apparel brands." },
-    { slug: "pet-care", title: "Pet Care", description: "Friendly and approachable mascots for pet brands." },
-    { slug: "travel", title: "Travel Agencies", description: "Adventurous themes and icon sets for the travel industry." },
-    { slug: "music", title: "Music Production", description: "Edgy avatars and assets for artists and labels." },
-    { slug: "event-planning", title: "Event Planning", description: "Vibrant and celebratory visual assets for event brands." },
-    { slug: "marketing", title: "Marketing Agencies", description: "White-label quality assets for client campaigns." },
-    { slug: "hr-tech", title: "HR Tech", description: "Human-centric, friendly visuals for modern workplace platforms." },
-    { slug: "fintech", title: "FinTech", description: "Trustworthy and modern financial design assets." },
-    { slug: "logistics", title: "Logistics", description: "Industrial and efficiency-focused iconography." }
+
+    { slug: "saas", title: "SaaS", description: "Professional visual assets for your software-as-a-service brand.", useCases: ["Feature Empty States","Onboarding Flows","In-App Tooltips","Pricing Page Elements"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "discord", title: "Discord", description: "Design unique characters and icons for your Discord server.", useCases: ["Server Emotes","Rank Badges","Announcement Graphics","Bot Avatars"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "twitch", title: "Twitch", description: "Level up your stream with custom AI-generated Twitch assets.", useCases: ["BRB Screens","Subscriber Emotes","Stream Overlays","Channel Avatars"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "gaming", title: "Gaming", description: "Build legendary characters and game assets for your title.", useCases: ["Loading Screens","Achievement Icons","In-Game NPC Avatars","Marketing Banners"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "real-estate", title: "Real Estate", description: "Professional branding assets for realtors and agencies.", useCases: ["Open House Flyers","Social Media Graphics","Website Contact Forms","Yard Signs"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "dentistry", title: "Dentistry", description: "Approachable characters and icons for healthcare brands.", useCases: ["Pediatric Rewards","Appointment Reminders","Waiting Room Posters","Website Headers"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "coffee-shops", title: "Coffee Shops", description: "Charming branding for cafes and local coffee brands.", useCases: ["Loyalty Cards","Menu Boards","Merchandise (Mugs/Tees)","Social Media Promos"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "gyms", title: "Gyms & Fitness", description: "Energetic and motivating visual assets for fitness centers.", useCases: ["Class Schedules","Apparel & Merch","Motivational Graphics","Member App Avatars"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "e-commerce", title: "E-commerce", description: "Branded mascots and consistent logos for your online store.", useCases: ["Cart Abandonment Emails","Packaging Inserts","Review Requests","Holiday Promos"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "youtube", title: "YouTube", description: "Iconic avatars and thumbnails for your YouTube channel.", useCases: ["Thumbnail Mascots","Video Intros","Community Posts","Channel Banners"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "ai-startups", title: "AI Startups", description: "Futuristic assets for the next generation of AI platforms.", useCases: ["Product Tutorials","Blog Headers","Pitch Decks","Dashboard Illustrations"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "indie-games", title: "Indie Game Devs", description: "Affordable, high-quality character sets for independent developers.", useCases: ["Steam Capsule Art","Devlog Graphics","Press Kits","Discord Community Mascots"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "solopreneurs", title: "Solopreneurs", description: "Building an army of one with consistent personal branding.", useCases: ["Newsletter Headers","Course Materials","Lead Magnets","X/Twitter Avatars"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "e-learning", title: "E-learning", description: "Engaging educational avatars and consistent instructional icons.", useCases: ["Course Gamification","Quiz Completion Screens","Certificate Badges","Lesson Headers"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "cybersecurity", title: "Cybersecurity", description: "Hard-edged, technical icons and characters for security firms.", useCases: ["Threat Warning Notifications","Compliance Reports","Product Dashboards","Marketing Campaigns"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "blockchain", title: "Web3 & Blockchain", description: "Abstract and futuristic visuals for the crypto ecosystem.", useCases: ["DApp Interfaces","Token Launch Graphics","NFT Community Emotes","Whitepaper Illustrations"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "interior-design", title: "Interior Design", description: "Elegant icons and showcase visuals for design professionals.", useCases: ["Mood Boards","Client Presentations","Instagram Highlights","Portfolio Sites"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "fashion", title: "Fashion", description: "Stylized characters and high-end logo marks for apparel brands.", useCases: ["Lookbook Graphics","Tag Designs","Pop-up Event Flyers","Brand Packaging"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "pet-care", title: "Pet Care", description: "Friendly and approachable mascots for pet brands.", useCases: ["Pet Product Labels","Vet Appointment Cards","Grooming Service Menus","Social Ad Creatives"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "travel", title: "Travel Agencies", description: "Adventurous themes and icon sets for the travel industry.", useCases: ["Itinerary Graphics","Destination Guides","Email Newsletters","Booking Confirmation Screens"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "music", title: "Music Production", description: "Edgy avatars and assets for artists and labels.", useCases: ["Album Covers","Tour Flyers","Spotify Canvas Video","Merch Designs"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "event-planning", title: "Event Planning", description: "Vibrant and celebratory visual assets for event brands.", useCases: ["Invitations","Event Maps","Photobooth Props","Email Campaigns"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "marketing", title: "Marketing Agencies", description: "White-label quality assets for client campaigns.", useCases: ["Client Pitch Decks","Landing Page Heroes","Ad Creatives","Case Study Graphics"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "hr-tech", title: "HR Tech", description: "Human-centric, friendly visuals for modern workplace platforms.", useCases: ["Employee Onboarding","Culture Handbooks","Benefits Portals","Slack Announcements"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "fintech", title: "FinTech", description: "Trustworthy and modern financial design assets.", useCases: ["Investment Dashboards","Gamified Savings Apps","Credit Card Designs","Educational Modules"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "logistics", title: "Logistics", description: "Industrial and efficiency-focused iconography.", useCases: ["Tracking App Empty States","Driver App Icons","Customer Status Updates","Fleet Decals"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] }
+
 ];
 
 export const STYLES = [
-    { slug: "3d-pixar", title: "3D Pixar Style", description: "High-end 3D cinematic characters and icons with Pixar-grade quality.", image: "/demo/style-pixar.png" },
-    { slug: "claymation", title: "Claymation", description: "Charming stop-motion style clay assets with rich textures.", image: "/demo/style-clay.png" },
-    { slug: "minimalist", title: "Minimalist", description: "Clean, simple, and modern designs for modern brands.", image: "/demo/style-minimal.png" },
-    { slug: "vector", title: "Vector Art", description: "Scalable and clean vector-style graphics for logos and print.", image: "/demo/style-vector.png" },
-    { slug: "retro-80s", title: "Retro 80s", description: "Vibrant neon and synthwave-inspired 80s designs.", image: "/demo/style-retro.png" },
-    { slug: "cyberpunk", title: "Cyberpunk", description: "Futuristic and edgy visual styles for the digital frontier.", image: "/demo/style-cyber.png" },
-    { slug: "isometric", title: "Isometric", description: "Perfectly angled isometric assets for apps and websites.", image: "/demo/style-iso.png" },
-    { slug: "flat-design", title: "Flat Design", description: "Timeless flat illustration style for versatile brand use.", image: "/demo/style-flat.png" },
-    { slug: "ghibli", title: "Ghibli Inspired", description: "Dreamy, hand-painted aesthetic inspired by legendary Japanese animation." },
-    { slug: "ukiyo-e", title: "Ukiyo-e Modern", description: "Traditional Japanese woodblock style reimagined for modern brands." },
-    { slug: "pixel-art", title: "Pixel Art", description: "Nostalgic 16-bit and 32-bit assets for games and apps." },
-    { slug: "low-poly", title: "3D Low Poly", description: "Stylish and efficient low-polygon 3D characters." },
-    { slug: "vaporwave", title: "Vaporwave Pastel", description: "Aesthetic pastel gradients and glitchy retro visuals." },
-    { slug: "oil-painting", title: "Oil Painting", description: "Rich, textured digital oils for a classical fine-art feel." },
-    { slug: "charcoal", title: "Charcoal Sketch", description: "Rough, expressive black and white hand-drawn aesthetics." },
-    { slug: "pop-art", title: "Pop Art", description: "Bold colors and Ben-Day dots inspired by 60s comic art." },
-    { slug: "glassmorphism", title: "Glassmorphism", description: "Modern frosted glass effects for high-end UI elements." },
-    { slug: "neumorphism", title: "Neumorphism", description: "Soft, organic 3D-like interface elements and icons." }
+
+    { slug: "3d-pixar", title: "3D Pixar Style", description: "Cinematic 3D characters and icons with Pixar-grade quality.", image: "/demo/style-pixar.png", aesthetics: ["Soft ambient lighting","Subsurface scattering on skin/fur","Expressive exaggerated eyes","Vibrant unified color palettes"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "claymation", title: "Claymation", description: "Charming stop-motion style clay assets with rich textures.", image: "/demo/style-clay.png", aesthetics: ["Visible tactile fingerprints","Stop-motion texture","Matte lighting","Thick distinct proportions"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "minimalist", title: "Minimalist", description: "Clean, simple, and modern designs for modern brands.", image: "/demo/style-minimal.png", aesthetics: ["Geometric simplicity","Negative space utilization","Monochrome or duo-tone palettes","Clean vector-ready edges"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "vector art", title: "Vector Art", description: "Scalable and clean vector-style graphics for logos and print.", image: "/demo/style-vector.png", aesthetics: ["Bold solid colors","Scalable anchor points","No gradients","High contrast linework"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "retro-80s", title: "Retro 80s", description: "Vibrant neon and synthwave-inspired 80s designs.", image: "/demo/style-retro.png", aesthetics: ["Neon glows (cyan/magenta)","Scanline effects","Synthwave grids","VHS chromatic aberration"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "isometric", title: "Isometric", description: "Perfectly angled isometric assets for apps and websites.", image: "/demo/style-iso.png", aesthetics: ["Strict 45-degree orthographic angle","Clean drop shadows","Grid-snapped proportions","Simulated depth"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "flat illustration", title: "Flat Illustration", description: "Timeless flat illustration style for versatile brand use.", image: "/demo/style-flat.png", aesthetics: ["No shadows","Corporate friendly 'Alegria' style","Playful scale","Pastel color schemes"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] },
+    { slug: "pixel art", title: "Pixel Art", description: "Nostalgic 16-bit and 32-bit assets for games and apps.", image: "/demo/style-pixel.png", aesthetics: ["Strict color palettes (16-bit)","Crisp aliased edges","Dithered shading","Nostalgic arcade aesthetic"], fallbackGallery: ["/demo/hero-dragon-barista.png", "/demo/style-clay.png", "/demo/style-minimal.png", "/demo/landing-story-v2.webp"] }
+
 ];
 
-export const LOCATIONS = [
-    { slug: "new-york", name: "New York", country: "USA" },
-    { slug: "london", name: "London", country: "UK" },
-    { slug: "tokyo", name: "Tokyo", country: "Japan" },
-    { slug: "san-francisco", name: "San Francisco", country: "USA" },
-    { slug: "los-angeles", name: "Los Angeles", country: "USA" },
-    { slug: "chicago", name: "Chicago", country: "USA" },
-    { slug: "austin", name: "Austin", country: "USA" },
-    { slug: "seattle", name: "Seattle", country: "USA" },
-    { slug: "boston", name: "Boston", country: "USA" },
-    { slug: "berlin", name: "Berlin", country: "Germany" },
-    { slug: "paris", name: "Paris", country: "France" },
-    { slug: "singapore", name: "Singapore", country: "Singapore" },
-    { slug: "sydney", name: "Sydney", country: "Australia" },
-    { slug: "toronto", name: "Toronto", country: "Canada" },
-    { slug: "amsterdam", name: "Amsterdam", country: "Netherlands" },
-    { slug: "dublin", name: "Dublin", country: "Ireland" },
-    { slug: "barcelona", name: "Barcelona", country: "Spain" },
-    { slug: "houston", name: "Houston", country: "USA" },
-    { slug: "miami", name: "Miami", country: "USA" },
-    { slug: "denver", name: "Denver", country: "USA" },
-    { slug: "atlanta", name: "Atlanta", country: "USA" },
-    { slug: "portland", name: "Portland", country: "USA" },
-    { slug: "nashville", name: "Nashville", country: "USA" },
-    { slug: "dubai", name: "Dubai", country: "UAE" },
-    { slug: "seoul", name: "Seoul", country: "South Korea" },
-    { slug: "mumbai", name: "Mumbai", country: "India" },
-    { slug: "bangalore", name: "Bangalore", country: "India" },
-    { slug: "vancouver", name: "Vancouver", country: "Canada" },
-    { slug: "melbourne", name: "Melbourne", country: "Australia" },
-    { slug: "stockholm", name: "Stockholm", country: "Sweden" },
-    { slug: "helsinki", name: "Helsinki", country: "Finland" },
-    { slug: "oslo", name: "Oslo", country: "Norway" },
-    { slug: "copenhagen", name: "Copenhagen", country: "Denmark" },
-    { slug: "tel-aviv", name: "Tel Aviv", country: "Israel" },
-    { slug: "munich", name: "Munich", country: "Germany" },
-    { slug: "madrid", name: "Madrid", country: "Spain" },
-    { slug: "milan", name: "Milan", country: "Italy" },
-    { slug: "mexico-city", name: "Mexico City", country: "Mexico" },
-    { slug: "sao-paulo", name: "Sao Paulo", country: "Brazil" },
-    { slug: "cape-town", name: "Cape Town", country: "South Africa" },
-    { slug: "lisbon", name: "Lisbon", country: "Portugal" },
-    { slug: "vienna", name: "Vienna", country: "Austria" },
-    { slug: "warsaw", name: "Warsaw", country: "Poland" },
-    { slug: "prague", name: "Prague", country: "Czech Republic" },
-    { slug: "istanbul", name: "Istanbul", country: "Turkey" },
-    { slug: "bangkok", name: "Bangkok", country: "Thailand" },
-    { slug: "hong-kong", name: "Hong Kong", country: "China" },
-    { slug: "kuala-lumpur", name: "Kuala Lumpur", country: "Malaysia" },
-    { slug: "jakarta", name: "Jakarta", country: "Indonesia" },
-    { slug: "manila", name: "Manila", country: "Philippines" },
-    { slug: "taipei", name: "Taipei", country: "Taiwan" },
-    { slug: "ho-chi-minh-city", name: "Ho Chi Minh City", country: "Vietnam" },
-    { slug: "beijing", name: "Beijing", country: "China" },
-    { slug: "shanghai", name: "Shanghai", country: "China" },
-    { slug: "guangzhou", name: "Guangzhou", country: "China" },
-    { slug: "shenzhen", name: "Shenzhen", country: "China" },
-    { slug: "delhi", name: "Delhi", country: "India" },
-    { slug: "chennai", name: "Chennai", country: "India" },
-    { slug: "hyderabad", name: "Hyderabad", country: "India" },
-    { slug: "pune", name: "Pune", country: "India" },
-    { slug: "ahmedabad", name: "Ahmedabad", country: "India" },
-    { slug: "karachi", name: "Karachi", country: "Pakistan" },
-    { slug: "lahore", name: "Lahore", country: "Pakistan" },
-    { slug: "dhaka", name: "Dhaka", country: "Bangladesh" },
-    { slug: "abu-dhabi", name: "Abu Dhabi", country: "UAE" },
-    { slug: "riyadh", name: "Riyadh", country: "Saudi Arabia" },
-    { slug: "jeddah", name: "Jeddah", country: "Saudi Arabia" },
-    { slug: "cairo", name: "Cairo", country: "Egypt" },
-    { slug: "lagos", name: "Lagos", country: "Nigeria" },
-    { slug: "nairobi", name: "Nairobi", country: "Kenya" },
-    { slug: "johannesburg", name: "Johannesburg", country: "South Africa" },
-    { slug: "casablanca", name: "Casablanca", country: "Morocco" },
-    { slug: "guadalajara", name: "Guadalajara", country: "Mexico" },
-    { slug: "monterrey", name: "Monterrey", country: "Mexico" },
-    { slug: "rio-de-janeiro", name: "Rio de Janeiro", country: "Brazil" },
-    { slug: "buenos-aires", name: "Buenos Aires", country: "Argentina" },
-    { slug: "santiago", name: "Santiago", country: "Chile" },
-    { slug: "bogota", name: "Bogota", country: "Colombia" },
-    { slug: "lima", name: "Lima", country: "Peru" },
-    { slug: "philadelphia", name: "Philadelphia", country: "USA" },
-    { slug: "phoenix", name: "Phoenix", country: "USA" },
-    { slug: "san-diego", name: "San Diego", country: "USA" },
-    { slug: "dallas", name: "Dallas", country: "USA" },
-    { slug: "san-jose", name: "San Jose", country: "USA" },
-    { slug: "columbus", name: "Columbus", country: "USA" },
-    { slug: "charlotte", name: "Charlotte", country: "USA" },
-    { slug: "indianapolis", name: "Indianapolis", country: "USA" },
-    { slug: "san-antonio", name: "San Antonio", country: "USA" },
-    { slug: "jacksonville", name: "Jacksonville", country: "USA" },
-    { slug: "fort-worth", name: "Fort Worth", country: "USA" },
-    { slug: "detroit", name: "Detroit", country: "USA" },
-    { slug: "el-paso", name: "El Paso", country: "USA" },
-    { slug: "memphis", name: "Memphis", country: "USA" },
-    { slug: "baltimore", name: "Baltimore", country: "USA" },
-    { slug: "oklahoma-city", name: "Oklahoma City", country: "USA" },
-    { slug: "las-vegas", name: "Las Vegas", country: "USA" },
-    { slug: "louisville", name: "Louisville", country: "USA" },
-    { slug: "milwaukee", name: "Milwaukee", country: "USA" },
-    { slug: "albuquerque", name: "Albuquerque", country: "USA" },
-    { slug: "tucson", name: "Tucson", country: "USA" },
-    { slug: "fresno", name: "Fresno", country: "USA" },
-    { slug: "sacramento", name: "Sacramento", country: "USA" },
-    { slug: "long-beach", name: "Long Beach", country: "USA" },
-    { slug: "kansas-city", name: "Kansas City", country: "USA" },
-    { slug: "mesa", name: "Mesa", country: "USA" },
-    { slug: "virginia-beach", name: "Virginia Beach", country: "USA" },
-    { slug: "colorado-springs", name: "Colorado Springs", country: "USA" },
-    { slug: "raleigh", name: "Raleigh", country: "USA" },
-    { slug: "omaha", name: "Omaha", country: "USA" },
-    { slug: "oakland", name: "Oakland", country: "USA" },
-    { slug: "tulsa", name: "Tulsa", country: "USA" },
-    { slug: "minneapolis", name: "Minneapolis", country: "USA" },
-    { slug: "cleveland", name: "Cleveland", country: "USA" },
-    { slug: "wichita", name: "Wichita", country: "USA" },
-    { slug: "arlington", name: "Arlington", country: "USA" },
-    { slug: "new-orleans", name: "New Orleans", country: "USA" },
-    { slug: "bakersfield", name: "Bakersfield", country: "USA" },
-    { slug: "tampa", name: "Tampa", country: "USA" },
-    { slug: "honolulu", name: "Honolulu", country: "USA" },
-    { slug: "aurora", name: "Aurora", country: "USA" },
-    { slug: "anaheim", name: "Anaheim", country: "USA" },
-    { slug: "santa-ana", name: "Santa Ana", country: "USA" },
-    { slug: "st-louis", name: "St. Louis", country: "USA" },
-    { slug: "riverside", name: "Riverside", country: "USA" },
-    { slug: "corpus-christi", name: "Corpus Christi", country: "USA" },
-    { slug: "lexington", name: "Lexington", country: "USA" },
-    { slug: "pittsburgh", name: "Pittsburgh", country: "USA" },
-    { slug: "anchorage", name: "Anchorage", country: "USA" },
-    { slug: "stockton", name: "Stockton", country: "USA" },
-    { slug: "cincinnati", name: "Cincinnati", country: "USA" },
-    { slug: "st-paul", name: "St. Paul", country: "USA" },
-    { slug: "greensboro", name: "Greensboro", country: "USA" },
-    { slug: "toledo", name: "Toledo", country: "USA" },
-    { slug: "newark", name: "Newark", country: "USA" },
-    { slug: "plano", name: "Plano", country: "USA" },
-    { slug: "henderson", name: "Henderson", country: "USA" },
-    { slug: "lincoln", name: "Lincoln", country: "USA" },
-    { slug: "orlando", name: "Orlando", country: "USA" },
-    { slug: "jersey-city", name: "Jersey City", country: "USA" },
-    { slug: "chula-vista", name: "Chula Vista", country: "USA" },
-    { slug: "buffalo", name: "Buffalo", country: "USA" },
-    { slug: "fort-wayne", name: "Fort Wayne", country: "USA" },
-    { slug: "chandler", name: "Chandler", country: "USA" },
-    { slug: "st-petersburg", name: "St. Petersburg", country: "USA" },
-    { slug: "laredo", name: "Laredo", country: "USA" },
-    { slug: "madison", name: "Madison", country: "USA" },
-    { slug: "durham", name: "Durham", country: "USA" },
-    { slug: "lubbock", name: "Lubbock", country: "USA" },
-    { slug: "scottsdale", name: "Scottsdale", country: "USA" },
-    { slug: "reno", name: "Reno", country: "USA" },
-    { slug: "glendale", name: "Glendale", country: "USA" },
-    { slug: "norfolk", name: "Norfolk", country: "USA" },
-    { slug: "winston-salem", name: "Winston-Salem", country: "USA" },
-    { slug: "north-las-vegas", name: "North Las Vegas", country: "USA" },
-    { slug: "irving", name: "Irving", country: "USA" },
-    { slug: "chesapeake", name: "Chesapeake", country: "USA" },
-    { slug: "gilbert", name: "Gilbert", country: "USA" },
-    { slug: "hialeah", name: "Hialeah", country: "USA" },
-    { slug: "garland", name: "Garland", country: "USA" },
-    { slug: "fremont", name: "Fremont", country: "USA" },
-    { slug: "baton-rouge", name: "Baton Rouge", country: "USA" },
-    { slug: "richmond", name: "Richmond", country: "USA" },
-    { slug: "boise", name: "Boise", country: "USA" },
-    { slug: "san-bernardino", name: "San Bernardino", country: "USA" },
-];
+export const LOCATIONS: never[] = [];
+
 
 export const COMPETITORS = [
     { slug: "midjourney", name: "Midjourney", type: "AI Image Generator", strength: "Artistic expression", weakness: "Consistency and UI" },
@@ -260,7 +98,7 @@ export function slugify(text: string) {
         .replace(/ +/g, "-");
 }
 
-export function getSEOContent(category?: string, location?: string) {
+export function getSEOContent(category?: string) {
     const catText = category ? category.toLowerCase() : "professional brand assets";
     const displayName = category || "Mascot Maker";
 
@@ -318,34 +156,20 @@ export function getSEOContent(category?: string, location?: string) {
         tips.push("Higher Resolution: For professional print, use our 4K Upscale engine to preserve fine textures and sharp lines.");
     }
 
-    // Regional/City Context for local SEO value
-    let localContext = "";
-    if (location) {
-        const usCities = LOCATIONS.filter(l => l.country === "USA").map(l => l.name);
-        const euCities = LOCATIONS.filter(l => ["UK", "Germany", "France", "Spain", "Italy", "Austria", "Sweden", "Finland", "Norway", "Denmark", "Ireland", "Netherlands", "Poland", "Czech Republic", "Portugal"].includes(l.country)).map(l => l.name);
-
-        if (usCities.includes(location)) {
-            localContext = `Our studio is optimized for the fast-paced North American market, providing the bold, high-contrast visual standards expected in ${location}.`;
-        } else if (euCities.includes(location)) {
-            localContext = `Tailored for the European design aesthetic, our AI respects the sophisticated, minimalist, and historically-rich styles found across brands in ${location}.`;
-        } else {
-            localContext = `Providing world-class AI design capabilities with localized support for high-growth creative markets in ${location}.`;
-        }
-    }
 
     // Expert Statistics & Trust Signals
     const stats = [
         `Identical character consistency across ${category ? `${category}-specific` : "100+"} poses.`,
-        `Studio-grade 4K resolution exports ${location ? `for the ${location} market` : "available instantly"}.`,
+        `Studio-grade 4K resolution exports.`,
         "98% accuracy in maintaining brand colors across artistic styles.",
-        `Integrated with 15+ specialized AI design engines ${location ? `supporting ${location} teams` : "for professionals"}.`
+        `Integrated with 8 specialized AI design engines.`
     ];
 
     return {
         definition,
-        intro: `Empower your brand with world-class ${catText}. Mascot Maker is the only AI design hub designed for professionals who refuse to compromise on character consistency and cinematic output quality${location ? `—now available with localized support in ${location}` : ""}.`,
-        benefit1: localContext || `For ${location || "scaling startups"}, our proprietary Identity-Lock technology eliminates the 'AI Drift' common in generic generators. Every ${catText} you create for your ${category?.toLowerCase() || 'brand'} workflow remains 100% faithful to your original design.`,
-        benefit2: `Achieve high-end agency results at 100x the speed. Whether you're building a global sub-brand or a ${location ? `${location}-specific campaign` : "targeted marketing push"}, our studio provides the photoreal textures and material accuracy required for modern commercial standards.`,
+        intro: `Empower your brand with world-class ${catText}. Mascot Maker is the only AI design hub designed for professionals who refuse to compromise on character consistency and cinematic output quality.`,
+        benefit1: `For scaling startups, our proprietary Identity-Lock technology eliminates the 'AI Drift' common in generic generators. Every ${catText} you create for your ${category?.toLowerCase() || 'brand'} workflow remains 100% faithful to your original design.`,
+        benefit2: `Achieve high-end agency results at 100x the speed. Whether you're building a global sub-brand or a targeted marketing push, our studio provides the photoreal textures and material accuracy required for modern commercial standards.`,
         tips,
         stats
     };

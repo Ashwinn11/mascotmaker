@@ -5,7 +5,7 @@ export function SEOSchema() {
     "name": "Mascot Maker",
     "url": "https://mascotmaker.io",
     "logo": "https://mascotmaker.io/app-icon.png",
-    "description": "AI-powered mascot and character generator. Create consistent 3D, 2D, and animated characters for brands, games, and content creators.",
+    "description": "AI-powered mascot, logo, and sticker generator. Create consistent 3D, 2D, and vector characters for brands, apps, and content creators.",
     "foundingDate": "2025",
     "sameAs": [
       "https://www.crunchbase.com/organization/mascot-maker"
@@ -21,18 +21,18 @@ export function SEOSchema() {
     "applicationSubCategory": "AI Image Generator",
     "operatingSystem": "Web",
     "browserRequirements": "Requires a modern web browser",
-    "description": "Create professional AI mascots and characters with identity consistency. 12+ art styles, 8-frame storyboards, and product ad compositing.",
+    "description": "Create professional AI mascots, logos, and sticker packs with identity consistency. 8 pro art styles and instant background remover.",
     "featureList": [
-      "AI Character Generation",
+      "AI Mascot Generation",
       "Identity Lock Technology",
-      "8-Frame Storyboard Creator",
-      "Product Ad Compositing",
-      "GIF Animation Export",
+      "AI Sticker Pack Creator",
+      "AI Logo Generator",
+      "Instant Background Removal",
       "4K Resolution Upscaling",
-      "12+ Art Styles",
+      "8 Professional Art Styles",
       "Commercial Usage Rights"
     ],
-    "screenshot": "https://mascotmaker.io/og-image.png",
+    "screenshot": "https://mascotmaker.io/app-icon.png",
     "offers": {
       "@type": "Offer",
       "price": "0.00",

@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Clock, Calendar } from "lucide-react";
 import { Breadcrumb } from "@/components/breadcrumb";
-import { BLOG_POSTS } from "../page";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { getBlogPosts, getBlogPost } from "@/lib/blog";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -32,7 +33,7 @@ const ARTICLE_CONTENT: Record<string, { sections: { heading: string; content: st
             },
             {
                 heading: "Getting Started with AI Mascot Creation",
-                content: "If you want to create your first brand mascot today, here's the fastest path:\n\n1. Open Mascot Maker's Character Generator\n2. Describe your character in plain English (e.g., 'a friendly robot helper for a coding education platform')\n3. Choose your art style from 12+ specialized AI models\n4. Use Identity Lock to generate multiple poses and expressions\n5. Export in the resolution you need — from social media to print\n\nThe entire process takes about 5 minutes for your first character, and you can iterate infinitely until it feels right."
+                content: "If you want to create your first brand mascot today, here's the fastest path:\n\n1. Open Mascot Maker's Mascot Generator\n2. Describe your character in plain English (e.g., 'a friendly robot helper for a coding education platform')\n3. Choose your art style from 8 professional AI models\n4. Use Identity Lock to generate logo variations and sticker packs\n5. Export in the resolution you need — with instant background removal\n\nThe entire process takes about 5 minutes for your first character, and you can iterate infinitely until it feels right."
             }
         ]
     },
@@ -92,7 +93,8 @@ const ARTICLE_CONTENT: Record<string, { sections: { heading: string; content: st
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
-    const post = BLOG_POSTS.find(p => p.slug === slug);
+    const posts = getBlogPosts();
+    const post = posts.find(p => p.slug === slug);
     if (!post) return {};
 
     return {
@@ -119,21 +121,22 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 }
 
 export async function generateStaticParams() {
-    return BLOG_POSTS.map(post => ({ slug: post.slug }));
+    const posts = getBlogPosts();
+    return posts.map(post => ({ slug: post.slug }));
 }
 
 export default async function BlogPost({ params }: PageProps) {
     const { slug } = await params;
-    const post = BLOG_POSTS.find(p => p.slug === slug);
-    const articleContent = ARTICLE_CONTENT[slug];
+    const post = getBlogPost(slug);
+    const allPosts = getBlogPosts();
 
-    if (!post || !articleContent) {
+    if (!post || !post.content) {
         notFound();
     }
 
-    const postIndex = BLOG_POSTS.findIndex(p => p.slug === slug);
-    const nextPost = BLOG_POSTS[postIndex + 1] || BLOG_POSTS[0];
-    const prevPost = postIndex > 0 ? BLOG_POSTS[postIndex - 1] : BLOG_POSTS[BLOG_POSTS.length - 1];
+    const postIndex = allPosts.findIndex(p => p.slug === slug);
+    const nextPost = allPosts[postIndex + 1] || allPosts[0];
+    const prevPost = postIndex > 0 ? allPosts[postIndex - 1] : allPosts[allPosts.length - 1];
 
     const articleJsonLd = {
         "@context": "https://schema.org",
@@ -214,17 +217,8 @@ export default async function BlogPost({ params }: PageProps) {
             {/* Article Body */}
             <article className="py-12">
                 <div className="mx-auto max-w-3xl px-6">
-                    <div className="prose-custom space-y-12">
-                        {articleContent.sections.map((section, i) => (
-                            <div key={i}>
-                                <h2 className="font-display text-3xl md:text-5xl text-foreground uppercase leading-tight mb-6">
-                                    {section.heading}
-                                </h2>
-                                <div className="text-lg text-muted-foreground font-semibold leading-relaxed whitespace-pre-line">
-                                    {section.content}
-                                </div>
-                            </div>
-                        ))}
+                    <div className="prose prose-lg max-w-none prose-headings:font-display prose-headings:uppercase prose-p:text-foreground/80 prose-p:font-medium prose-p:leading-relaxed prose-a:text-candy-pink prose-li:font-medium prose-strong:text-foreground">
+                        <MDXRemote source={post.content || ""} />
                     </div>
 
                     {/* CTA within article */}

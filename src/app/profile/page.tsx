@@ -4,7 +4,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
-import { Icon3D } from "@/components/ui/icon-3d";
+import { Zap, CheckCircle } from "lucide-react";
 import { PLANS } from "@/lib/pricing";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 
@@ -150,8 +150,8 @@ export default function ProfilePage() {
 
     if (!session?.user) {
         return (
-            <div className="min-h-[calc(100vh-5rem)] bg-dotted flex flex-col items-center justify-center gap-4">
-                <Icon3D name="warning" size="2xl" animated />
+            <div className="min-h-[calc(100vh-5rem)] bg-dotted flex flex-col items-center justify-center gap-6">
+                <Image src="/app-icon.png" alt="Mascot Maker" width={80} height={80} className="rounded-3xl shadow-lg" />
                 <h1 className="font-display text-2xl text-foreground">Sign in to view your profile</h1>
             </div>
         );
@@ -179,7 +179,7 @@ export default function ProfilePage() {
             {showSuccess && (
                 <div className="bg-candy-green/10 border-b border-candy-green/20 py-3 text-center transition-all animate-in fade-in slide-in-from-top-4">
                     <p className="text-sm font-bold text-candy-green flex items-center justify-center gap-2">
-                        <Icon3D name="party-popper" size="sm" />
+                        <CheckCircle size={16} className="text-candy-green" />
                         Purchase successful! Your credits have been updated.
                         <button
                             onClick={() => setShowSuccess(false)}
@@ -223,7 +223,7 @@ export default function ProfilePage() {
                     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
                         <h2 className="font-display text-xl md:text-2xl text-foreground">Current Balance</h2>
                         <div className="flex items-center gap-3 rounded-2xl bg-muted px-4 py-2 md:px-5 md:py-3 border-2 border-border/50">
-                            <Icon3D name="high-voltage" size="sm" />
+                            <Zap size={20} className="text-candy-orange fill-candy-orange" />
                             <span className="font-display text-3xl md:text-4xl text-foreground">{credits}</span>
                         </div>
                     </div>

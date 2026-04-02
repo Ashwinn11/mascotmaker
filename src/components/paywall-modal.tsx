@@ -10,7 +10,7 @@ import {
     DialogTitle,
     DialogDescription,
 } from "@/components/ui/dialog";
-import { Icon3D } from "@/components/ui/icon-3d";
+import Image from "next/image";
 import { PLANS } from "@/lib/pricing";
 
 interface PaywallModalProps {
@@ -64,7 +64,7 @@ export function PaywallModal({
                         </DialogDescription>
                     </DialogHeader>
                     <div className="flex flex-col items-center gap-6 py-6">
-                        <Icon3D name="warning" size="2xl" animated />
+                        <Image src="/app-icon.png" alt="Mascot Maker" width={64} height={64} className="rounded-2xl shadow-md" />
                         <button
                             onClick={() => signIn("google")}
                             className="flex items-center gap-3 rounded-2xl border-2 border-border bg-white px-6 py-3.5 text-base font-bold text-foreground shadow-sm transition-all hover:shadow-md hover:border-candy-pink/30 active:scale-[0.98]"
@@ -98,7 +98,7 @@ export function PaywallModal({
                     </DialogDescription>
                 </DialogHeader>
                 <div className="flex flex-col items-center gap-6 py-6">
-                    <Icon3D name="warning" size="2xl" animated />
+                    <Image src="/app-icon.png" alt="Mascot Maker" width={64} height={64} className="rounded-2xl shadow-md" />
                     <div className="w-full rounded-2xl border-2 border-border p-5">
                         <h3 className="font-display text-lg text-foreground mb-3 text-center">
                             Get More Credits
