@@ -134,6 +134,20 @@ export async function getGalleryItems(userId: string): Promise<GalleryItem[]> {
   return rows as GalleryItem[];
 }
 
+export async function getPublicGalleryItems(limit = 40): Promise<GalleryItem[]> {
+  await ensureDb();
+  const rows = await sql`
+    SELECT * FROM gallery WHERE published = 1 ORDER BY created_at DESC LIMIT ${limit}
+  `;
+  return rows as GalleryItem[];
+}
+
+export async function getGalleryItemById(id: number): Promise<GalleryItem | null> {
+  await ensureDb();
+  const rows = await sql`SELECT * FROM gallery WHERE id = ${id}`;
+  return (rows[0] as GalleryItem) || null;
+}
+
 export async function deleteGalleryItem(id: number, userId: string): Promise<GalleryItem | null> {
   await ensureDb();
   const rows = await sql`

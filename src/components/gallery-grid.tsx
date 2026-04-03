@@ -3,9 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { downloadFile } from "@/lib/download";
+import { downloadFile, downloadBase64, cropSticker } from "@/lib/download";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { Button } from "@/components/ui/button";
 import { Icon3D } from "@/components/ui/icon-3d";
 
 interface GalleryItem {
@@ -17,48 +16,6 @@ interface GalleryItem {
   sticker_url: string | null;
   subject_type: string;
   created_at: string;
-}
-
-function downloadBase64(base64: string, filename: string, mimeType: string = "image/png") {
-  const byteCharacters = atob(base64.includes(",") ? base64.split(",")[1] : base64);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-}
-
-async function cropSticker(spriteUrl: string, index: number): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const size = img.width / 3;
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        reject(new Error("Could not get canvas context"));
-        return;
-      }
-      const x = (index % 3) * size;
-      const y = Math.floor(index / 3) * size;
-      ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
-      resolve(canvas.toDataURL("image/png"));
-    };
-    img.onerror = reject;
-    img.src = spriteUrl;
-  });
 }
 
 export function GalleryGrid() {
@@ -202,11 +159,11 @@ function GalleryCard({
       style={{ animationDelay: `${index * 0.05}s` }}
       onMouseLeave={() => setPreviewMode("image")}
     >
-      <div className="relative aspect-square overflow-hidden bg-white hover:cursor-pointer">
+      <Link href={`/mascot/${item.id}`} className="relative aspect-square block overflow-hidden bg-white hover:cursor-pointer">
         <img
           src={previewMode === "gif" && item.gif_url ? item.gif_url : previewMode === "sticker" && item.sticker_url ? item.sticker_url : item.image_url}
           alt={item.name}
-          className={`h-full w-full object-contain transition-all duration-300 ${previewMode === "sticker" ? "scale-95" : "scale-100"}`}
+          className={`h-full w-full object-contain transition-all duration-300 ${previewMode === "sticker" ? "scale-95" : "scale-100"} group-hover:scale-105`}
         />
         {(item.gif_url || item.sticker_url) && (
           <div className="absolute top-3 right-3 flex gap-1">
@@ -222,11 +179,13 @@ function GalleryCard({
             )}
           </div>
         )}
-      </div>
+      </Link>
       <div className="p-3 md:p-3.5">
-        <h3 className="font-display text-sm md:text-base text-foreground truncate">{item.name}</h3>
+        <Link href={`/mascot/${item.id}`} className="block">
+          <h3 className="font-display text-sm md:text-base text-foreground truncate group-hover:text-candy-pink transition-colors">{item.name}</h3>
+        </Link>
         {item.description && (
-          <p className="mt-0.5 text-[10px] md:text-xs text-muted-foreground line-clamp-2">{item.description}</p>
+          <p className="mt-0.5 text-[10px] md:text-xs text-muted-foreground line-clamp-1">{item.description}</p>
         )}
         <div className="flex flex-wrap gap-1 mt-2.5">
           {!isSticker && (
@@ -281,6 +240,46 @@ function GalleryCard({
               <span className="truncate">{downloading ? "Working..." : "Download Individual Stickers"}</span>
             </button>
           )}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const url = `${window.location.origin}/mascot/${item.id}`;
+              navigator.clipboard.writeText(url);
+              toast.success("URL copied!");
+            }}
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-muted text-warm-gray transition-colors hover:bg-border"
+            title="Copy URL"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+          </button>
+          <button
+            onClick={async (e) => {
+              e.stopPropagation();
+              const url = `${window.location.origin}/mascot/${item.id}`;
+
+              if (navigator.share) {
+                try {
+                  await navigator.share({ url });
+                } catch (err) {
+                  if ((err as Error).name !== 'AbortError') console.error("Share failed:", err);
+                }
+              } else {
+                navigator.clipboard.writeText(url);
+                toast.success("URL copied!");
+              }
+            }}
+            className="flex h-7 w-7 items-center justify-center rounded-lg bg-candy-pink/5 text-candy-pink transition-colors hover:bg-candy-pink/10"
+            title="Share Mascot"
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+              <polyline points="16 6 12 2 8 6" />
+              <line x1="12" y1="2" x2="12" y2="15" />
+            </svg>
+          </button>
           <button
             onClick={(e) => {
               e.stopPropagation();

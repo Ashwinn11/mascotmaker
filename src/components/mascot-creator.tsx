@@ -249,15 +249,10 @@ export function MascotCreator() {
                       subjectType={createOptions.subjectType}
                       onAnimationGenerated={(anim) => setAnimations(prev => [...prev, anim])}
                       onLoadingChange={setMascotLoading} {...sharedProps} />
-                    <AnimationPreview animations={animations} mascotBase64={mascotBase64} />
                   </div>
                 )}
               </>
             )}
-
-
-
-
           </div>
         </div>
 
@@ -269,6 +264,8 @@ export function MascotCreator() {
                 mascotBase64={mascotBase64}
                 images={mascotImages}
                 animations={animations}
+                analysis={analysis}
+                setAnimations={setAnimations}
                 loading={mascotLoading && mascotStep !== "animate"}
                 removeBackground={createOptions.removeBackground}
                 subjectType={createOptions.subjectType}

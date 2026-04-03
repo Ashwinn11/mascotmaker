@@ -34,6 +34,15 @@ export const ENGINES = [
         image: "/demo/before-after.webp",
         useCases: ["Product Photos", "Transparent Logos", "Mascot Extraction", "Clean Assets"],
         fallbackGallery: ["/demo/style-showcase.webp", "/demo/style-cyber.png", "/demo/style-clay.png", "/demo/style-flat.png"]
+    },
+    {
+        slug: "animated-mascot-generator",
+        title: "Animated Mascot Generator",
+        description: "Turn your characters into instant high-fidelity GIFs. Fully mapped 9-frame sprite sheets in one click.",
+        keywords: ["ai gif maker", "mascot animation", "animated character creator", "sprite sheet generator"],
+        image: "/demo/hero-animation.webp",
+        useCases: ["Discord Alerts", "Slack Emojis", "Twitch Overlays", "Email Marketing"],
+        fallbackGallery: ["/demo/hero-animation.webp", "/demo/style-pixar.png", "/demo/hero-dragon-barista.png", "/demo/cat-stickers.webp"]
     }
 ];
 
@@ -136,9 +145,10 @@ export function getSEOContent(category?: string) {
         tips.push("App Consistency: If your app uses a specific corner radius (like 12px), try to match your mascot's geometry to that same curvature for a native feel.");
     }
 
-    if (category?.includes("Gaming") || category?.includes("Discord") || category?.includes("Twitch")) {
+    if (category?.includes("Gaming") || category?.includes("Discord") || category?.includes("Twitch") || category?.includes("Animated") || category?.includes("GIF")) {
         tips.push("Streamer Pro-tip: Generate a 'Transparent PNG' of your mascot and layer it over your OBS scenes. It creates a much stronger brand than a generic static avatar.");
         tips.push("Action States: Create specific poses for 'New Follower' or 'Gift Sub' alerts to make your stream interactions feel high-production.");
+        tips.push("GIF Optimization: If using for Discord or Slack emotes, keep your mascot centered. Our sprite engine automatically handles the cropping, ensuring your emote is clear and readable.");
     }
 
     if (category?.includes("E-commerce") || category?.includes("Marketplace")) {

@@ -118,25 +118,27 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
     return (
         <div className="space-y-5">
 
-            {/* Art Style */}
-            <div className="space-y-2 relative">
-                <SectionLabel>Art Style</SectionLabel>
-                <div className="relative">
-                    <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar scroll-smooth">
-                        {STYLES.map((s) => (
-                            <button key={s.id} onClick={() => setSelectedStyleId(s.id)}
-                                className={`flex-shrink-0 flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all min-w-[70px] ${selectedStyleId === s.id
-                                    ? `border-${ACCENT} bg-${ACCENT}/5 shadow-sm`
-                                    : "border-border bg-white hover:border-candy-pink/20"}`}>
-                                <Icon3DInline name={s.icon} size={24} className="md:w-[26px] md:h-[26px]" />
-                                <p className={`text-[9px] font-black uppercase ${selectedStyleId === s.id ? `text-${ACCENT}` : "text-foreground"}`}>{s.label}</p>
-                            </button>
-                        ))}
+            {/* Art Style - Hidden in Logo Mode */}
+            {subjectType !== "Logo" && (
+                <div className="space-y-2 relative animate-in fade-in slide-in-from-top-2 duration-300">
+                    <SectionLabel>Art Style</SectionLabel>
+                    <div className="relative">
+                        <div className="flex gap-2 overflow-x-auto pb-1 no-scrollbar scroll-smooth">
+                            {STYLES.map((s) => (
+                                <button key={s.id} onClick={() => setSelectedStyleId(s.id)}
+                                    className={`flex-shrink-0 flex flex-col items-center gap-1.5 p-2.5 rounded-2xl border-2 transition-all min-w-[70px] ${selectedStyleId === s.id
+                                        ? `border-${ACCENT} bg-${ACCENT}/5 shadow-sm`
+                                        : "border-border bg-white hover:border-candy-pink/20"}`}>
+                                    <Icon3DInline name={s.icon} size={24} className="md:w-[26px] md:h-[26px]" />
+                                    <p className={`text-[9px] font-black uppercase ${selectedStyleId === s.id ? `text-${ACCENT}` : "text-foreground"}`}>{s.label}</p>
+                                </button>
+                            ))}
+                        </div>
+                        {/* Fade indicators for mobile scroll */}
+                        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/80 to-transparent pointer-events-none md:hidden" />
                     </div>
-                    {/* Fade indicators for mobile scroll */}
-                    <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-white/80 to-transparent pointer-events-none md:hidden" />
                 </div>
-            </div>
+            )}
 
             {/* What are you creating? */}
             <div className="space-y-2">
@@ -169,8 +171,14 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
 
                 {inputMode === "describe" ? (
                     <Textarea value={prompt} onChange={(e) => setPrompt(e.target.value)}
-                        placeholder={`Describe your ${currentStyle.label.toLowerCase()}...`}
-                        className="min-h-[90px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-sm placeholder:text-muted-foreground/60 focus:border-candy-pink" />
+                        placeholder={
+                            subjectType === "Logo"
+                                ? "Describe your brand, icon, or vision..."
+                                : subjectType === "Sticker"
+                                    ? `Describe your ${currentStyle.label.toLowerCase()} stickers...`
+                                    : `Describe your ${currentStyle.label.toLowerCase()} mascot...`
+                        }
+                        className="min-h-[90px] resize-none rounded-2xl border-2 border-border bg-white px-4 py-3 text-sm placeholder:text-muted-foreground/60 focus:border-candy-pink transition-all" />
                 ) : (
                     <div
                         onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f?.type.startsWith("image/")) setFile(f); }}

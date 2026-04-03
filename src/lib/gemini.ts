@@ -37,6 +37,7 @@ export interface ImageOptions {
   imageSize?: "1K" | "2K" | "4K";
   style?: string;
   subjectType?: "Character" | "Sticker" | "Logo";
+  removeBackground?: boolean;
 }
 
 export async function generateImage(prompt: string, options: ImageOptions = {}): Promise<GeminiResult<string[]>> {
@@ -136,7 +137,14 @@ export async function stylizeImage(
   analysis?: string,
   options: ImageOptions = {}
 ): Promise<GeminiResult<string>> {
-  const fullPrompt = buildPrompt(options.subjectType || "Character", options.style || "", prompt, true, analysis);
+  const fullPrompt = buildPrompt(
+    options.subjectType || "Character",
+    options.style || "",
+    prompt,
+    true,
+    analysis,
+    options.removeBackground ?? false
+  );
   return editImage(fullPrompt, imageBase64, options);
 }
 
@@ -144,48 +152,60 @@ export async function generateSpriteSheet(
   mascotImageBase64: string,
   action: string,
   description?: string,
-  subjectType: string = "Character"
+  subjectType: string = "Character",
+  removeBackground: boolean = false
 ): Promise<GeminiResult<string>> {
-  const gridImagePath = path.join(process.cwd(), "public", "grid_3x3_1024_grey.png");
-  const gridImageBase64 = fs.readFileSync(gridImagePath).toString("base64");
-
-  const subjectContext = description
-    ? `The subject is: ${description}. `
-    : "";
-  
   const isSticker = subjectType === "Sticker";
+  const shouldForceCharcoal = isSticker || removeBackground;
+  
   const stickerStyle = isSticker 
     ? "Clean, wide white die-cut border around every sticker in EVERY frame. Bold black outlines. " 
     : "";
+  
+  const subjectContext = description ? `The subject is: ${description}. ` : "";
 
-  const prompt = `REFERENCE IMAGES: (1) Target subject, (2) Dark Charcoal Grey template (#404040).
+  let prompt = "";
+  let contentsParts: any[] = [];
 
-PROMPT: Using the EXACT subject from (1), create a 9-frame 3x3 asset sheet on the SOLID, uniform Dark Charcoal Grey (#404040) background shown in (2). 
+  if (shouldForceCharcoal) {
+    const gridImagePath = path.join(process.cwd(), "public", "grid_3x3_1024_grey.png");
+    const gridImageBase64 = fs.readFileSync(gridImagePath).toString("base64");
+    
+    prompt = `REFERENCE IMAGES: (1) Target subject, (2) Dark Charcoal Grey template (#404040).
+    PROMPT: Using the EXACT subject from (1), create a 9-frame 3x3 asset sheet on the SOLID, uniform Dark Charcoal Grey (#404040) background shown in (2). 
+    CRITICAL INSTRUCTIONS:
+    - PRESERVE IDENTITY: Reference (1) is the EXCLUSIVE and ONLY source for the design. Match all colors/details.
+    - ACTION: Create 9 distinct frames of ${action}.
+    - BACKGROUND: Background MUST remain the continuous Dark Charcoal Grey (#404040) from (2) with NO grid lines, gradients, or floor shadows.
+    ${stickerStyle}${subjectContext}`;
+    
+    contentsParts = [
+      { text: prompt },
+      { inlineData: { mimeType: "image/png", data: mascotImageBase64 } },
+      { inlineData: { mimeType: "image/png", data: gridImageBase64 } },
+    ];
+  } else {
+    prompt = `REFERENCE IMAGE: (1) Target subject.
+    PROMPT: Using the EXACT character from (1), create a 9-frame 3x3 asset sheet on a SOLID, uniform Pure White (#FFFFFF) background. 
+    CRITICAL INSTRUCTIONS:
+    - PRESERVE IDENTITY: Match all colors and design details from (1) exactly.
+    - ACTION: Create 9 distinct frames showing the character from (1) with ${action}.
+    - BACKGROUND: Background MUST be 100% Solid Pure White (#FFFFFF). NO floor shadows, NO grid lines, NO gradients.
+    ${stickerStyle}${subjectContext}`;
 
-CRITICAL INSTRUCTIONS:
-- PRESERVE IDENTITY: Reference (1) is the EXCLUSIVE and ONLY source for the design. Every detail of the subject's design and colors must match (1).
-- ACTION/EXPRESSION: Create 9 distinct frames showing the subject with ${action}. Each frame should be a unique variation.
-- STYLE MATCH: Use the identical art style and color palette as (1). ${stickerStyle}
-- ROWS/COLS: Exactly 3 rows and 3 columns. Each frame must show the full subject.
-- BACKGROUND: Background MUST remain the continuous Dark Charcoal Grey from (2) with NO grid lines, borders, shadows, or texture between frames.
-${subjectContext} Subject is ${action}.`;
+    contentsParts = [
+      { text: prompt },
+      { inlineData: { mimeType: "image/png", data: mascotImageBase64 } },
+    ];
+  }
 
   const response = await getAI().models.generateContent({
     model: MODEL_ID,
-    contents: [
-      {
-        role: "user",
-        parts: [
-          { text: prompt },
-          { inlineData: { mimeType: "image/png", data: mascotImageBase64 } },
-          { inlineData: { mimeType: "image/png", data: gridImageBase64 } },
-        ],
-      },
-    ],
+    contents: [{ role: "user", parts: contentsParts }],
     config: {
       responseModalities: ["IMAGE"],
       imageConfig: { aspectRatio: "1:1", imageSize: "2K" },
-      temperature: 0.1, // Minimize creativity to maintain character identity
+      temperature: 0.1,
     },
   });
 

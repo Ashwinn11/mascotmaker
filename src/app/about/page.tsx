@@ -130,6 +130,16 @@ export default function AboutPage() {
                         <Sparkles size={20} />
                         Get Started
                     </Link>
+
+                    {/* SEO Trust Signal Links */}
+                    <div className="pt-20 flex flex-wrap justify-center gap-8 opacity-20 hover:opacity-60 transition-opacity">
+                        <Link href="https://www.crunchbase.com/organization/mascot-maker" target="_blank" className="text-[10px] font-black uppercase tracking-[0.4em] text-cream hover:text-candy-pink transition-colors">
+                            Crunchbase Profile
+                        </Link>
+                        <Link href="https://www.producthunt.com/products/mascot-maker-ai" target="_blank" className="text-[10px] font-black uppercase tracking-[0.4em] text-cream hover:text-candy-pink transition-colors">
+                            Product Hunt
+                        </Link>
+                    </div>
                 </div>
             </section>
         </main>

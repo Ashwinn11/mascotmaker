@@ -40,13 +40,17 @@ export async function spriteSheetToGif(
             // This fixes the "off-center" jitter by finding the character's 
             // actual boundaries and re-centering them in the frame.
             let finalFrameBuffer = frameBuffer;
+            const bg = shouldRemoveBackground 
+                ? { r: 0, g: 0, b: 0, alpha: 0 } 
+                : { r: 255, g: 255, b: 255, alpha: 1 };
+
             try {
                 finalFrameBuffer = await sharp({
                     create: {
                         width: frameWidth,
                         height: frameHeight,
                         channels: 4,
-                        background: { r: 0, g: 0, b: 0, alpha: 0 }
+                        background: bg
                     }
                 })
                     .composite([{

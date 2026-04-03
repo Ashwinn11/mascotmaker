@@ -37,7 +37,7 @@ export function buildPrompt(
     
     const textProhibition = "CRITICAL: NO text, NO letters, NO words, NO typography, NO watermarks, NO signatures unless explicitly requested in the prompt.";
     const charcoalBg = "SOLID, uniform Dark Charcoal Grey (#404040) background. NO grid lines, NO shadows, NO gradients";
-    const whiteBg = "Solid Pure White (#FFFFFF) background";
+    const whiteBg = "SOLID, uniform Pure White (#FFFFFF) background. NO shadows, NO gradients, NO floor lines, NO gray shades";
     const antiBleed = "CRITICAL: The subject MUST NOT contain any shades of Dark Charcoal Grey or similar dark grays, to prevent the background removal tool from eating into the image.";
 
     if (subjectType === "Sticker") {
@@ -47,13 +47,21 @@ export function buildPrompt(
         BACKGROUND: Isolated on a ${charcoalBg}. ${antiBleed}
         ${textProhibition}`;
     } else if (subjectType === "Character") {
-        const bgInstruction = removeBackground ? `Isolated on a ${charcoalBg}. ${antiBleed}` : `Isolated on a ${whiteBg}.`;
+        const bgInstruction = removeBackground 
+            ? `Isolated on a ${charcoalBg}. ${antiBleed}` 
+            : `Isolated on a ${whiteBg}. CRITICAL: Use only solid white, no lighting shadows on the floor.`;
+        
         prompt = `${transformPrefix}an ultra-high-resolution (8k, sharp focus) ${baseStyle} Mascot of: ${userPrompt}. ${context}Professional studio lighting, cinematic detail. IMPORTANT: ${bgInstruction} Show the COMPLETE full body from head to feet — do NOT crop or cut off any part. Expressive face, clean outlines.
         ${textProhibition}`;
         if (isStylize) prompt += " Keep the mascot recognizable and high-fidelity.";
     } else if (subjectType === "Logo") {
-        // Logos inherently should support beautiful backgrounds, not forced solids unless specific.
-        prompt = `${transformPrefix}professional branding logo in a ${baseStyle} style: ${userPrompt}. ${context}Clean vector lines, flat design, simplistic geometric shapes. Professional brand identity style. NO mascot characters or complex cartoons unless specifically requested — focus on symbolic representation. Beautiful, complementary background.
+        // Logo Mode: Creative Soul + Mathematical Rigor
+        prompt = `${transformPrefix}a world-class, iconic brand identity logo: ${userPrompt}. ${context} 
+        CONCEPT: Highly creative, intelligent conceptual metaphor, use of clever NEGATIVE SPACE.
+        GEOMETRY: Swiss/Bauhaus design logic, geometric perfection, monoline or balanced shapes, golden ratio.
+        AESTHETIC: High-fidelity "modern startup" look. Must be STRONG ENOUGH TO WORK IN MONOCHROME but can use vibrant gradients.
+        PROHIBITED: NO text, NO realistic photos, NO bevels, NO reflections, NO glass/glossy effects, NO 3D "junk" artifacts.
+        BACKGROUND: Isolated on a clean, solid, high-contrast background (Pure White or complementary solid color).
         ${textProhibition}`;
     } else {
         // Fallback/Legacy

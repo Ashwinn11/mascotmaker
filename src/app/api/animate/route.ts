@@ -23,7 +23,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const result = await generateSpriteSheet(mascotBase64, action, description, subjectType);
+    const result = await generateSpriteSheet(mascotBase64, action, description, subjectType, shouldRemoveBackground);
     const spriteDataData = result.data;
     const spriteBuffer = Buffer.from(spriteDataData, "base64");
 

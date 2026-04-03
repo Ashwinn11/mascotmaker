@@ -1,165 +1,118 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
-import { downloadFile } from "@/lib/download";
 import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { toast } from "sonner";
+import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
+import { StickerGrid } from "@/components/sticker-grid";
+import { downloadFile, downloadBase64, cropSticker } from "@/lib/download";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogDescription,
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { toast } from "sonner";
-
-interface AnimationItem {
-  spriteBase64: string;
-  animationBase64: string;
-  action: string;
-}
+import Link from "next/link";
 
 interface MascotPreviewProps {
   mascotBase64: string | null;
-  images: string[];
-  animations: AnimationItem[];
-  loading: boolean;
-  removeBackground?: boolean;
-  subjectType?: "Character" | "Sticker" | "Logo";
-}
-
-function StickerGrid({ spriteBase64, removeBackground }: { spriteBase64: string; removeBackground: boolean }) {
-  return (
-    <div className="grid grid-cols-3 gap-3">
-      {[...Array(9)].map((_, i) => (
-        <div key={i} className={`relative aspect-square overflow-hidden rounded-xl border-2 border-white shadow-sm ${removeBackground ? "bg-checkerboard" : "bg-white"}`}>
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url(data:image/png;base64,${spriteBase64})`,
-            backgroundSize: "300% 300%",
-            backgroundPosition: `${(i % 3) * 50}% ${Math.floor(i / 3) * 50}%`,
-            imageRendering: "pixelated" // optional, depends on art style
-          }} />
-        </div>
-      ))}
-    </div>
-  );
-}
-
-async function cropSticker(spriteBase64: string, index: number): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      const canvas = document.createElement("canvas");
-      const size = img.width / 3;
-      canvas.width = size;
-      canvas.height = size;
-      const ctx = canvas.getContext("2d");
-      if (!ctx) {
-        reject(new Error("Could not get canvas context"));
-        return;
-      }
-      const x = (index % 3) * size;
-      const y = Math.floor(index / 3) * size;
-      ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
-      resolve(canvas.toDataURL("image/png"));
-    };
-    img.onerror = reject;
-    img.src = `data:image/png;base64,${spriteBase64}`;
-  });
-}
-
-function downloadBase64(base64: string, filename: string, mimeType: string = "image/png") {
-  const byteCharacters = atob(base64.includes(",") ? base64.split(",")[1] : base64);
-  const byteNumbers = new Array(byteCharacters.length);
-  for (let i = 0; i < byteCharacters.length; i++) {
-    byteNumbers[i] = byteCharacters.charCodeAt(i);
-  }
-  const byteArray = new Uint8Array(byteNumbers);
-  const blob = new Blob([byteArray], { type: mimeType });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = filename;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  loading?: boolean;
+  images?: string[];
+  onImagesChange?: (imgs: string[]) => void;
+  removeBackground: boolean;
+  subjectType: "Character" | "Sticker" | "Logo";
+  analysis: string | null;
+  animations: { spriteBase64: string; animationBase64: string; action: string }[];
+  setAnimations: React.Dispatch<React.SetStateAction<{ spriteBase64: string; animationBase64: string; action: string }[]>>;
 }
 
 const LOADING_MESSAGES = [
-  "Sketching your character...",
-  "Adding colors and details...",
-  "Polishing the final look...",
-  "Almost there...",
+  "Sculpting with pixels...",
+  "Applying digital paint...",
+  "Consulting the AI muses...",
+  "Perfecting the silhouette...",
+  "Studio lighting in progress...",
 ];
 
-export function MascotPreview({ mascotBase64, images, animations, loading, removeBackground = false, subjectType = "Character" }: MascotPreviewProps) {
-  const isSticker = subjectType === "Sticker";
+export function MascotPreview({
+  mascotBase64,
+  loading,
+  images,
+  removeBackground,
+  subjectType,
+  analysis,
+  animations,
+  setAnimations,
+}: MascotPreviewProps) {
   const [msgIndex, setMsgIndex] = useState(0);
-  const [hoverState, setHoverState] = useState<"gif" | "pack" | "mascot" | null>(null);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-
-  // Publish state
+  const [hoverState, setHoverState] = useState<"mascot" | "pack" | "gif" | null>(null);
   const [publishOpen, setPublishOpen] = useState(false);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [publishing, setPublishing] = useState(false);
   const [published, setPublished] = useState(false);
+  const [publishedId, setPublishedId] = useState<number | null>(null);
+
+  const isSticker = subjectType === "Sticker";
 
   useEffect(() => {
-    if (!loading) {
-      setMsgIndex(0);
-      return;
-    }
+    if (!loading) return;
     const interval = setInterval(() => {
-      setMsgIndex((i) => (i + 1) % LOADING_MESSAGES.length);
+      setMsgIndex((prev) => (prev + 1) % LOADING_MESSAGES.length);
     }, 3000);
     return () => clearInterval(interval);
   }, [loading]);
 
-  // Reset active index when images change
-  useEffect(() => {
-    setActiveImageIndex(0);
-  }, [images]);
-
   const handlePublish = async () => {
-    if (!name.trim() || !mascotBase64) return;
-    const latest = animations.length > 0 ? animations[animations.length - 1] : null;
+    if (!mascotBase64 || !name) return;
     setPublishing(true);
     try {
+      const latestAnim = animations.length > 0 ? animations[animations.length - 1] : null;
       const res = await fetch("/api/gallery", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: name.trim(),
-          description: description.trim(),
+          name,
+          description,
           imageBase64: mascotBase64,
-          animationBase64: latest?.animationBase64 || null,
-          spriteBase64: latest?.spriteBase64 || (isSticker ? mascotBase64 : null),
-          subjectType: subjectType || "Character",
+          animationBase64: latestAnim?.animationBase64,
+          spriteBase64: latestAnim?.spriteBase64,
+          subjectType,
+          analysis,
         }),
       });
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         toast.error(data.error || "Failed to publish");
         return;
       }
+      setPublishedId(data.item.id);
       setPublished(true);
-      toast.success("Mascot published to the gallery!");
-      setTimeout(() => {
-        setPublishOpen(false);
-        setPublished(false);
-        setName("");
-        setDescription("");
-      }, 1500);
+      toast.success("Published to the gallery!");
     } catch {
       toast.error("Failed to publish. Please try again.");
     } finally {
       setPublishing(false);
+    }
+  };
+
+  const handleShare = async (id: number) => {
+    const url = `${window.location.origin}/mascot/${id}`;
+    if (navigator.share) {
+      try {
+        await navigator.share({ url });
+      } catch (err) {
+        if ((err as Error).name !== "AbortError") console.error("Share failed:", err);
+      }
+    } else {
+      navigator.clipboard.writeText(url);
+      toast.success("URL copied!");
     }
   };
 
@@ -173,9 +126,7 @@ export function MascotPreview({ mascotBase64, images, animations, loading, remov
               <div className="absolute inset-0 rounded-full border-4 border-candy-pink/20" />
               <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-candy-pink" style={{ animationDuration: "1s" }} />
             </div>
-            <p className="font-display text-sm text-warm-gray transition-opacity duration-300">
-              {LOADING_MESSAGES[msgIndex]}
-            </p>
+            <p className="font-display text-sm text-warm-gray">{LOADING_MESSAGES[msgIndex]}</p>
           </div>
         </div>
       </div>
@@ -184,253 +135,174 @@ export function MascotPreview({ mascotBase64, images, animations, loading, remov
 
   if (!mascotBase64 && (!images || images.length === 0)) {
     return (
-      <div className="relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-dashed border-border bg-white/50">
-        <div className="absolute inset-0 flex items-center justify-center bg-dotted">
-          <div className="flex flex-col items-center gap-4 text-center px-8 text-warm-gray">
-            <Icon3D name="artist-palette" size="2xl" animated />
-            <p className="font-display text-lg">Your canvas awaits</p>
-            <p className="text-sm text-muted-foreground">Describe a character or upload an image to get started</p>
-          </div>
+      <div className="relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-dashed border-border bg-white/50 text-center flex items-center justify-center p-8">
+        <div className="space-y-4">
+          <Icon3D name="artist-palette" size="2xl" animated />
+          <p className="font-display text-lg text-warm-gray">Your canvas awaits</p>
+          <p className="text-sm text-muted-foreground">Describe your vision or upload an image to get started</p>
         </div>
       </div>
     );
   }
 
-  const currentDisplayImage = images && images.length > 0 ? images[activeImageIndex] : mascotBase64;
+  const latestAnim = animations.length > 0 ? animations[animations.length - 1] : null;
+  const currentDisplayImage = latestAnim && hoverState !== "mascot" ? latestAnim.spriteBase64 : mascotBase64!;
 
-  if ((animations.length > 0 || isSticker) && mascotBase64) {
-    const latest = animations.length > 0 ? animations[animations.length - 1] : null;
-    const displayBase64 = latest ? latest.spriteBase64 : mascotBase64;
-    const actionLabel = latest ? latest.action : "Asset Set";
-
-    return (
-      <>
-        <div className="rounded-3xl border-2 border-candy-pink/20 bg-gradient-to-br from-white to-candy-pink/5 p-5 shadow-sm animate-pop-in">
-          <h3 className="font-display text-lg text-foreground mb-4 flex items-center justify-between">
-            <span className="flex items-center gap-2">
-              <Icon3DInline name={isSticker ? "artist-palette" : "clapper-board"} size={20} />
-              {isSticker ? "Your Sticker Set" : "Latest Animation"}
-            </span>
-            {isSticker && (
-              <span className="text-[10px] font-black uppercase text-warm-gray bg-muted px-2 py-0.5 rounded-full">
-                9 Assets Created
-              </span>
-            )}
-          </h3>
-
-          <div className="space-y-5 flex flex-col items-center">
-            <div className="relative w-full overflow-hidden rounded-2xl">
-              {isSticker ? (
-                <StickerGrid spriteBase64={displayBase64} removeBackground={removeBackground} />
-              ) : latest && (
-                <div className={`relative aspect-square w-full max-w-[400px] overflow-hidden rounded-2xl border-2 border-white shadow-md mx-auto ${removeBackground ? "bg-checkerboard" : "bg-white"}`}>
-                  <img
-                    src={
-                      hoverState === "pack"
-                        ? `data:image/png;base64,${latest.spriteBase64}`
-                        : hoverState === "mascot"
-                          ? `data:image/png;base64,${mascotBase64}`
-                          : `data:image/gif;base64,${latest.animationBase64}`
-                    }
-                    alt={`${latest.action} preview`}
-                    className={`h-full w-full object-contain transition-all duration-300 ${hoverState === "pack" || hoverState === "mascot" ? "scale-95" : "scale-100"}`}
-                  />
-                  <div className="absolute top-2 right-2 flex gap-1">
-                    <div className={`rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${hoverState === "mascot" ? "opacity-100" : "opacity-40"}`}>
-                      MASCOT
-                    </div>
-                    <div className={`rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${hoverState === "pack" || hoverState === "mascot" ? "opacity-40" : "opacity-100"}`}>
-                      GIF
-                    </div>
-                    <div className={`rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${hoverState === "pack" ? "opacity-100" : "opacity-40"}`}>
-                      STICKERS
-                    </div>
-                  </div>
-                </div>
-              )}
+  return (
+    <div className="space-y-5">
+      <div className="space-y-4 animate-pop-in">
+        {/* Main Preview Frame */}
+        <div className={`relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-white shadow-xl shadow-candy-pink/10 ${removeBackground ? "bg-checkerboard" : "bg-white"}`}>
+          {isSticker ? (
+            <StickerGrid spriteBase64={currentDisplayImage} removeBackground={removeBackground} />
+          ) : (
+            <img
+              src={
+                latestAnim && hoverState === "gif"
+                  ? `data:image/gif;base64,${latestAnim.animationBase64}`
+                  : `data:image/png;base64,${currentDisplayImage}`
+              }
+              alt="Preview"
+              className="w-full h-full object-contain"
+            />
+          )}
+          
+          {/* Action Labels */}
+          <div className="absolute top-4 left-4">
+            <div className="rounded-full bg-black/60 px-3 py-1 text-[10px] font-black text-white uppercase tracking-widest backdrop-blur-md">
+              {subjectType} {latestAnim && !isSticker ? `• ${latestAnim.action}` : ""}
             </div>
+          </div>
+        </div>
 
-            {/* 3-in-1 Actions Area */}
-            <div className="w-full space-y-3">
-              <p className="text-xs font-bold text-warm-gray text-center uppercase tracking-wider">
-                Download as:
+        {/* Action Controls */}
+        <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            {/* Primary Download */}
+            <button
+              onClick={async () => {
+                if (isSticker) {
+                  const toastId = toast.loading("Preparing stickers...");
+                  try {
+                    for (let i = 0; i < 9; i++) {
+                      const cropped = await cropSticker(`data:image/png;base64,${currentDisplayImage}`, i);
+                      downloadBase64(cropped, `sticker-${i + 1}.png`);
+                      await new Promise(r => setTimeout(r, 150));
+                    }
+                    toast.success("Success!", { id: toastId });
+                  } catch (e) {
+                    toast.error("Failed to crop", { id: toastId });
+                  }
+                } else {
+                  downloadFile(`data:image/png;base64,${currentDisplayImage}`, `${subjectType.toLowerCase()}.png`);
+                }
+              }}
+              className="flex items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs font-bold text-warm-gray transition-all hover:border-candy-pink/30 hover:bg-candy-pink/5"
+            >
+              <Icon3DInline name="sparkles" size={16} />
+              {isSticker ? "Download Pack" : `Download ${subjectType}`}
+            </button>
+
+            {/* Animation/Secondary Download */}
+            {latestAnim && !isSticker && (
+              <button
+                onMouseEnter={() => setHoverState("gif")}
+                onMouseLeave={() => setHoverState(null)}
+                onClick={() => downloadFile(`data:image/gif;base64,${latestAnim.animationBase64}`, `mascot-${latestAnim.action}.gif`)}
+                className="flex items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs font-bold text-warm-gray transition-all hover:border-candy-orange/30 hover:bg-candy-orange/5"
+              >
+                <Icon3DInline name="film-frames" size={16} />
+                Download GIF
+              </button>
+            )}
+          </div>
+
+          <Button
+            onClick={() => setPublishOpen(true)}
+            className="w-full rounded-xl bg-gradient-to-r from-candy-pink to-candy-orange py-6 text-base font-bold text-white shadow-lg shadow-candy-pink/10 active:scale-95 transition-all"
+          >
+            <Icon3DInline name="sparkles" size={20} className="mr-2" />
+            Publish to Gallery
+          </Button>
+        </div>
+      </div>
+
+      {/* Publish Dialog */}
+      <Dialog open={publishOpen} onOpenChange={setPublishOpen}>
+        <DialogContent className="rounded-3xl border-2 border-border sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl">Publish to Gallery</DialogTitle>
+            <DialogDescription>Share your {subjectType.toLowerCase()} with the world!</DialogDescription>
+          </DialogHeader>
+          
+          {published ? (
+            <div className="flex flex-col items-center py-6 text-center">
+              <Icon3D name="party-popper" size="2xl" className="mb-4 animate-pop-in" />
+              <h3 className="font-display text-2xl text-foreground">Live on Gallery!</h3>
+              <p className="text-sm text-muted-foreground mt-2 mb-8 max-w-[240px]">
+                Your {subjectType.toLowerCase()} has been published.
               </p>
-              <div className="flex flex-wrap gap-2">
-                {!isSticker && (
-                  <button
-                    onMouseEnter={() => setHoverState("mascot")}
-                    onMouseLeave={() => setHoverState(null)}
-                    onClick={() => downloadFile(`data:image/png;base64,${mascotBase64}`, `mascot-high-res.png`)}
-                    className="flex-1 min-w-[100px] flex items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs font-bold text-warm-gray shadow-sm transition-all hover:border-candy-pink/30 hover:bg-candy-pink/5 active:scale-95"
-                  >
-                    <Icon3DInline name="sparkles" size={16} />
-                    Mascot
-                  </button>
-                )}
+              
+              <div className="w-full space-y-3">
+                <Button
+                  onClick={() => publishedId && handleShare(publishedId)}
+                  className="w-full rounded-2xl bg-foreground py-6 font-bold text-white shadow-lg"
+                >
+                  Share {subjectType}
+                </Button>
                 <button
-                  onMouseEnter={() => setHoverState("pack")}
-                  onMouseLeave={() => setHoverState(null)}
-                  onClick={async () => {
-                    if (isSticker) {
-                      // Multi-download individual stickers
-                      const toastId = toast.loading("Preparing stickers for download...");
-                      try {
-                        for (let i = 0; i < 9; i++) {
-                          const croppedBase64 = await cropSticker(displayBase64, i);
-                          downloadBase64(croppedBase64, `sticker-${actionLabel}-${i + 1}.png`);
-                          // Minor delay to help browser handle multiple prompts
-                          await new Promise(r => setTimeout(r, 150));
-                        }
-                        toast.success("All stickers downloaded!", { id: toastId });
-                      } catch (err) {
-                        toast.error("Failed to crop stickers", { id: toastId });
-                        console.error(err);
-                      }
-                    } else {
-                      downloadBase64(displayBase64, `mascot-${actionLabel}-pack.png`);
+                  onClick={() => {
+                    if (publishedId) {
+                      navigator.clipboard.writeText(`${window.location.origin}/mascot/${publishedId}`);
+                      toast.success("URL copied!");
                     }
                   }}
-                  className={`flex-1 min-w-[100px] flex items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs font-bold text-warm-gray shadow-sm transition-all hover:border-candy-blue/30 hover:bg-candy-blue/5 active:scale-95 ${isSticker ? "w-full" : ""}`}
+                  className="w-full text-xs font-black uppercase text-muted-foreground hover:text-foreground py-2"
                 >
-                  <Icon3DInline name="artist-palette" size={16} />
-                  {isSticker ? "Download Individual Stickers" : "Stickers"}
+                  Copy Clean Link
                 </button>
-                {!isSticker && latest && (
-                  <button
-                    onMouseEnter={() => setHoverState("gif")}
-                    onMouseLeave={() => setHoverState(null)}
-                    onClick={() => downloadFile(`data:image/gif;base64,${latest.animationBase64}`, `mascot-${actionLabel}.gif`)}
-                    className="flex-1 min-w-[100px] flex items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs font-bold text-warm-gray shadow-sm transition-all hover:border-candy-orange/30 hover:bg-candy-orange/5 active:scale-95"
-                  >
-                    <Icon3DInline name="film-frames" size={16} />
-                    Animated
-                  </button>
-                )}
-              </div>
-
-              <Button
-                onClick={() => setPublishOpen(true)}
-                disabled={isSticker ? false : !latest}
-                className="w-full rounded-xl bg-gradient-to-r from-candy-pink to-candy-orange py-6 text-base font-bold text-white shadow-lg shadow-candy-pink/20 hover:brightness-105 hover:shadow-candy-pink/30 active:scale-[0.98] mt-2"
-              >
-                <Icon3DInline name="sparkles" size={20} className="mr-2" />
-                Publish to Gallery
-              </Button>
-            </div>
-          </div>
-        </div>
-
-        <Dialog open={publishOpen} onOpenChange={setPublishOpen}>
-          <DialogContent className="rounded-3xl border-2 border-border sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle className="font-display text-xl">Publish to Gallery</DialogTitle>
-              <DialogDescription>Share your mascot with the world!</DialogDescription>
-            </DialogHeader>
-            {published ? (
-              <div className="flex flex-col items-center py-8">
-                <Icon3D name="party-popper" size="2xl" className="mb-3 animate-pop-in" />
-                <p className="font-display text-lg text-foreground">Published!</p>
-                <p className="text-sm text-muted-foreground mt-1">Your mascot is now in the gallery</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                <div>
-                  <label className="text-sm font-bold text-warm-gray mb-1 block">Mascot Name</label>
-                  <Input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="Give your mascot a name..."
-                    className="rounded-xl border-2"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-bold text-warm-gray mb-1 block">Description</label>
-                  <Textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Tell us about your mascot..."
-                    className="min-h-[80px] rounded-xl border-2 resize-none"
-                  />
-                </div>
-              </div>
-            )}
-            {!published && (
-              <DialogFooter>
-                <Button
-                  onClick={handlePublish}
-                  disabled={!name.trim() || publishing}
-                  className="w-full rounded-xl bg-gradient-to-r from-candy-pink to-candy-orange py-5 text-base font-bold text-white"
+                <hr className="border-t-2 border-border my-4" />
+                <Link
+                  href={publishedId ? `/mascot/${publishedId}` : "/gallery"}
+                  className="block w-full text-center text-sm font-bold text-candy-pink hover:underline"
                 >
-                  {publishing ? "Publishing..." : (
-                    <>
-                      <Icon3DInline name="sparkles" size={18} className="mr-1.5" />
-                      Publish
-                    </>
-                  )}
+                  View on Gallery →
+                </Link>
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              <div className="space-y-1">
+                <label className="text-sm font-bold text-warm-gray">Name</label>
+                <Input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder={`Mascot name...`}
+                  className="rounded-xl border-2"
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="text-sm font-bold text-warm-gray">Description</label>
+                <Textarea
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Tell us about it..."
+                  className="min-h-[80px] rounded-xl border-2 resize-none"
+                />
+              </div>
+              <DialogFooter className="mt-4">
+                <Button
+                  disabled={publishing || !name}
+                  onClick={handlePublish}
+                  className="w-full rounded-xl bg-gradient-to-r from-candy-pink to-candy-orange py-6 text-base font-bold text-white shadow-lg"
+                >
+                  {publishing ? "Publishing..." : "Publish Now"}
                 </Button>
               </DialogFooter>
-            )}
-          </DialogContent>
-        </Dialog>
-      </>
-    );
-  }
-
-  // Default image view (with gallery support if multiple images)
-  return (
-    <div className="space-y-4">
-      <div className={`relative w-full overflow-hidden rounded-3xl border-4 border-white shadow-xl shadow-candy-pink/10 animate-pop-in ${removeBackground ? "bg-checkerboard" : "bg-white"}`}>
-        <img
-          src={`data:image/png;base64,${currentDisplayImage}`}
-          alt="Your mascot"
-          className="w-full h-auto block"
-        />
-        <div className="absolute inset-0 rounded-3xl ring-1 ring-inset ring-black/5" />
-        <div className="absolute top-4 left-4 flex gap-2">
-          {images && images.length > 1 && (
-            <div className="rounded-full bg-black/60 px-3 py-1 text-[10px] font-black text-white uppercase tracking-widest backdrop-blur-md">
-              Frame {activeImageIndex + 1} / {images.length}
             </div>
           )}
-        </div>
-        <button
-          className="absolute bottom-4 right-4 flex items-center gap-2 rounded-xl bg-white/90 px-3 py-2 text-xs font-bold text-warm-gray shadow-lg backdrop-blur-sm transition-all hover:bg-white"
-          onClick={(e) => {
-            e.stopPropagation();
-            downloadFile(`data:image/png;base64,${currentDisplayImage}`, `mascot${images && images.length > 1 ? `_frame_${activeImageIndex + 1}` : ""}.png`);
-          }}
-        >
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-            <polyline points="7 10 12 15 17 10" />
-            <line x1="12" y1="15" x2="12" y2="3" />
-          </svg>
-          Download
-        </button>
-      </div>
-
-      {/* Gallery Reel */}
-      {images && images.length > 1 && (
-        <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-          {images.map((img, idx) => (
-            <button
-              key={idx}
-              onClick={() => setActiveImageIndex(idx)}
-              className={`relative h-20 w-20 flex-shrink-0 overflow-hidden rounded-xl border-2 transition-all ${activeImageIndex === idx ? "border-candy-pink scale-105 shadow-md" : "border-border hover:border-candy-pink/40"
-                }`}
-            >
-              <img
-                src={`data:image/png;base64,${img}`}
-                alt={`Frame ${idx + 1}`}
-                className="h-full w-full object-cover"
-              />
-              {activeImageIndex === idx && (
-                <div className="absolute inset-0 bg-candy-pink/10" />
-              )}
-            </button>
-          ))}
-        </div>
-      )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

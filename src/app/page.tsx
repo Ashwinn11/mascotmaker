@@ -9,8 +9,8 @@ import { STYLES } from "@/lib/seo-data";
 const TOP_STYLES = STYLES.slice(0, 8);
 
 export const metadata: Metadata = {
-  title: "Mascot Maker — AI Mascot, Logo & Sticker Generator",
-  description: "Create professional 3D, 2D, or retro characters with absolute identity consistency. Generate logos, sticker packs, and mascots in 8 styles. Instant AI background remover.",
+  title: "Mascot Maker — AI Mascot, Logo, Sticker & GIF Generator",
+  description: "Create professional 3D, 2D, or retro characters with absolute consistency. Generate branding logos, sticker packs, and instant character animations with AI. Built-in background remover.",
   alternates: {
     canonical: "/",
   },
@@ -26,7 +26,7 @@ export default function Home() {
         "name": "What can I create with Mascot Maker?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Mascot Maker is a specialized AI design studio for creating consistent brand mascots, professional logos, and cohesive sticker packs across 8 distinct art styles."
+          "text": "Mascot Maker is a specialized AI design studio for creating consistent brand mascots, professional logos, cohesive sticker packs, and instant character animations (GIFs) across 8 distinct styles."
         }
       },
       {
@@ -81,10 +81,10 @@ export default function Home() {
               <div className="space-y-4">
                 <h1 className="font-display text-5xl md:text-7xl leading-[0.85] tracking-tighter text-foreground uppercase">
                   Mascots, Logos<br />
-                  <span className="text-candy-pink italic">& Stickers.</span>
+                  <span className="text-candy-pink italic">& Animations.</span>
                 </h1>
                 <p className="text-lg md:text-xl font-medium text-foreground/50 max-w-xl leading-relaxed animate-slide-up stagger-1">
-                  We built the only design studio that fixes the "AI consistency" problem. Stop settling for one-off characters that don&apos;t match your brand. Pin your mascot's look across logos, 3D renders, and sticker packs in seconds.
+                  The only AI design studio that fixes the "consistency" problem. Generate professional 3D characters, logos, sticker packs, and instant animations for your brand in seconds.
                 </p>
               </div>
 
@@ -257,6 +257,64 @@ export default function Home() {
               {/* Small decorative accent */}
               <div className="absolute -top-6 -left-6 w-24 h-24 rounded-[1.5rem] overflow-hidden shadow-xl border border-foreground/5 rotate-[-8deg]">
                 <Image src="/demo/style-flat.png" alt="" width={96} height={96} className="object-cover w-full h-full" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+          INSTANT ANIMATION — Feature callout, dark section, image LEFT
+      ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+      <section className="py-28 bg-foreground text-cream overflow-hidden relative">
+        <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none" />
+        <div className="container mx-auto px-6">
+          <div className="flex flex-col lg:flex-row-reverse gap-16 lg:gap-24 items-center">
+
+            {/* Copy — right/right-aligned */}
+            <div className="lg:w-[45%] space-y-8">
+              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-candy-orange/10 border border-candy-orange/20">
+                <Zap size={12} className="text-candy-orange" />
+                <span className="text-[10px] font-black uppercase tracking-widest text-candy-orange">Magic Moment</span>
+              </div>
+              <h2 className="font-display text-5xl md:text-6xl leading-[0.9] tracking-tight">
+                Bring your mascot<br />
+                <span className="text-candy-orange">to life instantly.</span>
+              </h2>
+              <p className="text-cream/50 text-lg font-medium leading-relaxed">
+                A mascot is just a drawing until it moves. Our engine automatically generates 9-frame studio sprite sheets and converts them into Discord-ready animated GIFs in one click. 
+              </p>
+              <ul className="space-y-4">
+                {[
+                  "Automated 9-frame Sprite Sheet generation",
+                  "One-click high-fidelity GIF conversion",
+                  "Perfect for Discord, Slack, and Web Apps",
+                  "Maintain identity across every action"
+                ].map((item, i) => (
+                  <li key={i} className="flex items-start gap-4">
+                    <div className="w-5 h-5 rounded-full bg-candy-orange/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check size={12} className="text-candy-orange stroke-[3]" />
+                    </div>
+                    <span className="text-sm font-semibold text-cream/70">{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Link href="/create" className="inline-flex items-center gap-3 px-7 py-4 bg-candy-orange text-cream rounded-2xl font-black text-sm tracking-wide hover:brightness-110 transition-all group shadow-glow-orange">
+                ANIMATE YOUR CHARACTER
+                <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </div>
+
+            {/* Image — left */}
+            <div className="lg:w-[55%] relative">
+              <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border border-white/5 bg-white/5 p-4">
+                <Image src="/demo/animation-showcase.webp" alt="AI Mascot Animation Engine" width={800} height={600} className="w-full h-auto rounded-[2rem]" />
+              </div>
+              {/* Floating tech badge */}
+              <div className="absolute -bottom-6 -left-6 px-6 py-4 bg-foreground border-2 border-candy-orange rounded-3xl shadow-2xl">
+                <p className="text-[10px] font-black uppercase tracking-widest text-candy-orange">Engine Status</p>
+                <p className="text-xl font-black text-cream mt-0.5 whitespace-nowrap italic">Pro Sprite Mapping Active</p>
               </div>
             </div>
 

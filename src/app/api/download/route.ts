@@ -6,21 +6,28 @@ export async function GET(req: NextRequest) {
   const url = req.nextUrl.searchParams.get("url");
   const filename = req.nextUrl.searchParams.get("filename") || "download";
 
-  if (!url || !url.startsWith(R2_PUBLIC_URL)) {
+  if (!url || url.startsWith("data:")) {
     return NextResponse.json({ error: "Invalid URL" }, { status: 400 });
   }
 
-  const upstream = await fetch(url);
+  // Ensure url is absolute for fetch
+  const fetchUrl = url.startsWith("/") ? `${process.env.NEXT_PUBLIC_URL || ""}${url}` : url;
+
+  const upstream = await fetch(fetchUrl);
   if (!upstream.ok) {
     return NextResponse.json({ error: "Failed to fetch file" }, { status: 502 });
   }
 
   const contentType = upstream.headers.get("content-type") || "application/octet-stream";
+  const mode = req.nextUrl.searchParams.get("mode");
 
-  return new NextResponse(upstream.body, {
-    headers: {
-      "Content-Type": contentType,
-      "Content-Disposition": `attachment; filename="${filename}"`,
-    },
-  });
+  const headers: Record<string, string> = {
+    "Content-Type": contentType,
+  };
+
+  if (mode !== "view") {
+    headers["Content-Disposition"] = `attachment; filename="${filename}"`;
+  }
+
+  return new NextResponse(upstream.body, { headers });
 }

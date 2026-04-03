@@ -15,8 +15,8 @@ export async function POST(req: Request) {
     const style = (formData.get("style") as string) || "";
     const subjectType = (formData.get("subjectType") as "Character" | "Sticker" | "Logo") || "Character";
     const removeBackgroundFlag = formData.get("removeBackground") === "true";
-    const options = { aspectRatio, imageSize, style, subjectType };
-
+    const options = { aspectRatio, imageSize, style, subjectType, removeBackground: removeBackgroundFlag };
+    
     // Auth + credit check
     const check = await requireCredits("stylize", options);
     if (check instanceof Response) return check;
