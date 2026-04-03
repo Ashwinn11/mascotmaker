@@ -64,8 +64,17 @@ export async function cropSticker(spriteUrl: string, index: number): Promise<str
       ctx.drawImage(img, x, y, size, size, 0, 0, size, size);
       resolve(canvas.toDataURL("image/png"));
     };
-    img.onerror = reject;
-    // Route through the local proxy to bypass CORS restrictions
-    img.src = `/api/download?url=${encodeURIComponent(spriteUrl)}&mode=view`;
+    img.onerror = (err) => {
+      console.error("Image load error for cropping:", err);
+      reject(new Error("Failed to load image for cropping"));
+    };
+    
+    // Use the proxy only for external URLs to avoid CORS. 
+    // Data URLs and Blobs don't need a proxy.
+    if (spriteUrl.startsWith("data:") || spriteUrl.startsWith("blob:")) {
+      img.src = spriteUrl;
+    } else {
+      img.src = `/api/download?url=${encodeURIComponent(spriteUrl)}&mode=view`;
+    }
   });
 }
