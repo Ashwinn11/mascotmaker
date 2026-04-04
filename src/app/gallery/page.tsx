@@ -8,6 +8,25 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://mascotmaker.io/gallery",
   },
+  openGraph: {
+    title: "Mascot Gallery — Animated AI Characters",
+    description: "Explore mascots created by the community. Shop, download, or get inspired.",
+    url: "https://mascotmaker.io/gallery",
+    siteName: "Mascot Maker",
+    images: [{
+      url: "https://mascotmaker.io/app-icon.png",
+      width: 512,
+      height: 512,
+      alt: "Mascot Maker — Community Gallery",
+    }],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Mascot Gallery — Powered by mascotmaker.io",
+    images: ["https://mascotmaker.io/app-icon.png"],
+  },
 };
 
 export default function GalleryPage() {

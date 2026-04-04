@@ -97,6 +97,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     const post = posts.find(p => p.slug === slug);
     if (!post) return {};
 
+    const absoluteImageUrl = post.image.startsWith("http") 
+        ? post.image 
+        : `https://mascotmaker.io${post.image}`;
+
     return {
         title: post.title,
         description: post.description,
@@ -109,13 +113,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             type: "article",
             publishedTime: post.date,
             authors: [post.author],
-            images: [{ url: post.image, alt: post.imageAlt }],
+            images: [{ url: absoluteImageUrl, alt: post.imageAlt }],
         },
         twitter: {
             card: "summary_large_image",
             title: post.title,
             description: post.description,
-            images: [post.image],
+            images: [absoluteImageUrl],
         }
     };
 }

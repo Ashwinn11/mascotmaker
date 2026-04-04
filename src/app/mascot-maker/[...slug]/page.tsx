@@ -64,13 +64,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
             title,
             description,
             type: "website",
-            images: [`/app-icon.png`],
+            images: [`https://mascotmaker.io/app-icon.png`],
         },
         twitter: {
-            card: "summary_large_image",
+            card: "summary",
             title,
             description,
-            images: [`/app-icon.png`],
+            images: [`https://mascotmaker.io/app-icon.png`],
         }
     };
 }

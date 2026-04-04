@@ -8,6 +8,25 @@ export const metadata: Metadata = {
     alternates: {
         canonical: "https://mascotmaker.io/explore",
     },
+    openGraph: {
+        title: "Mascot Maker Studio Index",
+        description: "Directory of specialized AI mascot styles and industry tools.",
+        url: "https://mascotmaker.io/explore",
+        siteName: "Mascot Maker",
+        images: [{
+          url: "https://mascotmaker.io/app-icon.png",
+          width: 512,
+          height: 512,
+          alt: "Mascot Maker — Design Index",
+        }],
+        locale: "en_US",
+        type: "website",
+    },
+    twitter: {
+        card: "summary",
+        title: "Mascot Maker Index — Powered by mascotmaker.io",
+        images: ["https://mascotmaker.io/app-icon.png"],
+    },
 };
 
 export default function ExplorePage() {

@@ -16,7 +16,12 @@ export const metadata: Metadata = {
         title: "Blog — Mascot Maker",
         description: "Guides, tutorials, and insights on AI mascot design, brand strategy, and character creation.",
         type: "website",
-        images: ["/app-icon.png"],
+        images: ["https://mascotmaker.io/app-icon.png"],
+    },
+    twitter: {
+        card: "summary",
+        title: "Blog — Mascot Maker",
+        images: ["https://mascotmaker.io/app-icon.png"],
     },
 };
 

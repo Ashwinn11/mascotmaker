@@ -62,11 +62,11 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon.ico" },
-      { url: "/app-icon.png", type: "image/png" },
+      { url: "https://mascotmaker.io/favicon.ico" },
+      { url: "https://mascotmaker.io/app-icon.png", type: "image/png" },
     ],
     apple: [
-      { url: "/apple-touch-icon.png" },
+      { url: "https://mascotmaker.io/apple-touch-icon.png" },
     ],
   },
   openGraph: {
@@ -77,21 +77,21 @@ export const metadata: Metadata = {
     siteName: "Mascot Maker",
     images: [
       {
-        url: "/app-icon.png",
-        width: 1200,
-        height: 630,
-        alt: "Mascot Maker — AI mascot, logo, and sticker generator with 8 pro art styles",
+        url: "https://mascotmaker.io/app-icon.png",
+        width: 512,
+        height: 512,
+        alt: "Mascot Maker — AI mascot, logo, and sticker generator",
       },
     ],
     locale: "en_US",
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Mascot Maker — Powered by mascotmaker.io",
     description:
       "Free AI mascot, logo, and sticker generator with Identity Lock technology. Create consistent 3D, 2D, and vector characters for your brand.",
-    images: ["/app-icon.png"],
+    images: ["https://mascotmaker.io/app-icon.png"],
     creator: "@mascotmaker",
   },
   category: "technology",

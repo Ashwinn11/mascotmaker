@@ -16,18 +16,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const item = await getGalleryItemById(parseInt(id));
   if (!item) return { title: "Mascot Not Found" };
 
+  const absoluteImageUrl = item.image_url.startsWith("http") 
+    ? item.image_url 
+    : `https://mascotmaker.io${item.image_url}`;
+
   return {
     title: `${item.name} | Mascot Maker AI`,
     description: item.description || `Check out this consistent ${item.subject_type} generated with Mascot Maker AI. No character drift.`,
     openGraph: {
       title: `${item.name} - Character Identity Studio`,
       description: item.description || "Generated with Identity Lock technology.",
-      images: [{ url: item.image_url }],
+      images: [{ url: absoluteImageUrl }],
     },
     twitter: {
       card: "summary_large_image",
       title: item.name,
-      images: [item.image_url],
+      images: [absoluteImageUrl],
     },
   };
 }

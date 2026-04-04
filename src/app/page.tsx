@@ -14,6 +14,25 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "/",
   },
+  openGraph: {
+    title: "Mascot Maker — AI Mascot, Logo, Sticker & GIF Generator",
+    description: "Create professional 3D, 2D, or retro characters with absolute consistency. No character drift.",
+    url: "https://mascotmaker.io",
+    siteName: "Mascot Maker",
+    images: [{
+      url: "https://mascotmaker.io/app-icon.png",
+      width: 512,
+      height: 512,
+      alt: "Mascot Maker — AI Mascot Generator",
+    }],
+    locale: "en_US",
+    type: "website",
+  },
+  twitter: {
+    card: "summary",
+    title: "Mascot Maker — AI Character Generator",
+    images: ["https://mascotmaker.io/app-icon.png"],
+  },
 };
 
 export default function Home() {
