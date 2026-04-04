@@ -309,7 +309,7 @@ export default function Home() {
             {/* Image — left */}
             <div className="lg:w-[55%] relative">
               <div className="relative rounded-[3rem] overflow-hidden shadow-2xl border border-white/5 bg-white/5 p-4">
-                <Image src="/demo/animation-showcase.webp" alt="AI Mascot Animation Engine" width={800} height={600} className="w-full h-auto rounded-[2rem]" />
+                <Image src="/demo/style-showcase.webp" alt="AI Mascot Animation Engine" width={800} height={600} className="w-full h-auto rounded-[2rem]" />
               </div>
               {/* Floating tech badge */}
               <div className="absolute -bottom-6 -left-6 px-6 py-4 bg-foreground border-2 border-candy-orange rounded-3xl shadow-2xl">
