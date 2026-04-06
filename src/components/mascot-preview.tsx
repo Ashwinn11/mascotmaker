@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import Link from "next/link";
+import { motion, AnimatePresence } from "framer-motion";
 
 interface MascotPreviewProps {
   mascotBase64: string | null;
@@ -50,7 +51,6 @@ export function MascotPreview({
   setAnimations,
 }: MascotPreviewProps) {
   const [msgIndex, setMsgIndex] = useState(0);
-  const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [hoverState, setHoverState] = useState<"mascot" | "pack" | "gif" | null>(null);
   const [publishOpen, setPublishOpen] = useState(false);
   const [name, setName] = useState("");
@@ -118,15 +118,18 @@ export function MascotPreview({
 
   if (loading) {
     return (
-      <div className="relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-dashed border-candy-pink/30 bg-white shadow-sm">
-        <Skeleton className="h-full w-full" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="relative h-16 w-16">
-              <div className="absolute inset-0 rounded-full border-4 border-candy-pink/20" />
-              <div className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-t-candy-pink" style={{ animationDuration: "1s" }} />
-            </div>
-            <p className="font-display text-sm text-warm-gray">{LOADING_MESSAGES[msgIndex]}</p>
+      <div className="relative aspect-square w-full overflow-hidden rounded-[2rem] border border-white/10 glass-dark bg-[#141210] shadow-2xl flex items-center justify-center">
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-candy-pink/10 to-transparent opacity-50" />
+        <div className="flex flex-col items-center gap-6 relative z-10">
+          <div className="relative h-20 w-20">
+            <div className="absolute inset-0 rounded-full border border-white/10" />
+            <div className="absolute top-0 right-0 w-3 h-3 rounded-full bg-candy-pink animate-ping" />
+            <div className="absolute inset-0 rounded-full border-2 border-transparent border-t-candy-pink animate-spin" style={{ animationDuration: "1s" }} />
+            <div className="absolute inset-2 rounded-full border border-transparent border-b-candy-pink/50 animate-spin-slow" />
+          </div>
+          <div className="space-y-1 text-center">
+            <p className="font-display text-base text-white tracking-wide">{LOADING_MESSAGES[msgIndex]}</p>
+            <p className="text-[10px] font-black uppercase tracking-widest text-white/30">Engine V2.5 Active</p>
           </div>
         </div>
       </div>
@@ -135,11 +138,11 @@ export function MascotPreview({
 
   if (!mascotBase64 && (!images || images.length === 0)) {
     return (
-      <div className="relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-dashed border-border bg-white/50 text-center flex items-center justify-center p-8">
-        <div className="space-y-4">
+      <div className="relative aspect-square w-full overflow-hidden rounded-[2rem] border border-dashed border-white/10 bg-[#1c1916] text-center flex items-center justify-center p-8">
+        <div className="space-y-4 opacity-50">
           <Icon3D name="artist-palette" size="2xl" animated />
-          <p className="font-display text-lg text-warm-gray">Your canvas awaits</p>
-          <p className="text-sm text-muted-foreground">Describe your vision or upload an image to get started</p>
+          <p className="font-display text-xl text-white">Your canvas awaits</p>
+          <p className="text-sm text-white/50 font-medium">Describe your vision or upload an image to get started</p>
         </div>
       </div>
     );
@@ -150,9 +153,14 @@ export function MascotPreview({
 
   return (
     <div className="space-y-5">
-      <div className="space-y-4 animate-pop-in">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ type: "spring", stiffness: 300, damping: 25 }}
+        className="space-y-4"
+      >
         {/* Main Preview Frame */}
-        <div className={`relative aspect-square w-full overflow-hidden rounded-3xl border-4 border-white shadow-xl shadow-candy-pink/10 ${removeBackground ? "bg-checkerboard" : "bg-white"}`}>
+        <div className={`relative aspect-square w-full overflow-hidden rounded-[2rem] border-2 border-white/5 shadow-2xl glass-dark ${removeBackground ? "bg-checkerboard" : "bg-[#141210]"}`}>
           {isSticker ? (
             <StickerGrid spriteBase64={currentDisplayImage} removeBackground={removeBackground} />
           ) : (
@@ -168,16 +176,22 @@ export function MascotPreview({
           )}
           
           {/* Action Labels */}
-          <div className="absolute top-4 left-4">
-            <div className="rounded-full bg-black/60 px-3 py-1 text-[10px] font-black text-white uppercase tracking-widest backdrop-blur-md">
-              {subjectType} {latestAnim && !isSticker ? `• ${latestAnim.action}` : ""}
+          <div className="absolute top-4 left-4 flex gap-2">
+            <div className="rounded-full bg-black/60 px-3 py-1.5 text-[10px] font-black text-white uppercase tracking-widest backdrop-blur-md border border-white/10 shadow-lg">
+              {subjectType}
             </div>
+            {latestAnim && !isSticker && (
+              <div className="rounded-full bg-candy-pink/20 px-3 py-1.5 text-[10px] font-black text-candy-pink uppercase tracking-widest backdrop-blur-md border border-candy-pink/30 shadow-lg flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-candy-pink animate-pulse" />
+                {latestAnim.action}
+              </div>
+            )}
           </div>
         </div>
 
         {/* Action Controls */}
         <div className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {/* Primary Download */}
             <button
               onClick={async () => {
@@ -197,7 +211,7 @@ export function MascotPreview({
                   downloadFile(`data:image/png;base64,${currentDisplayImage}`, `${subjectType.toLowerCase()}.png`);
                 }
               }}
-              className="flex items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs font-bold text-warm-gray transition-all hover:border-candy-pink/30 hover:bg-candy-pink/5"
+              className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#1c1916] px-4 py-4 text-xs font-bold text-white/70 transition-all duration-300 hover:text-white hover:border-candy-pink/50 hover:bg-candy-pink/10 shadow-lg shadow-black/20"
             >
               <Icon3DInline name="sparkles" size={16} />
               {isSticker ? "Download Pack" : `Download ${subjectType}`}
@@ -209,7 +223,7 @@ export function MascotPreview({
                 onMouseEnter={() => setHoverState("gif")}
                 onMouseLeave={() => setHoverState(null)}
                 onClick={() => downloadFile(`data:image/gif;base64,${latestAnim.animationBase64}`, `mascot-${latestAnim.action}.gif`)}
-                className="flex items-center justify-center gap-2 rounded-xl border-2 border-border bg-white px-4 py-3 text-xs font-bold text-warm-gray transition-all hover:border-candy-orange/30 hover:bg-candy-orange/5"
+                className="flex items-center justify-center gap-2 rounded-2xl border border-white/10 bg-[#1c1916] px-4 py-4 text-xs font-bold text-white/70 transition-all duration-300 hover:text-candy-yellow hover:border-candy-yellow/50 hover:bg-candy-yellow/10 shadow-lg shadow-black/20"
               >
                 <Icon3DInline name="film-frames" size={16} />
                 Download GIF
@@ -219,88 +233,99 @@ export function MascotPreview({
 
           <Button
             onClick={() => setPublishOpen(true)}
-            className="w-full rounded-xl bg-gradient-to-r from-candy-pink to-candy-orange py-6 text-base font-bold text-white shadow-lg shadow-candy-pink/10 active:scale-95 transition-all"
+            className="w-full rounded-2xl border border-white/10 bg-candy-pink hover:brightness-110 py-6 text-base font-black tracking-wide text-white shadow-glow-coral transition-all duration-300 transform active:scale-[0.98]"
           >
             <Icon3DInline name="sparkles" size={20} className="mr-2" />
             Publish to Gallery
           </Button>
         </div>
-      </div>
+      </motion.div>
 
       {/* Publish Dialog */}
       <Dialog open={publishOpen} onOpenChange={setPublishOpen}>
-        <DialogContent className="rounded-3xl border-2 border-border sm:max-w-md">
+        <DialogContent className="rounded-3xl border border-white/10 bg-[#141210] sm:max-w-md shadow-2xl glass-dark">
           <DialogHeader>
-            <DialogTitle className="font-display text-xl">Publish to Gallery</DialogTitle>
-            <DialogDescription>Share your {subjectType.toLowerCase()} with the world!</DialogDescription>
+            <DialogTitle className="font-display text-2xl text-white">Publish to Gallery</DialogTitle>
+            <DialogDescription className="text-white/50">Share your {subjectType.toLowerCase()} with the world!</DialogDescription>
           </DialogHeader>
           
-          {published ? (
-            <div className="flex flex-col items-center py-6 text-center">
-              <Icon3D name="party-popper" size="2xl" className="mb-4 animate-pop-in" />
-              <h3 className="font-display text-2xl text-foreground">Live on Gallery!</h3>
-              <p className="text-sm text-muted-foreground mt-2 mb-8 max-w-[240px]">
-                Your {subjectType.toLowerCase()} has been published.
-              </p>
-              
-              <div className="w-full space-y-3">
-                <Button
-                  onClick={() => publishedId && handleShare(publishedId)}
-                  className="w-full rounded-2xl bg-foreground py-6 font-bold text-white shadow-lg"
-                >
-                  Share {subjectType}
-                </Button>
-                <button
-                  onClick={() => {
-                    if (publishedId) {
-                      navigator.clipboard.writeText(`${window.location.origin}/mascot/${publishedId}`);
-                      toast.success("URL copied!");
-                    }
-                  }}
-                  className="w-full text-xs font-black uppercase text-muted-foreground hover:text-foreground py-2"
-                >
-                  Copy Clean Link
-                </button>
-                <hr className="border-t-2 border-border my-4" />
-                <Link
-                  href={publishedId ? `/mascot/${publishedId}` : "/gallery"}
-                  className="block w-full text-center text-sm font-bold text-candy-pink hover:underline"
-                >
-                  View on Gallery →
-                </Link>
-              </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              <div className="space-y-1">
-                <label className="text-sm font-bold text-warm-gray">Name</label>
-                <Input
-                  value={name}
-                  onChange={(e) => setName(e.target.value)}
-                  placeholder={`Mascot name...`}
-                  className="rounded-xl border-2"
-                />
-              </div>
-              <div className="space-y-1">
-                <label className="text-sm font-bold text-warm-gray">Description</label>
-                <Textarea
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Tell us about it..."
-                  className="min-h-[80px] rounded-xl border-2 resize-none"
-                />
-              </div>
-              <DialogFooter className="mt-4">
-                <Button
-                  disabled={publishing || !name}
-                  onClick={handlePublish}
-                  className="w-full rounded-xl bg-gradient-to-r from-candy-pink to-candy-orange py-6 text-base font-bold text-white shadow-lg"
-                >
-                  {publishing ? "Publishing..." : "Publish Now"}
-                </Button>
-              </DialogFooter>
-            </div>
-          )}
+          <AnimatePresence mode="wait">
+            {published ? (
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="flex flex-col items-center py-6 text-center"
+              >
+                <Icon3D name="party-popper" size="2xl" className="mb-4" animated />
+                <h3 className="font-display text-3xl text-white">Live on Gallery!</h3>
+                <p className="text-sm text-white/50 mt-2 mb-8 max-w-[240px]">
+                  Your {subjectType.toLowerCase()} has been published.
+                </p>
+                
+                <div className="w-full space-y-3">
+                  <Button
+                    onClick={() => publishedId && handleShare(publishedId)}
+                    className="w-full rounded-xl bg-candy-pink hover:brightness-110 py-6 font-black text-white shadow-glow-coral"
+                  >
+                    Share {subjectType}
+                  </Button>
+                  <button
+                    onClick={() => {
+                      if (publishedId) {
+                        navigator.clipboard.writeText(`${window.location.origin}/mascot/${publishedId}`);
+                        toast.success("URL copied!");
+                      }
+                    }}
+                    className="w-full text-xs font-black uppercase text-white/30 hover:text-white py-3 transition-colors"
+                  >
+                    Copy Clean Link
+                  </button>
+                  <div className="h-px bg-white/10 w-full my-4" />
+                  <Link
+                    href={publishedId ? `/mascot/${publishedId}` : "/gallery"}
+                    className="block w-full text-center text-sm font-bold text-candy-pink hover:text-white transition-colors"
+                  >
+                    View on Gallery →
+                  </Link>
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                className="space-y-5 py-2"
+              >
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-white/50">Name</label>
+                  <Input
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder={`Mascot name...`}
+                    className="rounded-xl border border-white/10 bg-[#1c1916] text-white placeholder:text-white/20 focus-visible:ring-candy-pink focus-visible:border-candy-pink"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-black uppercase tracking-widest text-white/50">Description</label>
+                  <Textarea
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="Tell us about it..."
+                    className="min-h-[100px] rounded-xl border border-white/10 bg-[#1c1916] text-white placeholder:text-white/20 resize-none focus-visible:ring-candy-pink focus-visible:border-candy-pink"
+                  />
+                </div>
+                <DialogFooter className="mt-6 sm:justify-center border-t border-white/5 pt-6">
+                  <Button
+                    disabled={publishing || !name}
+                    onClick={handlePublish}
+                    className="w-full rounded-xl bg-white text-[#141210] hover:bg-candy-pink hover:text-white hover:shadow-glow-coral py-6 text-base font-black transition-all duration-300"
+                  >
+                    {publishing ? "Publishing..." : "Publish Now"}
+                  </Button>
+                </DialogFooter>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </DialogContent>
       </Dialog>
     </div>

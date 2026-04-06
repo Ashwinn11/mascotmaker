@@ -10,7 +10,6 @@ import { AnimationPreview } from "./animation-preview";
 import { PaywallModal } from "./paywall-modal";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { downloadFile } from "@/lib/download";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 
@@ -33,28 +32,18 @@ const ALL_MASCOT_STEPS = [
   { key: "animate" as MascotStep, label: "Action Set", num: 3 },
 ];
 
-const DownloadIcon = () => (
-  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
-  </svg>
-);
-
 // ── Shared left-panel placeholder shown before any result exists ──────────────
 function EmptyPreview({ icon, title, subtitle }: { icon: string; title: string; subtitle: string }) {
   return (
-    <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-4 rounded-3xl border-4 border-dashed border-border bg-white/50 p-8 text-center">
+    <div className="flex h-full min-h-[320px] flex-col items-center justify-center gap-4 rounded-3xl border-2 border-dashed border-white/10 bg-white/5 p-8 text-center backdrop-blur-sm">
       <Icon3DInline name={icon as any} size={48} className="opacity-40" />
       <div>
-        <p className="text-sm font-black text-muted-foreground">{title}</p>
-        <p className="text-xs text-muted-foreground/60 mt-1">{subtitle}</p>
+        <p className="text-sm font-black text-white/70 tracking-wide uppercase">{title}</p>
+        <p className="text-xs text-white/40 mt-1 font-medium">{subtitle}</p>
       </div>
     </div>
   );
 }
-
-
-
-
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 export function MascotCreator() {
@@ -86,10 +75,6 @@ export function MascotCreator() {
     removeBackground: false,
     subjectType: "Character" as "Character" | "Sticker" | "Logo",
   });
-
-
-
-
 
   // Paywall
   const [paywallOpen, setPaywallOpen] = useState(false);
@@ -176,44 +161,33 @@ export function MascotCreator() {
     setMascotStep(targetStep);
   };
 
-  const calculateStepCost = (step: MascotStep) => {
-    // 1. Base route cost from lib/credits.ts defaults
-    if (step === "animate") return 10;
-    
-    // 2. Type-specific cost for 'create' and 'refine'
-    if (createOptions.subjectType === "Sticker") return 15;
-    return 5;
-  };
-
   const sharedProps = { requireAuth, onApiError: handleApiError, onCreditsUpdate: handleCreditsUpdate };
 
   return (
-    <div className="mx-auto max-w-6xl px-3 py-4 md:px-6 md:py-8 mb-16 md:mb-0">
-
-
-
-      {/* Main Content: Reordered for mobile: Form top, Preview bottom */}
-      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-6 md:gap-8">
+    <div className="mx-auto max-w-6xl px-3 py-6 md:px-6 md:py-10 mb-16 md:mb-0">
+      <div className="flex flex-col lg:grid lg:grid-cols-2 gap-8 md:gap-10">
 
         {/* ── RIGHT (now Top on mobile): Studio Panel ── */}
         <div className="h-full">
-          <div className="rounded-3xl border-2 border-border bg-white/90 p-4 md:p-6 shadow-sm backdrop-blur-md flex-1 h-full flex flex-col">
+          <div className="rounded-[2rem] border border-white/10 glass-dark p-6 md:p-8 shadow-2xl flex-1 h-full flex flex-col relative overflow-hidden">
+            {/* Subtle glow background inside panel */}
+            <div className="absolute top-0 right-0 w-[50%] h-[50%] bg-candy-pink/5 blur-[80px] pointer-events-none" />
 
             {/* MASCOT */}
             {activeTab === "mascot" && (
-              <>
-                <div className="mb-5 flex items-center justify-center">
-                  <div className="flex items-center gap-1 rounded-2xl bg-white border-2 border-border p-1 shadow-sm">
+              <div className="relative z-10 flex-1 flex flex-col">
+                <div className="mb-8 flex items-center justify-center">
+                  <div className="flex items-center gap-1 rounded-full glass-dark border border-white/10 p-1.5 shadow-xl backdrop-blur-xl">
                     {getCurrentSteps().map((step, idx) => {
                       const isActive = mascotStep === step.key;
                       const isAccessible = canGoToStep(step.key);
                       return (
                         <button key={step.key} onClick={() => isAccessible && handleStepClick(step.key)}
                           disabled={!isAccessible}
-                          className={`flex items-center gap-1.5 rounded-xl px-3 py-2 text-xs font-bold transition-all ${isActive
-                            ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md"
-                            : isAccessible ? "text-muted-foreground hover:bg-muted" : "text-muted-foreground/30 cursor-not-allowed"}`}>
-                          <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] ${isActive ? "bg-white/20" : "bg-muted"}`}>
+                          className={`flex items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold transition-all duration-300 ${isActive
+                            ? "bg-candy-pink text-white shadow-[0_0_15px_rgba(255,77,28,0.4)]"
+                            : isAccessible ? "text-white/60 hover:bg-white/5 hover:text-white" : "text-white/20 cursor-not-allowed"}`}>
+                          <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[9px] ${isActive ? "bg-white/20" : "bg-white/10"}`}>
                             {idx + 1}
                           </span>
                           {step.label}
@@ -235,15 +209,12 @@ export function MascotCreator() {
                     onDone={() => {
                       if (createOptions.subjectType === "Character") {
                         setMascotStep("animate");
-                      } else {
-                        // For non-characters, maybe stay on refine or just show success
-                        // Users can still download from refine.
                       }
                     }} {...sharedProps} />
                 )}
 
                 {mascotStep === "animate" && mascotBase64 && (
-                  <div className="space-y-4 md:space-y-6">
+                  <div className="space-y-4 md:space-y-6 flex-1 flex flex-col">
                     <AnimationPicker mascotBase64={mascotBase64} description={analysis || undefined}
                       removeBackground={createOptions.removeBackground}
                       subjectType={createOptions.subjectType}
@@ -251,13 +222,13 @@ export function MascotCreator() {
                       onLoadingChange={setMascotLoading} {...sharedProps} />
                   </div>
                 )}
-              </>
+              </div>
             )}
           </div>
         </div>
 
         {/* ── LEFT (now Bottom on mobile): Preview Panel ── */}
-        <div className="order-last lg:order-first flex flex-col gap-3 md:gap-4">
+        <div className="order-last lg:order-first flex flex-col gap-5">
           {activeTab === "mascot" && (
             <>
               <MascotPreview
@@ -272,14 +243,12 @@ export function MascotCreator() {
               />
               {mascotBase64 && mascotStep !== "create" && (
                 <button onClick={handleStartOver}
-                  className="self-center text-xs font-semibold text-muted-foreground hover:text-foreground transition-colors">
+                  className="self-center text-[11px] font-black uppercase tracking-[0.2em] text-white/30 hover:text-candy-pink hover:bg-white/5 px-4 py-2 rounded-full transition-all duration-300">
                   ← Start over with a new mascot
                 </button>
               )}
             </>
           )}
-
-
         </div>
       </div>
 

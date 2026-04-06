@@ -1,4 +1,3 @@
-
 import type { Metadata } from "next";
 import { INDUSTRIES, STYLES, ENGINES, getSEOContent } from "@/lib/seo-data";
 import { notFound, redirect } from "next/navigation";
@@ -197,12 +196,13 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
     ];
 
     return (
-        <div className="bg-cream min-h-screen selection:bg-candy-pink/30">
+        <div className="bg-[#0c0a09] min-h-screen text-white selection:bg-candy-pink/30">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
 
             {/* ─── Hero ─── */}
-            <section className="relative flex items-center overflow-hidden bg-mesh-candy bg-grain pt-24 pb-16">
+            <section className="relative flex items-center overflow-hidden bg-[#141210] border-b border-white/[0.04] pt-24 pb-16">
+                <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px]" />
                 <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-candy-pink/5 to-transparent pointer-events-none" />
                 <div className="container mx-auto px-6 relative z-10">
                     <div className="grid lg:grid-cols-12 gap-12 items-start">
@@ -215,15 +215,15 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 { label: secondaryItem?.title || primaryItem?.title || "" }
                             ]} />
 
-                            <div className="inline-flex items-center gap-3 px-3 py-1.5 rounded-full border border-foreground/5 bg-cream/50 backdrop-blur-sm">
+                            <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full border border-white/10 glass-dark shadow-sm">
                                 <span className="relative flex h-2 w-2">
                                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-candy-pink opacity-75"></span>
                                     <span className="relative inline-flex rounded-full h-2 w-2 bg-candy-pink"></span>
                                 </span>
-                                <span className="text-[9px] font-black tracking-widest uppercase text-foreground/40 leading-none">Identity Lock™ — Free to try</span>
+                                <span className="text-[10px] font-black tracking-widest uppercase text-white/50 leading-none">Identity Lock™ — Free to try</span>
                             </div>
 
-                            <h1 className="font-display text-5xl md:text-6xl leading-[0.9] tracking-tighter text-foreground uppercase">
+                            <h1 className="font-display text-5xl md:text-6xl leading-[0.9] tracking-tighter text-white uppercase drop-shadow-sm">
                                 {type === "style" ? (
                                     <>
                                         {primaryItem?.title} <br />
@@ -241,29 +241,29 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     </>
                                 )}
                             </h1>
-                            <p className="text-lg md:text-xl font-medium text-foreground/60 max-w-xl leading-relaxed">
+                            <p className="text-lg md:text-xl font-medium text-white/50 max-w-xl leading-relaxed">
                                 {primaryItem?.description} {secondaryItem ? `Precision-tuned for ${secondaryItem.title} brands.` : ""} Generate consistent, studio-grade characters in under 30 seconds — no design skills required.
                             </p>
 
                             <div className="flex flex-wrap gap-4 pt-2">
-                                <Link href="/create" className="group inline-flex items-center gap-3 px-8 py-4 bg-foreground text-cream rounded-2xl font-black text-lg shadow-premium hover:bg-candy-pink transition-all duration-300 hover:scale-[1.02]">
+                                <Link href="/create" className="group inline-flex items-center gap-3 px-8 py-4 bg-candy-pink text-white rounded-2xl font-black text-lg shadow-glow-coral hover:brightness-110 active:scale-95 transition-all duration-300">
                                     <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
                                     START FOR FREE
                                 </Link>
-                                <Link href="/gallery" className="inline-flex items-center gap-3 px-8 py-4 border border-foreground/10 text-foreground rounded-2xl font-black text-lg hover:border-candy-pink hover:text-candy-pink transition-all duration-300">
+                                <Link href="/gallery" className="inline-flex items-center gap-3 px-8 py-4 border border-white/10 bg-[#1c1916] text-white rounded-2xl font-black text-lg hover:border-candy-pink hover:text-candy-pink active:scale-95 transition-all duration-300 shadow-lg">
                                     SEARCH HUB <ArrowRight size={18} />
                                 </Link>
                             </div>
 
                             {/* Trust bar */}
-                            <div className="flex flex-wrap gap-6 pt-2">
+                            <div className="flex flex-wrap gap-6 pt-4">
                                 {[
                                     { icon: Zap, text: "5 free credits" },
                                     { icon: Shield, text: "Commercial rights included" },
                                     { icon: Users, text: "No design skills needed" },
                                 ].map(({ icon: Icon, text }) => (
-                                    <div key={text} className="flex items-center gap-2 text-sm font-bold text-foreground/50">
-                                        <Icon size={14} className="text-candy-pink" />
+                                    <div key={text} className="flex items-center gap-2 text-[11px] font-black uppercase tracking-widest text-[#5cd85c]/80">
+                                        <Icon size={14} className="text-[#5cd85c]" />
                                         {text}
                                     </div>
                                 ))}
@@ -271,7 +271,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                         </div>
 
                         <div className="lg:col-span-5 relative mt-12 lg:mt-0">
-                            <div className="relative aspect-square w-full rounded-[2.5rem] overflow-hidden border border-foreground/5 shadow-2xl bg-white p-3">
+                            <div className="relative aspect-square w-full rounded-[2.5rem] overflow-hidden border border-white/10 shadow-2xl bg-[#1c1916] p-3 glass-dark">
                                 <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden">
                                     <Image
                                         src={(primaryItem as any)?.image || "/demo/hero-dragon-barista.png"}
@@ -281,10 +281,10 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                         className="object-cover"
                                     />
                                 </div>
-                                <div className="absolute top-1/2 -left-6 z-30 hidden md:block">
-                                    <div className="px-4 py-3 bg-foreground text-cream rounded-xl shadow-premium">
+                                <div className="absolute top-[40%] left-6 z-30 hidden md:block">
+                                    <div className="px-4 py-3 bg-[#141210]/95 border border-white/20 rounded-xl shadow-2xl backdrop-blur-xl">
                                         <p className="text-[8px] font-black uppercase tracking-[0.2em] text-candy-pink mb-0.5 leading-none">Identity Lock™</p>
-                                        <p className="text-[10px] font-bold text-cream/50 leading-none">Zero AI drift</p>
+                                        <p className="text-[10px] font-bold text-white/50 leading-none">Zero AI drift</p>
                                     </div>
                                 </div>
                             </div>
@@ -294,13 +294,13 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             </section>
 
             {/* ─── Why This Combination Works ─── */}
-            <section className="py-20 bg-white border-t border-foreground/5">
+            <section className="py-20 bg-[#0c0a09]">
                 <div className="container mx-auto px-6">
                     <div className="max-w-4xl mx-auto">
-                        <h2 className="font-display text-4xl md:text-5xl uppercase mb-4">
+                        <h2 className="font-display text-4xl md:text-5xl uppercase mb-4 text-white drop-shadow-sm">
                             Why {combinedTitle} <span className="text-candy-pink">Works</span>
                         </h2>
-                        <p className="text-foreground/50 text-lg font-medium max-w-2xl mb-12 leading-relaxed">
+                        <p className="text-white/50 text-lg font-medium max-w-2xl mb-12 leading-relaxed">
                             {isStyle
                                 ? `The ${primaryItem?.title} aesthetic isn't just a visual choice — it's a brand signal. Here's why it's the right call${secondaryItem ? ` for ${secondaryItem.title}` : ""}.`
                                 : `Mascots aren't decoration. They're brand equity. Here's what a well-executed ${combinedTitle?.toLowerCase()} delivers for your business.`
@@ -325,32 +325,32 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     icon: Zap,
                                     title: "Consistent Across Every Touchpoint",
                                     body: `From LinkedIn banners to product packaging to Discord avatars — a ${primaryItem?.title} character ensures your personality stays locked.`,
-                                    color: "text-candy-orange"
+                                    color: "text-[#5cd85c]"
                                 },
                             ].map(({ icon: Icon, title, body, color }) => (
-                                <div key={title} className="p-6 rounded-2xl border-2 border-foreground/5 bg-cream hover:border-candy-pink/20 transition-all">
-                                    <Icon size={24} className={`${color} mb-4`} />
-                                    <h3 className="font-black text-lg mb-2">{title}</h3>
-                                    <p className="text-sm text-foreground/60 leading-relaxed">{body}</p>
+                                <div key={title} className="p-6 rounded-2xl border border-white/5 bg-[#141210] hover:border-candy-pink/20 transition-all shadow-lg group">
+                                    <Icon size={24} className={`${color} mb-4 group-hover:scale-110 transition-transform`} />
+                                    <h3 className="font-black text-lg mb-2 text-white">{title}</h3>
+                                    <p className="text-sm text-white/50 leading-relaxed">{body}</p>
                                 </div>
                             ))}
                         </div>
 
                         {/* Founder's Take / Expert Insight */}
-                        <div className="bg-candy-pink/5 border border-candy-pink/10 rounded-[2rem] p-8 md:p-12 mb-16 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 p-8 text-candy-pink opacity-10 rotate-12">
+                        <div className="bg-candy-pink/5 border border-candy-pink/20 rounded-[2rem] p-8 md:p-12 mb-16 relative overflow-hidden glass-dark shadow-xl">
+                            <div className="absolute top-0 right-0 p-8 text-candy-pink opacity-20 rotate-12 mix-blend-screen">
                                 <Sparkles size={120} />
                             </div>
                             <div className="relative z-10 max-w-2xl">
                                 <p className="text-[10px] font-black uppercase tracking-[0.2em] text-candy-pink mb-4">Founder&apos;s Take</p>
-                                <h3 className="font-display text-3xl uppercase mb-6 leading-none tracking-tight">Consistency is your <span className="italic">real</span> moat.</h3>
-                                <div className="space-y-4 text-foreground/70 font-medium leading-relaxed">
+                                <h3 className="font-display text-3xl md:text-4xl uppercase mb-6 leading-none tracking-tight text-white drop-shadow-sm">Consistency is your <span className="italic text-candy-pink">real</span> moat.</h3>
+                                <div className="space-y-4 text-white/70 font-medium leading-relaxed">
                                     <p>
-                                        When we started Mascot Maker, the biggest design bottleneck wasn&apos;t generating an image—it was generating the <span className="text-foreground font-bold italic underline decoration-candy-pink underline-offset-4">same</span> character twice.
+                                        When we started Mascot Maker, the biggest design bottleneck wasn&apos;t generating an image—it was generating the <span className="text-white font-bold italic underline decoration-candy-pink underline-offset-4">same</span> character twice.
                                     </p>
                                     <p>
                                         For {combinedTitle?.toLowerCase()} users, this is do-or-die. If your mascot looks different on your homepage than it does in your dashboard, you haven&apos;t built a character—you&apos;ve built a distraction.
-                                        That&apos;s why we focused everything on <span className="text-foreground font-bold">Identity Lock™</span>. It&apos;s not just AI; it&apos;s brand insurance.
+                                        That&apos;s why we focused everything on <span className="text-white font-bold text-candy-pink">Identity Lock™</span>. It&apos;s not just AI; it&apos;s brand insurance.
                                     </p>
                                 </div>
                             </div>
@@ -359,12 +359,12 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                         {/* Programmatic Visual Gallery */}
                         {((primaryItem as any)?.fallbackGallery?.length > 0) && (
                             <div className="mb-16">
-                                <h3 className="font-display text-2xl uppercase tracking-tight mb-6">
+                                <h3 className="font-display text-2xl uppercase tracking-tight mb-6 text-white">
                                     {type === "style" ? "Visual Aesthetic Examples" : "Asset Applications"}
                                 </h3>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                                     {((primaryItem as any).fallbackGallery || []).map((imgUrl: string, idx: number) => (
-                                        <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden border border-foreground/5 shadow-sm hover:scale-105 transition-transform duration-300">
+                                        <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden border border-white/10 shadow-lg hover:scale-105 transition-transform duration-300">
                                             <Image src={imgUrl} alt={`Example ${idx + 1} for ${primaryItem.title}`} fill className="object-cover" />
                                         </div>
                                     ))}
@@ -373,7 +373,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                         )}
 
                         {/* Deep Content */}
-                        <div className="prose prose-lg max-w-none prose-headings:font-display prose-headings:uppercase prose-headings:tracking-tight prose-p:text-foreground/60 prose-p:leading-relaxed">
+                        <div className="prose prose-lg prose-invert max-w-none prose-headings:font-display prose-headings:uppercase prose-headings:tracking-tight prose-headings:text-white prose-p:text-white/60 prose-p:leading-relaxed prose-p:font-medium">
                             {type === "industry" ? (
                                 <>
                                     <h2 className="text-3xl mb-4">Why {primaryItem?.title} Brands Need a Mascot</h2>
@@ -386,14 +386,14 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     </p>
                                     {((primaryItem as any).useCases?.length > 0) && (
                                         <>
-                                            <h3 className="text-2xl mt-8 mb-4">Strategic Applications for {primaryItem?.title}</h3>
+                                            <h3 className="text-2xl mt-8 mb-4 text-white">Strategic Applications for {primaryItem?.title}</h3>
                                             <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-4 not-prose">
                                                 {((primaryItem as any).useCases || []).map((uc: string, idx: number) => (
-                                                    <li key={idx} className="flex gap-3 items-center p-4 bg-white border border-foreground/5 rounded-2xl shadow-sm">
-                                                        <div className="w-8 h-8 rounded-full bg-candy-pink/10 text-candy-pink flex items-center justify-center shrink-0">
+                                                    <li key={idx} className="flex gap-4 items-center p-5 bg-[#141210] border border-white/5 rounded-2xl shadow-sm hover:border-white/10 transition-colors">
+                                                        <div className="w-8 h-8 rounded-full bg-candy-pink/20 text-candy-pink flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(255,77,28,0.3)]">
                                                             <Check size={16} className="stroke-[3]" />
                                                         </div>
-                                                        <span className="font-bold text-sm tracking-tight text-foreground">{uc}</span>
+                                                        <span className="font-bold text-sm tracking-tight text-white/90">{uc}</span>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -412,14 +412,14 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     </p>
                                     {((primaryItem as any).aesthetics?.length > 0) && (
                                         <>
-                                            <h3 className="text-2xl mt-8 mb-4">Core Traits of {primaryItem?.title}</h3>
+                                            <h3 className="text-2xl mt-8 mb-4 text-white">Core Traits of {primaryItem?.title}</h3>
                                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose">
                                                 {((primaryItem as any).aesthetics || []).map((aes: string, idx: number) => (
-                                                    <li key={idx} className="flex gap-3 items-center p-4 bg-white border border-foreground/5 rounded-2xl shadow-sm">
-                                                        <div className="w-8 h-8 rounded-full bg-candy-blue/10 text-candy-blue flex items-center justify-center shrink-0">
+                                                    <li key={idx} className="flex gap-4 items-center p-5 bg-[#141210] border border-white/5 rounded-2xl shadow-sm hover:border-white/10 transition-colors">
+                                                        <div className="w-8 h-8 rounded-full bg-[#5cd85c]/20 text-[#5cd85c] flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(92,216,92,0.3)]">
                                                             <Sparkles size={16} className="stroke-[3]" />
                                                         </div>
-                                                        <span className="font-bold text-sm tracking-tight text-foreground">{aes}</span>
+                                                        <span className="font-bold text-sm tracking-tight text-white/90">{aes}</span>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -438,14 +438,14 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     </p>
                                     {((primaryItem as any).useCases?.length > 0) && (
                                         <>
-                                            <h3 className="text-2xl mt-8 mb-4">Common Generator Applications</h3>
+                                            <h3 className="text-2xl mt-8 mb-4 text-white">Common Generator Applications</h3>
                                             <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 not-prose">
                                                 {((primaryItem as any).useCases || []).map((uc: string, idx: number) => (
-                                                    <li key={idx} className="flex gap-3 items-center p-4 bg-white border border-foreground/5 rounded-2xl shadow-sm">
-                                                        <div className="w-8 h-8 rounded-full bg-candy-yellow/10 text-candy-yellow flex items-center justify-center shrink-0">
+                                                    <li key={idx} className="flex gap-4 items-center p-5 bg-[#141210] border border-white/5 rounded-2xl shadow-sm hover:border-white/10 transition-colors">
+                                                        <div className="w-8 h-8 rounded-full bg-candy-yellow/20 text-candy-yellow flex items-center justify-center shrink-0 shadow-[0_0_8px_rgba(255,235,59,0.3)]">
                                                             <TrendingUp size={16} className="stroke-[3]" />
                                                         </div>
-                                                        <span className="font-bold text-sm tracking-tight text-foreground">{uc}</span>
+                                                        <span className="font-bold text-sm tracking-tight text-white/90">{uc}</span>
                                                     </li>
                                                 ))}
                                             </ul>
@@ -453,37 +453,42 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     )}
                                 </>
                             )}
-                            <ol className="space-y-3 not-prose mb-8">
-                                {[
-                                    `Describe your ${combinedTitle?.toLowerCase()} in plain English. Include personality traits, colors, and any reference style you like.`,
-                                    `Select your preferred style — Mascot Maker is fully optimized for the kind of output you want.`,
-                                    `Click generate. The AI produces a studio-quality asset in under 30 seconds.`,
-                                    `Use Identity Lock™ to generate the same character in different poses, expressions, and scenes without drift.`,
-                                    `Download with full commercial rights. Use everywhere.`
-                                ].map((step, i) => (
-                                    <li key={i} className="flex gap-4 items-start p-4 rounded-xl bg-white border border-foreground/5">
-                                        <span className="shrink-0 w-7 h-7 rounded-full bg-candy-pink text-white text-xs font-black flex items-center justify-center">{i + 1}</span>
-                                        <p className="text-sm font-medium text-foreground/70">{step}</p>
-                                    </li>
-                                ))}
-                            </ol>
+                            <div className="pt-8 mb-8 relative">
+                                <ol className="space-y-4 not-prose relative z-10">
+                                    {[
+                                        `Describe your ${combinedTitle?.toLowerCase()} in plain English. Include personality traits, colors, and any reference style you like.`,
+                                        `Select your preferred style — Mascot Maker is fully optimized for the kind of output you want.`,
+                                        `Click generate. The AI produces a studio-quality asset in under 30 seconds.`,
+                                        `Use Identity Lock™ to generate the same character in different poses, expressions, and scenes without drift.`,
+                                        `Download with full commercial rights. Use everywhere.`
+                                    ].map((step, i) => (
+                                        <li key={i} className="flex gap-5 items-center p-5 rounded-[1.5rem] bg-[#141210] border border-white/10 shadow-lg">
+                                            <span className="shrink-0 w-8 h-8 rounded-full bg-candy-pink text-white text-sm font-black flex items-center justify-center shadow-glow-coral">{i + 1}</span>
+                                            <p className="text-base font-medium text-white/80">{step}</p>
+                                        </li>
+                                    ))}
+                                </ol>
+                                {/* Connecting line for steps */}
+                                <div className="absolute left-[34px] top-12 bottom-12 w-0.5 bg-gradient-to-b from-candy-pink to-candy-pink/0 opacity-50 hidden sm:block"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </section>
 
             {/* ─── Best Practices ─── */}
-            <section className="py-20 bg-cream border-t border-foreground/5">
-                <div className="container mx-auto px-6 max-w-4xl">
-                    <h2 className="font-display text-4xl uppercase mb-3">Expert Tips for {primaryItem?.title}</h2>
-                    <p className="text-foreground/50 font-medium mb-10">Proven techniques to get the best results from the {combinedTitle?.toLowerCase()} generator.</p>
-                    <div className="grid md:grid-cols-2 gap-4">
+            <section className="py-20 bg-[#141210] border-t border-white/[0.04] relative">
+                <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-candy-pink/20 to-transparent"></div>
+                <div className="container mx-auto px-6 max-w-4xl relative z-10">
+                    <h2 className="font-display text-4xl uppercase mb-3 text-white drop-shadow-sm">Expert Tips for {primaryItem?.title}</h2>
+                    <p className="text-white/50 font-medium mb-10 text-lg">Proven techniques to get the best results from the {combinedTitle?.toLowerCase()} generator.</p>
+                    <div className="grid md:grid-cols-2 gap-5">
                         {content.tips.map((tip: string, i: number) => (
-                            <div key={i} className="flex items-start gap-4 p-5 rounded-2xl bg-white border border-foreground/5 shadow-sm">
-                                <div className="shrink-0 w-8 h-8 rounded-xl bg-candy-pink/10 flex items-center justify-center">
-                                    <Check size={14} className="text-candy-pink" />
+                            <div key={i} className="flex items-start gap-4 p-6 rounded-[1.5rem] bg-[#1c1916] border border-white/5 hover:border-white/10 transition-colors shadow-lg">
+                                <div className="shrink-0 w-10 h-10 rounded-xl bg-candy-blue/10 flex items-center justify-center border border-candy-blue/20">
+                                    <Sparkles size={18} className="text-candy-blue" />
                                 </div>
-                                <p className="text-sm font-medium text-foreground/70 leading-relaxed">{tip}</p>
+                                <p className="text-sm font-medium text-white/70 leading-relaxed mt-1">{tip}</p>
                             </div>
                         ))}
                     </div>
@@ -491,27 +496,27 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             </section>
 
             {/* ─── Comparison Table ─── */}
-            <section className="py-20 bg-white border-t border-foreground/5">
+            <section className="py-24 bg-[#0c0a09] border-t border-white/[0.04]">
                 <div className="container mx-auto px-6 max-w-4xl">
-                    <h2 className="font-display text-4xl uppercase mb-3">
-                        Mascot Maker vs <span className="text-candy-pink">The Alternatives</span>
+                    <h2 className="font-display text-4xl uppercase mb-4 text-center text-white drop-shadow-sm">
+                        Mascot Maker vs <span className="text-[#5cd85c] italic">The Alternatives</span>
                     </h2>
-                    <p className="text-foreground/50 font-medium mb-10">
-                        Why use a dedicated {combinedTitle?.toLowerCase()} tool instead of a design agency, Midjourney, or Canva?
+                    <p className="text-white/50 font-medium mb-12 text-center text-lg">
+                        Why use a dedicated tool instead of a design agency, Midjourney, or Canva?
                     </p>
-                        <div className="rounded-2xl border-2 border-foreground/10 overflow-hidden">
-                        <div className="grid grid-cols-4 bg-foreground text-cream text-xs font-black uppercase tracking-widest">
-                            <div className="p-4 col-span-1">Feature</div>
-                            <div className="p-4 text-candy-pink">Mascot Maker</div>
-                            <div className="p-4 text-foreground/40">Freelancer</div>
-                            <div className="p-4 text-foreground/40">Midjourney / DIY</div>
+                    <div className="rounded-[2.5rem] border border-white/10 overflow-hidden shadow-2xl glass-dark">
+                        <div className="grid grid-cols-4 bg-[#1c1916] border-b border-white/10 text-[10px] font-black uppercase tracking-widest">
+                            <div className="p-5 col-span-1 text-white/50 hidden md:block">Feature</div>
+                            <div className="p-5 text-candy-pink sm:col-span-1 col-span-2 text-center md:text-left drop-shadow-[0_0_5px_rgba(255,77,28,0.5)]">Mascot Maker</div>
+                            <div className="p-5 text-white/40text-center md:text-left">Freelancer</div>
+                            <div className="p-5 text-white/40 text-center md:text-left">DIY AI</div>
                         </div>
                         {comparisonRows.map((row, i) => (
-                            <div key={i} className={`grid grid-cols-4 text-sm border-t border-foreground/5 ${i % 2 === 0 ? "bg-cream" : "bg-white"}`}>
-                                <div className="p-4 font-bold text-foreground/70 col-span-1">{row.feature}</div>
-                                <div className="p-4 font-bold text-candy-pink">{row.mascotMaker}</div>
-                                <div className="p-4 text-foreground/40">{row.freelancer}</div>
-                                <div className="p-4 text-foreground/40">{row.diy}</div>
+                            <div key={i} className={`grid grid-cols-4 text-sm border-t border-white/5 ${i % 2 === 0 ? "bg-[#141210]" : "bg-[#0c0a09]"}`}>
+                                <div className="p-5 font-bold text-white/80 col-span-1 md:block hidden">{row.feature}</div>
+                                <div className="p-5 font-bold text-candy-pink bg-candy-pink/5 sm:col-span-1 col-span-2 text-center md:text-left">{row.mascotMaker}</div>
+                                <div className="p-5 text-white/50 font-medium text-center md:text-left">{row.freelancer}</div>
+                                <div className="p-5 text-white/50 font-medium text-center md:text-left">{row.diy}</div>
                             </div>
                         ))}
                     </div>
@@ -519,12 +524,12 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             </section>
 
             {/* ─── Stats Bar ─── */}
-            <section className="py-12 bg-foreground border-t-4 border-foreground">
+            <section className="py-12 bg-[#1c1916] border-y border-white/[0.04]">
                 <div className="container mx-auto px-6">
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
                         {content.stats.map((stat: string, i: number) => (
                             <div key={i} className="space-y-1">
-                                <p className="text-cream/40 text-[10px] font-black uppercase tracking-widest">{stat}</p>
+                                <p className="text-white/40 text-[10px] font-black uppercase tracking-widest">{stat}</p>
                             </div>
                         ))}
                     </div>
@@ -532,10 +537,10 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             </section>
 
             {/* ─── FAQ ─── */}
-            <section className="py-20 bg-cream border-t border-foreground/5">
+            <section className="py-24 bg-[#0c0a09]">
                 <div className="container mx-auto px-6 max-w-3xl">
-                    <h2 className="font-display text-4xl uppercase mb-10">Frequently Asked Questions</h2>
-                    <div className="space-y-4">
+                    <h2 className="font-display text-4xl md:text-5xl uppercase mb-12 text-center text-white drop-shadow-sm">Frequently Asked Questions</h2>
+                    <div className="space-y-5">
                         {[
                             {
                                 q: `How do I create a ${combinedTitle?.toLowerCase()} with AI?`,
@@ -554,9 +559,9 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                 a: `The key difference is Identity Lock™ — Mascot Maker preserves your character's exact features across every generation. Midjourney produces a different-looking character every time you prompt it, making it impractical for brand consistency.`
                             },
                         ].map(({ q, a }, i) => (
-                            <div key={i} className="p-6 rounded-2xl border-2 border-foreground/5 bg-white">
-                                <h3 className="font-black text-base mb-2">{q}</h3>
-                                <p className="text-sm text-foreground/60 leading-relaxed">{a}</p>
+                            <div key={i} className="p-8 rounded-[2rem] border border-white/10 bg-[#141210] glass-dark shadow-lg">
+                                <h3 className="font-black text-lg mb-3 text-white/90">{q}</h3>
+                                <p className="text-base text-white/60 font-medium leading-relaxed">{a}</p>
                             </div>
                         ))}
                     </div>
@@ -564,22 +569,25 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
             </section>
 
             {/* ─── Internal Linking Hub ─── */}
-            <DynamicHubLinks type={type} primarySlug={part1} />
+            <div className="border-t border-white/[0.04]">
+                <DynamicHubLinks type={type} primarySlug={part1} />
+            </div>
 
             {/* ─── Final CTA ─── */}
-            <section className="py-24 bg-foreground relative overflow-hidden">
-                <div className="absolute inset-0 bg-grain opacity-20 pointer-events-none" />
-                <div className="container mx-auto px-6 relative z-10 text-center space-y-8">
-                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-cream/20">Free · No card required · Commercial rights included</p>
-                    <h2 className="font-display text-4xl md:text-6xl text-cream leading-tight tracking-tight uppercase">
+            <section className="py-32 bg-[#141210] relative overflow-hidden border-t border-white/[0.04]">
+                <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px] pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-candy-pink/5 to-transparent pointer-events-none" />
+                <div className="container mx-auto px-6 relative z-10 text-center space-y-10">
+                    <p className="text-[10px] font-black uppercase tracking-[0.4em] text-[#5cd85c]/80">Free · No card required · Commercial rights included</p>
+                    <h2 className="font-display text-5xl md:text-7xl text-white leading-tight tracking-tight uppercase drop-shadow-sm">
                         Your {primaryItem?.title}<br />
-                        <span className="text-candy-pink">Starts here.</span>
+                        <span className="text-candy-pink italic">Starts here.</span>
                     </h2>
                     <Link
                         href="/create"
-                        className="inline-flex items-center gap-3 px-10 py-5 bg-candy-pink text-cream rounded-2xl font-black text-lg tracking-wide shadow-glow-pink hover:brightness-110 hover:scale-[1.02] transition-all group"
+                        className="inline-flex items-center gap-3 px-12 py-6 bg-candy-pink text-white rounded-2xl font-black text-xl tracking-wide shadow-glow-coral hover:brightness-110 active:scale-95 transition-all duration-300 group"
                     >
-                        <Sparkles size={20} className="group-hover:rotate-12 transition-transform" />
+                        <Sparkles size={24} className="group-hover:rotate-12 transition-transform" />
                         CREATE FOR FREE
                     </Link>
                 </div>

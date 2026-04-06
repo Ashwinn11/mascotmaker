@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowRight, Clock, Calendar } from "lucide-react";
 import { Breadcrumb } from "@/components/breadcrumb";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { getBlogPosts, getBlogPost } from "@/lib/blog";
+import { Sparkles } from "lucide-react";
 
 interface PageProps {
     params: Promise<{ slug: string }>;
@@ -174,30 +175,31 @@ export default async function BlogPost({ params }: PageProps) {
     };
 
     return (
-        <div className="bg-cream min-h-screen">
+        <div className="bg-[#0c0a09] min-h-screen text-white selection:bg-candy-pink/30">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
             />
 
             {/* Article Header */}
-            <section className="relative pt-32 pb-16 bg-white border-b-4 border-foreground">
-                <div className="mx-auto max-w-4xl px-6">
+            <section className="relative pt-32 pb-16 bg-[#141210] border-b border-white/[0.04] overflow-hidden">
+                <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px]" />
+                <div className="mx-auto max-w-4xl px-6 relative z-10">
                     <Breadcrumb items={[
                         { label: "Home", href: "/" },
                         { label: "Blog", href: "/blog" },
                         { label: post.title.length > 40 ? post.title.slice(0, 40) + "…" : post.title }
                     ]} />
 
-                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border-2 border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink">
+                    <div className="mb-6 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-candy-pink/10 border border-candy-pink/20 text-xs font-black uppercase tracking-widest text-candy-pink shadow-sm">
                         {post.category}
                     </div>
 
-                    <h1 className="font-display text-4xl md:text-7xl text-foreground leading-[0.9] uppercase -tracking-[0.03em] mb-8">
+                    <h1 className="font-display text-4xl md:text-7xl text-white leading-[0.9] uppercase tracking-tighter mb-8 drop-shadow-sm">
                         {post.title}
                     </h1>
 
-                    <div className="flex flex-wrap items-center gap-6 text-sm font-bold text-muted-foreground">
+                    <div className="flex flex-wrap items-center gap-6 text-sm font-bold text-white/50">
                         <span className="flex items-center gap-2"><Calendar size={16} /> {new Date(post.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
                         <span className="flex items-center gap-2"><Clock size={16} /> {post.readTime} read</span>
                         <span>{post.author}</span>
@@ -206,16 +208,16 @@ export default async function BlogPost({ params }: PageProps) {
             </section>
 
             {/* Hero Image */}
-            <section className="py-12 bg-cream">
+            <section className="py-12 bg-[#0c0a09]">
                 <div className="mx-auto max-w-4xl px-6">
-                    <div className="rounded-[2rem] border-4 border-foreground overflow-hidden shadow-[12px_12px_0_#2d2420]">
+                    <div className="rounded-[2rem] border border-white/10 overflow-hidden shadow-2xl glass-dark">
                         <div className="relative aspect-[2/1]">
                             <Image
                                 src={post.image}
                                 alt={post.imageAlt}
                                 fill
                                 priority
-                                className="object-cover"
+                                className="object-cover opacity-90"
                             />
                         </div>
                     </div>
@@ -225,48 +227,49 @@ export default async function BlogPost({ params }: PageProps) {
             {/* Article Body */}
             <article className="py-12">
                 <div className="mx-auto max-w-3xl px-6">
-                    <div className="prose prose-lg max-w-none prose-headings:font-display prose-headings:uppercase prose-p:text-foreground/80 prose-p:font-medium prose-p:leading-relaxed prose-a:text-candy-pink prose-li:font-medium prose-strong:text-foreground">
+                    <div className="prose prose-lg prose-invert max-w-none prose-headings:font-display prose-headings:uppercase prose-headings:tracking-tight prose-headings:text-white prose-p:text-white/70 prose-p:font-medium prose-p:leading-relaxed prose-a:text-candy-pink prose-li:font-medium prose-li:text-white/70 prose-strong:text-white/90">
                         <MDXRemote source={post.content || ""} />
                     </div>
 
                     {/* CTA within article */}
-                    <div className="mt-16 p-10 rounded-[2rem] border-4 border-foreground bg-white shadow-[8px_8px_0_#ff6b9d] text-center">
-                        <h3 className="font-display text-3xl md:text-5xl uppercase mb-4">Try Mascot Maker <span className="text-candy-pink">Free</span></h3>
-                        <p className="text-lg text-muted-foreground font-bold mb-8">
+                    <div className="mt-16 p-10 rounded-[2rem] border border-white/10 bg-[#1c1916] text-center shadow-2xl glass-dark">
+                        <h3 className="font-display text-3xl md:text-5xl uppercase mb-4 text-white">Try Mascot Maker <span className="text-candy-pink">Free</span></h3>
+                        <p className="text-lg text-white/50 font-medium mb-8">
                             Create your first AI mascot in under 5 minutes. No credit card required.
                         </p>
                         <Link
                             href="/create"
-                            className="inline-flex items-center gap-3 rounded-full bg-foreground px-10 py-5 text-xl font-black text-white shadow-[6px_6px_0_#ffc857] hover:shadow-none hover:translate-x-1 hover:translate-y-1 transition-all active:scale-95"
+                            className="inline-flex items-center gap-3 rounded-full bg-candy-pink px-10 py-5 text-xl font-black text-[#0c0a09] shadow-glow-coral hover:brightness-110 transition-all active:scale-95 uppercase tracking-wide"
                         >
-                            LAUNCH STUDIO <ArrowRight size={24} />
+                            <Sparkles size={20} />
+                            LAUNCH STUDIO
                         </Link>
                     </div>
                 </div>
             </article>
 
             {/* Navigation */}
-            <section className="py-16 bg-white border-t-4 border-foreground">
+            <section className="py-16 bg-[#181512] border-t border-white/[0.04]">
                 <div className="mx-auto max-w-4xl px-6">
-                    <h3 className="font-black uppercase tracking-widest text-xs text-muted-foreground mb-8 text-center">Continue Reading</h3>
+                    <h3 className="font-black uppercase tracking-widest text-xs text-white/40 mb-8 text-center">Continue Reading</h3>
                     <div className="grid md:grid-cols-2 gap-6">
                         <Link
                             href={`/blog/${prevPost.slug}`}
-                            className="group p-6 rounded-2xl border-3 border-foreground hover:bg-cream transition-colors"
+                            className="group p-6 rounded-[2rem] border border-white/5 bg-[#141210] hover:border-white/10 hover:shadow-lg transition-all"
                         >
-                            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground/60 mb-3">
+                            <div className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-white/30 mb-3">
                                 <ArrowLeft size={14} /> Previous
                             </div>
-                            <h4 className="font-black text-lg text-foreground group-hover:text-candy-pink transition-colors leading-tight">{prevPost.title}</h4>
+                            <h4 className="font-black text-lg text-white/90 group-hover:text-candy-pink transition-colors leading-tight">{prevPost.title}</h4>
                         </Link>
                         <Link
                             href={`/blog/${nextPost.slug}`}
-                            className="group p-6 rounded-2xl border-3 border-foreground hover:bg-cream transition-colors text-right"
+                            className="group p-6 rounded-[2rem] border border-white/5 bg-[#141210] hover:border-white/10 hover:shadow-lg transition-all text-right"
                         >
-                            <div className="flex items-center justify-end gap-2 text-xs font-black uppercase tracking-widest text-muted-foreground/60 mb-3">
+                            <div className="flex items-center justify-end gap-2 text-xs font-black uppercase tracking-widest text-white/30 mb-3">
                                 Next <ArrowRight size={14} />
                             </div>
-                            <h4 className="font-black text-lg text-foreground group-hover:text-candy-pink transition-colors leading-tight">{nextPost.title}</h4>
+                            <h4 className="font-black text-lg text-white/90 group-hover:text-candy-pink transition-colors leading-tight">{nextPost.title}</h4>
                         </Link>
                     </div>
                 </div>

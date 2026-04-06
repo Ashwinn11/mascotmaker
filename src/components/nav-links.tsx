@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Wand2, ImageIcon } from "lucide-react";
+import { Wand2, ImageIcon, Eraser } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
-const links: { href: string; label: string; icon: LucideIcon; color: string; activeColor: string }[] = [
-  { href: "/create", label: "Create", icon: Wand2, color: "text-candy-pink", activeColor: "text-white" },
-  { href: "/gallery", label: "Gallery", icon: ImageIcon, color: "text-candy-blue", activeColor: "text-white" },
+const links: { href: string; label: string; icon: LucideIcon }[] = [
+  { href: "/create", label: "Create", icon: Wand2 },
+  { href: "/gallery", label: "Gallery", icon: ImageIcon },
+  { href: "/background-remover", label: "Remover", icon: Eraser },
 ];
 
 export function NavLinks() {
@@ -22,13 +23,19 @@ export function NavLinks() {
           <Link
             key={link.href}
             href={link.href}
-            className={`flex items-center gap-2 rounded-xl px-3 py-2 md:px-4 text-sm font-bold transition-all ${
+            className={`group relative flex items-center gap-2 rounded-full px-3 py-2 md:px-4 text-sm font-bold transition-all duration-300 overflow-hidden ${
               isActive
-                ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-md scale-105"
-                : "text-warm-gray hover:bg-white hover:text-foreground hover:shadow-sm"
+                ? "text-white"
+                : "text-muted-foreground hover:text-white"
             }`}
           >
-            <Icon size={16} className={isActive ? link.activeColor : link.color} />
+            {isActive && (
+              <div className="absolute inset-0 bg-candy-pink rounded-full -z-10" />
+            )}
+            {!isActive && (
+              <div className="absolute inset-0 bg-white/5 rounded-full -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            )}
+            <Icon size={16} className={isActive ? "text-white" : "text-muted-foreground group-hover:text-white transition-colors duration-300"} />
             <span className="hidden md:inline">{link.label}</span>
           </Link>
         );

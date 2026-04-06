@@ -133,40 +133,41 @@ export function MascotActions({ item, isOwner = false, isPurchased = false }: { 
   return (
     <div className="space-y-6">
       {(isOwner || isPurchased) && (
-        <div className="flex items-center gap-2 px-4 py-2.5 bg-candy-green/10 border-2 border-candy-green/20 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-500">
-          <CheckCircle size={14} className="text-candy-green" />
-          <span className="text-xs font-black uppercase tracking-widest text-candy-green">
+        <div className="flex items-center gap-3 px-4 py-3 bg-[#5cd85c]/10 border border-[#5cd85c]/20 rounded-[1rem] animate-in fade-in slide-in-from-top-2 duration-500 backdrop-blur-sm">
+          <CheckCircle size={14} className="text-[#5cd85c]" />
+          <span className="text-[10px] font-black uppercase tracking-widest text-[#5cd85c]">
             {isOwner ? "Direct Access (Author)" : "Unlocked Lifetime Access"}
           </span>
         </div>
       )}
+      
       {/* Primary Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button
           onClick={() => handleDownloadWithCheck('image')}
           disabled={downloading}
-          className="flex items-center justify-center gap-3 rounded-2xl bg-foreground text-white px-8 py-4 font-black uppercase text-sm hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-foreground/10 disabled:opacity-50"
+          className="flex items-center justify-center gap-3 rounded-[1.25rem] bg-candy-pink text-[#0c0a09] px-6 py-4 font-black uppercase text-xs hover:brightness-110 transition-all duration-300 active:scale-95 shadow-glow-coral disabled:opacity-50"
         >
-          {downloading ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
-          {isSticker ? "Download Sprite Sheet" : isLogo ? "Download Logo" : "Download PNG"}
+          {downloading ? <Loader2 className="animate-spin" size={16} /> : <Download size={16} />}
+          {isSticker ? "Combo Sprite Sheet" : isLogo ? "Download Logo" : "Download PNG"}
         </button>
 
         {isSticker && item.sticker_url ? (
           <button
             onClick={() => handleDownloadWithCheck('sticker')}
             disabled={downloading}
-            className="flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-candy-blue to-candy-purple text-white px-8 py-4 font-black uppercase text-sm hover:brightness-110 transition-all active:scale-95 disabled:opacity-50"
+            className="flex items-center justify-center gap-3 rounded-[1.25rem] bg-white/5 border border-white/10 text-white px-6 py-4 font-black uppercase text-xs hover:bg-white/10 transition-all duration-300 active:scale-95 disabled:opacity-50"
           >
-            {downloading ? <Loader2 className="animate-spin" size={18} /> : <Scissors size={18} />}
+            {downloading ? <Loader2 className="animate-spin" size={16} /> : <Scissors size={16} />}
             {downloading ? "Extracting..." : "Individual Stickers"}
           </button>
         ) : item.gif_url ? (
           <button
             onClick={() => handleDownloadWithCheck('gif')}
             disabled={downloading}
-            className="flex items-center justify-center gap-3 rounded-2xl border-2 border-foreground px-8 py-4 font-black uppercase text-sm hover:bg-foreground/5 transition-all active:scale-95 disabled:opacity-50"
+            className="flex items-center justify-center gap-3 rounded-[1.25rem] border border-white/10 bg-white/5 text-white px-6 py-4 font-black uppercase text-xs hover:bg-white/10 transition-all duration-300 active:scale-95 disabled:opacity-50"
           >
-            <Download size={18} />
+            <Download size={16} />
             Download GIF
           </button>
         ) : null}
@@ -174,9 +175,9 @@ export function MascotActions({ item, isOwner = false, isPurchased = false }: { 
 
       <button
         onClick={handleShare}
-        className="w-full flex items-center justify-center gap-3 rounded-2xl bg-candy-pink/5 px-8 py-4 font-black uppercase text-xs text-candy-pink hover:bg-candy-pink/10 transition-all border-2 border-candy-pink/10"
+        className="w-full flex items-center justify-center gap-3 rounded-[1.25rem] bg-[#141210] px-6 py-4 font-black uppercase text-[10px] tracking-widest text-white/50 hover:text-white hover:bg-white/5 hover:border-white/20 transition-all duration-300 border border-white/5"
       >
-        <Share2 size={16} />
+        <Share2 size={14} />
         Share this {item.subject_type || "Mascot"}
       </button>
 
@@ -185,24 +186,25 @@ export function MascotActions({ item, isOwner = false, isPurchased = false }: { 
           navigator.clipboard.writeText(window.location.href);
           toast.success("URL copied!");
         }}
-        className="w-full flex items-center justify-center gap-3 py-2 font-black uppercase text-[10px] text-foreground/30 hover:text-foreground/60 transition-all"
+        className="w-full flex items-center justify-center gap-3 py-2 font-black uppercase text-[9px] tracking-widest text-white/20 hover:text-white/60 transition-all"
       >
         Copy Direct Link
       </button>
 
-      <hr className="border-t-2 border-foreground/5" />
+      <hr className="border-t border-white/[0.04]" />
 
       {/* Remix / Create CTA */}
-      <div className="p-8 rounded-[2.5rem] bg-gradient-to-br from-candy-pink to-candy-orange text-white shadow-xl shadow-candy-pink/10">
-        <h3 className="font-display text-2xl uppercase tracking-tight mb-2 italic">Want one like this?</h3>
-        <p className="text-white/80 text-sm font-medium mb-6">
+      <div className="p-8 rounded-[2rem] bg-[#1c1916] border border-white/10 text-white shadow-xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-gradient-to-br from-candy-pink/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <h3 className="font-display text-2xl uppercase tracking-tight mb-2 relative z-10 text-white">Want one like this?</h3>
+        <p className="text-white/40 text-sm font-medium mb-6 relative z-10">
           Use our Identity Lock engine to generate consistent characters for your own brand. 
         </p>
         <Link 
           href="/create" 
-          className="inline-flex items-center gap-3 rounded-full bg-white text-candy-pink px-8 py-3 text-sm font-black uppercase hover:shadow-xl transition-all active:scale-95"
+          className="inline-flex items-center gap-3 rounded-full bg-white text-[#0c0a09] px-6 py-3 text-xs font-black uppercase hover:bg-candy-pink hover:text-[#0c0a09] transition-all duration-300 active:scale-95 relative z-10"
         >
-          <Sparkles size={16} />
+          <Sparkles size={14} />
           Remix for Free
         </Link>
       </div>

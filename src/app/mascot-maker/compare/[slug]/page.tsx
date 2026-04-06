@@ -81,7 +81,7 @@ export default async function ComparisonPage({ params }: PageProps) {
     };
 
     return (
-        <div className="bg-cream min-h-screen selection:bg-candy-blue/30">
+        <div className="bg-[#0c0a09] min-h-screen text-white selection:bg-candy-blue/30">
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -123,28 +123,29 @@ export default async function ComparisonPage({ params }: PageProps) {
             />
 
             {/* Hero Section: Comparison Context */}
-            <section className="relative pt-40 pb-24 overflow-hidden bg-mesh-candy bg-grain border-b border-foreground/5">
+            <section className="relative pt-40 pb-24 overflow-hidden bg-[#141210] border-b border-white/[0.04]">
+                <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px]" />
                 <div className="container mx-auto px-6 text-center space-y-10 relative z-10">
                     <Breadcrumb items={[
                         { label: "Home", href: "/" },
                         { label: "Comparisons", href: "/explore" },
                         { label: `vs ${competitor.name}` }
                     ]} />
-                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card border border-foreground/5 text-[10px] font-black uppercase tracking-widest text-foreground/50 animate-slide-up">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-dark border border-white/10 text-[10px] font-black uppercase tracking-widest text-[#5cd85c] animate-slide-up shadow-sm">
                         PLATFORM HEAD-TO-HEAD
                     </div>
-                    <h1 className="font-display text-7xl md:text-[10rem] text-foreground leading-[0.85] uppercase -tracking-tight animate-slide-up stagger-1">
+                    <h1 className="font-display text-7xl md:text-[10rem] text-white leading-[0.85] uppercase tracking-tighter animate-slide-up stagger-1 drop-shadow-sm">
                         Mascot Maker <br /><span className="text-candy-blue">vs</span> {competitor.name}.
                     </h1>
-                    <p className="text-xl md:text-2xl text-muted-foreground font-semibold leading-relaxed max-w-3xl mx-auto animate-slide-up stagger-2">
+                    <p className="text-xl md:text-2xl text-white/50 font-medium leading-relaxed max-w-3xl mx-auto animate-slide-up stagger-2">
                         Looking for a better alternative to {competitor.name}? While they are known for {competitor.strength.toLowerCase()}, Mascot Maker is built specifically for global brands requiring perfect character consistency.
                     </p>
-                    <div className="flex justify-center pt-6 animate-slide-up stagger-3">
+                    <div className="flex justify-center pt-8 animate-slide-up stagger-3">
                         <Link
                             href="/create"
-                            className="inline-flex items-center justify-center gap-4 rounded-2xl bg-foreground px-12 py-6 text-xl font-black text-white shadow-premium hover:shadow-glow-pink hover:scale-[1.02] transition-all group"
+                            className="inline-flex items-center justify-center gap-4 rounded-2xl bg-candy-blue px-12 py-6 text-xl font-black text-[#0c0a09] shadow-[0_0_20px_rgba(33,150,243,0.3)] hover:shadow-[0_0_30px_rgba(33,150,243,0.5)] hover:bg-[#3cacff] active:scale-95 transition-all duration-300 group"
                         >
-                            <Sparkles size={24} className="text-candy-yellow group-hover:rotate-12 transition-all" />
+                            <Sparkles size={24} className="text-[#0c0a09] group-hover:rotate-12 transition-all" />
                             TRY MASCOT MAKER
                         </Link>
                     </div>
@@ -152,30 +153,30 @@ export default async function ComparisonPage({ params }: PageProps) {
             </section>
 
             {/* Feature Table: Refined & Clean */}
-            <section className="py-24 bg-cream">
+            <section className="py-24 bg-[#0c0a09]">
                 <div className="container mx-auto max-w-5xl px-6">
-                    <h2 className="font-display text-5xl md:text-7xl text-center mb-24 uppercase italic">Feature Check</h2>
-                    <div className="overflow-x-auto rounded-[3.5rem] border border-foreground/5 bg-cream/40 shadow-premium">
+                    <h2 className="font-display text-5xl md:text-7xl text-center mb-24 uppercase italic text-white drop-shadow-sm">Feature Check</h2>
+                    <div className="overflow-x-auto rounded-[3.5rem] border border-white/10 bg-[#141210] shadow-2xl glass-dark">
                         <table className="w-full text-left">
                             <thead>
-                                <tr className="bg-foreground text-white">
-                                    <th className="p-10 font-display text-2xl uppercase tracking-tight">Capabilities</th>
-                                    <th className="p-10 font-display text-2xl uppercase tracking-tight text-center bg-candy-pink">Mascot Maker</th>
-                                    <th className="p-10 font-display text-2xl uppercase tracking-tight text-center">{competitor.name}</th>
+                                <tr className="bg-[#1c1916] text-white/80 border-b border-white/10">
+                                    <th className="p-10 font-display text-2xl md:text-3xl uppercase tracking-tight">Capabilities</th>
+                                    <th className="p-10 font-display text-2xl md:text-3xl uppercase tracking-tight text-center bg-candy-blue/[0.05] text-candy-blue">Mascot Maker</th>
+                                    <th className="p-10 font-display text-2xl md:text-3xl uppercase tracking-tight text-center">{competitor.name}</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y border-t border-foreground/5 text-lg font-semibold">
+                            <tbody className="divide-y divide-white/5 text-lg font-medium text-white/80">
                                 {features.map((f, i) => (
-                                    <tr key={i} className="hover:bg-white/50 transition-colors">
-                                        <td className="p-10 border-r border-foreground/5">
-                                            <div className="text-foreground/80">{f.name}</div>
-                                            <div className="text-[10px] text-muted-foreground font-black uppercase tracking-widest mt-2">{f.notes}</div>
+                                    <tr key={i} className="hover:bg-white/[0.02] transition-colors">
+                                        <td className="p-10 border-r border-white/5">
+                                            <div className="text-white font-bold">{f.name}</div>
+                                            <div className="text-[10px] text-white/40 font-black uppercase tracking-widest mt-3 leading-relaxed">{f.notes}</div>
                                         </td>
-                                        <td className="p-10 text-center border-r border-foreground/5 bg-candy-pink/[0.02]">
-                                            {f.mm ? <Check className="mx-auto text-candy-green stroke-[4]" size={28} /> : <X className="mx-auto text-red-400 stroke-[4]" size={28} />}
+                                        <td className="p-10 text-center border-r border-white/5 bg-candy-blue/[0.02]">
+                                            {f.mm ? <Check className="mx-auto text-[#5cd85c] stroke-[4] drop-shadow-[0_0_5px_rgba(92,216,92,0.4)]" size={28} /> : <X className="mx-auto text-red-500 stroke-[4]" size={28} />}
                                         </td>
                                         <td className="p-10 text-center">
-                                            {f.comp ? <Check className="mx-auto text-candy-green stroke-[4]" size={28} /> : <X className="mx-auto text-red-500 stroke-[4]" size={28} />}
+                                            {f.comp ? <Check className="mx-auto text-white/50 stroke-[4]" size={28} /> : <X className="mx-auto text-red-500/50 stroke-[4]" size={28} />}
                                         </td>
                                     </tr>
                                 ))}
@@ -186,49 +187,52 @@ export default async function ComparisonPage({ params }: PageProps) {
             </section>
 
             {/* Time & Cost ROI */}
-            <section className="py-24 bg-white border-t border-foreground/5">
+            <section className="py-24 bg-[#141210] border-t border-white/[0.04]">
                 <div className="container mx-auto max-w-5xl px-6">
-                    <div className="text-center mb-16">
-                        <h2 className="font-display text-4xl md:text-5xl uppercase tracking-tight">Time & Cost Advantage</h2>
-                        <p className="text-foreground/50 font-medium text-lg mt-4 max-w-2xl mx-auto">
+                    <div className="text-center mb-20">
+                        <h2 className="font-display text-4xl md:text-6xl uppercase tracking-tight text-white drop-shadow-sm">Time & Cost Advantage</h2>
+                        <p className="text-white/50 font-medium text-lg mt-6 max-w-2xl mx-auto">
                             See how Mascot Maker compares to {competitor.name} when it comes to speed of execution and budget.
                         </p>
                     </div>
 
                     <div className="grid md:grid-cols-2 gap-8">
-                        <div className="p-10 rounded-[3rem] border border-foreground/10 bg-cream/30 space-y-8">
-                            <h3 className="font-display text-3xl uppercase tracking-tight opacity-50">{competitor.name} Reality</h3>
-                            <ul className="space-y-6">
-                                <li className="flex flex-col gap-1">
-                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Time to consistent character</span>
-                                    <span className="text-xl font-semibold text-foreground">Hours of manual reprompting</span>
+                        <div className="p-10 md:p-12 rounded-[3rem] border border-white/10 bg-[#1c1916] space-y-10 shadow-lg glass-dark">
+                            <h3 className="font-display text-3xl uppercase tracking-tight text-white/40">{competitor.name} Reality</h3>
+                            <ul className="space-y-8">
+                                <li className="flex flex-col gap-2">
+                                    <span className="text-xs font-black uppercase tracking-widest text-white/30">Time to consistent character</span>
+                                    <span className="text-xl font-bold text-white/70">Hours of manual reprompting</span>
                                 </li>
-                                <li className="flex flex-col gap-1">
-                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Cost barrier</span>
-                                    <span className="text-xl font-semibold text-foreground">Often requires $20-$30/mo subscription just to start</span>
+                                <li className="flex flex-col gap-2">
+                                    <span className="text-xs font-black uppercase tracking-widest text-white/30">Cost barrier</span>
+                                    <span className="text-xl font-bold text-white/70">Often requires $20-$30/mo subscription just to start</span>
                                 </li>
-                                <li className="flex flex-col gap-1">
-                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Hidden friction</span>
-                                    <span className="text-xl font-semibold text-foreground">Steep learning curve for exact seeding & weight control</span>
+                                <li className="flex flex-col gap-2">
+                                    <span className="text-xs font-black uppercase tracking-widest text-white/30">Hidden friction</span>
+                                    <span className="text-xl font-bold text-white/70">Steep learning curve for exact seeding & weight control</span>
                                 </li>
                             </ul>
                         </div>
 
-                        <div className="p-10 rounded-[3rem] border border-candy-pink/10 bg-candy-pink/[0.02] shadow-premium space-y-8 relative overflow-hidden">
-                            <div className="absolute top-0 right-0 w-32 h-32 bg-candy-pink/5 rounded-full blur-3xl" />
-                            <h3 className="font-display text-3xl uppercase tracking-tight text-candy-pink">Mascot Maker ROI</h3>
-                            <ul className="space-y-6 relative z-10">
-                                <li className="flex flex-col gap-1">
-                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Time to consistent character</span>
-                                    <span className="text-xl font-semibold text-foreground">~30 seconds with Identity Lock™</span>
+                        <div className="p-10 md:p-12 rounded-[3rem] border border-candy-blue/20 bg-candy-blue/[0.03] shadow-[0_0_30px_rgba(33,150,243,0.05)] space-y-10 relative overflow-hidden glass-dark">
+                            <div className="absolute top-0 right-0 w-40 h-40 bg-candy-blue/10 rounded-full blur-[40px] pointer-events-none" />
+                            <h3 className="font-display text-3xl uppercase tracking-tight text-candy-blue drop-shadow-[0_0_8px_rgba(33,150,243,0.5)]">Mascot Maker ROI</h3>
+                            <ul className="space-y-8 relative z-10">
+                                <li className="flex flex-col gap-2">
+                                    <span className="text-xs font-black uppercase tracking-widest text-white/30">Time to consistent character</span>
+                                    <span className="text-xl font-bold text-white">~30 seconds with Identity Lock™</span>
                                 </li>
-                                <li className="flex flex-col gap-1">
-                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Cost barrier</span>
-                                    <span className="text-xl font-semibold flex items-center gap-2"><div className="px-2 py-0.5 rounded text-xs bg-candy-green/20 text-candy-green uppercase tracking-widest font-black">Free</div> 5 credits on signup</span>
+                                <li className="flex flex-col gap-2">
+                                    <span className="text-xs font-black uppercase tracking-widest text-white/30">Cost barrier</span>
+                                    <span className="text-xl font-bold flex items-center gap-3">
+                                        <div className="px-3 py-1 rounded bg-[#5cd85c]/10 border border-[#5cd85c]/20 text-[#5cd85c] text-[10px] uppercase tracking-widest font-black shadow-sm">Free</div> 
+                                        <span className="text-white">5 credits on signup</span>
+                                    </span>
                                 </li>
-                                <li className="flex flex-col gap-1">
-                                    <span className="text-sm font-bold uppercase tracking-widest text-foreground/40">Hidden friction</span>
-                                    <span className="text-xl font-semibold text-foreground">Zero. Click, generate, download.</span>
+                                <li className="flex flex-col gap-2">
+                                    <span className="text-xs font-black uppercase tracking-widest text-white/30">Hidden friction</span>
+                                    <span className="text-xl font-bold text-white">Zero. Click, generate, download.</span>
                                 </li>
                             </ul>
                         </div>
@@ -237,40 +241,40 @@ export default async function ComparisonPage({ params }: PageProps) {
             </section>
 
             {/* Why section: Deep Dive */}
-            <section className="py-24 bg-cream overflow-hidden">
+            <section className="py-32 bg-[#0c0a09] overflow-hidden border-t border-white/[0.04]">
                 <div className="container mx-auto max-w-7xl px-6">
                     <div className="flex flex-col lg:flex-row items-center gap-24">
                         <div className="lg:w-1/2 space-y-12">
-                            <h2 className="font-display text-6xl md:text-8xl uppercase leading-[0.9]">
+                            <h2 className="font-display text-6xl md:text-8xl uppercase leading-[0.9] text-white drop-shadow-sm">
                                 THE SMART <br /><span className="text-candy-pink">PROFESSIONAL</span> CHOICE.
                             </h2>
-                            <p className="text-2xl text-muted-foreground font-semibold italic opacity-80 leading-relaxed">
+                            <p className="text-2xl text-white/50 font-medium italic leading-relaxed">
                                 {competitor.name} is a powerful tool, but it often fails at {competitor.weakness.toLowerCase()}. Mascot Maker was engineered to solve the most difficult problems in AI design.
                             </p>
                             <div className="grid gap-6 pt-6">
                                 {[
-                                    { icon: ShieldCheck, title: "Identity Locking", desc: "Keep the same character DNA across logos, stickers, and mascots. Never lose your brand consistency.", color: "text-candy-blue", bg: "bg-candy-blue/5" },
-                                    { icon: Zap, title: "Professional Assets", desc: "Go beyond single images. Build full sticker sets and logo variations in a single session.", color: "text-candy-yellow", bg: "bg-candy-yellow/5" }
+                                    { icon: ShieldCheck, title: "Identity Locking", desc: "Keep the same character DNA across logos, stickers, and mascots. Never lose your brand consistency.", color: "text-candy-blue", bg: "bg-[#141210] border border-white/5" },
+                                    { icon: Zap, title: "Professional Assets", desc: "Go beyond single images. Build full sticker sets and logo variations in a single session.", color: "text-[#5cd85c]", bg: "bg-[#141210] border border-white/5" }
                                 ].map((item, i) => (
-                                    <div key={i} className="flex gap-6 p-10 rounded-[3rem] bg-white border border-foreground/10 shadow-sm hover:shadow-md transition-all">
-                                        <div className={`w-14 h-14 rounded-2xl ${item.bg} ${item.color} flex items-center justify-center shrink-0`}>
+                                    <div key={i} className={`flex gap-6 p-10 rounded-[2.5rem] ${item.bg} shadow-lg hover:border-white/10 transition-colors`}>
+                                        <div className={`w-14 h-14 rounded-2xl bg-white/5 border border-white/10 ${item.color} flex items-center justify-center shrink-0`}>
                                             <item.icon size={28} />
                                         </div>
-                                        <div className="space-y-2">
-                                            <h4 className="text-xl font-black uppercase tracking-tight">{item.title}</h4>
-                                            <p className="text-base font-semibold text-foreground italic leading-relaxed">{item.desc}</p>
+                                        <div className="space-y-3">
+                                            <h4 className="text-xl font-black uppercase tracking-tight text-white">{item.title}</h4>
+                                            <p className="text-base font-medium text-white/60 leading-relaxed">{item.desc}</p>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         </div>
                         <div className="lg:w-1/2 relative">
-                            <div className="relative z-10 rounded-[4rem] border border-foreground/10 overflow-hidden shadow-premium p-4 bg-white">
-                                <Image src="/demo/character-consistency.webp" alt={`Mascot Maker AI logo and sticker pack production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto rounded-[3rem]" />
+                            <div className="relative z-10 rounded-[3rem] border border-white/10 overflow-hidden shadow-2xl p-4 bg-[#1c1916] glass-dark">
+                                <Image src="/demo/character-consistency.webp" alt={`Mascot Maker AI logo and sticker pack production workflow compared to ${competitor.name}`} width={800} height={800} className="w-full h-auto rounded-[2rem] border border-white/5" />
                             </div>
                             {/* Decorative Flair */}
                             <div className="absolute -bottom-10 -left-10 animate-float">
-                                <Camera size={60} className="text-candy-blue" />
+                                <Camera size={60} className="text-candy-blue drop-shadow-[0_0_15px_rgba(33,150,243,0.5)]" />
                             </div>
                         </div>
                     </div>
@@ -278,35 +282,36 @@ export default async function ComparisonPage({ params }: PageProps) {
             </section>
 
             {/* Choose Section: Dual Cards */}
-            <section className="py-24 bg-secondary/5">
+            <section className="py-32 bg-[#141210] border-t border-white/[0.04]">
                 <div className="container mx-auto px-6 max-w-5xl">
-                    <h3 className="font-display text-4xl md:text-5xl mb-16 uppercase text-center tracking-tight leading-none italic">Decision Guide.</h3>
+                    <h3 className="font-display text-4xl md:text-5xl mb-16 uppercase text-center tracking-tight leading-none italic text-white drop-shadow-sm">Decision Guide.</h3>
                     <div className="grid md:grid-cols-2 gap-8">
-                        <div className="p-8 rounded-[3rem] border border-foreground/5 bg-cream/80 space-y-6">
-                            <h4 className="text-xl font-display uppercase tracking-tight text-candy-blue">Choose {competitor.name} if:</h4>
-                            <ul className="space-y-4">
+                        <div className="p-10 rounded-[3rem] border border-white/5 bg-[#1c1916] space-y-8 shadow-lg">
+                            <h4 className="text-2xl font-display uppercase tracking-tight text-white/60">Choose {competitor.name} if:</h4>
+                            <ul className="space-y-6">
                                 {[
                                     `You need ${competitor.strength.toLowerCase()}`,
                                     "You're creating one-off artistic images",
                                     "Character consistency isn't critical"
                                 ].map((li, i) => (
-                                    <li key={i} className="flex items-center gap-4 text-sm font-black uppercase tracking-tight text-foreground/60">
-                                        <div className="w-2 h-2 rounded-full bg-candy-blue" />
+                                    <li key={i} className="flex items-center gap-5 text-sm font-black uppercase tracking-widest text-white/40">
+                                        <div className="w-2.5 h-2.5 rounded-full bg-white/20 shrink-0" />
                                         {li}
                                     </li>
                                 ))}
                             </ul>
                         </div>
-                        <div className="p-8 rounded-[3rem] border border-candy-pink/10 bg-candy-pink/[0.02] shadow-premium space-y-6">
-                            <h4 className="text-xl font-display uppercase tracking-tight text-candy-pink">Choose Mascot Maker if:</h4>
-                            <ul className="space-y-4">
+                        <div className="p-10 rounded-[3rem] border border-candy-blue/20 bg-candy-blue/[0.02] shadow-[0_0_20px_rgba(33,150,243,0.05)] space-y-8 glass-dark relative overflow-hidden">
+                            <div className="absolute top-0 right-0 w-32 h-32 bg-candy-blue/10 rounded-full blur-3xl pointer-events-none" />
+                            <h4 className="text-2xl font-display uppercase tracking-tight text-candy-blue drop-shadow-[0_0_8px_rgba(33,150,243,0.5)] relative z-10">Choose Mascot Maker if:</h4>
+                            <ul className="space-y-6 relative z-10">
                                 {[
                                     "You need the same character in every image",
                                     "You're building brand assets at scale",
                                     "You need logos, stickers, and mascots"
                                 ].map((li, i) => (
-                                    <li key={i} className="flex items-center gap-4 text-sm font-black uppercase tracking-tight text-foreground/80">
-                                        <div className="w-2 h-2 rounded-full bg-candy-pink" />
+                                    <li key={i} className="flex items-center gap-5 text-sm font-black uppercase tracking-widest text-white/80">
+                                        <div className="w-2.5 h-2.5 rounded-full bg-candy-blue shadow-[0_0_8px_rgba(33,150,243,0.8)] shrink-0" />
                                         {li}
                                     </li>
                                 ))}
@@ -317,12 +322,14 @@ export default async function ComparisonPage({ params }: PageProps) {
             </section>
 
             {/* Footer CTA: Premium Upgrade */}
-            <section className="py-32 bg-mesh-dark text-white relative overflow-hidden text-center">
+            <section className="py-32 bg-[#0c0a09] border-t border-white/[0.04] text-white relative overflow-hidden text-center">
+                <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px] pointer-events-none" />
+                <div className="absolute inset-x-0 bottom-0 top-1/2 bg-gradient-to-t from-candy-blue/5 to-transparent pointer-events-none" />
                 <div className="container mx-auto px-6 relative z-10 space-y-12">
-                    <h2 className="font-display text-6xl md:text-[10rem] mb-12 uppercase leading-[0.85] tracking-tighter">READY FOR <br /><span className="text-gradient">THE UPGRADE?</span></h2>
+                    <h2 className="font-display text-6xl md:text-[10rem] mb-12 uppercase leading-[0.85] tracking-tighter drop-shadow-sm">READY FOR <br /><span className="text-candy-blue italic">THE UPGRADE?</span></h2>
                     <Link
                         href="/create"
-                        className="inline-flex items-center gap-5 rounded-full bg-white px-14 py-7 text-2xl font-black text-foreground hover:bg-candy-pink hover:text-white transition-all shadow-glow-pink hover:scale-105"
+                        className="inline-flex items-center gap-5 rounded-3xl bg-candy-blue px-14 py-7 text-2xl font-black text-[#0c0a09] hover:bg-[#3cacff] transition-all shadow-[0_0_20px_rgba(33,150,243,0.3)] hover:shadow-[0_0_30px_rgba(33,150,243,0.5)] active:scale-95 uppercase tracking-wide"
                     >
                         GET STARTED FREE <ArrowRight size={32} />
                     </Link>
@@ -335,7 +342,7 @@ export default async function ComparisonPage({ params }: PageProps) {
                                 <Link
                                     key={c.slug}
                                     href={`/mascot-maker/compare/${c.slug}`}
-                                    className="px-6 py-3 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest hover:border-candy-pink hover:text-candy-pink transition-colors"
+                                    className="px-6 py-3 rounded-full border border-white/10 text-[10px] font-black uppercase tracking-widest text-white/60 hover:border-candy-blue hover:text-candy-blue transition-colors bg-[#141210] hover:bg-candy-blue/5"
                                 >
                                     vs {c.name}
                                 </Link>
@@ -343,12 +350,9 @@ export default async function ComparisonPage({ params }: PageProps) {
                         </div>
                     </div>
                 </div>
-                <div className="absolute inset-0 bg-grain opacity-10 pointer-events-none" />
             </section>
 
-            <div className="py-20 bg-cream">
-                <ExploreLinks />
-            </div>
+            <ExploreLinks />
         </div>
     );
 }

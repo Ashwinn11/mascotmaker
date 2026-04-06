@@ -15,22 +15,25 @@ export function MobileNav() {
     const pathname = usePathname();
 
     return (
-        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
+        <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden pb-safe">
             <div className="mx-auto mb-6 max-w-fit px-6">
-                <nav className="flex items-center gap-1 rounded-2xl border-2 border-white/50 bg-white/80 p-2 shadow-2xl backdrop-blur-xl">
+                <nav className="flex items-center gap-1 rounded-full glass-dark p-2 shadow-2xl relative overflow-hidden">
+                    {/* Add a subtle highlight line at top */}
+                    <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                    
                     {links.map((link) => {
                         const isActive = pathname.startsWith(link.href);
                         return (
-                            <Link
+                          <Link
                                 key={link.href}
                                 href={link.href}
-                                className={`flex flex-col items-center gap-1 rounded-xl px-4 py-2 transition-all ${isActive
-                                    ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white shadow-lg scale-110"
-                                    : "text-warm-gray hover:bg-white"
+                                className={`flex flex-col items-center justify-center min-w-[64px] gap-1 rounded-full px-3 py-2 transition-all duration-300 ${isActive
+                                    ? "bg-candy-pink text-white shadow-glow-coral"
+                                    : "text-muted-foreground hover:bg-white/5 hover:text-white"
                                     }`}
                             >
-                                <Icon3DInline name={link.icon} size={20} className={isActive ? "brightness-110" : ""} />
-                                <span className="text-[10px] font-bold uppercase tracking-wider">{link.label}</span>
+                                <Icon3DInline name={link.icon} size={20} className={isActive ? "brightness-110" : "opacity-70"} />
+                                <span className={`text-[10px] font-bold uppercase tracking-wider ${isActive ? "text-white" : "text-muted-foreground"}`}>{link.label}</span>
                             </Link>
                         );
                     })}

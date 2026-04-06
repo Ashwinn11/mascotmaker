@@ -52,11 +52,11 @@ export function DynamicHubLinks({ type, primarySlug }: DynamicHubLinksProps) {
     if (links.length === 0) return null;
 
     return (
-        <section className="py-20 bg-secondary/5 border-t border-foreground/5">
+        <section className="py-20 bg-[#0c0a09] border-t border-white/[0.04]">
             <div className="container mx-auto px-6 max-w-5xl">
                 <div className="mb-10 text-center md:text-left">
-                    <h2 className="font-display text-4xl py-2 uppercase tracking-tight text-foreground">{sectionTitle}</h2>
-                    <p className="text-foreground/50 font-medium text-lg mt-2">{sectionDesc}</p>
+                    <h2 className="font-display text-4xl py-2 uppercase tracking-tight text-white">{sectionTitle}</h2>
+                    <p className="text-white/50 font-medium text-lg mt-2">{sectionDesc}</p>
                 </div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -64,12 +64,12 @@ export function DynamicHubLinks({ type, primarySlug }: DynamicHubLinksProps) {
                         <Link 
                             key={i} 
                             href={link.href}
-                            className="group p-5 bg-white rounded-2xl border border-foreground/5 shadow-sm hover:shadow-md hover:border-candy-pink/30 transition-all duration-300 flex flex-col"
+                            className="group p-5 bg-[#141210] rounded-2xl border border-white/5 shadow-sm hover:shadow-lg hover:border-candy-pink/30 hover:bg-[#1c1916] transition-all duration-300 flex flex-col"
                         >
-                            <span className="text-[10px] font-black uppercase tracking-widest text-foreground/30 mb-2 group-hover:text-candy-pink transition-colors">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-white/30 mb-2 group-hover:text-candy-pink transition-colors">
                                 {link.category}
                             </span>
-                            <span className="font-bold text-foreground text-base tracking-tight leading-snug group-hover:text-candy-pink transition-colors">
+                            <span className="font-bold text-white text-base tracking-tight leading-snug group-hover:text-candy-pink transition-colors">
                                 {link.title}
                             </span>
                         </Link>

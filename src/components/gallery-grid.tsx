@@ -5,7 +5,7 @@ import Link from "next/link";
 import { toast } from "sonner";
 import { downloadFile } from "@/lib/download";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
-import { Icon3D } from "@/components/ui/icon-3d";
+import { Icon3D, Icon3DInline } from "@/components/ui/icon-3d";
 import { Search, Globe, Lock, Trash2, Eye, Download } from "lucide-react";
 import { PaywallModal } from "@/components/paywall-modal";
 
@@ -169,12 +169,12 @@ export function GalleryGrid({
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-10">
       {/* Controls: Tabs & Search */}
       {(!hideTabs || !hideSearch) && (
-        <div className="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        <div className="flex flex-col md:flex-row gap-5 items-stretch md:items-center justify-between">
           {!hideTabs && (
-            <div className="flex p-1 bg-foreground/[0.04] rounded-2xl border border-foreground/[0.06]">
+            <div className="flex p-1.5 rounded-full glass-dark border border-white/10 shadow-xl backdrop-blur-xl">
               {(["public", ...(currentUserId ? ["mine", "purchased"] : [])] as const).map((s) => {
                 const labels: Record<string, string> = {
                   public: "Community",
@@ -185,10 +185,10 @@ export function GalleryGrid({
                   <button
                     key={s}
                     onClick={() => setScope(s as "public" | "mine" | "purchased")}
-                    className={`px-5 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all duration-200 whitespace-nowrap ${
+                    className={`px-5 py-2.5 rounded-full text-[11px] font-black uppercase tracking-widest transition-all duration-300 whitespace-nowrap ${
                       scope === s
-                        ? "bg-white text-foreground shadow-sm"
-                        : "text-foreground/40 hover:text-foreground/60"
+                        ? "bg-candy-pink text-[#0c0a09] shadow-glow-coral"
+                        : "text-white/50 hover:bg-white/5 hover:text-white"
                     }`}
                   >
                     {labels[s]}
@@ -199,14 +199,14 @@ export function GalleryGrid({
           )}
 
           {!hideSearch && (
-            <div className="relative w-full md:w-72 group">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground/25 group-focus-within:text-candy-pink transition-colors duration-200" size={16} />
+            <div className="relative w-full md:w-80 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-candy-pink transition-colors duration-300" size={18} />
               <input
                 type="text"
                 placeholder="Search mascots, styles…"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 bg-white border border-foreground/[0.08] rounded-xl text-sm focus:outline-none focus:border-candy-pink/50 focus:ring-2 focus:ring-candy-pink/10 transition-all"
+                className="w-full pl-12 pr-4 py-3 glass-dark border border-white/10 rounded-2xl text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-candy-pink/50 focus:ring-1 focus:ring-candy-pink/50 transition-all duration-300 shadow-inner"
               />
             </div>
           )}
@@ -215,30 +215,31 @@ export function GalleryGrid({
 
       {/* Grid */}
       {loading ? (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+        <div className="grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
           {Array.from({ length: 8 }).map((_, i) => (
             <div
               key={i}
-              className="aspect-square animate-pulse rounded-3xl bg-foreground/[0.05]"
+              className="aspect-[4/5] animate-pulse rounded-[1.5rem] bg-white/5 border border-white/5"
               style={{ animationDelay: `${i * 0.08}s` }}
             />
           ))}
         </div>
       ) : error ? (
-        <div className="flex flex-col items-center justify-center py-24 text-center">
-          <Icon3D name="dizzy-face" size="2xl" animated className="mb-4" />
-          <h2 className="font-display text-2xl text-foreground mb-2">Failed to Load Gallery</h2>
-          <button onClick={fetchItems} className="mt-4 px-6 py-2.5 bg-candy-pink text-white font-bold rounded-xl hover:scale-105 active:scale-95 transition-all">
-            Retry
+        <div className="flex flex-col items-center justify-center py-32 text-center rounded-[2rem] glass-dark border border-white/10">
+          <Icon3D name="dizzy-face" size="2xl" animated className="mb-6 opacity-80" />
+          <h2 className="font-display text-3xl text-white mb-2">Failed to Load Gallery</h2>
+          <p className="text-white/50 mb-8 max-w-sm">Something went wrong while connecting to the studio network.</p>
+          <button onClick={fetchItems} className="px-8 py-3 bg-white text-[#0c0a09] font-black tracking-wide rounded-xl hover:bg-candy-pink transition-all duration-300 shadow-lg">
+            Retry Connection
           </button>
         </div>
       ) : items.length === 0 ? (
-        <div className="flex flex-col items-center justify-center py-28 text-center bg-white/60 rounded-[2.5rem] border-2 border-dashed border-foreground/[0.08]">
-          <Icon3D name="classical-building" size="2xl" animated className="mb-6 opacity-30 grayscale" />
-          <h2 className="font-display text-2xl text-foreground/30 mb-2">
-            {scope === "purchased" ? "No Purchases Yet" : "No Mascots Found"}
+        <div className="flex flex-col items-center justify-center py-32 text-center glass-dark rounded-[2.5rem] border border-dashed border-white/20">
+          <Icon3D name="classical-building" size="2xl" animated className="mb-6 opacity-40 grayscale" />
+          <h2 className="font-display text-3xl text-white mb-3">
+            {scope === "purchased" ? "No Purchases Yet" : "No Characters Found"}
           </h2>
-          <p className="text-muted-foreground/50 max-w-sm mb-8 text-[11px] font-black tracking-widest uppercase">
+          <p className="text-white/40 max-w-sm mb-10 text-[11px] font-black tracking-widest uppercase">
             {scope === "purchased"
               ? "Browse the community and unlock a mascot you love."
               : query
@@ -247,7 +248,7 @@ export function GalleryGrid({
           </p>
           <Link
             href={scope === "purchased" ? "/gallery" : "/create"}
-            className="px-7 py-3 bg-foreground text-white font-black text-[11px] uppercase tracking-widest rounded-xl hover:bg-candy-pink transition-colors duration-200"
+            className="px-8 py-3.5 bg-candy-pink text-[#0c0a09] font-black text-xs uppercase tracking-widest rounded-xl hover:brightness-110 shadow-glow-coral transition-all duration-300 transform hover:scale-105"
           >
             {scope === "purchased" ? "Browse Gallery" : "Create Now"}
           </Link>
@@ -255,8 +256,8 @@ export function GalleryGrid({
       ) : (
         <div className={
           variant === "compact"
-            ? "columns-1 sm:columns-2 lg:columns-3 gap-5 space-y-5"
-            : "columns-2 gap-4 sm:gap-5 sm:columns-3 lg:columns-4 xl:columns-5 space-y-5"
+            ? "columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6"
+            : "columns-1 sm:columns-2 lg:columns-3 xl:columns-4 gap-6 space-y-6"
         }>
           {items.map((item, i) => (
             <GalleryCard
@@ -333,28 +334,25 @@ function GalleryCard({
           ? "owned"
           : "locked";
 
-  const cardShadowClass = {
-    "public-owner": "card-status-public",
-    "private-owner": "card-status-private",
-    "owned": "card-status-owned",
-    "locked": "card-status-locked",
-  }[cardState];
-
   const showPriceOverlay = cardState === "locked";
   const downloadLabel = isOwner || isPurchased ? "Download" : "1 Credit";
+  
   const downloadButtonClass =
     isOwner || isPurchased
-      ? "flex items-center justify-center gap-1.5 h-8 px-3 rounded-lg bg-foreground/[0.05] border border-transparent text-foreground/50 hover:bg-foreground/[0.10] text-[10px] font-black uppercase tracking-wider transition-all active:scale-95"
-      : "flex items-center justify-center gap-1.5 h-8 px-3 rounded-lg bg-candy-pink text-white text-[10px] font-black uppercase tracking-wider hover:brightness-110 shadow-sm transition-all active:scale-95";
+      ? "flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-white/5 border border-white/5 text-white/70 hover:bg-white/10 hover:text-white text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 active:scale-95"
+      : "flex items-center justify-center gap-2 h-10 px-4 rounded-xl bg-candy-pink text-[#0c0a09] text-[10px] font-black uppercase tracking-[0.2em] shadow-glow-coral hover:brightness-110 transition-all duration-300 active:scale-95";
 
   return (
     <div
-      className={`group relative mb-5 break-inside-avoid overflow-hidden rounded-[1.5rem] bg-white border border-foreground/[0.06] transition-all duration-300 hover:-translate-y-1.5 ${cardShadowClass}`}
-      style={{ animationDelay: `${index * 0.04}s` }}
+      className={`group relative mb-6 break-inside-avoid overflow-hidden rounded-[1.5rem] bg-[#141210] border border-white/10 transition-all duration-500 hover:-translate-y-2 hover:border-white/20 hover:shadow-2xl hover:shadow-candy-pink/5 block`}
+      style={{ animationDelay: `${index * 0.05}s` }}
       onMouseLeave={() => setPreviewMode("image")}
     >
       {/* ── Image area ── */}
-      <Link href={`/mascot/${item.id}`} className="relative aspect-square block overflow-hidden bg-white">
+      <Link href={`/mascot/${item.id}`} className="relative aspect-square flex items-center justify-center overflow-hidden bg-[#1c1916]">
+        {/* Checkerboard subtle background for alpha */}
+        <div className="absolute inset-0 bg-grid-white/[0.02] bg-[length:16px_16px]" />
+        
         <img
           src={
             previewMode === "gif" && item.gif_url
@@ -364,46 +362,47 @@ function GalleryCard({
                 : `/api/mascot/${item.id}/preview?v=${Date.now()}`
           }
           alt={item.name}
-          className={`h-full w-full object-contain p-3 transition-all duration-500 ${
-            previewMode === "sticker" ? "scale-90 rotate-3" : "scale-100 group-hover:scale-[1.08]"
+          className={`h-full w-full object-contain p-4 relative z-10 drop-shadow-2xl transition-all duration-700 ease-out ${
+            previewMode === "sticker" ? "scale-90 rotate-3" : "scale-100 group-hover:scale-[1.05]"
           }`}
         />
 
         {/* ── State badge — always visible, prominent ── */}
-        <div className="absolute top-2.5 left-2.5 flex flex-col gap-1.5 pointer-events-none z-10">
+        <div className="absolute top-3 left-3 flex flex-col gap-2 pointer-events-none z-20">
           {cardState === "public-owner" && (
-            <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-candy-green text-white text-[9px] font-black uppercase tracking-widest shadow-sm">
-              <Globe size={9} /> Minted
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-[#5cd85c]/20 border border-[#5cd85c]/30 text-[#5cd85c] text-[9px] font-black uppercase tracking-widest shadow-lg backdrop-blur-md">
+              <Globe size={10} /> Minted
             </div>
           )}
           {cardState === "private-owner" && (
-            <div className="flex items-center gap-1 px-2 py-1 rounded-lg bg-foreground/70 text-white text-[9px] font-black uppercase tracking-widest shadow-sm backdrop-blur-sm">
-              <Lock size={9} /> Private
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-black/60 border border-white/10 text-white/80 text-[9px] font-black uppercase tracking-widest shadow-lg backdrop-blur-md">
+              <Lock size={10} /> Private
             </div>
           )}
           {cardState === "owned" && (
-            <div className="flex items-center gap-1 px-2 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest shadow-sm" style={{ background: "#f5b942", color: "#0d0c0b" }}>
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-candy-yellow/20 border border-candy-yellow/30 text-candy-yellow text-[9px] font-black uppercase tracking-widest shadow-lg backdrop-blur-md">
               ✓ Owned
             </div>
           )}
         </div>
 
         {/* ── Media type badges ── */}
-        <div className="absolute top-2.5 right-2.5 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
+        <div className="absolute top-3 right-3 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-20 xl:flex">
           {item.gif_url && (
-            <div className="rounded-md bg-foreground/70 px-1.5 py-0.5 text-[8px] font-black text-white backdrop-blur-sm tracking-widest">ANIM</div>
+            <div className="rounded-lg bg-black/80 border border-white/10 px-2 py-1 text-[8px] font-black text-white backdrop-blur-md tracking-widest shadow-lg">ANIM</div>
           )}
           {item.sticker_url && (
-            <div className="rounded-md bg-foreground/70 px-1.5 py-0.5 text-[8px] font-black text-white backdrop-blur-sm tracking-widest">PACK</div>
+            <div className="rounded-lg bg-black/80 border border-white/10 px-2 py-1 text-[8px] font-black text-white backdrop-blur-md tracking-widest shadow-lg">PACK</div>
           )}
         </div>
 
         {/* ── Price overlay — slides up on hover for locked items ── */}
         {showPriceOverlay && (
-          <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out pointer-events-none">
-            <div className="bg-candy-pink/95 backdrop-blur-sm px-4 py-2.5 text-center">
-              <p className="text-white text-[10px] font-black uppercase tracking-widest leading-none">
-                ⚡ Unlock for 1 Credit
+          <div className="absolute inset-x-0 bottom-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out pointer-events-none z-20">
+            <div className="bg-gradient-to-t from-black/90 via-black/60 to-transparent pt-8 pb-3 px-4 text-center">
+              <p className="text-candy-pink text-[10px] font-black uppercase tracking-[0.2em] leading-none drop-shadow-md flex items-center justify-center gap-2">
+                <span className="w-1.5 h-1.5 rounded-full bg-candy-pink animate-pulse" />
+                Unlock for 1 Credit
               </p>
             </div>
           </div>
@@ -411,41 +410,42 @@ function GalleryCard({
       </Link>
 
       {/* ── Card footer ── */}
-      <div className="px-3 py-2.5 space-y-2">
+      <div className="p-4 space-y-4">
         {/* Name + type */}
         <div>
           <Link href={`/mascot/${item.id}`}>
-            <h3 className="font-display text-[13px] text-foreground truncate group-hover:text-candy-pink transition-colors duration-200 capitalize leading-tight">
+            <h3 className="font-display text-lg text-white truncate group-hover:text-candy-pink transition-colors duration-300 capitalize leading-tight">
               {item.name}
             </h3>
           </Link>
-          <p className="text-[9px] font-bold text-foreground/25 uppercase tracking-[0.18em] mt-0.5">
+          <p className="text-[10px] font-bold text-white/30 uppercase tracking-[0.2em] mt-1">
             {item.subject_type}
           </p>
         </div>
 
         {/* Actions row */}
-        <div className="flex items-center gap-1.5">
+        <div className="flex items-center gap-2">
           {/* View detail */}
           <Link
             href={`/mascot/${item.id}`}
-            className="flex items-center justify-center gap-1 h-8 px-2.5 rounded-lg bg-foreground/[0.05] border border-transparent text-foreground/50 hover:bg-foreground/[0.10] text-[10px] font-black uppercase tracking-wider transition-all active:scale-95"
+            className="flex items-center justify-center h-10 w-10 shrink-0 rounded-xl bg-white/5 border border-white/5 text-white/50 hover:bg-white/10 hover:text-white transition-all duration-300 active:scale-95 group/btn"
+            title="View Details"
           >
-            <Eye size={10} /> View
+            <Eye size={16} className="group-hover/btn:scale-110 transition-transform" />
           </Link>
 
           {/* Download / Purchase — the money button */}
           <button
             onClick={onDownload}
             disabled={isPurchasing}
-            className={`flex-1 ${downloadButtonClass} ${isPurchasing ? "opacity-60 animate-pulse" : ""}`}
+            className={`flex-1 ${downloadButtonClass} ${isPurchasing ? "opacity-50" : ""}`}
             title={downloadLabel}
           >
             {isPurchasing ? (
-              <>Processing…</>
+              <span className="animate-pulse flex items-center gap-2"><Icon3DInline name="sparkles" size={14} /> Processing…</span>
             ) : (
               <>
-                <Download size={10} />
+                {isOwner || isPurchased ? <Download size={14} /> : <Icon3DInline name="sparkles" size={14} />}
                 {downloadLabel}
               </>
             )}
@@ -453,29 +453,29 @@ function GalleryCard({
 
           {/* Owner controls */}
           {isOwner && (
-            <>
+            <div className="flex gap-2 shrink-0">
               {/* Publish toggle */}
               <button
                 onClick={() => onTogglePublished(item.id)}
                 title={item.published ? "Make Private" : "Mint to Community"}
-                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-all active:scale-95 ${
+                className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl transition-all duration-300 active:scale-95 group/pub ${
                   item.published
-                    ? "bg-candy-green/10 text-candy-green border border-candy-green/20 hover:bg-candy-green/20"
-                    : "bg-foreground/[0.04] text-foreground/35 border border-transparent hover:bg-foreground/[0.08] hover:text-foreground/60"
+                    ? "bg-[#5cd85c]/10 text-[#5cd85c] border border-[#5cd85c]/20 hover:bg-[#5cd85c]/20 hover:border-[#5cd85c]/40"
+                    : "bg-white/5 text-white/40 border border-white/5 hover:bg-white/10 hover:text-white/80"
                 }`}
               >
-                <Globe size={13} />
+                <Globe size={16} className="group-hover/pub:scale-110 transition-transform" />
               </button>
 
               {/* Delete */}
               <button
                 onClick={() => onDelete(item)}
                 title="Delete"
-                className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-400 border border-transparent hover:bg-red-100 hover:text-red-500 transition-all active:scale-95"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-red-500/10 text-red-400 border border-red-500/10 hover:bg-red-500/20 hover:text-red-300 hover:border-red-500/30 transition-all duration-300 active:scale-95 group/del"
               >
-                <Trash2 size={13} />
+                <Trash2 size={16} className="group-hover/del:scale-110 transition-transform" />
               </button>
-            </>
+            </div>
           )}
         </div>
       </div>

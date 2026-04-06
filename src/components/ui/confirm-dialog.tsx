@@ -36,16 +36,16 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="rounded-3xl border-2 border-border sm:max-w-md">
+            <DialogContent className="rounded-[2rem] border border-white/10 bg-[#141210] shadow-2xl glass-dark sm:max-w-md p-6 sm:p-8">
                 <DialogHeader>
-                    <DialogTitle className="font-display text-xl">{title}</DialogTitle>
-                    <DialogDescription>{description}</DialogDescription>
+                    <DialogTitle className="font-display text-2xl text-white">{title}</DialogTitle>
+                    <DialogDescription className="text-white/50">{description}</DialogDescription>
                 </DialogHeader>
-                <DialogFooter className="flex flex-col sm:flex-row gap-2 sm:justify-end mt-4">
+                <DialogFooter className="flex flex-col-reverse sm:flex-row gap-3 sm:justify-end mt-6">
                     <Button
                         variant="outline"
                         onClick={() => onOpenChange(false)}
-                        className="rounded-xl border-2"
+                        className="rounded-xl border border-white/10 bg-transparent text-white hover:bg-white/5 transition-colors"
                         disabled={loading}
                     >
                         {cancelText}
@@ -58,8 +58,8 @@ export function ConfirmDialog({
                         variant={variant === "destructive" ? "destructive" : "default"}
                         className={
                             variant === "destructive"
-                                ? "rounded-xl"
-                                : "rounded-xl bg-gradient-to-r from-candy-pink to-candy-orange text-white hover:brightness-105"
+                                ? "rounded-xl font-bold bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20"
+                                : "rounded-xl font-bold bg-candy-pink text-[#0c0a09] hover:brightness-110 shadow-glow-coral"
                         }
                     >
                         {loading ? "Processing..." : confirmText}
