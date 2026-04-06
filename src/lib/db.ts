@@ -3,7 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 
 // ─── Connection ───
 
-function sql(strings: TemplateStringsArray, ...values: unknown[]) {
+export async function sql(strings: TemplateStringsArray, ...values: unknown[]) {
   const databaseUrl = process.env.DATABASE_URL || process.env.POSTGRES_URL;
   if (!databaseUrl) throw new Error("DATABASE_URL or POSTGRES_URL env var is required");
   const query = neon(databaseUrl);

@@ -16,9 +16,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const item = await getGalleryItemById(parseInt(id));
   if (!item) return { title: "Mascot Not Found" };
 
-  const absoluteImageUrl = item.image_url.startsWith("http") 
-    ? item.image_url 
-    : `https://mascotmaker.io${item.image_url}`;
+  const absoluteImageUrl = `https://mascotmaker.io/api/mascot/${id}/preview`;
 
   return {
     title: `${item.name} | Mascot Maker AI`,

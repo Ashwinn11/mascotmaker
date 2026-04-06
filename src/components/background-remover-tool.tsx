@@ -5,11 +5,14 @@ import Image from "next/image";
 import { Upload, Download, Loader2, X, RefreshCw, WandSparkles } from "lucide-react";
 import { toast } from "sonner";
 import { useSession } from "next-auth/react";
+import { PaywallModal } from "@/components/paywall-modal";
 
 export function BackgroundRemoverTool() {
   const [image, setImage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<string | null>(null);
+  const [showPaywall, setShowPaywall] = useState(false);
+  const [paywallMode, setPaywallMode] = useState<"auth" | "credits">("auth");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { data: session, update } = useSession();
 
@@ -32,12 +35,14 @@ export function BackgroundRemoverTool() {
   const removeBg = async () => {
     if (!image) return;
     if (!session) {
-      toast.error("Please sign in to use this tool.");
+      setPaywallMode("auth");
+      setShowPaywall(true);
       return;
     }
 
     if (session.user.credits < 1) {
-      toast.error("Insufficient credits.");
+      setPaywallMode("credits");
+      setShowPaywall(true);
       return;
     }
 
@@ -182,6 +187,12 @@ export function BackgroundRemoverTool() {
             Please sign in to claim your 5 free credits
          </p>
       )}
+
+      <PaywallModal 
+        open={showPaywall}
+        onOpenChange={setShowPaywall}
+        type={paywallMode}
+      />
     </div>
   );
 }
