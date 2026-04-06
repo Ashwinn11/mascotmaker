@@ -3,13 +3,13 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, Download, ArrowLeft, Share2 } from "lucide-react";
-import { getGalleryItemById } from "@/lib/db";
+import { MascotActions } from "./mascot-actions";
+import { getGalleryItemById, isItemPurchased } from "@/lib/db";
+import { auth } from "@/lib/auth";
 
 interface Props {
   params: Promise<{ id: string }>;
 }
-
-import { MascotActions } from "./mascot-actions";
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params;
@@ -39,9 +39,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function MascotPage({ params }: Props) {
   const { id } = await params;
+  const session = await auth();
+  const userId = session?.user?.id;
   const item = await getGalleryItemById(parseInt(id));
 
   if (!item) notFound();
+
+  const isOwner = userId ? item.user_id === userId : false;
+  const isPurchased = !isOwner && userId
+    ? await isItemPurchased(userId, item.id)
+    : false;
 
   return (
     <main className="min-h-screen bg-cream px-6 py-20 pb-32">
@@ -90,7 +97,7 @@ export default async function MascotPage({ params }: Props) {
               </p>
             </div>
 
-            <MascotActions item={item} />
+            <MascotActions item={item} isOwner={isOwner} isPurchased={isPurchased} />
           </div>
         </div>
       </div>

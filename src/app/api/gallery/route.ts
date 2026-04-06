@@ -18,6 +18,12 @@ export async function GET(req: Request) {
         return NextResponse.json({ items: [] });
       }
       items = await getGalleryItems({ userId, query, showPublic: false });
+    } else if (scope === "purchased") {
+      if (!userId) {
+        return NextResponse.json({ items: [] });
+      }
+      const { getPurchasedGalleryItems } = await import("@/lib/db");
+      items = await getPurchasedGalleryItems(userId);
     } else {
       // Showcase mode: show everything published
       items = await getGalleryItems({ userId, query, showPublic: true });
@@ -81,7 +87,7 @@ export async function POST(req: Request) {
       stickerUrl, 
       userId: session.user.id, 
       subjectType,
-      published: 1 // Default to public for the Showcase
+      published: 0 // Default to PRIVATE — creator manually publishes
     });
     return NextResponse.json({ item });
   } catch (error) {

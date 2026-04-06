@@ -230,6 +230,17 @@ export async function recordGalleryPurchase(userId: string, itemId: number): Pro
   `;
 }
 
+export async function getPurchasedGalleryItems(userId: string): Promise<GalleryItem[]> {
+  await ensureDb();
+  const rows = await sql`
+    SELECT g.* FROM gallery g
+    INNER JOIN gallery_purchases gp ON gp.item_id = g.id
+    WHERE gp.user_id = ${userId}
+    ORDER BY gp.created_at DESC
+  `;
+  return rows as GalleryItem[];
+}
+
 // ─── Users ───
 
 export interface User {

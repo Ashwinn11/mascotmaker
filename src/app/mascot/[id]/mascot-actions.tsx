@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { PaywallModal } from "@/components/paywall-modal";
-import { Download, Sparkles, Loader2, Scissors, Share2 } from "lucide-react";
+import { Download, Sparkles, Loader2, Scissors, Share2, CheckCircle } from "lucide-react";
 import { toast } from "sonner";
 import { downloadFile, downloadBase64, cropSticker } from "@/lib/download";
 import Link from "next/link";
@@ -18,7 +18,7 @@ interface MascotItem {
   user_id: string | null;
 }
 
-export function MascotActions({ item }: { item: MascotItem }) {
+export function MascotActions({ item, isOwner = false, isPurchased = false }: { item: MascotItem, isOwner?: boolean, isPurchased?: boolean }) {
   const { data: session } = useSession();
   const [downloading, setDownloading] = useState(false);
   const [sharing, setSharing] = useState(false);
@@ -39,11 +39,11 @@ export function MascotActions({ item }: { item: MascotItem }) {
       return;
     }
 
-    const isOwner = item.user_id === session.user?.id;
-    if (isOwner) {
+    const canDownloadFree = isOwner || isPurchased;
+    if (canDownloadFree) {
       if (type === 'image') downloadFile(item.image_url, `${downloadName}.png`);
-      if (type === 'gif') downloadFile(item.gif_url!, `${downloadName}.gif`);
-      if (type === 'sticker') handleStickerBatch(item.sticker_url);
+      if (type === 'gif' && item.gif_url) downloadFile(item.gif_url, `${downloadName}.gif`);
+      if (type === 'sticker' && item.sticker_url) handleStickerBatch(item.sticker_url);
       return;
     }
 
@@ -132,6 +132,14 @@ export function MascotActions({ item }: { item: MascotItem }) {
 
   return (
     <div className="space-y-6">
+      {(isOwner || isPurchased) && (
+        <div className="flex items-center gap-2 px-4 py-2.5 bg-candy-green/10 border-2 border-candy-green/20 rounded-2xl animate-in fade-in slide-in-from-top-2 duration-500">
+          <CheckCircle size={14} className="text-candy-green" />
+          <span className="text-xs font-black uppercase tracking-widest text-candy-green">
+            {isOwner ? "Direct Access (Author)" : "Unlocked Lifetime Access"}
+          </span>
+        </div>
+      )}
       {/* Primary Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button

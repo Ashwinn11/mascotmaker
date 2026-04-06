@@ -24,16 +24,28 @@ interface GalleryItem {
 
 interface GalleryGridProps {
   currentUserId?: string;
+  purchasedIds?: number[];
+  initialScope?: "public" | "mine" | "purchased";
+  hideTabs?: boolean;
+  hideSearch?: boolean;
+  variant?: "full" | "compact";
 }
 
-export function GalleryGrid({ currentUserId }: GalleryGridProps) {
+export function GalleryGrid({ 
+  currentUserId, 
+  purchasedIds = [], 
+  initialScope = "public",
+  hideTabs = false,
+  hideSearch = false,
+  variant = "full"
+}: GalleryGridProps) {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<GalleryItem | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [purchasing, setPurchasing] = useState<number | null>(null);
-  const [scope, setScope] = useState<"public" | "mine">("public");
+  const [scope, setScope] = useState<"public" | "mine" | "purchased">(initialScope);
   const [query, setQuery] = useState("");
   const [debouncedQuery, setDebouncedQuery] = useState("");
   
@@ -159,39 +171,55 @@ export function GalleryGrid({ currentUserId }: GalleryGridProps) {
   return (
     <div className="space-y-10">
       {/* 🛠️ Controls: Tabs & Search */}
-      <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
-        <div className="flex p-1.5 bg-foreground/5 rounded-2xl border border-foreground/5 backdrop-blur-sm">
-          <button
-            onClick={() => setScope("public")}
-            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-              scope === "public" ? "bg-white text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground/60"
-            }`}
-          >
-            Showcase
-          </button>
-          {currentUserId && (
-            <button
-              onClick={() => setScope("mine")}
-              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                scope === "mine" ? "bg-white text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground/60"
-              }`}
-            >
-              My Mascots
-            </button>
+      {(!hideTabs || !hideSearch) && (
+        <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
+          {!hideTabs && (
+            <div className="flex p-1.5 bg-foreground/5 rounded-2xl border border-foreground/5 backdrop-blur-sm">
+              <button
+                onClick={() => setScope("public")}
+                className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                  scope === "public" ? "bg-white text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground/60"
+                }`}
+              >
+                Showcase
+              </button>
+              {currentUserId && (
+                <button
+                  onClick={() => setScope("mine")}
+                  className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                    scope === "mine" ? "bg-white text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground/60"
+                  }`}
+                >
+                  My Mascots
+                </button>
+              )}
+              {currentUserId && (
+                <button
+                  onClick={() => setScope("purchased")}
+                  className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                    scope === "purchased" ? "bg-white text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground/60"
+                  }`}
+                >
+                  Purchased
+                </button>
+              )}
+            </div>
+          )}
+
+          {!hideSearch && (
+            <div className="relative w-full md:w-80 group">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-candy-pink transition-colors" size={18} />
+              <input
+                type="text"
+                placeholder="Search mascots, styles..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-full pl-12 pr-6 py-3.5 bg-white border-2 border-foreground/5 rounded-2xl text-sm focus:outline-none focus:border-candy-pink/50 focus:ring-4 focus:ring-candy-pink/5 transition-all shadow-premium"
+              />
+            </div>
           )}
         </div>
-
-        <div className="relative w-full md:w-80 group">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-candy-pink transition-colors" size={18} />
-          <input
-            type="text"
-            placeholder="Search mascots, styles..."
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            className="w-full pl-12 pr-6 py-3.5 bg-white border-2 border-foreground/5 rounded-2xl text-sm focus:outline-none focus:border-candy-pink/50 focus:ring-4 focus:ring-candy-pink/5 transition-all shadow-premium"
-          />
-        </div>
-      </div>
+      )}
 
       {/* 🖼️ Grid View */}
       {loading ? (
@@ -218,7 +246,10 @@ export function GalleryGrid({ currentUserId }: GalleryGridProps) {
           </Link>
         </div>
       ) : (
-        <div className="columns-2 gap-4 sm:gap-6 sm:columns-3 lg:columns-4 xl:columns-5 space-y-6">
+        <div className={variant === "compact" 
+          ? "columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6" 
+          : "columns-2 gap-4 sm:gap-6 sm:columns-3 lg:columns-4 xl:columns-5 space-y-6"
+        }>
           {items.map((item, i) => (
             <GalleryCard 
               key={item.id} 
@@ -226,6 +257,7 @@ export function GalleryGrid({ currentUserId }: GalleryGridProps) {
               index={i} 
               onDelete={setDeleteTarget} 
               isOwner={item.user_id === currentUserId}
+              isPurchased={purchasedIds.includes(item.id)}
               onTogglePublished={handleTogglePublished}
               onDownload={() => handlePurchaseAndDownload(item)}
               isPurchasing={purchasing === item.id}
@@ -261,6 +293,7 @@ function GalleryCard({
   index,
   onDelete,
   isOwner,
+  isPurchased,
   onTogglePublished,
   onDownload,
   isPurchasing
@@ -269,6 +302,7 @@ function GalleryCard({
   index: number;
   onDelete: (item: GalleryItem) => void;
   isOwner: boolean;
+  isPurchased: boolean;
   onTogglePublished: (id: number) => void;
   onDownload: () => void;
   isPurchasing: boolean;
@@ -299,6 +333,11 @@ function GalleryCard({
               <Lock size={8} /> Private
             </div>
           ) : null}
+          {isPurchased && !isOwner && (
+            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-candy-green/90 text-white text-[7px] font-black uppercase tracking-widest shadow-sm backdrop-blur-sm">
+               Owned ✓
+            </div>
+          )}
         </div>
 
         {/* Media Badges */}
@@ -331,11 +370,11 @@ function GalleryCard({
                 onClick={onDownload}
                 disabled={isPurchasing}
                 className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all border ${
-                    isOwner 
+                    isOwner || isPurchased
                     ? "bg-foreground/5 border-transparent text-foreground/40 hover:bg-foreground/10" 
                     : "bg-candy-pink/5 border-candy-pink/20 text-candy-pink hover:bg-candy-pink/10 shadow-sm"
                 } ${isPurchasing ? "animate-pulse" : "active:scale-95"}`}
-                title={isOwner ? "Download Design" : "Download for 1 Credit"}
+                title={isOwner || isPurchased ? "Download Design" : "Download for 1 Credit"}
                 >
                 <Download size={14} />
             </button>

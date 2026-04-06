@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { GalleryGrid } from "@/components/gallery-grid";
 import { auth } from "@/lib/auth";
+import { getPurchasedGalleryItems } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Mascot Gallery — Animated AI Characters",
@@ -33,6 +34,8 @@ export const metadata: Metadata = {
 export default async function GalleryPage() {
   const session = await auth();
   const userId = session?.user?.id;
+  const purchasedItems = userId ? await getPurchasedGalleryItems(userId) : [];
+  const purchasedIds = purchasedItems.map(item => item.id);
 
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-dotted">
@@ -50,7 +53,7 @@ export default async function GalleryPage() {
       </div>
 
       <div className="mx-auto max-w-7xl px-6 py-12">
-        <GalleryGrid currentUserId={userId} />
+        <GalleryGrid currentUserId={userId} purchasedIds={purchasedIds} />
       </div>
 
       <section className="mx-auto max-w-4xl px-6 py-20 border-t border-border/20">
