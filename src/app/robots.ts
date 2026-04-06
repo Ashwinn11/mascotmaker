@@ -19,6 +19,7 @@ export default function robots(): MetadataRoute.Robots {
         '/terms',             // Legal trust signal
         '/privacy',           // Privacy trust signal
         '/about',             // Story/Mission
+        '/learn',             // Glossary Academy Hub
       ],
       // 🚪 DISALLOW Privacy: Lock the doors on everything else
       disallow: [

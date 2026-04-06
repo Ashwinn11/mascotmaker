@@ -1,5 +1,6 @@
 import { MetadataRoute } from 'next';
 import { COMPETITORS } from "@/lib/seo-data";
+import { LEARN_TERMS } from "@/lib/learn-data";
 
 // sitemap.xml = static pages + blog + compare pages ONLY
 // pSEO use-case/style/industry URLs → /sitemap-use-cases.xml
@@ -20,6 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/background-remover',
     '/privacy',
     '/terms',
+    '/learn',
   ].map((route) => ({
     url: `${baseUrl}${route}`,
     lastModified: new Date(),
@@ -44,5 +46,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticRoutes, ...blogRoutes, ...compareRoutes];
+  // 4. Learning Academy (Glossary)
+  const learnRoutes = LEARN_TERMS.map(t => ({
+    url: `${baseUrl}/learn/${t.slug}`,
+    lastModified: new Date(),
+    changeFrequency: 'weekly' as const,
+    priority: 0.8,
+  }));
+
+  return [...staticRoutes, ...blogRoutes, ...compareRoutes, ...learnRoutes];
 }
