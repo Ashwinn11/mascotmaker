@@ -11,6 +11,7 @@ export default function robots(): MetadataRoute.Robots {
         '/',
         '/gallery',
         '/mascot/',           // Every community design is indexable
+        '/mascot-maker/',     // All 400+ pSEO spokes
         '/blog/',             // All blog content
         '/create',            // The editor hub
         '/background-remover', // The cutout studio
@@ -18,17 +19,20 @@ export default function robots(): MetadataRoute.Robots {
         '/terms',             // Legal trust signal
         '/privacy',           // Privacy trust signal
         '/about',             // Story/Mission
-        '/sitemap.xml',       // The growth reactor map
       ],
       // 🚪 DISALLOW Privacy: Lock the doors on everything else
       disallow: [
         '/api/',        // No crawling our internal logic/payment hooks
-        '/profile',      // No indexing private user dashboards
-        '/auth/',        // No crawling login/callback loops
-        '/_next/',       // No crawling Next.js internal files
-        '/*.json',       // No crawling config files
+        '/profile',     // No indexing private user dashboards
+        '/auth/',       // No crawling login/callback loops
+        '/_next/',      // No crawling Next.js internal files
+        '/*.json',      // No crawling config files
       ],
     },
-    sitemap: `${baseUrl}/sitemap.xml`,
+    sitemap: [
+      `${baseUrl}/sitemap.xml`,
+      `${baseUrl}/sitemap-mascots.xml`,
+      `${baseUrl}/sitemap-use-cases.xml`,
+    ],
   };
 }

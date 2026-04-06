@@ -44,6 +44,9 @@ export default async function MascotPage({ params }: Props) {
   const item = await getGalleryItemById(parseInt(id));
 
   if (!item) notFound();
+  // Guard: unpublished items must not be visible to Google or unauthenticated users
+  if (!item.published && item.user_id !== userId) notFound();
+
 
   const isOwner = userId ? item.user_id === userId : false;
   const isPurchased = !isOwner && userId

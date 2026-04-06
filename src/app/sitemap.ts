@@ -1,11 +1,15 @@
 import { MetadataRoute } from 'next';
-import { sql } from "@/lib/db";
-import { INDUSTRIES, STYLES, ENGINES, COMPETITORS } from "@/lib/seo-data";
+import { COMPETITORS } from "@/lib/seo-data";
+
+// sitemap.xml = static pages + blog + compare pages ONLY
+// pSEO use-case/style/industry URLs → /sitemap-use-cases.xml
+// /mascot/[id] community URLs      → /sitemap-mascots.xml
+// Splitting by velocity: this file changes per deploy; shards change per data
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://mascotmaker.io';
 
-  // 1. Core Static Routes
+  // 1. Core static routes — highest priority, deepest trust signals
   const staticRoutes = [
     '',
     '/gallery',
@@ -23,8 +27,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 1,
   }));
 
-  // 2. Blog Posts (Dynamic from DB or Content)
-  // These slugs match your build log exactly
+  // 2. Blog posts — update when new posts are added
   const blogSlugs = ['ai-mascot-vs-illustrator', 'character-consistency-ai', 'what-is-a-brand-mascot'];
   const blogRoutes = blogSlugs.map(slug => ({
     url: `${baseUrl}/blog/${slug}`,
@@ -33,57 +36,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.9,
   }));
 
-  // 3. Showcase Previews (SEO Goldmine)
-  let mascotRoutes: MetadataRoute.Sitemap = [];
-  try {
-    const publishedMascots = (await sql`
-      SELECT id, created_at FROM gallery WHERE published = 1 LIMIT 500
-    `) as Array<{ id: number; created_at: string | Date }>;
-
-    mascotRoutes = publishedMascots.map((item) => ({
-      url: `${baseUrl}/mascot/${item.id}`,
-      lastModified: new Date(item.created_at),
-      changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    }));
-  } catch (error) {
-    console.error("Sitemap DB error:", error);
-  }
-
-  // 4. Mascot-Maker SEO Use Cases (The Growth Reactor - 400+ Paths)
-  const useCaseRoutes: MetadataRoute.Sitemap = [];
-
-  // 4a. Base Engine Routes
-  ENGINES.forEach(e => {
-    useCaseRoutes.push({ url: `${baseUrl}/mascot-maker/use-case/${e.slug}`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 });
-    INDUSTRIES.forEach(i => {
-      useCaseRoutes.push({ url: `${baseUrl}/mascot-maker/use-case/${e.slug}/${i.slug}`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 });
-    });
-    STYLES.forEach(s => {
-      useCaseRoutes.push({ url: `${baseUrl}/mascot-maker/use-case/${e.slug}/${s.slug}`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 });
-    });
-  });
-
-  // 4b. Industry & Style Combinations
-  INDUSTRIES.forEach(i => {
-    useCaseRoutes.push({ url: `${baseUrl}/mascot-maker/industry/${i.slug}`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 });
-    STYLES.forEach(s => {
-      useCaseRoutes.push({ url: `${baseUrl}/mascot-maker/industry/${i.slug}/${s.slug}`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 });
-    });
-  });
-
-  // 4c. Simple Style Individual Routes
-  STYLES.forEach(s => {
-    useCaseRoutes.push({ url: `${baseUrl}/mascot-maker/style/${s.slug}`, lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 });
-  });
-
-  // 5. Competitor Comparisons
+  // 3. Competitor comparison pages
   const compareRoutes = COMPETITORS.map(c => ({
     url: `${baseUrl}/mascot-maker/compare/${c.slug}`,
     lastModified: new Date(),
     changeFrequency: 'monthly' as const,
-    priority: 0.7,
+    priority: 0.8,
   }));
 
-  return [...staticRoutes, ...blogRoutes, ...mascotRoutes, ...useCaseRoutes, ...compareRoutes];
+  return [...staticRoutes, ...blogRoutes, ...compareRoutes];
 }

@@ -11,6 +11,9 @@ interface PageProps {
     params: Promise<{ slug: string }>;
 }
 
+export const revalidate = 86400; // 24h — competitor data changes rarely
+
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
     const competitor = COMPETITORS.find((c) => c.slug === slug);

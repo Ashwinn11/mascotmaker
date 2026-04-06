@@ -4,29 +4,35 @@ import { auth } from "@/lib/auth";
 import { getPurchasedGalleryItems } from "@/lib/db";
 
 export const metadata: Metadata = {
-  title: "Mascot Gallery — Animated AI Characters",
+  title: "AI Mascot, Logo & Sticker Pack Gallery — Browse & Download",
   description:
-    "Explore mascots created by the community. Shop, download, or get inspired for your own design. High-quality animated world of mascots.",
+    "Browse thousands of AI-generated mascots, logos, and sticker packs made by the community. Filter by style, buy with 1 credit, and download with full commercial rights.",
+  keywords: [
+    "ai mascot gallery", "sticker pack download", "logo maker gallery",
+    "buy ai mascots", "discord sticker packs", "ai logo designs",
+    "custom mascot download", "telegram sticker sets", "brand character marketplace"
+  ],
   alternates: {
     canonical: "https://mascotmaker.io/gallery",
   },
   openGraph: {
-    title: "Mascot Gallery — Animated AI Characters",
-    description: "Explore mascots created by the community. Shop, download, or get inspired.",
+    title: "AI Mascot, Logo & Sticker Pack Gallery",
+    description: "Browse community-made mascots, logos, and sticker packs. Buy with 1 credit. Full commercial rights included.",
     url: "https://mascotmaker.io/gallery",
     siteName: "Mascot Maker",
     images: [{
       url: "https://mascotmaker.io/app-icon.png",
       width: 512,
       height: 512,
-      alt: "Mascot Maker — Community Gallery",
+      alt: "Mascot Maker — Asset Marketplace",
     }],
     locale: "en_US",
     type: "website",
   },
   twitter: {
-    card: "summary",
-    title: "Mascot Gallery — Powered by mascotmaker.io",
+    card: "summary_large_image",
+    title: "AI Mascots, Logos & Sticker Packs — Mascot Maker Gallery",
+    description: "Browse and buy community-made assets. 1 credit per download. Commercial rights included.",
     images: ["https://mascotmaker.io/app-icon.png"],
   },
 };
@@ -37,8 +43,23 @@ export default async function GalleryPage() {
   const purchasedItems = userId ? await getPurchasedGalleryItems(userId) : [];
   const purchasedIds = purchasedItems.map(item => item.id);
 
+  const itemListSchema = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    "name": "AI Mascots, Logos & Sticker Packs — Community Gallery",
+    "description": "Browse and purchase community-made AI mascots, brand logos, and sticker packs with full commercial rights.",
+    "url": "https://mascotmaker.io/gallery",
+    "numberOfItems": "500+",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "AI Mascots", "url": "https://mascotmaker.io/gallery" },
+      { "@type": "ListItem", "position": 2, "name": "Sticker Packs", "url": "https://mascotmaker.io/gallery" },
+      { "@type": "ListItem", "position": 3, "name": "Brand Logos", "url": "https://mascotmaker.io/gallery" }
+    ]
+  };
+
   return (
     <div className="min-h-[calc(100vh-4rem)] bg-[#0c0a09]">
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(itemListSchema) }} />
       <div className="relative overflow-hidden border-b border-white/[0.04] bg-[#141210]">
         {/* Subtle grid background */}
         <div className="absolute inset-0 bg-grid-white/[0.02] bg-[size:32px]" />
@@ -50,10 +71,10 @@ export default async function GalleryPage() {
           </div>
           
           <h1 className="font-display text-4xl sm:text-5xl md:text-6xl text-white mb-6 animate-slide-up leading-tight tracking-tight">
-            Mascot <span className="text-candy-pink drop-shadow-sm">Gallery.</span>
+            Mascots, Logos &amp; <span className="text-candy-pink drop-shadow-sm">Sticker Packs.</span>
           </h1>
           <p className="text-xl text-white/40 max-w-2xl mx-auto animate-slide-up stagger-2 font-medium">
-            Discover community-powered character design. Filter by style, industry, or search for your favorite mascot.
+            Browse community-made AI assets — mascots, brand logos, and sticker packs. Filter by style, buy with 1 credit, download with full commercial rights.
           </p>
         </div>
         

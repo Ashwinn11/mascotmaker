@@ -11,6 +11,9 @@ interface PageProps {
     params: Promise<{ slug: string[] }>;
 }
 
+export const revalidate = 3600;   // ISR: refresh cached pages every hour
+export const dynamicParams = true; // allow on-demand generation for new paths
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
     const { slug } = await params;
 
@@ -53,9 +56,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
     const canonicalPath = [type, primaryItem.slug, secondaryItem?.slug].filter(Boolean).join('/');
 
+    // Priority 3: noindex background-remover combos — zero unique content, no gallery assets
+    const isNoindex = type === "use-case" && part1 === "background-remover" && !!part2;
+
     return {
         title,
         description,
+        ...(isNoindex ? { robots: { index: false, follow: true } } : {}),
         alternates: {
             canonical: `https://mascotmaker.io/mascot-maker/${canonicalPath}`,
         },
@@ -137,7 +144,8 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
     const combinedTitle = secondaryItem ? `${primaryItem?.title} for ${secondaryItem?.title}` : primaryItem?.title;
     const isStyle = !!style1;
     const isIndustry = !!industry1 && !engine1;
-    const content = getSEOContent(combinedTitle || "Mascot Maker");
+    // Priority 2: pass real descriptions so getSEOContent builds a unique definition per page
+    const content = getSEOContent(combinedTitle || "Mascot Maker", primaryItem?.description, secondaryItem?.description);
 
     const jsonLd = {
         "@context": "https://schema.org",
@@ -186,6 +194,31 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
         ]
     };
 
+    const howToSchema = {
+        "@context": "https://schema.org",
+        "@type": "HowTo",
+        "name": `How to build a ${combinedTitle} with Mascot Maker AI`,
+        "description": `Step-by-step guide to generating studio-grade ${combinedTitle} assets using Identity Lock™ consistency.`,
+        "step": [
+            {
+                "@type": "HowToStep",
+                "text": `Describe your ${combinedTitle?.toLowerCase()} in plain English. Include personality traits and colors.`
+            },
+            {
+                "@type": "HowToStep",
+                "text": `Select the ${primaryItem?.title} engine from our studio menu.`
+            },
+            {
+                "@type": "HowToStep",
+                "text": `Hit Generate. The AI will produce a studio-quality asset in 30 seconds.`
+            },
+            {
+                "@type": "HowToStep",
+                "text": `Use Identity Lock™ to preserve your character's DNA across different poses.`
+            }
+        ]
+    };
+
     const comparisonRows = [
         { feature: "Generation speed", mascotMaker: "~30 seconds", freelancer: "3–7 days", diy: "Hours of manual prompting" },
         { feature: "Cost per asset", mascotMaker: "$0.00 (Free credits)", freelancer: "$150–$500", diy: "Opportunity cost" },
@@ -199,6 +232,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
         <div className="bg-[#0c0a09] min-h-screen text-white selection:bg-candy-pink/30">
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
             <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+            <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(howToSchema) }} />
 
             {/* ─── Hero ─── */}
             <section className="relative flex items-center overflow-hidden bg-[#141210] border-b border-white/[0.04] pt-24 pb-16">
