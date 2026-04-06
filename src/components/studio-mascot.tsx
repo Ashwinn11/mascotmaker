@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Icon3DInline } from "@/components/ui/icon-3d";
-import { downloadFile } from "@/lib/download";
-
+import { motion, AnimatePresence } from "framer-motion";
+import { Sparkles, FolderOpen, Wand2 } from "lucide-react";
 import { STYLES, SUBJECT_TYPES, SubjectType } from "@/lib/prompts";
 
 interface StudioMascotProps {
@@ -21,12 +21,6 @@ const SectionLabel = ({ children }: { children: React.ReactNode }) => (
     <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50">{children}</p>
 );
 
-const DownloadIcon = () => (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" />
-    </svg>
-);
-
 export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiError, onCreditsUpdate }: StudioMascotProps) {
     const [inputMode, setInputMode] = useState<"describe" | "upload">("describe");
     const [prompt, setPrompt] = useState("");
@@ -35,7 +29,6 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
     const [selectedStyleId, setSelectedStyleId] = useState("chibi");
     const [subjectType, setSubjectType] = useState<SubjectType>("Character");
     const [removeBackground, setRemoveBackground] = useState(false);
-    const [result, setResult] = useState<string | null>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
 
     const currentStyle = STYLES.find(s => s.id === selectedStyleId) || STYLES[0];
@@ -49,7 +42,6 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
         if (!prompt.trim() && !file) return;
         if (!requireAuth()) return;
         onLoadingChange(true);
-        setResult(null);
         try {
             const res = await fetch("/api/generate", {
                 method: "POST",
@@ -69,7 +61,6 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             onCreditsUpdate(data.creditsRemaining);
             const images = data.images || (data.imageBase64 ? [data.imageBase64] : []);
             if (images.length > 0) {
-                setResult(images[0]);
                 onGenerated(images, data.analysis, {
                     aspectRatio: "1:1",
                     imageSize: "2K",
@@ -85,7 +76,6 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
         if (!file) return;
         if (!requireAuth()) return;
         onLoadingChange(true);
-        setResult(null);
         try {
             const formData = new FormData();
             formData.append("image", file);
@@ -100,7 +90,6 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
             if (!res.ok) { if (!onApiError(res, data)) return; toast.error(data.error || "Failed"); return; }
             onCreditsUpdate(data.creditsRemaining);
             if (data.imageBase64) {
-                setResult(data.imageBase64);
                 onGenerated([data.imageBase64], data.analysis, {
                     aspectRatio: "1:1",
                     imageSize: "2K",
@@ -113,141 +102,139 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
     };
 
     const canSubmit = inputMode === "describe" ? !!prompt.trim() : !!file;
-    const ACCENT = "candy-pink";
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-5">
 
-            {/* Art Style - Hidden in Logo Mode */}
-            {subjectType !== "Logo" && (
-                <div className="space-y-3 relative animate-in fade-in slide-in-from-top-2 duration-300">
-                    <SectionLabel>Art Style</SectionLabel>
-                    <div className="relative">
-                        <div className="flex gap-2.5 overflow-x-auto pb-2 no-scrollbar scroll-smooth">
-                            {STYLES.map((s) => (
-                                <button key={s.id} onClick={() => setSelectedStyleId(s.id)}
-                                    className={`flex-shrink-0 flex flex-col items-center gap-2 p-3 rounded-[1.25rem] border transition-all duration-300 min-w-[76px] ${selectedStyleId === s.id
-                                        ? `border-${ACCENT}/50 bg-${ACCENT}/10 shadow-[0_0_15px_rgba(255,77,28,0.2)]`
-                                        : "border-white/5 bg-[#141210] hover:border-candy-pink/30 hover:bg-white/5"}`}>
-                                    <Icon3DInline name={s.icon} size={24} className={`md:w-[28px] md:h-[28px] transition-transform ${selectedStyleId === s.id ? "scale-110" : ""}`} />
-                                    <p className={`text-[9px] font-black uppercase tracking-wider ${selectedStyleId === s.id ? `text-${ACCENT}` : "text-white/60"}`}>{s.label}</p>
-                                </button>
-                            ))}
-                        </div>
-                        {/* Fade indicators for mobile scroll */}
-                        <div className="absolute right-0 top-0 bottom-0 w-8 bg-gradient-to-l from-[#0c0a09] to-transparent pointer-events-none md:hidden" />
-                    </div>
-                </div>
-            )}
-
-            {/* What are you creating? */}
-            <div className="space-y-3">
-                <SectionLabel>What are you creating?</SectionLabel>
-                <div className="grid grid-cols-3 md:grid-cols-5 gap-2">
+            {/* Asset Configuration - High Density */}
+            <div className="space-y-2.5">
+                <SectionLabel>Asset Configuration</SectionLabel>
+                <div className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-black border border-white/[0.06]">
                     {SUBJECT_TYPES.map((s) => (
-                        <button key={s.value} onClick={() => setSubjectType(s.value)} title={s.desc}
-                            className={`flex flex-col items-center justify-center gap-1.5 p-3 min-h-[48px] rounded-2xl border transition-all duration-300 ${subjectType === s.value
-                                ? "border-candy-pink bg-candy-pink/10 text-candy-pink shadow-[0_0_15px_rgba(255,77,28,0.15)]"
-                                : "border-white/5 bg-[#141210] text-white/50 hover:border-candy-pink/30 hover:bg-white/5 hover:text-white/80"}`}>
-                            <span className="text-[10px] font-black uppercase tracking-widest leading-none text-center">{s.label}</span>
+                        <button 
+                            key={s.value} 
+                            onClick={() => setSubjectType(s.value)} 
+                            title={s.desc}
+                            className={`flex flex-col items-center justify-center py-2 rounded-lg transition-all duration-300 ${
+                                subjectType === s.value
+                                ? "bg-[#F5C842] text-black shadow-md ring-1 ring-[#F5C842]/20"
+                                : "text-white/40 hover:text-white/70"
+                            }`}
+                        >
+                            <span className="text-[9px] font-black uppercase tracking-widest leading-none text-center">{s.label}</span>
                         </button>
                     ))}
                 </div>
-                <p className="text-[11px] font-medium text-white/40 hidden md:block pt-1">{SUBJECT_TYPES.find(s => s.value === subjectType)?.desc}</p>
             </div>
 
-            {/* Describe or Upload */}
-            <div className="space-y-3">
-                <div className="flex gap-1 rounded-2xl bg-white/5 p-1 border border-white/[0.04]">
+            {/* Pro Style Palette - Compressed Grid */}
+            {subjectType !== "Logo" && (
+                <div className="space-y-2.5">
+                    <div className="flex items-center justify-between">
+                        <SectionLabel>Style Palette</SectionLabel>
+                        <span className="text-[8px] font-bold text-white/20 uppercase tracking-widest italic">PRO ENGINE</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-1.5">
+                        {STYLES.map((s, idx) => (
+                            <motion.button 
+                                key={s.id} 
+                                initial={{ opacity: 0, scale: 0.9 }}
+                                animate={{ opacity: 1, scale: 1 }}
+                                transition={{ delay: idx * 0.01, duration: 0.2 }}
+                                onClick={() => setSelectedStyleId(s.id)}
+                                className={`group relative flex flex-col items-center gap-1 p-1.5 rounded-lg border transition-all duration-200 ${
+                                    selectedStyleId === s.id
+                                    ? "border-[#F5C842] bg-white/[0.08] shadow-sm shadow-[#F5C842]/10"
+                                    : "border-white/[0.04] bg-white/[0.02] hover:bg-white/[0.05]"
+                                }`}
+                            >
+                                <div className={`relative transition-all duration-300 ${selectedStyleId === s.id ? "scale-105" : "opacity-60 group-hover:opacity-100"}`}>
+                                    <Icon3DInline name={s.icon} size={22} />
+                                </div>
+                                <p className={`text-[7px] font-black uppercase tracking-tighter text-center leading-tight ${selectedStyleId === s.id ? "text-[#F5C842]" : "text-white/40 group-hover:text-white/60"}`}>
+                                    {s.label}
+                                </p>
+                            </motion.button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            {/* Execution Layer - Mode Selection */}
+            <div className="space-y-3.5">
+                <div className="flex gap-1 p-1 rounded-xl bg-black border border-white/[0.08]">
                     <button onClick={() => setInputMode("describe")}
-                        className={`flex-1 rounded-xl py-2.5 text-xs font-bold transition-all duration-300 ${inputMode === "describe" ? "bg-[#141210] text-white border border-white/10 shadow-lg" : "text-white/40 hover:text-white"}`}>
+                        className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-[9px] font-black uppercase tracking-widest transition-all duration-300 ${inputMode === "describe" ? "bg-[#F5C842] text-black shadow-md" : "text-white/50 hover:text-white/80"}`}>
+                        <Wand2 size={10} />
                         Describe
                     </button>
                     <button onClick={() => setInputMode("upload")}
-                        className={`flex-1 rounded-xl py-2.5 text-xs font-bold transition-all duration-300 ${inputMode === "upload" ? "bg-[#141210] text-white border border-white/10 shadow-lg" : "text-white/40 hover:text-white"}`}>
-                        Upload Photo
+                        className={`flex-1 flex items-center justify-center gap-1.5 rounded-lg py-2 text-[9px] font-black uppercase tracking-widest transition-all duration-300 ${inputMode === "upload" ? "bg-[#F5C842] text-black shadow-md" : "text-white/50 hover:text-white/80"}`}>
+                        <FolderOpen size={10} />
+                        Reference
                     </button>
                 </div>
 
-                {inputMode === "describe" ? (
-                    <Textarea value={prompt} onChange={(e) => setPrompt(e.target.value)}
-                        placeholder={
-                            subjectType === "Logo"
-                                ? "Describe your brand, icon, or vision..."
-                                : subjectType === "Sticker"
-                                    ? `Describe your ${currentStyle.label.toLowerCase()} stickers...`
-                                    : `Describe your ${currentStyle.label.toLowerCase()} mascot...`
-                        }
-                        className="min-h-[100px] resize-none rounded-2xl border border-white/10 bg-[#1c1916] px-4 py-3 text-sm text-white placeholder:text-white/20 focus:border-candy-pink focus:ring-1 focus:ring-candy-pink/50 transition-all duration-300 shadow-inner" />
-                ) : (
-                    <div
-                        onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f?.type.startsWith("image/")) setFile(f); }}
-                        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-                        onDragLeave={() => setDragOver(false)}
-                        onClick={() => fileInputRef.current?.click()}
-                        className={`flex min-h-[100px] cursor-pointer flex-col items-center justify-center rounded-2xl border-2 border-dashed transition-all duration-300 ${dragOver ? "border-candy-pink bg-candy-pink/10" : file ? "border-[#5cd85c]/50 bg-[#5cd85c]/10" : "border-white/10 bg-[#1c1916] hover:border-candy-pink/40 hover:bg-white/5"}`}>
-                        <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
-                        {file
-                            ? <p className="text-xs font-black text-[#5cd85c] px-4 text-center">{file.name} ✓</p>
-                            : <div className="text-center opacity-70 group-hover:opacity-100"><Icon3DInline name="open-folder" size={28} className="mx-auto mb-2" /><p className="text-[10px] font-black text-white/50 uppercase tracking-widest">Drop or click to upload</p></div>
-                        }
-                    </div>
-                )}
-
-                {inputMode === "upload" && file && (
-                    <Textarea value={prompt} onChange={(e) => setPrompt(e.target.value)}
-                        placeholder="Optional: describe how to style it..."
-                        className="min-h-[60px] resize-none rounded-2xl border border-white/10 bg-[#1c1916] px-4 py-3 text-sm text-white focus:border-candy-pink focus:ring-1 focus:ring-candy-pink/50 transition-all duration-300" />
-                )}
+                <AnimatePresence mode="wait">
+                    {inputMode === "describe" ? (
+                        <motion.div 
+                            key="describe-input"
+                            initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
+                            className="relative"
+                        >
+                            <Textarea 
+                                value={prompt} 
+                                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setPrompt(e.target.value)}
+                                placeholder={`Describe your concept...`}
+                                className="min-h-[80px] resize-none rounded-lg border border-white/[0.04] bg-[#0c0a09] px-4 py-3 text-xs text-white placeholder:text-white/20 focus:border-[#F5C842]/50 focus:ring-0 transition-all shadow-inner" 
+                            />
+                        </motion.div>
+                    ) : (
+                        <motion.div
+                            key="upload-input"
+                            initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }}
+                            onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f?.type.startsWith("image/")) setFile(f); }}
+                            onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                            onDragLeave={() => setDragOver(false)}
+                            onClick={() => fileInputRef.current?.click()}
+                            className={`flex min-h-[80px] cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed transition-all duration-300 ${
+                                dragOver ? "border-[#F5C842] bg-[#F5C842]/5" : file ? "border-[#5cd85c]/30 bg-white/[0.01]" : "border-white/[0.06] bg-white/[0.01] hover:bg-white/[0.03]"
+                            }`}
+                        >
+                            <input ref={fileInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+                            {file
+                                ? <p className="text-[10px] font-black text-[#5cd85c] px-4 text-center tracking-tight italic">{file.name} ✓</p>
+                                : <p className="text-[8px] font-black text-white/20 uppercase tracking-[0.2em]">Visual Input</p>
+                            }
+                        </motion.div>
+                    )}
+                </AnimatePresence>
             </div>
 
-            {/* Quality & Options */}
+            {/* Switch Layer - Compact */}
             {subjectType === "Character" && (
-                <div className="rounded-2xl border border-white/10 overflow-hidden bg-[#1c1916] px-4 py-3 shadow-inner">
-                    <div className="flex items-center justify-between">
-                        <SectionLabel>Transparent Background</SectionLabel>
-                        <div onClick={() => setRemoveBackground(!removeBackground)}
-                            className={`flex cursor-pointer items-center justify-between rounded-xl border border-white/10 px-3 py-1.5 transition-all duration-300 ${removeBackground ? "border-[#5cd85c]/30 bg-[#5cd85c]/10" : "bg-[#141210] hover:border-candy-pink/30 hover:bg-white/5"}`}>
-                            <span className="text-[9px] font-black uppercase text-[#5cd85c] mr-3">
-                                Automagic
-                            </span>
-                            <div className={`h-4 w-7 rounded-full p-0.5 transition-all duration-300 ${removeBackground ? "bg-[#5cd85c]" : "bg-white/20"}`}>
-                                <div className={`h-3 w-3 rounded-full shadow-sm transition-all duration-300 ${removeBackground ? "translate-x-3 bg-white" : "translate-x-0 bg-white/60"}`} />
-                            </div>
-                        </div>
+                <div className="flex items-center justify-between px-4 py-2.5 rounded-lg bg-black border border-white/[0.04] cursor-pointer group hover:bg-white/[0.02] transition-colors" 
+                     onClick={() => setRemoveBackground(!removeBackground)}>
+                    <SectionLabel>Auto-Masking</SectionLabel>
+                    <div className={`h-4 w-7.5 rounded-full p-0.5 transition-all duration-300 ${removeBackground ? "bg-[#F5C842]" : "bg-white/10"}`}>
+                        <div className={`h-3 w-3 rounded-full shadow-sm transition-all duration-300 ${removeBackground ? "translate-x-3.5 bg-black" : "translate-x-0 bg-white/40"}`} />
                     </div>
                 </div>
             )}
 
-            {/* Generate Button */}
-            <div className="pt-2">
-                <Button onClick={inputMode === "upload" && file ? handleStylize : handleGenerate}
+            {/* Primary Action Button - Pure Pro */}
+            <div className="pt-0.5">
+                <Button 
+                    onClick={inputMode === "upload" && file ? handleStylize : handleGenerate}
                     disabled={!canSubmit}
-                    className="w-full rounded-[2rem] bg-candy-pink border border-transparent py-7 text-sm md:text-base font-black text-white shadow-[0_0_20px_rgba(255,77,28,0.3)] hover:brightness-110 hover:shadow-[0_0_30px_rgba(255,77,28,0.5)] transition-all duration-300 transform active:scale-[0.98] disabled:opacity-30 disabled:hover:scale-100 disabled:shadow-none">
-                    <Icon3DInline name="sparkles" size={20} className="mr-2" />
-                    GENERATE {subjectType === "Character" ? "MASCOT" : (subjectType === "Sticker" ? "STICKER PACK" : "LOGO")} · {calculateCost()} CREDITS
+                    className="w-full relative overflow-hidden group rounded-xl bg-[#F5C842] py-6 text-[11px] font-black text-black shadow-[0_20px_50px_-5px_rgba(245,200,66,0.3)] hover:shadow-[0_20px_60px_-5px_rgba(245,200,66,0.4)] active:scale-[0.98] transition-all disabled:opacity-10 hover:brightness-110"
+                >
+                    <div className="relative flex items-center justify-center gap-2 tracking-[0.2em] uppercase italic">
+                        <Sparkles size={13} className="text-black/40 group-hover:rotate-12 transition-transform" />
+                        Generate · {calculateCost()}
+                    </div>
                 </Button>
             </div>
-
-            {/* Result preview */}
-            {result && (
-                <div className="space-y-3 pt-6 border-t border-white/10">
-                    <div className="flex items-center justify-between">
-                        <SectionLabel>Result</SectionLabel>
-                        <button onClick={() => downloadFile(`data:image/png;base64,${result}`, "mascot.png")}
-                            className="text-[10px] font-black uppercase text-candy-pink hover:text-white transition-colors">
-                            Download
-                        </button>
-                    </div>
-                    <div className="relative w-full overflow-hidden rounded-[2rem] border-2 border-white/10 bg-checkerboard shadow-2xl glass-dark">
-                        <img src={`data:image/png;base64,${result}`} alt="Generated mascot" className="w-full h-auto block" />
-                        <button onClick={() => downloadFile(`data:image/png;base64,${result}`, "mascot.png")}
-                            className="absolute bottom-4 right-4 flex items-center gap-2 rounded-xl bg-[#141210]/90 border border-white/10 px-4 py-2.5 text-xs font-black text-white shadow-xl backdrop-blur-md hover:bg-candy-pink hover:text-[#0c0a09] hover:border-transparent transition-all duration-300">
-                            <DownloadIcon /> SAVE PNG
-                        </button>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

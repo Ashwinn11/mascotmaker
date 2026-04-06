@@ -87,10 +87,10 @@ export default function BackgroundRemoverPage() {
         <div className="container mx-auto px-6 relative z-10 text-center space-y-10">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass-dark border border-white/10 text-[10px] font-black uppercase tracking-widest text-[#5cd85c] shadow-lg">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#5cd85c] animate-pulse" />
-                PRO AI UTILITY
+                Free AI Tool
             </div>
           <h1 className="font-display text-5xl md:text-7xl uppercase leading-tight tracking-tight drop-shadow-sm">
-            Cutout <br /><span className="text-candy-pink">Studio.</span>
+            Background <br /><span className="text-candy-pink">Remover.</span>
           </h1>
           <p className="text-lg md:text-xl text-white/50 font-medium max-w-2xl mx-auto leading-relaxed">
             Standard AI tools give you halos and choppy edges. We tuned our engine specifically to handle character fur and mascot geometry.
