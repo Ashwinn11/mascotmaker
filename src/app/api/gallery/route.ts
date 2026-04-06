@@ -3,14 +3,26 @@ import { auth } from "@/lib/auth";
 import { getGalleryItems, addToGallery, deleteGalleryItem } from "@/lib/db";
 import { saveImage, saveBuffer, deleteFile } from "@/lib/storage";
 
-export async function GET() {
+export async function GET(req: Request) {
   try {
+    const { searchParams } = new URL(req.url);
+    const scope = searchParams.get("scope") || "public"; // default to showcase
+    const query = searchParams.get("q") || undefined;
+    
     const session = await auth();
-    if (!session?.user?.id) {
-      return NextResponse.json({ items: [] });
+    const userId = session?.user?.id;
+
+    let items = [];
+    if (scope === "mine") {
+      if (!userId) {
+        return NextResponse.json({ items: [] });
+      }
+      items = await getGalleryItems({ userId, query, showPublic: false });
+    } else {
+      // Showcase mode: show everything published
+      items = await getGalleryItems({ userId, query, showPublic: true });
     }
 
-    const items = await getGalleryItems(session.user.id);
     return NextResponse.json({ items });
   } catch (error) {
     console.error("Gallery GET error:", error);
@@ -61,7 +73,16 @@ export async function POST(req: Request) {
       stickerUrl = await saveBuffer(stickerBuffer, "png");
     }
 
-    const item = await addToGallery({ name, description, imageUrl, gifUrl, stickerUrl, userId: session.user.id, subjectType });
+    const item = await addToGallery({ 
+      name, 
+      description, 
+      imageUrl, 
+      gifUrl, 
+      stickerUrl, 
+      userId: session.user.id, 
+      subjectType,
+      published: 1 // Default to public for the Showcase
+    });
     return NextResponse.json({ item });
   } catch (error) {
     console.error("Gallery POST error:", error);
@@ -114,6 +135,40 @@ export async function DELETE(req: Request) {
     console.error("Gallery DELETE error:", error);
     return NextResponse.json(
       { error: "Failed to delete item" },
+      { status: 500 }
+    );
+  }
+}
+
+export async function PATCH(req: Request) {
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { id } = await req.json();
+    if (!id || typeof id !== "number") {
+      return NextResponse.json(
+        { error: "Valid id is required" },
+        { status: 400 }
+      );
+    }
+
+    const { toggleGalleryPublished } = await import("@/lib/db");
+    const updated = await toggleGalleryPublished(id, session.user.id);
+    if (!updated) {
+      return NextResponse.json(
+        { error: "Item not found or not yours" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({ item: updated });
+  } catch (error) {
+    console.error("Gallery PATCH error:", error);
+    return NextResponse.json(
+      { error: "Failed to update item" },
       { status: 500 }
     );
   }

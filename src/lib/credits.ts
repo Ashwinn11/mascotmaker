@@ -14,6 +14,7 @@ export const CREDIT_COSTS: Record<string, number> = {
     stylize: 5,
     animate: 10,
     remove_bg: 1,
+    download_showcase: 1,
 };
 
 export type ImageOptions = {

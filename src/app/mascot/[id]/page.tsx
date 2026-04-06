@@ -28,6 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       description: item.description || "Generated with Identity Lock technology.",
       images: [{ url: absoluteImageUrl }],
     },
+    alternates: {
+      canonical: `https://mascotmaker.io/mascot/${id}`,
+    },
     twitter: {
       card: "summary_large_image",
       title: item.name,
@@ -57,10 +60,11 @@ export default async function MascotPage({ params }: Props) {
           {/* Mascot Preview */}
           <div className="relative aspect-square rounded-[3rem] border-4 border-foreground bg-white p-8 shadow-premium overflow-hidden group">
             <img 
-              src={item.image_url} 
+              src={`/api/mascot/${item.id}/preview?v=${Date.now()}`} 
               alt={item.name}
               className="w-full h-full object-contain"
             />
+
             {item.subject_type === "Sticker" && (
                 <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md rounded-full px-3 py-1 text-[9px] font-black uppercase text-white tracking-widest border border-white/20">
                     Sticker Pack

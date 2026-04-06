@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { PaywallModal } from "@/components/paywall-modal";
 import { Download, Sparkles, Loader2, Scissors, Share2 } from "lucide-react";
 import { toast } from "sonner";
 import { downloadFile, downloadBase64, cropSticker } from "@/lib/download";
@@ -13,22 +15,79 @@ interface MascotItem {
   gif_url: string | null;
   sticker_url: string | null;
   subject_type: string;
+  user_id: string | null;
 }
 
 export function MascotActions({ item }: { item: MascotItem }) {
+  const { data: session } = useSession();
   const [downloading, setDownloading] = useState(false);
+  const [sharing, setSharing] = useState(false);
+
+  // Paywall Modal State
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallType, setPaywallType] = useState<"auth" | "credits">("auth");
+  const [paywallCredits, setPaywallCredits] = useState({ required: 1, remaining: 0 });
   
   const isSticker = item.subject_type === "Sticker";
   const isLogo = item.subject_type === "Logo";
   const downloadName = `${item.name.replace(/\s+/g, "-").toLowerCase()}`;
 
-  const handleStickerBatch = async () => {
-    if (!item.sticker_url) return;
+  const handleDownloadWithCheck = async (type: 'image' | 'gif' | 'sticker') => {
+    if (!session) {
+      setPaywallType("auth");
+      setPaywallOpen(true);
+      return;
+    }
+
+    const isOwner = item.user_id === session.user?.id;
+    if (isOwner) {
+      if (type === 'image') downloadFile(item.image_url, `${downloadName}.png`);
+      if (type === 'gif') downloadFile(item.gif_url!, `${downloadName}.gif`);
+      if (type === 'sticker') handleStickerBatch(item.sticker_url);
+      return;
+    }
+
+    setDownloading(true);
+    const toastId = toast.loading(`Unlocking ${item.name}...`);
+    try {
+      const res = await fetch("/api/gallery/purchase", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemId: item.id }),
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        if (res.status === 402) {
+          toast.dismiss(toastId);
+          setPaywallCredits({ required: 1, remaining: data.current || 0 });
+          setPaywallType("credits");
+          setPaywallOpen(true);
+        } else {
+          toast.error(data.error || "failed to unlock", { id: toastId });
+        }
+        return;
+      }
+
+      toast.success("Ready to download!", { id: toastId });
+      if (type === 'image') downloadFile(data.imageUrl || item.image_url, `${downloadName}.png`);
+      if (type === 'gif') downloadFile(data.gifUrl || item.gif_url!, `${downloadName}.gif`);
+      if (type === 'sticker') handleStickerBatch(data.stickerUrl || item.sticker_url);
+    } catch {
+      toast.error("Failed to process unlock", { id: toastId });
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+  const handleStickerBatch = async (customUrl?: string | null) => {
+    const stickerUrl = customUrl || item.sticker_url;
+    if (!stickerUrl) return;
     setDownloading(true);
     const toastId = toast.loading("Extracting individual stickers...");
     try {
       for (let i = 0; i < 9; i++) {
-        const cropped = await cropSticker(item.sticker_url, i);
+        const cropped = await cropSticker(stickerUrl, i);
         downloadBase64(cropped, `${downloadName}-sticker-${i + 1}.png`);
         await new Promise(r => setTimeout(r, 150));
       }
@@ -42,17 +101,32 @@ export function MascotActions({ item }: { item: MascotItem }) {
   };
 
   const handleShare = async () => {
+    if (sharing) return; // Prevent concurrent shares
     const url = window.location.href;
+    const title = `Check out this ${item.name} ${item.subject_type || "Mascot"}!`;
 
-    if (navigator.share) {
-      try {
-        await navigator.share({ url });
-      } catch (err) {
-        if ((err as Error).name !== 'AbortError') console.error("Share failed:", err);
-      }
-    } else {
-      navigator.clipboard.writeText(url);
-      toast.success("URL copied!");
+    setSharing(true);
+    try {
+        if (navigator.share) {
+            try {
+                await navigator.share({ title, url });
+                setSharing(false);
+                return;
+            } catch (err) {
+                if ((err as Error).name === 'AbortError') {
+                    setSharing(false);
+                    return;
+                }
+                console.error("Native share failed, falling back:", err);
+            }
+        }
+        await navigator.clipboard.writeText(url);
+        toast.success("Link copied!");
+    } catch (err) {
+        console.error("Clipboard fallback failed:", err);
+        toast.error("Failed to share link");
+    } finally {
+        setSharing(false);
     }
   };
 
@@ -61,16 +135,17 @@ export function MascotActions({ item }: { item: MascotItem }) {
       {/* Primary Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <button
-          onClick={() => downloadFile(item.image_url, `${downloadName}.png`)}
-          className="flex items-center justify-center gap-3 rounded-2xl bg-foreground text-white px-8 py-4 font-black uppercase text-sm hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-foreground/10"
+          onClick={() => handleDownloadWithCheck('image')}
+          disabled={downloading}
+          className="flex items-center justify-center gap-3 rounded-2xl bg-foreground text-white px-8 py-4 font-black uppercase text-sm hover:brightness-110 transition-all active:scale-95 shadow-lg shadow-foreground/10 disabled:opacity-50"
         >
-          <Download size={18} />
+          {downloading ? <Loader2 className="animate-spin" size={18} /> : <Download size={18} />}
           {isSticker ? "Download Sprite Sheet" : isLogo ? "Download Logo" : "Download PNG"}
         </button>
 
         {isSticker && item.sticker_url ? (
           <button
-            onClick={handleStickerBatch}
+            onClick={() => handleDownloadWithCheck('sticker')}
             disabled={downloading}
             className="flex items-center justify-center gap-3 rounded-2xl bg-gradient-to-r from-candy-blue to-candy-purple text-white px-8 py-4 font-black uppercase text-sm hover:brightness-110 transition-all active:scale-95 disabled:opacity-50"
           >
@@ -79,8 +154,9 @@ export function MascotActions({ item }: { item: MascotItem }) {
           </button>
         ) : item.gif_url ? (
           <button
-            onClick={() => downloadFile(item.gif_url!, `${downloadName}.gif`)}
-            className="flex items-center justify-center gap-3 rounded-2xl border-2 border-foreground px-8 py-4 font-black uppercase text-sm hover:bg-foreground/5 transition-all active:scale-95"
+            onClick={() => handleDownloadWithCheck('gif')}
+            disabled={downloading}
+            className="flex items-center justify-center gap-3 rounded-2xl border-2 border-foreground px-8 py-4 font-black uppercase text-sm hover:bg-foreground/5 transition-all active:scale-95 disabled:opacity-50"
           >
             <Download size={18} />
             Download GIF
@@ -122,6 +198,14 @@ export function MascotActions({ item }: { item: MascotItem }) {
           Remix for Free
         </Link>
       </div>
+
+      <PaywallModal 
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        type={paywallType}
+        creditsRequired={paywallCredits.required}
+        creditsRemaining={paywallCredits.remaining}
+      />
     </div>
   );
 }

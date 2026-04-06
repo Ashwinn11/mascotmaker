@@ -13,99 +13,112 @@ function sql(strings: TemplateStringsArray, ...values: unknown[]) {
 // ─── Schema Init ───
 
 let initialized = false;
+let initPromise: Promise<void> | null = null;
 
 export async function initDb(): Promise<void> {
   if (initialized) return;
+  if (initPromise) return initPromise;
 
-  await sql`
-    CREATE TABLE IF NOT EXISTS gallery (
+  initPromise = (async () => {
+    await sql`
+      CREATE TABLE IF NOT EXISTS gallery (
+        id SERIAL PRIMARY KEY,
+        name TEXT NOT NULL,
+        description TEXT,
+        image_url TEXT NOT NULL,
+        gif_url TEXT,
+        sticker_url TEXT,
+        user_id TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        published INTEGER DEFAULT 1,
+        subject_type TEXT DEFAULT 'Character'
+      )
+    `;
+    await sql`CREATE TABLE IF NOT EXISTS gallery_purchases (
       id SERIAL PRIMARY KEY,
-      name TEXT NOT NULL,
-      description TEXT,
-      image_url TEXT NOT NULL,
-      gif_url TEXT,
-      sticker_url TEXT,
-      user_id TEXT,
+      user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+      item_id INTEGER NOT NULL REFERENCES gallery(id) ON DELETE CASCADE,
       created_at TIMESTAMPTZ DEFAULT NOW(),
-      published INTEGER DEFAULT 1,
-      subject_type TEXT DEFAULT 'Character'
-    )
-  `;
-  // Ensure recent schema additions exist for existing tables
-  await sql`ALTER TABLE gallery ADD COLUMN IF NOT EXISTS sticker_url TEXT`;
-  await sql`ALTER TABLE gallery ADD COLUMN IF NOT EXISTS subject_type TEXT DEFAULT 'Character'`;
-  
-  await sql`
-    CREATE TABLE IF NOT EXISTS users (
-      id TEXT PRIMARY KEY,
-      google_id TEXT UNIQUE NOT NULL,
-      email TEXT NOT NULL,
-      name TEXT,
-      avatar_url TEXT,
-      credits INTEGER DEFAULT 5,
-      created_at TIMESTAMPTZ DEFAULT NOW()
-    )
-  `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS transactions (
-      id SERIAL PRIMARY KEY,
-      user_id TEXT NOT NULL,
-      type TEXT NOT NULL,
-      amount INTEGER NOT NULL,
-      balance_after INTEGER NOT NULL,
-      description TEXT,
-      created_at TIMESTAMPTZ DEFAULT NOW()
-    )
-  `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS usage_logs (
-      id SERIAL PRIMARY KEY,
-      user_id TEXT NOT NULL,
-      api_route TEXT NOT NULL,
-      credits_charged INTEGER NOT NULL,
-      created_at TIMESTAMPTZ DEFAULT NOW()
-    )
-  `;
-  await sql`
-    CREATE TABLE IF NOT EXISTS subscriptions (
-      id SERIAL PRIMARY KEY,
-      user_id TEXT NOT NULL,
-      ls_subscription_id TEXT UNIQUE NOT NULL,
-      ls_customer_id TEXT,
-      variant_id TEXT NOT NULL,
-      plan_name TEXT NOT NULL,
-      status TEXT NOT NULL DEFAULT 'active',
-      current_period_end TIMESTAMPTZ,
-      cancel_at TIMESTAMPTZ,
-      customer_portal_url TEXT,
-      update_payment_url TEXT,
-      created_at TIMESTAMPTZ DEFAULT NOW(),
-      updated_at TIMESTAMPTZ DEFAULT NOW()
-    )
-  `;
-  // Add foreign keys with CASCADE (safe to run multiple times — DO NOTHING if already exists)
-  await sql`
-    DO $$ BEGIN
-      ALTER TABLE gallery ADD CONSTRAINT fk_gallery_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
-    EXCEPTION WHEN duplicate_object THEN NULL; END $$
-  `;
-  await sql`
-    DO $$ BEGIN
-      ALTER TABLE transactions ADD CONSTRAINT fk_transactions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
-    EXCEPTION WHEN duplicate_object THEN NULL; END $$
-  `;
-  await sql`
-    DO $$ BEGIN
-      ALTER TABLE usage_logs ADD CONSTRAINT fk_usage_logs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
-    EXCEPTION WHEN duplicate_object THEN NULL; END $$
-  `;
-  await sql`
-    DO $$ BEGIN
-      ALTER TABLE subscriptions ADD CONSTRAINT fk_subscriptions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
-    EXCEPTION WHEN duplicate_object THEN NULL; END $$
-  `;
+      UNIQUE(user_id, item_id)
+    )`;
+    // Ensure recent schema additions exist for existing tables
+    await sql`ALTER TABLE gallery ADD COLUMN IF NOT EXISTS sticker_url TEXT`;
+    await sql`ALTER TABLE gallery ADD COLUMN IF NOT EXISTS subject_type TEXT DEFAULT 'Character'`;
+    
+    await sql`
+      CREATE TABLE IF NOT EXISTS users (
+        id TEXT PRIMARY KEY,
+        google_id TEXT UNIQUE NOT NULL,
+        email TEXT NOT NULL,
+        name TEXT,
+        avatar_url TEXT,
+        credits INTEGER DEFAULT 5,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `;
+    await sql`
+      CREATE TABLE IF NOT EXISTS transactions (
+        id SERIAL PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        type TEXT NOT NULL,
+        amount INTEGER NOT NULL,
+        balance_after INTEGER NOT NULL,
+        description TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `;
+    await sql`
+      CREATE TABLE IF NOT EXISTS usage_logs (
+        id SERIAL PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        api_route TEXT NOT NULL,
+        credits_charged INTEGER NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `;
+    await sql`
+      CREATE TABLE IF NOT EXISTS subscriptions (
+        id SERIAL PRIMARY KEY,
+        user_id TEXT NOT NULL,
+        ls_subscription_id TEXT UNIQUE NOT NULL,
+        ls_customer_id TEXT,
+        variant_id TEXT NOT NULL,
+        plan_name TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'active',
+        current_period_end TIMESTAMPTZ,
+        cancel_at TIMESTAMPTZ,
+        customer_portal_url TEXT,
+        update_payment_url TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      )
+    `;
+    // Add foreign keys with CASCADE (safe to run multiple times — DO NOTHING if already exists)
+    await sql`
+      DO $$ BEGIN
+        ALTER TABLE gallery ADD CONSTRAINT fk_gallery_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+      EXCEPTION WHEN duplicate_object THEN NULL; END $$
+    `;
+    await sql`
+      DO $$ BEGIN
+        ALTER TABLE transactions ADD CONSTRAINT fk_transactions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+      EXCEPTION WHEN duplicate_object THEN NULL; END $$
+    `;
+    await sql`
+      DO $$ BEGIN
+        ALTER TABLE usage_logs ADD CONSTRAINT fk_usage_logs_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+      EXCEPTION WHEN duplicate_object THEN NULL; END $$
+    `;
+    await sql`
+      DO $$ BEGIN
+        ALTER TABLE subscriptions ADD CONSTRAINT fk_subscriptions_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+      EXCEPTION WHEN duplicate_object THEN NULL; END $$
+    `;
 
-  initialized = true;
+    initialized = true;
+  })();
+
+  return initPromise;
 }
 
 async function ensureDb(): Promise<void> {
@@ -123,23 +136,37 @@ export interface GalleryItem {
   sticker_url: string | null;
   subject_type: string;
   user_id: string | null;
+  published: number;
   created_at: string;
 }
 
-export async function getGalleryItems(userId: string): Promise<GalleryItem[]> {
+export async function getGalleryItems(params: { userId?: string; query?: string; showPublic?: boolean; limit?: number }): Promise<GalleryItem[]> {
   await ensureDb();
+  const { userId = null, query = null, showPublic = true, limit = 100 } = params;
+  
+  // Use a single tagged template with COALESCE/NULL logic to handle optional filters
   const rows = await sql`
-    SELECT * FROM gallery WHERE user_id = ${userId} ORDER BY created_at DESC
+    SELECT * FROM gallery 
+    WHERE 
+      (
+        (${userId}::text IS NULL AND published = 1) OR
+        (${showPublic}::boolean = true AND (user_id = ${userId} OR published = 1)) OR
+        (user_id = ${userId})
+      )
+      AND (
+        ${query}::text IS NULL OR 
+        name ILIKE '%' || ${query} || '%' OR 
+        description ILIKE '%' || ${query} || '%' OR
+        subject_type ILIKE '%' || ${query} || '%'
+      )
+    ORDER BY created_at DESC 
+    LIMIT ${limit}
   `;
   return rows as GalleryItem[];
 }
 
 export async function getPublicGalleryItems(limit = 40): Promise<GalleryItem[]> {
-  await ensureDb();
-  const rows = await sql`
-    SELECT * FROM gallery WHERE published = 1 ORDER BY created_at DESC LIMIT ${limit}
-  `;
-  return rows as GalleryItem[];
+  return getGalleryItems({ limit, showPublic: true });
 }
 
 export async function getGalleryItemById(id: number): Promise<GalleryItem | null> {
@@ -164,14 +191,43 @@ export async function addToGallery(item: {
   stickerUrl?: string;
   subjectType?: string;
   userId?: string;
+  published?: number;
 }): Promise<GalleryItem> {
   await ensureDb();
   const rows = await sql`
-    INSERT INTO gallery (name, description, image_url, gif_url, sticker_url, subject_type, user_id)
-    VALUES (${item.name}, ${item.description || null}, ${item.imageUrl}, ${item.gifUrl || null}, ${item.stickerUrl || null}, ${item.subjectType || 'Character'}, ${item.userId || null})
+    INSERT INTO gallery (name, description, image_url, gif_url, sticker_url, subject_type, user_id, published)
+    VALUES (${item.name}, ${item.description || null}, ${item.imageUrl}, ${item.gifUrl || null}, ${item.stickerUrl || null}, ${item.subjectType || 'Character'}, ${item.userId || null}, ${item.published ?? 0})
     RETURNING *
   `;
   return rows[0] as GalleryItem;
+}
+
+export async function toggleGalleryPublished(id: number, userId: string): Promise<GalleryItem | null> {
+  await ensureDb();
+  const rows = await sql`
+    UPDATE gallery SET published = CASE WHEN published = 1 THEN 0 ELSE 1 END
+    WHERE id = ${id} AND user_id = ${userId}
+    RETURNING *
+  `;
+  return (rows[0] as GalleryItem) || null;
+}
+
+export async function isItemPurchased(userId: string, itemId: number): Promise<boolean> {
+  await ensureDb();
+  const rows = await sql`
+    SELECT id FROM gallery_purchases 
+    WHERE user_id = ${userId} AND item_id = ${itemId}
+  `;
+  return rows.length > 0;
+}
+
+export async function recordGalleryPurchase(userId: string, itemId: number): Promise<void> {
+  await ensureDb();
+  await sql`
+    INSERT INTO gallery_purchases (user_id, item_id)
+    VALUES (${userId}, ${itemId})
+    ON CONFLICT (user_id, item_id) DO NOTHING
+  `;
 }
 
 // ─── Users ───

@@ -28,8 +28,8 @@ const values = [
     },
     {
         icon: Users,
-        title: "Built for Creators",
-        description: "Whether you're a solo founder or a streamer, we give you the design power of a pro illustrator without the $200-per-pose invoice.",
+        title: "Community Showcase",
+        description: "Join a growing hub of creators. Every published mascot, sticker pack, and logo is searchable, allowing you to find design inspiration and head-to-head style comparisons.",
     },
 ];
 
@@ -88,7 +88,17 @@ export default function AboutPage() {
                                 We aren&apos;t here to replace artists. We&apos;re here for the person who can&apos;t afford separate commissions for every single character pose but still needs a professional identity. 
                             </p>
                             <p className="text-foreground/60 text-lg font-medium leading-relaxed mt-6">
-                                We focus on 8 specific art styles \u2014 from 3D Pixar to Minimalist Vector \u2014 and we built a native <strong>AI Background Remover</strong> into the workflow. You get production-ready assets in under 30 seconds.
+                                We focus on 8 specific art styles \u2014 from 3D Pixar to Minimalist Vector \u2014 and we built a native <strong>AI Background Remover</strong> into the workflow.
+                            </p>
+                        </div>
+
+                        <div>
+                            <h2 className="font-display text-3xl uppercase tracking-tight mb-4 text-foreground/80">The Searchable Hub</h2>
+                            <p className="text-foreground/60 text-lg font-medium leading-relaxed">
+                                Mascot Maker is more than a tool; it&apos;s a **searchable design hub**. Everything you see in the [Showcase](/gallery) is generated using the same tools you have access to. 
+                            </p>
+                            <p className="text-foreground/60 text-lg font-medium leading-relaxed mt-6">
+                                We believe the future of design is transparent, searchable, and community-powered. Explore thousands of community mascots to find the perfect style for your project.
                             </p>
                         </div>
                     </div>

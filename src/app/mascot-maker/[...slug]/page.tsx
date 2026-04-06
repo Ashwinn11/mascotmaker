@@ -1,7 +1,7 @@
 
 import type { Metadata } from "next";
 import { INDUSTRIES, STYLES, ENGINES, getSEOContent } from "@/lib/seo-data";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, Check, ArrowRight, Zap, DollarSign, Clock, Shield, TrendingUp, Users } from "lucide-react";
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description = `${primaryItem.description} Create consistent, professional brand characters for your ${primaryItem.title} business with zero design experience.`;
     }
 
-    const canonicalPath = slug.join('/');
+    const canonicalPath = [type, primaryItem.slug, secondaryItem?.slug].filter(Boolean).join('/');
 
     return {
         title,
@@ -123,6 +123,16 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
 
     if (!primaryItem) {
         notFound();
+    }
+
+    // --- Hard Redirect for Canonical Logic (fixes GSC Duplicate issues) ---
+    const officialPathParts = ["mascot-maker", type, primaryItem.slug];
+    if (secondaryItem) officialPathParts.push(secondaryItem.slug);
+    const officialPath = `/${officialPathParts.join('/')}`;
+    const currentPath = `/mascot-maker/${slug.join('/')}`;
+
+    if (currentPath !== officialPath) {
+        redirect(officialPath);
     }
 
     const combinedTitle = secondaryItem ? `${primaryItem?.title} for ${secondaryItem?.title}` : primaryItem?.title;
@@ -241,7 +251,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                                     START FOR FREE
                                 </Link>
                                 <Link href="/gallery" className="inline-flex items-center gap-3 px-8 py-4 border border-foreground/10 text-foreground rounded-2xl font-black text-lg hover:border-candy-pink hover:text-candy-pink transition-all duration-300">
-                                    SEE EXAMPLES <ArrowRight size={18} />
+                                    SEARCH HUB <ArrowRight size={18} />
                                 </Link>
                             </div>
 

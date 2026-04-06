@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, ArrowRight, Clock, Calendar } from "lucide-react";
@@ -105,7 +105,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: post.title,
         description: post.description,
         alternates: {
-            canonical: `https://mascotmaker.io/blog/${slug}`,
+            canonical: `https://mascotmaker.io/blog/${post.slug}`,
         },
         openGraph: {
             title: post.title,
@@ -136,6 +136,10 @@ export default async function BlogPost({ params }: PageProps) {
 
     if (!post || !post.content) {
         notFound();
+    }
+
+    if (slug !== post.slug) {
+        redirect(`/blog/${post.slug}`);
     }
 
     const postIndex = allPosts.findIndex(p => p.slug === slug);

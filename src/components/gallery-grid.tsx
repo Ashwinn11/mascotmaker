@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { toast } from "sonner";
-import { downloadFile, downloadBase64, cropSticker } from "@/lib/download";
+import { downloadFile } from "@/lib/download";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { Icon3D } from "@/components/ui/icon-3d";
+import { Search, Globe, Lock, Trash2, Eye, Share2, Copy, Download } from "lucide-react";
+import { PaywallModal } from "@/components/paywall-modal";
 
 interface GalleryItem {
   id: number;
@@ -15,20 +17,48 @@ interface GalleryItem {
   gif_url: string | null;
   sticker_url: string | null;
   subject_type: string;
+  user_id: string | null;
+  published: number;
   created_at: string;
 }
 
-export function GalleryGrid() {
+interface GalleryGridProps {
+  currentUserId?: string;
+}
+
+export function GalleryGrid({ currentUserId }: GalleryGridProps) {
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<GalleryItem | null>(null);
   const [deleting, setDeleting] = useState(false);
+  const [purchasing, setPurchasing] = useState<number | null>(null);
+  const [scope, setScope] = useState<"public" | "mine">("public");
+  const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  
+  // Paywall Modal State
+  const [paywallOpen, setPaywallOpen] = useState(false);
+  const [paywallType, setPaywallType] = useState<"auth" | "credits">("auth");
+  const [paywallCredits, setPaywallCredits] = useState({ required: 1, remaining: 0 });
+
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   const fetchItems = () => {
     setLoading(true);
     setError(false);
-    fetch("/api/gallery")
+    const searchParams = new URLSearchParams({
+      scope,
+      ...(debouncedQuery && { q: debouncedQuery }),
+    });
+
+    fetch(`/api/gallery?${searchParams.toString()}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load gallery");
         return res.json();
@@ -40,7 +70,7 @@ export function GalleryGrid() {
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [scope, debouncedQuery]);
 
   const handleDelete = async () => {
     if (!deleteTarget) return;
@@ -65,75 +95,164 @@ export function GalleryGrid() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <div
-            key={i}
-            className="aspect-square animate-pulse rounded-3xl bg-muted"
-            style={{ animationDelay: `${i * 0.1}s` }}
-          />
-        ))}
-      </div>
-    );
-  }
+  const handleTogglePublished = async (id: number) => {
+    try {
+      const res = await fetch("/api/gallery", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (!res.ok) throw new Error("Failed to update status");
+      const { item: updated } = await res.json();
+      setItems((prev) => prev.map((item) => (item.id === id ? updated : item)));
+      toast.success(updated.published ? "Mascot is now public" : "Mascot is now private");
+    } catch {
+      toast.error("Failed to update visibility");
+    }
+  };
 
-  if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center py-24 text-center">
-        <Icon3D name="dizzy-face" size="2xl" animated className="mb-4" />
-        <h2 className="font-display text-2xl text-foreground mb-2">Failed to Load Gallery</h2>
-        <p className="text-muted-foreground max-w-sm mb-6">
-          Something went wrong while fetching mascots. Give it another try!
-        </p>
-        <button
-          onClick={fetchItems}
-          className="rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:brightness-105 active:scale-[0.98]"
-        >
-          Retry
-        </button>
-      </div>
-    );
-  }
+  const handlePurchaseAndDownload = async (item: GalleryItem) => {
+    if (!currentUserId) {
+      setPaywallType("auth");
+      setPaywallOpen(true);
+      return;
+    }
 
-  if (items.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center py-24 text-center">
-        <Icon3D name="classical-building" size="2xl" animated className="mb-4" />
-        <h2 className="font-display text-2xl text-foreground mb-2">No Mascots Yet</h2>
-        <p className="text-muted-foreground max-w-sm mb-6">
-          The gallery is waiting for its first mascot. Create one and be the first to share!
-        </p>
-        <Link
-          href="/create"
-          className="rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange px-6 py-2.5 text-sm font-bold text-white shadow-lg shadow-candy-pink/25 transition-all hover:shadow-xl hover:brightness-105 active:scale-[0.98]"
-        >
-          Create a Mascot
-        </Link>
-      </div>
-    );
-  }
+    if (item.user_id === currentUserId) {
+      // Direct Download for owner
+      downloadFile(item.image_url, `${item.name.toLowerCase().replace(/\s+/g, '-')}.png`);
+      return;
+    }
+
+    setPurchasing(item.id);
+    const toastId = toast.loading(`Unlocking "${item.name}" (1 credit)...`);
+    
+    try {
+      const res = await fetch("/api/gallery/purchase", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ itemId: item.id }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) {
+        if (res.status === 402 || data.error === "INSUFFICIENT_CREDITS") {
+          toast.dismiss(toastId);
+          setPaywallCredits({ required: 1, remaining: data.remaining || 0 });
+          setPaywallType("credits");
+          setPaywallOpen(true);
+        } else {
+          toast.error(data.error || "Failed to purchase", { id: toastId });
+        }
+        return;
+      }
+
+      toast.success("Mascot Unlocked!", { id: toastId });
+      downloadFile(item.image_url, `${item.name.toLowerCase().replace(/\s+/g, '-')}.png`);
+    } catch {
+      toast.error("Failed to process download", { id: toastId });
+    } finally {
+      setPurchasing(null);
+    }
+  };
 
   return (
-    <>
-      <div className="columns-2 gap-3 sm:gap-4 sm:columns-3 lg:columns-4">
-        {items.map((item, i) => (
-          <GalleryCard key={item.id} item={item} index={i} onDelete={setDeleteTarget} />
-        ))}
+    <div className="space-y-10">
+      {/* 🛠️ Controls: Tabs & Search */}
+      <div className="flex flex-col md:flex-row gap-6 items-center justify-between">
+        <div className="flex p-1.5 bg-foreground/5 rounded-2xl border border-foreground/5 backdrop-blur-sm">
+          <button
+            onClick={() => setScope("public")}
+            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+              scope === "public" ? "bg-white text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground/60"
+            }`}
+          >
+            Showcase
+          </button>
+          {currentUserId && (
+            <button
+              onClick={() => setScope("mine")}
+              className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
+                scope === "mine" ? "bg-white text-foreground shadow-sm" : "text-foreground/40 hover:text-foreground/60"
+              }`}
+            >
+              My Mascots
+            </button>
+          )}
+        </div>
+
+        <div className="relative w-full md:w-80 group">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-foreground/20 group-focus-within:text-candy-pink transition-colors" size={18} />
+          <input
+            type="text"
+            placeholder="Search mascots, styles..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            className="w-full pl-12 pr-6 py-3.5 bg-white border-2 border-foreground/5 rounded-2xl text-sm focus:outline-none focus:border-candy-pink/50 focus:ring-4 focus:ring-candy-pink/5 transition-all shadow-premium"
+          />
+        </div>
       </div>
+
+      {/* 🖼️ Grid View */}
+      {loading ? (
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 animate-in fade-in duration-500">
+          {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="aspect-square animate-pulse rounded-3xl bg-foreground/5" style={{ animationDelay: `${i * 0.1}s` }} />
+          ))}
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center py-24 text-center">
+          <Icon3D name="dizzy-face" size="2xl" animated className="mb-4" />
+          <h2 className="font-display text-2xl text-foreground mb-2">Failed to Load Gallery</h2>
+          <button onClick={fetchItems} className="mt-4 px-6 py-2.5 bg-candy-pink text-white font-bold rounded-xl shadow-lg shadow-candy-pink/25 hover:scale-105 active:scale-95 transition-all">Retry</button>
+        </div>
+      ) : items.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-32 text-center bg-white/50 rounded-[3rem] border-2 border-dashed border-foreground/10 animate-in zoom-in duration-500">
+          <Icon3D name="classical-building" size="2xl" animated className="mb-6 opacity-40 grayscale" />
+          <h2 className="font-display text-3xl text-foreground/30 mb-2">No Mascots Found</h2>
+          <p className="text-muted-foreground/50 max-w-sm mb-10 uppercase text-[10px] font-black tracking-widest">
+            {query ? `Try a different term for "${query}"` : "The showcase is waiting for its first shared masterpiece"}
+          </p>
+          <Link href="/create" className="px-8 py-3.5 bg-foreground text-white font-black uppercase text-xs tracking-widest rounded-2xl hover:bg-candy-pink transition-colors shadow-premium">
+            Create Now
+          </Link>
+        </div>
+      ) : (
+        <div className="columns-2 gap-4 sm:gap-6 sm:columns-3 lg:columns-4 xl:columns-5 space-y-6">
+          {items.map((item, i) => (
+            <GalleryCard 
+              key={item.id} 
+              item={item} 
+              index={i} 
+              onDelete={setDeleteTarget} 
+              isOwner={item.user_id === currentUserId}
+              onTogglePublished={handleTogglePublished}
+              onDownload={() => handlePurchaseAndDownload(item)}
+              isPurchasing={purchasing === item.id}
+            />
+          ))}
+        </div>
+      )}
 
       <ConfirmDialog
         open={!!deleteTarget}
         onOpenChange={(open) => !open && setDeleteTarget(null)}
         title="Delete Mascot?"
-        description={`"${deleteTarget?.name}" will be permanently removed from the gallery. This cannot be undone.`}
-        confirmText="Delete"
+        description={`"${deleteTarget?.name}" will be permanently removed. This action is irreversible.`}
+        confirmText="Delete permanently"
         variant="destructive"
         loading={deleting}
         onConfirm={handleDelete}
       />
-    </>
+
+      <PaywallModal 
+        open={paywallOpen}
+        onOpenChange={setPaywallOpen}
+        type={paywallType}
+        creditsRequired={paywallCredits.required}
+        creditsRemaining={paywallCredits.remaining}
+      />
+    </div>
   );
 }
 
@@ -141,157 +260,107 @@ function GalleryCard({
   item,
   index,
   onDelete,
+  isOwner,
+  onTogglePublished,
+  onDownload,
+  isPurchasing
 }: {
   item: GalleryItem;
   index: number;
   onDelete: (item: GalleryItem) => void;
+  isOwner: boolean;
+  onTogglePublished: (id: number) => void;
+  onDownload: () => void;
+  isPurchasing: boolean;
 }) {
   const [previewMode, setPreviewMode] = useState<"image" | "gif" | "sticker">("image");
-  const [downloading, setDownloading] = useState(false);
-
-  const isSticker = item.subject_type === "Sticker";
-  const isLogo = item.subject_type === "Logo";
-  const downloadName = `${item.name.replace(/\s+/g, "-").toLowerCase()}`;
 
   return (
     <div
-      className="group relative mb-4 break-inside-avoid overflow-hidden rounded-3xl border-2 border-border bg-white shadow-sm transition-all duration-300 hover:shadow-xl hover:shadow-candy-pink/10 hover:-translate-y-1 animate-pop-in"
+      className="group relative mb-6 break-inside-avoid overflow-hidden rounded-[2.5rem] border-2 border-foreground/5 bg-white shadow-premium transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-candy-pink/10 animate-in slide-in-from-bottom-8 stagger-in"
       style={{ animationDelay: `${index * 0.05}s` }}
       onMouseLeave={() => setPreviewMode("image")}
     >
-      <Link href={`/mascot/${item.id}`} className="relative aspect-square block overflow-hidden bg-white hover:cursor-pointer">
+      <Link href={`/mascot/${item.id}`} className="relative aspect-[1/1] block overflow-hidden bg-white">
         <img
-          src={previewMode === "gif" && item.gif_url ? item.gif_url : previewMode === "sticker" && item.sticker_url ? item.sticker_url : item.image_url}
+          src={previewMode === "gif" && item.gif_url ? item.gif_url : previewMode === "sticker" && item.sticker_url ? item.sticker_url : `/api/mascot/${item.id}/preview?v=${Date.now()}`}
           alt={item.name}
-          className={`h-full w-full object-contain transition-all duration-300 ${previewMode === "sticker" ? "scale-95" : "scale-100"} group-hover:scale-105`}
+          className={`h-full w-full object-contain p-4 transition-all duration-700 ${previewMode === "sticker" ? "scale-90 rotate-3" : "scale-100 group-hover:scale-110"}`}
         />
-        {(item.gif_url || item.sticker_url) && (
-          <div className="absolute top-3 right-3 flex gap-1">
-            {item.gif_url && (
-              <div className={`rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${previewMode === "gif" ? "opacity-100" : "opacity-40"}`}>
-                ANIM
-              </div>
-            )}
-            {item.sticker_url && (
-              <div className={`rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold text-white transition-opacity ${previewMode === "sticker" ? "opacity-100" : "opacity-40"}`}>
-                STICKERS
-              </div>
+
+        {/* State Badges - Micro-labels to prevent overlap */}
+        <div className="absolute top-2 left-2 flex flex-col gap-1.5 pointer-events-none z-10">
+          {item.published ? (
+            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-candy-green/90 text-white text-[7px] font-black uppercase tracking-widest shadow-sm backdrop-blur-sm">
+              <Globe size={8} /> Published
+            </div>
+          ) : isOwner ? (
+            <div className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-foreground/60 text-white text-[7px] font-black uppercase tracking-widest shadow-sm backdrop-blur-sm">
+              <Lock size={8} /> Private
+            </div>
+          ) : null}
+        </div>
+
+        {/* Media Badges */}
+        <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {item.gif_url && <div className="rounded-md bg-black/60 px-1.5 py-0.5 text-[7px] font-bold text-white backdrop-blur-md">ANIM</div>}
+          {item.sticker_url && <div className="rounded-md bg-black/60 px-1.5 py-0.5 text-[7px] font-bold text-white backdrop-blur-md">SPRITE</div>}
+        </div>
+      </Link>
+
+      <div className="p-3.5 pt-1 space-y-2.5">
+        <div className="space-y-0.5">
+          <Link href={`/mascot/${item.id}`}>
+            <h3 className="font-display text-base text-foreground truncate group-hover:text-candy-pink transition-colors duration-300 capitalize">{item.name}</h3>
+          </Link>
+          <div className="text-[9px] font-bold text-foreground/20 uppercase tracking-[0.2em]">
+            {item.subject_type}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1 pt-0.5">
+          <Link 
+            href={`/mascot/${item.id}`}
+            className="flex-1 flex items-center justify-center gap-1 h-9 px-2 rounded-lg bg-foreground text-white text-[8px] font-black uppercase tracking-widest hover:bg-candy-pink transition-all shadow-md active:scale-95"
+          >
+            <Eye size={10} /> Checkout
+          </Link>
+
+          <div className="flex gap-1">
+            <button
+                onClick={onDownload}
+                disabled={isPurchasing}
+                className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all border ${
+                    isOwner 
+                    ? "bg-foreground/5 border-transparent text-foreground/40 hover:bg-foreground/10" 
+                    : "bg-candy-pink/5 border-candy-pink/20 text-candy-pink hover:bg-candy-pink/10 shadow-sm"
+                } ${isPurchasing ? "animate-pulse" : "active:scale-95"}`}
+                title={isOwner ? "Download Design" : "Download for 1 Credit"}
+                >
+                <Download size={14} />
+            </button>
+
+            {isOwner && (
+              <>
+                <button
+                  onClick={() => onTogglePublished(item.id)}
+                  className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg transition-all border ${
+                    item.published ? "bg-candy-green/5 border-candy-green/10 text-candy-green hover:bg-candy-green/10" : "bg-foreground/5 border-transparent text-foreground/40 hover:bg-foreground/10"
+                  }`}
+                  title={item.published ? "Make Private" : "Publish to Showcase"}
+                >
+                  <Globe size={14} />
+                </button>
+                <button
+                  onClick={() => onDelete(item)}
+                  className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-red-50 text-red-500 border border-transparent hover:bg-red-100 transition-all active:scale-95"
+                  title="Delete Mascot"
+                >
+                  <Trash2 size={14} />
+                </button>
+              </>
             )}
           </div>
-        )}
-      </Link>
-      <div className="p-3 md:p-3.5">
-        <Link href={`/mascot/${item.id}`} className="block">
-          <h3 className="font-display text-sm md:text-base text-foreground truncate group-hover:text-candy-pink transition-colors">{item.name}</h3>
-        </Link>
-        {item.description && (
-          <p className="mt-0.5 text-[10px] md:text-xs text-muted-foreground line-clamp-1">{item.description}</p>
-        )}
-        <div className="flex flex-wrap gap-1 mt-2.5">
-          {!isSticker && (
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                downloadFile(item.image_url, `${downloadName}.png`);
-              }}
-              className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-[9px] font-bold text-warm-gray transition-colors hover:bg-border"
-            >
-              {isLogo ? "Logo" : "Mascot"}
-            </button>
-          )}
-          {item.gif_url && !isSticker && (
-            <button
-              onMouseEnter={() => setPreviewMode("gif")}
-              onMouseLeave={() => setPreviewMode("image")}
-              onClick={(e) => {
-                e.stopPropagation();
-                downloadFile(item.gif_url!, `${downloadName}.gif`);
-              }}
-              className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-muted py-1.5 text-[9px] font-bold text-warm-gray transition-colors hover:bg-border"
-            >
-              Animated
-            </button>
-          )}
-          {isSticker && item.sticker_url && (
-            <button
-              onMouseEnter={() => setPreviewMode("sticker")}
-              onMouseLeave={() => setPreviewMode("image")}
-              disabled={downloading}
-              onClick={async (e) => {
-                e.stopPropagation();
-                setDownloading(true);
-                const toastId = toast.loading("Preparing stickers...");
-                try {
-                  for (let i = 0; i < 9; i++) {
-                    const cropped = await cropSticker(item.sticker_url!, i);
-                    downloadBase64(cropped, `${downloadName}-${i + 1}.png`);
-                    await new Promise(r => setTimeout(r, 150));
-                  }
-                  toast.success("Downloaded!", { id: toastId });
-                } catch (err) {
-                  toast.error("Failed to extract stickers", { id: toastId });
-                  console.error(err);
-                } finally {
-                  setDownloading(false);
-                }
-              }}
-              className="flex-1 min-w-[60px] flex items-center justify-center gap-1 rounded-lg bg-gradient-to-r from-candy-blue/80 to-candy-purple/80 py-1.5 text-[9px] font-bold text-white transition-all hover:brightness-105 disabled:opacity-50"
-            >
-              <span className="truncate">{downloading ? "Working..." : "Download Individual Stickers"}</span>
-            </button>
-          )}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              const url = `${window.location.origin}/mascot/${item.id}`;
-              navigator.clipboard.writeText(url);
-              toast.success("URL copied!");
-            }}
-            className="flex h-7 w-7 items-center justify-center rounded-lg bg-muted text-warm-gray transition-colors hover:bg-border"
-            title="Copy URL"
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
-              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
-            </svg>
-          </button>
-          <button
-            onClick={async (e) => {
-              e.stopPropagation();
-              const url = `${window.location.origin}/mascot/${item.id}`;
-
-              if (navigator.share) {
-                try {
-                  await navigator.share({ url });
-                } catch (err) {
-                  if ((err as Error).name !== 'AbortError') console.error("Share failed:", err);
-                }
-              } else {
-                navigator.clipboard.writeText(url);
-                toast.success("URL copied!");
-              }
-            }}
-            className="flex h-7 w-7 items-center justify-center rounded-lg bg-candy-pink/5 text-candy-pink transition-colors hover:bg-candy-pink/10"
-            title="Share Mascot"
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-              <polyline points="16 6 12 2 8 6" />
-              <line x1="12" y1="2" x2="12" y2="15" />
-            </svg>
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(item);
-            }}
-            className="flex h-7 w-7 items-center justify-center rounded-lg bg-red-50 text-destructive transition-colors hover:bg-red-100"
-          >
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="3 6 5 6 21 6" />
-              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
-            </svg>
-          </button>
         </div>
       </div>
     </div>

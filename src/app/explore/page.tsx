@@ -47,8 +47,13 @@ export default function ExplorePage() {
                         Design <span className="text-gradient">Index.</span>
                     </h1>
                     <p className="text-2xl font-semibold text-muted-foreground max-w-2xl leading-relaxed animate-slide-up stagger-2">
-                        A complete directory of specialized AI mascot styles, industry tools, and head-to-head comparison guides.
+                        A complete directory of specialized AI mascot styles, industry tools, and a 1,000+ searchable community showcase.
                     </p>
+                    <div className="mt-10 flex gap-4 animate-slide-up stagger-3">
+                        <Link href="/gallery" className="px-8 py-4 bg-foreground text-white rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-candy-pink transition-colors">
+                            Explore Showcase Hub
+                        </Link>
+                    </div>
                 </div>
             </header>
 
