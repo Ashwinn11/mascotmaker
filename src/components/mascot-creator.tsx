@@ -23,152 +23,152 @@ interface AnimationItem {
 }
 
 const ALL_MASCOT_STEPS = [
-  { key: "create" as MascotStep, label: "Create", num: 1 },
-  { key: "refine" as MascotStep, label: "Refine", num: 2 },
-  { key: "animate" as MascotStep, label: "Action Set", num: 3 },
+    { key: "create" as MascotStep, label: "Create", num: 1 },
+    { key: "refine" as MascotStep, label: "Refine", num: 2 },
+    { key: "animate" as MascotStep, label: "Action", num: 3 },
 ];
 
 export function MascotCreator() {
-  const { data: session, status, update: updateSession } = useSession();
-  const searchParams = useSearchParams();
+    const { data: session, status, update: updateSession } = useSession();
+    const searchParams = useSearchParams();
 
-  const [activeTab] = useState<StudioTab>("mascot");
+    const [activeTab] = useState<StudioTab>("mascot");
 
-  // Mascot workflow
-  const [mascotStep, setMascotStep] = useState<MascotStep>("create");
-  const [mascotBase64, setMascotBase64] = useState<string | null>(null);
-  const [mascotImages, setMascotImages] = useState<string[]>([]);
-  const [analysis, setAnalysis] = useState<string | null>(null);
-  const [animations, setAnimations] = useState<AnimationItem[]>([]);
-  const [mascotLoading, setMascotLoading] = useState(false);
-  const [confirmReset, setConfirmReset] = useState(false);
-  const [pendingStep, setPendingStep] = useState<MascotStep | null>(null);
-  const [createOptions, setCreateOptions] = useState({
-    aspectRatio: "1:1",
-    imageSize: "2K" as "512px" | "1K" | "2K" | "4K",
-    removeBackground: false,
-    subjectType: "Character" as "Character" | "Sticker" | "Logo",
-  });
+    // Mascot workflow
+    const [mascotStep, setMascotStep] = useState<MascotStep>("create");
+    const [mascotBase64, setMascotBase64] = useState<string | null>(null);
+    const [mascotImages, setMascotImages] = useState<string[]>([]);
+    const [analysis, setAnalysis] = useState<string | null>(null);
+    const [animations, setAnimations] = useState<AnimationItem[]>([]);
+    const [mascotLoading, setMascotLoading] = useState(false);
+    const [confirmReset, setConfirmReset] = useState(false);
+    const [pendingStep, setPendingStep] = useState<MascotStep | null>(null);
+    const [createOptions, setCreateOptions] = useState({
+        aspectRatio: "1:1",
+        imageSize: "2K" as "512px" | "1K" | "2K" | "4K",
+        removeBackground: false,
+        subjectType: "Character" as "Character" | "Sticker" | "Logo",
+    });
 
-  // Paywall
-  const [paywallOpen, setPaywallOpen] = useState(false);
-  const [paywallType, setPaywallType] = useState<"auth" | "credits">("auth");
-  const [paywallCreditsRequired, setPaywallCreditsRequired] = useState(0);
+    // Paywall
+    const [paywallOpen, setPaywallOpen] = useState(false);
+    const [paywallType, setPaywallType] = useState<"auth" | "credits">("auth");
+    const [paywallCreditsRequired, setPaywallCreditsRequired] = useState(0);
 
-  const requireAuth = (): boolean => {
-    if (status === "loading") return false;
-    if (!session?.user) { setPaywallType("auth"); setPaywallOpen(true); return false; }
-    return true;
-  };
+    const requireAuth = (): boolean => {
+        if (status === "loading") return false;
+        if (!session?.user) { setPaywallType("auth"); setPaywallOpen(true); return false; }
+        return true;
+    };
 
-  const handleApiError = (res: Response, data: { error?: string; creditsRequired?: number }): boolean => {
-    if (res.status === 401) { setPaywallType("auth"); setPaywallOpen(true); return false; }
-    if (res.status === 402) { setPaywallType("credits"); setPaywallCreditsRequired(data.creditsRequired || 0); setPaywallOpen(true); return false; }
-    return true;
-  };
+    const handleApiError = (res: Response, data: { error?: string; creditsRequired?: number }): boolean => {
+        if (res.status === 401) { setPaywallType("auth"); setPaywallOpen(true); return false; }
+        if (res.status === 402) { setPaywallType("credits"); setPaywallCreditsRequired(data.creditsRequired || 0); setPaywallOpen(true); return false; }
+        return true;
+    };
 
-  const handleCreditsUpdate = async () => { await updateSession(); };
+    const handleCreditsUpdate = async () => { await updateSession(); };
 
-  const handleMascotGenerated = (images: string[], newAnalysis?: string, options?: any) => {
-    setMascotImages(images);
-    setMascotBase64(images[0]);
-    if (newAnalysis) setAnalysis(newAnalysis);
-    if (options) setCreateOptions(prev => ({ ...prev, ...options }));
-    setAnimations([]);
-    setMascotStep("refine");
-  };
+    const handleMascotGenerated = (images: string[], newAnalysis?: string, options?: any) => {
+        setMascotImages(images);
+        setMascotBase64(images[0]);
+        if (newAnalysis) setAnalysis(newAnalysis);
+        if (options) setCreateOptions(prev => ({ ...prev, ...options }));
+        setAnimations([]);
+        setMascotStep("refine");
+    };
 
-  const handleMascotUpdate = (imageBase64: string, newAnalysis?: string) => {
-    setMascotBase64(imageBase64);
-    setMascotImages([imageBase64]);
-    if (newAnalysis) setAnalysis(newAnalysis);
-    setAnimations([]);
-  };
+    const handleMascotUpdate = (imageBase64: string, newAnalysis?: string) => {
+        setMascotBase64(imageBase64);
+        setMascotImages([imageBase64]);
+        if (newAnalysis) setAnalysis(newAnalysis);
+        setAnimations([]);
+    };
 
-  const handleStartOver = () => {
-    setPendingStep("create");
-    setConfirmReset(true);
-  };
+    const handleStartOver = () => {
+        setPendingStep("create");
+        setConfirmReset(true);
+    };
 
-  const confirmStepChange = () => {
-    if (pendingStep === "create") {
-      setMascotBase64(null); setMascotImages([]); setAnalysis(null);
-      setAnimations([]);
-      setMascotStep("create");
-    } else if (pendingStep === "refine") {
-      setAnimations([]);
-      setMascotStep("refine");
-    }
-    setConfirmReset(false);
-    setPendingStep(null);
-  };
+    const confirmStepChange = () => {
+        if (pendingStep === "create") {
+            setMascotBase64(null); setMascotImages([]); setAnalysis(null);
+            setAnimations([]);
+            setMascotStep("create");
+        } else if (pendingStep === "refine") {
+            setAnimations([]);
+            setMascotStep("refine");
+        }
+        setConfirmReset(false);
+        setPendingStep(null);
+    };
 
-  const getCurrentSteps = () => {
-    if (createOptions.subjectType === "Character") return ALL_MASCOT_STEPS;
-    return ALL_MASCOT_STEPS.filter(s => s.key !== "animate");
-  };
+    const getCurrentSteps = () => {
+        if (createOptions.subjectType === "Character") return ALL_MASCOT_STEPS;
+        return ALL_MASCOT_STEPS.filter(s => s.key !== "animate");
+    };
 
-  const canGoToStep = (step: MascotStep) => {
-    if (step === "create") return true;
-    if (!mascotBase64) return false;
-    if (step === "animate" && createOptions.subjectType !== "Character") return false;
-    return true;
-  };
+    const canGoToStep = (step: MascotStep) => {
+        if (step === "create") return true;
+        if (!mascotBase64) return false;
+        if (step === "animate" && createOptions.subjectType !== "Character") return false;
+        return true;
+    };
 
-  const handleStepClick = (targetStep: MascotStep) => {
-    if (!canGoToStep(targetStep)) return;
-    if (targetStep === "create" && mascotBase64) {
-      setPendingStep("create");
-      setConfirmReset(true);
-      return;
-    }
-    if (targetStep === "refine" && mascotStep === "animate" && animations.length > 0) {
-      setPendingStep("refine");
-      setConfirmReset(true);
-      return;
-    }
-    setMascotStep(targetStep);
-  };
+    const handleStepClick = (targetStep: MascotStep) => {
+        if (!canGoToStep(targetStep)) return;
+        if (targetStep === "create" && mascotBase64) {
+            setPendingStep("create");
+            setConfirmReset(true);
+            return;
+        }
+        if (targetStep === "refine" && mascotStep === "animate" && animations.length > 0) {
+            setPendingStep("refine");
+            setConfirmReset(true);
+            return;
+        }
+        setMascotStep(targetStep);
+    };
 
-  const sharedProps = { requireAuth, onApiError: handleApiError, onCreditsUpdate: handleCreditsUpdate };
+    const sharedProps = { requireAuth, onApiError: handleApiError, onCreditsUpdate: handleCreditsUpdate };
 
-  return (
-    <div className="mx-auto max-w-[1280px] px-4 py-8 md:px-8 md:py-16 mb-24 md:mb-0">
-      <div className="flex flex-col items-center gap-12">
-        
-        {/* ── Studio Stepper: Clean Floating Bar ── */}
-        <motion.div 
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="flex items-center gap-2 rounded-full bg-[#141210]/80 border border-white/10 p-1.5 shadow-2xl backdrop-blur-2xl z-40 sticky top-24"
-        >
-          {getCurrentSteps().map((step, idx) => {
-            const isActive = mascotStep === step.key;
-            const isAccessible = canGoToStep(step.key);
-            return (
-              <button 
-                key={step.key} 
-                onClick={() => isAccessible && handleStepClick(step.key)}
-                disabled={!isAccessible}
-                className={`relative flex items-center gap-3 rounded-full px-6 py-3 text-[11px] font-black uppercase tracking-widest transition-all duration-500 overflow-hidden ${
-                  isActive ? "text-white" : isAccessible ? "text-white/40 hover:text-white" : "text-white/10 cursor-not-allowed"
-                }`}
-              >
-                {isActive && (
-                  <motion.div 
-                    layoutId="activeStep"
-                    className="absolute inset-0 bg-candy-pink shadow-[0_0_25px_rgba(255,77,28,0.5)] -z-10"
-                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
-                  />
-                )}
-                <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[9px] border ${isActive ? "border-white/30 bg-white/10" : "border-white/10"}`}>
-                  {idx + 1}
-                </span>
-                {step.label}
-              </button>
-            );
-          })}
-        </motion.div>
+    return (
+        <div className="mx-auto max-w-[1280px] px-4 py-8 md:px-8 md:py-16 mb-24 md:mb-0">
+            <div className="flex flex-col items-center gap-12">
+                
+                {/* ── Studio Stepper: Clean Floating Bar ── */}
+                <motion.div 
+                    initial={{ y: -20, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    className="flex items-center gap-1.5 rounded-full bg-[#141210]/80 border border-white/10 p-1 shadow-2xl backdrop-blur-2xl z-40 sticky top-24"
+                >
+                    {getCurrentSteps().map((step, idx) => {
+                        const isActive = mascotStep === step.key;
+                        const isAccessible = canGoToStep(step.key);
+                        return (
+                            <button 
+                                key={step.key} 
+                                onClick={() => isAccessible && handleStepClick(step.key)}
+                                disabled={!isAccessible}
+                                className={`relative flex items-center justify-center gap-3 rounded-full px-8 py-3 text-[11px] font-black uppercase tracking-[0.2em] transition-all duration-500 overflow-hidden min-w-[150px] ${
+                                    isActive ? "text-black" : isAccessible ? "text-white/40 hover:text-white" : "text-white/10 cursor-not-allowed"
+                                }`}
+                            >
+                                {isActive && (
+                                    <motion.div 
+                                        layoutId="activeStep"
+                                        className="absolute inset-0 bg-[#F5C842] shadow-[0_0_20px_rgba(245,200,66,0.3)] -z-10"
+                                        transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                                    />
+                                )}
+                                <span className={`flex h-4 w-4 items-center justify-center rounded-full text-[9px] border ${isActive ? "border-black/30 bg-black/10" : "border-white/10"}`}>
+                                    {idx + 1}
+                                </span>
+                                {step.label}
+                            </button>
+                        );
+                    })}
+                </motion.div>
 
         {/* ── Main Workspace Grid: Adobe Layout ── */}
         <div className="w-full grid lg:grid-cols-[1fr_420px] gap-12 items-start">
@@ -226,8 +226,8 @@ export function MascotCreator() {
               
               <div className="mb-5 pb-5 border-b border-white/[0.04] flex items-center justify-between">
                 <div>
-                  <p className="text-[10px] font-black text-white/30 uppercase tracking-[0.2em] mb-0.5">Asset Creator</p>
-                  <h2 className="text-xl font-black text-white tracking-tight italic uppercase">Creation Suite</h2>
+                  <p className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-0.5">Asset Creator</p>
+                  <h2 className="text-xl bg-candy-yellow text-[#0c0a09] tracking-tight italic uppercase">Creation Suite</h2>
                 </div>
                 <div className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center justify-center">
                   <Sparkles size={16} className="text-[#F5C842]" />

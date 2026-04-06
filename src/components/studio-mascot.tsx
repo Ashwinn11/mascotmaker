@@ -227,7 +227,7 @@ export function StudioMascot({ onGenerated, onLoadingChange, requireAuth, onApiE
                 <Button 
                     onClick={inputMode === "upload" && file ? handleStylize : handleGenerate}
                     disabled={!canSubmit}
-                    className="w-full relative overflow-hidden group rounded-xl bg-[#F5C842] py-6 text-[11px] font-black text-black shadow-[0_20px_50px_-5px_rgba(245,200,66,0.3)] hover:shadow-[0_20px_60px_-5px_rgba(245,200,66,0.4)] active:scale-[0.98] transition-all disabled:opacity-10 hover:brightness-110"
+                    className="w-full relative overflow-hidden group rounded-xl bg-[#F5C842] hover:bg-[#F5C842] py-6 text-[11px] font-black text-black shadow-[0_20px_50px_-5px_rgba(245,200,66,0.3)] hover:shadow-[0_20px_60px_-5px_rgba(245,200,66,0.5)] active:scale-[0.98] transition-all disabled:opacity-10 hover:brightness-110"
                 >
                     <div className="relative flex items-center justify-center gap-2 tracking-[0.2em] uppercase italic">
                         <Sparkles size={13} className="text-black/40 group-hover:rotate-12 transition-transform" />

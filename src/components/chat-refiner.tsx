@@ -26,6 +26,10 @@ interface ChatRefinerProps {
   onCreditsUpdate: (creditsRemaining?: number) => void;
 }
 
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50">{children}</p>
+);
+
 export function ChatRefiner({
   mascotBase64,
   analysis,
@@ -64,7 +68,6 @@ export function ChatRefiner({
           message: userMsg,
           mascotBase64,
           analysis,
-          // Inherit options from the Create step
           aspectRatio,
           imageSize,
           removeBackground,
@@ -75,10 +78,6 @@ export function ChatRefiner({
       if (!res.ok) {
         if (!onApiError(res, data)) return;
         toast.error(data.error || "Failed to refine");
-        setMessages((prev) => [
-          ...prev,
-          { role: "assistant", content: "Error. Try again!" },
-        ]);
         return;
       }
       onCreditsUpdate(data.creditsRemaining);
@@ -91,10 +90,6 @@ export function ChatRefiner({
       }
     } catch {
       toast.error("Error. Try again.");
-      setMessages((prev) => [
-        ...prev,
-        { role: "assistant", content: "Error. Try again!" },
-      ]);
     } finally {
       setLoading(false);
       onLoadingChange(false);
@@ -110,54 +105,50 @@ export function ChatRefiner({
     "Make it fluffier",
   ];
 
-  // Show current settings inherited from Create step as a subtle info bar
   const settingsLabel = [
     imageSize !== "2K" ? imageSize : null,
     removeBackground ? "Transp." : null,
   ].filter(Boolean).join(" · ");
 
   return (
-    <div className="flex flex-1 flex-col">
-      <div className="mb-3 flex items-center justify-between gap-2">
-        <div>
-          <h3 className="font-display text-base md:text-lg text-foreground">Refine</h3>
-          {settingsLabel && (
-            <p className="text-[9px] text-muted-foreground font-semibold uppercase tracking-wider">
-              Using: {aspectRatio} · {settingsLabel}
-            </p>
-          )}
+    <div className="flex flex-1 flex-col space-y-4">
+      <div className="flex items-center justify-between">
+        <div className="space-y-1">
+          <SectionLabel>Refine</SectionLabel>
+          <div className="flex items-center gap-2">
+            <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/20 italic">Using: {aspectRatio}</span>
+            {settingsLabel && <span className="text-[8px] font-black uppercase tracking-[0.2em] text-white/20 italic">· {settingsLabel}</span>}
+          </div>
         </div>
+        
         {subjectType === "Character" && (
-          <Button
-            onClick={onDone}
-            variant="outline"
-            className="rounded-xl border-2 border-candy-green text-candy-green hover:bg-candy-green/10 font-bold whitespace-nowrap"
-            size="sm"
-          >
-            {subjectType === "Character" ? "Animate →" : "Studio →"}
-          </Button>
+           <Button
+             onClick={onDone}
+             variant="outline"
+             className="h-8 rounded-lg border-white/[0.08] bg-white/[0.02] px-3 text-[9px] font-black uppercase tracking-[0.2em] text-white/40 hover:bg-[#F5C842]/10 hover:text-[#F5C842] hover:border-[#F5C842]/40 transition-all border shadow-none"
+           >
+             Animate →
+           </Button>
         )}
       </div>
 
-      {/* Messages area */}
-      <div className="flex-1 space-y-3 overflow-y-auto rounded-2xl bg-white/50 p-4 border-2 border-border mb-3 max-h-60 sm:max-h-[320px]">
-        {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Icon3D name="sparkles" size="xl" className="mb-3" />
-            <p className="text-sm font-semibold text-warm-gray">
-              Tweak anything?
-            </p>
-          </div>
-        )}
+      {/* Messages area - Studio Dark Container */}
+      <div className="flex-1 space-y-3 overflow-y-auto rounded-xl bg-black border border-white/[0.06] p-4 min-h-[220px] max-h-[280px] shadow-inner relative group">
+        <div className="flex flex-col items-center justify-center p-3 text-center border border-white/[0.04] bg-white/[0.01] rounded-lg mb-2">
+          <Icon3D name="sparkles" size="sm" className="mb-2 opacity-50 contrast-150 saturate-0 group-hover:saturate-200 transition-all duration-700" />
+          <p className="text-[9px] font-black uppercase tracking-[0.3em] text-white/20">
+            Tweak anything?
+          </p>
+        </div>
         {messages.map((msg, i) => (
           <div
             key={i}
             className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"} animate-slide-up`}
           >
             <div
-              className={`max-w-[80%] rounded-2xl px-4 py-2.5 text-sm ${msg.role === "user"
-                ? "bg-gradient-to-r from-candy-pink to-candy-orange text-white rounded-br-md"
-                : "bg-white border-2 border-border text-foreground rounded-bl-md"
+              className={`max-w-[85%] rounded-xl px-4 py-3 text-[11px] font-medium leading-relaxed tracking-tight ${msg.role === "user"
+                ? "bg-[#F5C842] text-black shadow-lg shadow-[#F5C842]/10 font-bold"
+                : "bg-white/[0.04] text-white/80 border border-white/[0.08]"
                 }`}
             >
               {msg.content}
@@ -166,11 +157,11 @@ export function ChatRefiner({
         ))}
         {loading && (
           <div className="flex justify-start">
-            <div className="rounded-2xl rounded-bl-md bg-white border-2 border-border px-4 py-3">
-              <div className="flex gap-1.5">
-                <div className="h-2 w-2 rounded-full bg-candy-pink animate-bounce" />
-                <div className="h-2 w-2 rounded-full bg-candy-orange animate-bounce" style={{ animationDelay: "0.15s" }} />
-                <div className="h-2 w-2 rounded-full bg-candy-yellow animate-bounce" style={{ animationDelay: "0.3s" }} />
+            <div className="rounded-xl bg-white/[0.02] border border-white/[0.08] px-4 py-3">
+              <div className="flex gap-1.5 grayscale opacity-50">
+                <div className="h-1.5 w-1.5 rounded-full bg-white animate-bounce" />
+                <div className="h-1.5 w-1.5 rounded-full bg-white animate-bounce" style={{ animationDelay: "0.15s" }} />
+                <div className="h-1.5 w-1.5 rounded-full bg-white animate-bounce" style={{ animationDelay: "0.3s" }} />
               </div>
             </div>
           </div>
@@ -178,44 +169,42 @@ export function ChatRefiner({
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Quick edit chips */}
-      <div className="flex flex-wrap gap-2 mb-4">
+      {/* Quick edit chips - Obsidian Palette */}
+      <div className="flex flex-wrap gap-1.5">
         {quickEdits.map((edit) => (
           <button
             key={edit}
             onClick={() => setInput(edit)}
             disabled={loading}
-            className="rounded-full bg-white border-2 border-border px-3 py-1 text-[10px] md:text-xs font-semibold text-warm-gray transition-all hover:border-candy-pink/40 hover:bg-candy-pink/5 active:scale-95 disabled:opacity-50"
+            className="rounded-lg bg-white/[0.02] border border-white/[0.04] px-2.5 py-1.5 text-[9px] font-black uppercase tracking-widest text-white/30 transition-all hover:bg-white/[0.06] hover:text-[#F5C842] hover:border-[#F5C842]/30 active:scale-95 disabled:opacity-20"
           >
             {edit}
           </button>
         ))}
       </div>
 
-      <div className="border-t border-border pt-4 mt-auto">
-        {/* Cost label — inherits from Create step settings */}
-        <div className="flex items-center justify-center gap-2 mb-3">
-          <div className="flex-1 h-[1px] bg-border/50" />
-          <div className="flex items-center gap-1 text-[9px] font-bold text-muted-foreground uppercase tracking-widest">
-            <span>Cost: {subjectType === "Sticker" ? 15 : 5} Credits</span>
-          </div>
-          <div className="flex-1 h-[1px] bg-border/50" />
+      <div className="pt-2">
+        {/* Cost label */}
+        <div className="flex items-center justify-center gap-3 mb-4">
+          <div className="flex-1 h-[1px] bg-white/[0.04]" />
+          <span className="text-[8px] font-black text-white/10 uppercase tracking-[0.4em]">Cost: {subjectType === "Sticker" ? 15 : 5} Credits</span>
+          <div className="flex-1 h-[1px] bg-white/[0.04]" />
         </div>
 
-        {/* Input */}
-        <div className="flex gap-2">
+        {/* Input Layer */}
+        <div className="flex gap-1.5 p-1 rounded-xl bg-black border border-white/[0.08]">
           <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
             placeholder="Changes..."
             disabled={loading}
-            className="flex-1 rounded-2xl border-2 border-border bg-white px-4 py-3 text-sm placeholder:text-muted-foreground/60 focus:border-candy-pink focus:outline-none focus:ring-2 focus:ring-candy-pink/20 disabled:opacity-50"
+            className="flex-1 bg-transparent px-4 py-2 text-xs text-white placeholder:text-white/20 focus:outline-none disabled:opacity-50"
           />
           <Button
             onClick={handleSend}
             disabled={!input.trim() || loading}
-            className="rounded-2xl bg-gradient-to-r from-candy-pink to-candy-orange px-5 text-white shadow-md hover:brightness-105 active:scale-95 disabled:opacity-50"
+            className="rounded-lg bg-[#F5C842] hover:bg-[#F5C842] px-5 py-2 text-[10px] font-black uppercase tracking-widest text-black shadow-md hover:brightness-110 active:scale-95 disabled:opacity-10 transition-all"
           >
             Send
           </Button>
@@ -224,3 +213,4 @@ export function ChatRefiner({
     </div>
   );
 }
+

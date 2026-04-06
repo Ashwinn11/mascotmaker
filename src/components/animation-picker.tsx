@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { Icon3DInline } from "@/components/ui/icon-3d";
 import type { FluentIcon3D } from "@/components/ui/icon-3d";
+import { motion } from "framer-motion";
 
 interface AnimationPickerProps {
   mascotBase64: string;
@@ -17,22 +18,26 @@ interface AnimationPickerProps {
   subjectType?: "Character" | "Sticker" | "Logo";
 }
 
-const ANIMATION_PRESETS: { label: string; icon: FluentIcon3D; color: string }[] = [
-  { label: "Wave", icon: "waving-hand", color: "from-candy-pink to-candy-orange" },
-  { label: "Jump", icon: "kangaroo", color: "from-candy-orange to-candy-yellow" },
-  { label: "Dance", icon: "woman-dancing", color: "from-candy-yellow to-candy-green" },
-  { label: "Idle", icon: "relieved-face", color: "from-candy-green to-candy-blue" },
-  { label: "Walk", icon: "person-walking", color: "from-candy-blue to-candy-purple" },
-  { label: "Victory", icon: "thumbs-up", color: "from-candy-purple to-candy-pink" },
+const SectionLabel = ({ children }: { children: React.ReactNode }) => (
+  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-white/50">{children}</p>
+);
+
+const ANIMATION_PRESETS: { label: string; icon: FluentIcon3D }[] = [
+  { label: "Wave", icon: "waving-hand" },
+  { label: "Jump", icon: "kangaroo" },
+  { label: "Dance", icon: "woman-dancing" },
+  { label: "Idle", icon: "relieved-face" },
+  { label: "Walk", icon: "person-walking" },
+  { label: "Victory", icon: "thumbs-up" },
 ];
 
-const STICKER_PRESETS: { label: string; icon: FluentIcon3D; color: string }[] = [
-  { label: "Emotions", icon: "artist-palette", color: "from-candy-pink to-candy-orange" },
-  { label: "Happy", icon: "relieved-face", color: "from-candy-orange to-candy-yellow" },
-  { label: "Dizzy", icon: "dizzy-face", color: "from-candy-yellow to-candy-green" },
-  { label: "Cool", icon: "sparkles", color: "from-candy-green to-candy-blue" },
-  { label: "Action", icon: "high-voltage", color: "from-candy-blue to-candy-purple" },
-  { label: "Thinking", icon: "magnifying-glass", color: "from-candy-purple to-candy-pink" },
+const STICKER_PRESETS: { label: string; icon: FluentIcon3D }[] = [
+  { label: "Emotions", icon: "artist-palette" },
+  { label: "Happy", icon: "relieved-face" },
+  { label: "Dizzy", icon: "dizzy-face" },
+  { label: "Cool", icon: "sparkles" },
+  { label: "Action", icon: "high-voltage" },
+  { label: "Thinking", icon: "magnifying-glass" },
 ];
 
 export function AnimationPicker({
@@ -83,71 +88,87 @@ export function AnimationPicker({
   };
 
   return (
-    <div className="space-y-5">
-      <div>
-        <h3 className="font-display text-lg text-foreground mb-1">
-          {isSticker ? "Generate Sticker Set" : "Animate Your Mascot"}
-        </h3>
-        <p className="text-sm text-muted-foreground">
-          {isSticker ? "Create 9 different expressions" : "Pick an action or describe your own"}
+    <div className="space-y-6">
+      <div className="space-y-1.5">
+        <SectionLabel>{isSticker ? "Sticker Set" : "Motion Suite"}</SectionLabel>
+        <p className="text-[9px] font-black uppercase tracking-[0.15em] text-white/20 italic">
+          {isSticker ? "Generate 9 unique expressions" : "Trigger studio animations"}
         </p>
       </div>
 
-      {/* Preset Actions Grid */}
-      <div className="grid grid-cols-2 xs:grid-cols-3 gap-2 md:gap-2.5">
+      {/* Preset Actions Grid - Obsidian Style */}
+      <div className="grid grid-cols-3 gap-2">
         {presets.map((action) => (
           <button
             key={action.label}
             onClick={() => handleAnimate(action.label.toLowerCase())}
             disabled={activeAction !== null}
-            className={`group relative overflow-hidden rounded-2xl border-2 border-border bg-white p-3 md:p-4 text-center transition-all hover:border-transparent hover:shadow-lg active:scale-95 disabled:opacity-50 disabled:cursor-wait ${activeAction === action.label.toLowerCase() ? "border-candy-pink shadow-lg" : ""
-              }`}
+            className={`group relative flex flex-col items-center gap-2 p-3 rounded-xl border transition-all duration-300 ${
+              activeAction === action.label.toLowerCase()
+              ? "border-[#F5C842] bg-[#F5C842]/5 shadow-lg shadow-[#F5C842]/5"
+              : "border-white/[0.04] bg-white/[0.01] hover:bg-white/[0.03] hover:border-white/[0.1]"
+            }`}
           >
-            <div className={`absolute inset-0 bg-gradient-to-br ${action.color} opacity-0 transition-opacity group-hover:opacity-10`} />
-            <div className="relative">
-              <div className="mb-1 flex md:mb-1.5 justify-center">
-                <Icon3DInline name={action.icon} size={28} className="md:w-[32px] md:h-[32px]" />
-              </div>
-              <span className="text-[10px] md:text-xs font-bold text-warm-gray block">{action.label}</span>
+            <div className={`transition-all duration-500 ${activeAction === action.label.toLowerCase() ? "scale-110 rotate-3" : "opacity-60 group-hover:opacity-100 group-hover:scale-110"}`}>
+              <Icon3DInline name={action.icon} size={24} />
             </div>
+            <span className={`text-[9px] font-black uppercase tracking-widest leading-none ${activeAction === action.label.toLowerCase() ? "text-[#F5C842]" : "text-white/30 group-hover:text-white/60"}`}>
+              {action.label}
+            </span>
+            
             {activeAction === action.label.toLowerCase() && (
-              <div className="absolute inset-0 flex items-center justify-center bg-white/80 rounded-2xl">
-                <div className="h-5 w-5 animate-spin rounded-full border-2 border-candy-pink border-t-transparent" />
+              <div className="absolute inset-0 flex items-center justify-center bg-black/40 rounded-xl overflow-hidden backdrop-blur-[1px]">
+                  {/* Subtle progress line */}
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 15, ease: "linear" }}
+                    className="absolute bottom-0 left-0 h-0.5 bg-[#F5C842]"
+                  />
+                  <div className="h-4 w-4 animate-spin rounded-full border border-[#F5C842] border-t-transparent" />
               </div>
             )}
           </button>
         ))}
       </div>
 
+      {/* Custom Action Layer */}
+      <div className="space-y-4 pt-2">
+         <div className="flex items-center justify-center gap-3">
+          <div className="flex-1 h-[1px] bg-white/[0.04]" />
+          <span className="text-[8px] font-black text-white/10 uppercase tracking-[0.4em]">Custom Sequence</span>
+          <div className="flex-1 h-[1px] bg-white/[0.04]" />
+        </div>
 
-      {/* Custom Action */}
-      <div className="flex gap-2">
-        <input
-          value={customAction}
-          onChange={(e) => setCustomAction(e.target.value)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && customAction.trim()) {
-              handleAnimate(customAction.trim());
-              setCustomAction("");
-            }
-          }}
-          placeholder="Or type a custom action..."
-          disabled={activeAction !== null}
-          className="flex-1 rounded-2xl border-2 border-border bg-white px-4 py-3 text-sm placeholder:text-muted-foreground/60 focus:border-candy-purple focus:outline-none focus:ring-2 focus:ring-candy-purple/20 disabled:opacity-50"
-        />
-        <Button
-          onClick={() => {
-            if (customAction.trim()) {
-              handleAnimate(customAction.trim());
-              setCustomAction("");
-            }
-          }}
-          disabled={!customAction.trim() || activeAction !== null}
-          className="rounded-2xl bg-gradient-to-r from-candy-purple to-candy-pink px-5 text-white shadow-md hover:brightness-105 active:scale-95"
-        >
-          {isSticker ? "Generate" : "Animate"}
-        </Button>
+        <div className="flex gap-1.5 p-1 rounded-xl bg-black border border-white/[0.08]">
+          <input
+            value={customAction}
+            onChange={(e) => setCustomAction(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && customAction.trim()) {
+                handleAnimate(customAction.trim());
+                setCustomAction("");
+              }
+            }}
+            placeholder="Type a custom action..."
+            disabled={activeAction !== null}
+            className="flex-1 bg-transparent px-4 py-2 text-xs text-white placeholder:text-white/20 focus:outline-none disabled:opacity-50"
+          />
+          <Button
+            onClick={() => {
+              if (customAction.trim()) {
+                handleAnimate(customAction.trim());
+                setCustomAction("");
+              }
+            }}
+            disabled={!customAction.trim() || activeAction !== null}
+            className="rounded-lg bg-[#F5C842] hover:bg-[#F5C842] px-5 py-2 text-[10px] font-black uppercase tracking-widest text-black shadow-md hover:brightness-110 active:scale-95 disabled:opacity-10 transition-all"
+          >
+            {isSticker ? "Gen" : "Run"}
+          </Button>
+        </div>
       </div>
     </div>
   );
 }
+
