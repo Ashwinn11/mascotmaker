@@ -227,7 +227,7 @@ export function MascotCreator() {
               <div className="mb-5 pb-5 border-b border-white/[0.04] flex items-center justify-between">
                 <div>
                   <p className="text-[10px] font-black text-white uppercase tracking-[0.2em] mb-0.5">Asset Creator</p>
-                  <h2 className="text-xl bg-candy-yellow text-[#0c0a09] tracking-tight italic uppercase">Creation Suite</h2>
+                  <h2 className="text-xl font-black text-white tracking-tight italic uppercase">Creation Suite</h2>
                 </div>
                 <div className="w-9 h-9 rounded-xl bg-white/[0.03] border border-white/[0.05] flex items-center justify-center">
                   <Sparkles size={16} className="text-[#F5C842]" />

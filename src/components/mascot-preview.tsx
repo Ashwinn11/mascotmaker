@@ -166,7 +166,7 @@ export function MascotPreview({
           ) : (
             <img
               src={
-                latestAnim && hoverState === "gif"
+                latestAnim && hoverState !== "mascot"
                   ? `data:image/gif;base64,${latestAnim.animationBase64}`
                   : `data:image/png;base64,${currentDisplayImage}`
               }
@@ -243,7 +243,7 @@ export function MascotPreview({
 
       {/* Publish Dialog */}
       <Dialog open={publishOpen} onOpenChange={setPublishOpen}>
-        <DialogContent className="rounded-3xl border border-white/10 bg-[#141210] sm:max-w-md shadow-2xl glass-dark">
+        <DialogContent className="rounded-3xl border border-white/10 bg-[#141210] sm:max-w-md shadow-2xl">
           <DialogHeader>
             <DialogTitle className="font-display text-2xl text-white">Publish to Gallery</DialogTitle>
             <DialogDescription className="text-white/50">Share your {subjectType.toLowerCase()} with the world!</DialogDescription>

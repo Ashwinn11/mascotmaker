@@ -88,7 +88,7 @@ export function PaywallModal({
                                 <div key={label} className={`group/item flex flex-col items-center gap-2 py-5 rounded-2xl ${bg} border ${border} hover:scale-[1.02] hover:brightness-110 transition-all duration-300 shadow-lg relative overflow-hidden`}>
                                     {/* Subtle animated shine */}
                                     <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
-                                    
+
                                     <Icon className={`w-6 h-6 ${color} transition-transform duration-300 group-hover/item:rotate-12`} strokeWidth={2.5} />
                                     <span className={`text-[10px] font-bold uppercase tracking-[0.2em] ${color} transition-colors uppercase`}>{label}</span>
                                 </div>
@@ -123,22 +123,22 @@ export function PaywallModal({
 
                 <div className="px-8 pt-8 pb-10 space-y-6">
                     {/* Headline */}
-                        <div className="text-center space-y-3">
-                            <div className="inline-flex items-center justify-center w-14 h-14 rounded-[1.25rem] bg-candy-pink/10 border border-candy-pink/20 mb-2 shadow-inner">
-                                <svg width="24" height="24" viewBox="0 0 11 14" fill="#FF4D1C" aria-hidden="true" className="drop-shadow-[0_0_8px_rgba(255,77,28,0.5)]">
-                                    <path d="M6.5 0L0 8h4.5L3.5 14L11 5.5H6.5L8 0H6.5Z" />
-                                </svg>
-                            </div>
-                            <DialogTitle className="font-display text-3xl text-white tracking-tight leading-none">
-                                Top up your studio
-                            </DialogTitle>
-                            <DialogDescription className="text-sm text-white/50 leading-relaxed font-medium">
-                                You need <span className="font-black text-white">{creditsRequired} credit</span> to unlock this mascot.
-                                {typeof creditsRemaining === "number" && creditsRemaining > 0 && (
-                                    <> You have <span className="font-black text-white">{creditsRemaining}</span> left.</>
-                                )}
-                            </DialogDescription>
+                    <div className="text-center space-y-3">
+                        <div className="inline-flex items-center justify-center w-14 h-14 rounded-[1.25rem] bg-candy-pink/10 border border-candy-pink/20 mb-2 shadow-inner">
+                            <svg width="24" height="24" viewBox="0 0 11 14" fill="#FF4D1C" aria-hidden="true" className="drop-shadow-[0_0_8px_rgba(255,77,28,0.5)]">
+                                <path d="M6.5 0L0 8h4.5L3.5 14L11 5.5H6.5L8 0H6.5Z" />
+                            </svg>
                         </div>
+                        <DialogTitle className="font-display text-3xl text-white tracking-tight leading-none">
+                            Top up your studio
+                        </DialogTitle>
+                        <DialogDescription className="text-sm text-white/50 leading-relaxed font-medium">
+                            You need <span className="font-black text-white">{creditsRequired} credit</span> to unlock this mascot.
+                            {typeof creditsRemaining === "number" && creditsRemaining > 0 && (
+                                <> You have <span className="font-black text-white">{creditsRemaining}</span> left.</>
+                            )}
+                        </DialogDescription>
+                    </div>
 
                     {/* Plans */}
                     <div className="space-y-3 pt-2">
@@ -147,11 +147,10 @@ export function PaywallModal({
                                 key={plan.credits}
                                 disabled={loading !== null}
                                 onClick={() => handleBuyCredits(plan.variantId, plan.credits)}
-                                className={`w-full flex items-center justify-between rounded-2xl px-5 py-4 text-sm font-bold transition-all duration-300 disabled:opacity-50 active:scale-[0.98] ${
-                                    plan.popular
+                                className={`w-full flex items-center justify-between rounded-2xl px-5 py-4 text-sm font-bold transition-all duration-300 disabled:opacity-50 active:scale-[0.98] ${plan.popular
                                         ? "bg-candy-pink text-white shadow-glow-coral hover:brightness-110"
                                         : "border border-white/5 bg-[#1c1916] text-white hover:border-white/20 hover:bg-white/5"
-                                }`}
+                                    }`}
                             >
                                 <div className="flex flex-col items-start gap-0.5">
                                     <div className="flex items-center gap-2">
