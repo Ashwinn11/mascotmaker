@@ -7,7 +7,7 @@ import { AuthButton } from "@/components/auth-button";
 import { CreditsDisplay } from "@/components/credits-display";
 import { MobileNav } from "@/components/mobile-nav";
 import { Providers } from "@/components/providers";
-import { Lilita_One, Nunito } from "next/font/google";
+import { Lilita_One, DM_Sans } from "next/font/google";
 import { SEOSchema } from "@/components/seo-schema";
 import "./globals.css";
 
@@ -18,10 +18,11 @@ const heading = Lilita_One({
   display: "swap",
 });
 
-const body = Nunito({
+const body = DM_Sans({
   subsets: ["latin"],
   variable: "--font-body-text",
   display: "swap",
+  weight: ["300", "400", "500", "600", "700", "800"],
 });
 
 export const metadata: Metadata = {
@@ -107,71 +108,85 @@ export default function RootLayout({
       <body className={`${heading.variable} ${body.variable} antialiased`}>
         <SEOSchema />
         <Providers>
-          <nav className="sticky top-0 z-50 border-b border-border/50 bg-cream/80 backdrop-blur-xl">
-            <div className="mx-auto flex h-16 md:h-20 max-w-6xl items-center justify-between px-4 md:px-6">
-              <Link href="/" className="flex items-center gap-2 md:gap-3 group">
-                <Image
-                  src="/app-icon.png"
-                  alt="mascotmaker.io"
-                  width={40}
-                  height={40}
-                  className="rounded-lg md:rounded-xl shadow-md transition-transform group-hover:scale-110 group-hover:rotate-3 md:w-[56px] md:h-[56px]"
-                />
-                <span className="font-display text-xl md:text-2xl tracking-tight text-foreground">
+          {/* ── Navigation ── */}
+          <nav className="sticky top-0 z-50 border-b border-foreground/[0.06] bg-cream/85 backdrop-blur-xl backdrop-saturate-150">
+            <div className="mx-auto flex h-[60px] max-w-6xl items-center justify-between px-4 md:px-6">
+
+              {/* Logo */}
+              <Link href="/" className="flex items-center gap-2.5 group flex-shrink-0">
+                <div className="relative w-8 h-8 md:w-9 md:h-9 rounded-xl overflow-hidden shadow-sm border border-foreground/[0.06] transition-all duration-200 group-hover:shadow-md group-hover:scale-105">
+                  <Image
+                    src="/app-icon.png"
+                    alt="mascotmaker.io"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <span className="font-display text-lg md:text-xl tracking-tight text-foreground leading-none">
                   Mascot Maker
                 </span>
               </Link>
+
+              {/* Right side: Nav + Credits + Auth */}
               <div className="flex items-center gap-2 md:gap-3">
-                <div className="hidden md:block">
+                <div className="hidden md:flex">
                   <NavLinks />
                 </div>
                 <CreditsDisplay />
                 <AuthButton />
               </div>
+
             </div>
           </nav>
+
           <main className="pb-24 md:pb-0">{children}</main>
           <MobileNav />
-          <footer className="border-t border-border/50 bg-cream/50 pt-12 pb-8">
+
+          {/* ── Footer ── */}
+          <footer className="border-t border-foreground/[0.06] bg-cream/60 pt-10 pb-8">
             <div className="mx-auto max-w-6xl px-6">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start justify-between">
-                <div className="flex items-center gap-4">
-                  <Image
-                    src="/app-icon.png"
-                    alt="Mascot Maker"
-                    width={64}
-                    height={64}
-                    className="rounded-xl shadow-sm"
-                  />
+
+                {/* Brand */}
+                <div className="flex items-center gap-3.5">
+                  <div className="relative w-12 h-12 rounded-xl overflow-hidden shadow-sm border border-foreground/[0.06] flex-shrink-0">
+                    <Image src="/app-icon.png" alt="Mascot Maker" fill className="object-cover" />
+                  </div>
                   <div>
-                    <span className="font-display text-xl text-foreground block">Mascot Maker</span>
-                    <p className="text-sm text-muted-foreground font-semibold">mascotmaker.io</p>
+                    <span className="font-display text-lg text-foreground block leading-tight">Mascot Maker</span>
+                    <p className="text-xs text-muted-foreground font-semibold mt-0.5">mascotmaker.io</p>
                   </div>
                 </div>
 
+                {/* External links */}
                 <div className="flex flex-col gap-2">
-                  <span className="text-xs font-black uppercase tracking-widest text-foreground/50">External Resources</span>
-                  <div className="flex flex-col gap-1">
-                    <a href="https://deepmind.google" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Google DeepMind</a>
-                    <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Next.js Framework</a>
-                    <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Lucide Icons</a>
+                  <span className="text-[10px] font-black uppercase tracking-widest text-foreground/30">Built With</span>
+                  <div className="flex flex-col gap-1.5">
+                    <a href="https://deepmind.google" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">Google DeepMind</a>
+                    <a href="https://nextjs.org" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">Next.js Framework</a>
+                    <a href="https://lucide.dev" target="_blank" rel="noopener noreferrer" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">Lucide Icons</a>
                   </div>
                 </div>
 
-                <div className="flex flex-col md:items-end gap-2">
-                  <div className="flex flex-wrap gap-6">
-                    <Link href="/blog" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Blog</Link>
-                    <Link href="/explore" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Explore</Link>
-                    <Link href="/privacy" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Privacy Policy</Link>
-                    <Link href="/terms" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors">Terms of Service</Link>
+                {/* Legal + nav links */}
+                <div className="flex flex-col md:items-end gap-3">
+                  <div className="flex flex-wrap gap-x-5 gap-y-1.5">
+                    <Link href="/gallery" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">Gallery</Link>
+                    <Link href="/blog" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">Blog</Link>
+                    <Link href="/about" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">About</Link>
+                    <Link href="/explore" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">Explore</Link>
+                    <Link href="/privacy" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">Privacy</Link>
+                    <Link href="/terms" className="text-sm font-semibold text-warm-gray hover:text-candy-pink transition-colors duration-200">Terms</Link>
                   </div>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-[11px] text-muted-foreground/60">
                     &copy; {new Date().getFullYear()} mascotmaker.io. All rights reserved.
                   </p>
                 </div>
+
               </div>
             </div>
           </footer>
+
           <Toaster richColors position="bottom-right" />
         </Providers>
       </body>
