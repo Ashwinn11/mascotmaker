@@ -1,0 +1,8 @@
+Reason,Source,Validation,Pages
+Crawled - currently not indexed,Google systems,Failed,19
+Excluded by ‘noindex’ tag,Website,Not Started,8
+Not found (404),Website,Not Started,7
+Alternative page with proper canonical tag,Website,Started,15
+Page with redirect,Website,Started,2
+Duplicate without user-selected canonical,Website,Passed,0
+Discovered – currently not indexed,Google systems,Passed,0

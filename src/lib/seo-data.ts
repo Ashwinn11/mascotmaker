@@ -320,12 +320,51 @@ export function getSEOContent(category?: string, primaryDesc?: string, secondary
         `Integrated with 8 specialized AI design engines.`
     ];
 
+    // Industry-specific FAQs to "thicken" the content for GSC
+    let customFAQ = {
+        q: "How does Identity Lock™ help my brand?",
+        a: "Identity Lock™ ensures that your mascot's core features—like facial proportions and color schemes—stay consistent across every generation, preventing the 'AI drift' found in other tools."
+    };
+
+    if (category?.includes("SaaS") || category?.includes("Startup")) {
+        customFAQ = {
+            q: "Can I use these mascots in my product onboarding?",
+            a: "Yes! Mascot Maker is optimized for SaaS onboarding. You can generate consistent characters for empty states, success messages, and user guides that look like they were custom-illustrated for your app."
+        };
+    } else if (category?.includes("Gaming") || category?.includes("Indie")) {
+        customFAQ = {
+            q: "Are the assets ready for game engines like Unity or Unreal?",
+            a: "Our characters are exported as high-resolution PNGs with transparent backgrounds (via the Background Remover), making them perfect for 2D sprites, UI elements, and marketing materials."
+        };
+    } else if (category?.includes("Real Estate") || category?.includes("Property")) {
+        customFAQ = {
+            q: "Can I use these mascots on physical yard signs?",
+            a: "Absolutely. When you use our 4K Upscale engine, the mascots maintain sharp edges and vibrant colors even when printed on large-format materials like lawn signs and billboards."
+        };
+    } else if (category?.includes("E-learning") || category?.includes("Education")) {
+        customFAQ = {
+            q: "How do mascots help with student engagement?",
+            a: "Studies show that consistent characters in e-learning increase student completion rates by up to 30%. They act as friendly tutors that celebrate wins and guide users through difficult modules."
+        };
+    } else if (category?.includes("Cybersecurity") || category?.includes("Security")) {
+        customFAQ = {
+            q: "How do I make a security mascot look professional, not childish?",
+            a: "We recommend using the 'Vector Art' or 'Minimalist' styles. Combined with a technical color palette (blues/greys), these styles project authority and precision while still being approachable."
+        };
+    } else if (category?.includes("Pet Care") || category?.includes("Vet")) {
+        customFAQ = {
+            q: "Can I create different animal mascots in the same style?",
+            a: "Yes. Use Identity Lock™ with a style like '3D Pixar' to ensure that your clinic's dog, cat, and bird mascots all look part of the same professional brand family."
+        };
+    }
+
     return {
         definition,
         intro: `Character consistency is the #1 hurdle in AI design. Our ${displayName} studio is built for designers who need more than just a one-off image. We focus on pinning character DNA so your ${catLower} can move across marketing decks, social banners, and product UI without losing brand recognition.`,
         benefit1: `One of the biggest frustrations we found with generic generators was the lack of control over fine details like lighting and angle. In the ${displayName} engine, we've fine-tuned the logic to ensure that your ${catLower} maintain their material integrity—meaning if you start with claymation, they stay claymation.`,
         benefit2: `Instead of weeks waiting on an agency, you get studio-grade ${catLower} in seconds. This isn't about skipping the design process; it's about giving your ${category ? `${category} brand` : "project"} a face that resonates with your audience while keeping your production pipeline lean and predictable.`,
         tips,
-        stats
+        stats,
+        customFAQ
     };
 }

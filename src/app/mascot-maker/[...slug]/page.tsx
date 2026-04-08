@@ -131,9 +131,35 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
         notFound();
     }
 
-    // --- Hard Redirect for Canonical Logic (fixes GSC Duplicate issues) ---
-    const officialPathParts = ["mascot-maker", type, primaryItem.slug];
-    if (secondaryItem) officialPathParts.push(secondaryItem.slug);
+    // --- Hard Redirect for Structural Consolidation (Fixes GSC Duplicate issues) ---
+    // We prefer: /use-case/engine/industry OR /style/style/industry
+    // We want to avoid: /industry/industry/style OR /industry/industry/engine
+    let officialType = type;
+    let officialPart1 = part1;
+    let officialPart2 = part2;
+
+    if (type === "industry" && part2) {
+        // If it's Industry/Style combo, flip it to Style-first
+        if (style2) {
+            officialType = "style";
+            officialPart1 = part2;
+            officialPart2 = part1;
+        } 
+        // If it's Industry/Engine combo, flip it to Use-case-first
+        else if (engine1 || (part2 && ENGINES.find(e => e.slug === part2))) {
+             // wait, if type is industry, engine1 is null. We need to find engine2.
+             const engine2 = ENGINES.find(e => e.slug === part2);
+             if (engine2) {
+                officialType = "use-case";
+                officialPart1 = part2;
+                officialPart2 = part1;
+             }
+        }
+    }
+
+    const officialPathParts = ["mascot-maker", officialType, officialPart1];
+    if (officialPart2) officialPathParts.push(officialPart2);
+    
     const officialPath = `/${officialPathParts.join('/')}`;
     const currentPath = `/mascot-maker/${slug.join('/')}`;
 
@@ -165,6 +191,14 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
         "@context": "https://schema.org",
         "@type": "FAQPage",
         "mainEntity": [
+            {
+                "@type": "Question",
+                "name": content.customFAQ.q,
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": content.customFAQ.a
+                }
+            },
             {
                 "@type": "Question",
                 "name": type === "style" ? `How do I apply the ${primaryItem?.title} style to my mascot?` : `How do I create a ${combinedTitle?.toLowerCase()} with AI?`,
@@ -576,6 +610,10 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
                     <h2 className="font-display text-4xl md:text-5xl uppercase mb-12 text-center text-white drop-shadow-sm">Frequently Asked Questions</h2>
                     <div className="space-y-5">
                         {[
+                            {
+                                q: content.customFAQ.q,
+                                a: content.customFAQ.a
+                            },
                             {
                                 q: `How do I create a ${combinedTitle?.toLowerCase()} with AI?`,
                                 a: `Sign up for a free Mascot Maker account, describe your character in plain English, and the AI generates a studio-quality ${combinedTitle?.toLowerCase()} in under 30 seconds. No design skills or software required.`
