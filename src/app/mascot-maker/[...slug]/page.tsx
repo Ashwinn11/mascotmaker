@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { INDUSTRIES, STYLES, ENGINES, getSEOContent } from "@/lib/seo-data";
-import { notFound, redirect } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Sparkles, Check, ArrowRight, Zap, DollarSign, Clock, Shield, TrendingUp, Users } from "lucide-react";
@@ -54,7 +54,24 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         description = `${primaryItem.description} Create consistent, professional brand characters for your ${primaryItem.title} business with zero design experience.`;
     }
 
-    const canonicalPath = [type, primaryItem.slug, secondaryItem?.slug].filter(Boolean).join('/');
+    // Consolidate Canonical URLs to match sitemap structure (fixes Redirect failures)
+    let officialType = type;
+    let officialPart1 = primaryItem.slug;
+    let officialPart2 = secondaryItem?.slug;
+
+    if (type === "industry" && secondaryItem) {
+        if (style2) {
+            officialType = "style";
+            officialPart1 = secondaryItem.slug;
+            officialPart2 = primaryItem.slug;
+        } else if (engine1 || (part2 && ENGINES.find(e => e.slug === part2))) {
+             officialType = "use-case";
+             officialPart1 = secondaryItem.slug;
+             officialPart2 = primaryItem.slug;
+        }
+    }
+
+    const canonicalPath = [officialType, officialPart1, officialPart2].filter(Boolean).join('/');
 
     // Priority 3: noindex background-remover combos — zero unique content, no gallery assets
     const isNoindex = type === "use-case" && part1 === "background-remover" && !!part2;
@@ -164,7 +181,7 @@ export default async function GenericCategoricalPage({ params }: PageProps) {
     const currentPath = `/mascot-maker/${slug.join('/')}`;
 
     if (currentPath !== officialPath) {
-        redirect(officialPath);
+        permanentRedirect(officialPath);
     }
 
     const combinedTitle = secondaryItem ? `${primaryItem?.title} for ${secondaryItem?.title}` : primaryItem?.title;
